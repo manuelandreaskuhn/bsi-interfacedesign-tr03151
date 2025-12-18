@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exception id="ErrorPukTemporarilyBlocked" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+    <name>ErrorPukTemporarilyBlocked</name>
+    <description>This exception is thrown by SE API method unblockPin in case the PUK is temporarily blocked.</description>
+    <category>Authentication</category>
+    <severity>High</severity>
+    <javadoc>
+        <summary>This class defines the exception ErrorPukTemporarilyBlocked that is thrown by SE API method unblockPin in case the PUK is temporarily blocked.</summary>
+    </javadoc>
+    <specification>
+        <source>BSI TR-03151-1</source>
+        <requirement>SHALL be raised when PUK is temporarily blocked due to failed attempts</requirement>
+        <applicability>PIN unblock operations when PUK temporarily blocked</applicability>
+    </specification>
+    <thrownBy>
+        <function>unblockPin</function>
+    </thrownBy>
+</exception>

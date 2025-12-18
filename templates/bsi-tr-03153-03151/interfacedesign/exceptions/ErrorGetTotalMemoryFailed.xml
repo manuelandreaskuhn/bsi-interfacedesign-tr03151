@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exception id="ErrorGetTotalMemoryFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+    <name>ErrorGetTotalMemoryFailed</name>
+    <description>This exception is thrown if the SE API function getTotalMemory fails to determine the capacity of the storage medium.</description>
+    <category>Storage</category>
+    <severity>Medium</severity>
+    <javadoc>
+        <summary>This class defines the exception ErrorGetTotalMemoryFailed that is thrown if the SE API function getTotalMemory fails to determine the capacity of the storage medium.</summary>
+    </javadoc>
+    <specification>
+        <source>BSI TR-03151-1</source>
+        <requirement>SHALL be raised when total memory query fails</requirement>
+        <applicability>Memory information query operations</applicability>
+    </specification>
+    <thrownBy>
+        <function>getTotalMemory</function>
+    </thrownBy>
+</exception>

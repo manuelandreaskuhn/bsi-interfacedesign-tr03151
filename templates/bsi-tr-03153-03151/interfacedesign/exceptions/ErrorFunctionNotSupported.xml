@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exception id="ErrorFunctionNotSupported" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+    <name>ErrorFunctionNotSupported</name>
+    <description>This exception is thrown if an optional SE API function is invoked which is not supported by the device.</description>
+    <category>Common Exception</category>
+    <severity>Medium</severity>
+    <javadoc>
+        <summary>This class defines the exception ErrorFunctionNotSupported that is thrown if an optional SE API function is invoked which is not supported by the device.</summary>
+    </javadoc>
+    <specification>
+        <source>BSI TR-03151-1</source>
+        <requirement>SHALL be raised when an optional function is invoked that is not implemented by the device</requirement>
+        <applicability>Common exception - applicable to optional API functions</applicability>
+    </specification>
+    <thrownBy>
+        <function>authenticateUser</function>
+        <function>logOut</function>
+        <function>unblockPin</function>
+        <function>setDescription</function>
+        <function>getDescription</function>
+        <function>selfTest</function>
+        <function>updateDevice</function>
+        <function>disableSecureElement</function>
+        <function>getTotalMemory</function>
+        <function>getUsedMemory</function>
+        <function>getFreeMemory</function>
+        <function>getDeviceHealth</function>
+        <function>getComponentVersions</function>
+        <function>getEndOfUsageDate</function>
+        <function>updateTime</function>
+        <function>getTimeSyncVariant</function>
+        <function>getCurrentSeTime</function>
+        <function>configureLogging</function>
+        <function>exportLogMessages</function>
+        <function>exportLoggingCertificates</function>
+        <function>deleteLogMessages</function>
+        <function>exportSerialNumbers</function>
+        <function>getCurrentLoggingSignatureCounters</function>
+        <function>restoreLogsFromBackup</function>
+        <function>getLastLogMessage</function>
+        <function>registerClient</function>
+        <function>deregisterClient</function>
+        <function>startTransaction</function>
+        <function>updateTransaction</function>
+        <function>finishTransaction</function>
+        <function>exportFilteredTransactionLogs</function>
+        <function>getSupportedTransactionUpdateVariants</function>
+        <function>getCurrentNumberOfClients</function>
+        <function>getMaxNumberOfClients</function>
+        <function>getRegisteredClients</function>
+        <function>getCurrentNumberOfTransactions</function>
+        <function>getMaxNumberOfTransactions</function>
+        <function>getCurrentTransactionCounter</function>
+        <function>getOpenTransactions</function>
+        <function>getTransactionState</function>
+        <function>lockTransactionLogging</function>
+        <function>unlockTransactionLogging</function>
+        <function>getLastTransactionLogMessage</function>
+    </thrownBy>
+</exception>

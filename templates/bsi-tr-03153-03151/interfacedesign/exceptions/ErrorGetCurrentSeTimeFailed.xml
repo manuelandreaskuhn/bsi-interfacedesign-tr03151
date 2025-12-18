@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exception id="ErrorGetCurrentSeTimeFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+    <name>ErrorGetCurrentSeTimeFailed</name>
+    <description>This exception is thrown if the SE API function getCurrentSeTime fails to obtain the current time of the Secure Element.</description>
+    <category>Time Synchronization</category>
+    <severity>Medium</severity>
+    <javadoc>
+        <summary>This class defines the exception ErrorGetCurrentSeTimeFailed that is thrown if the SE API function getCurrentSeTime fails to obtain the current time of the Secure Element.</summary>
+    </javadoc>
+    <specification>
+        <source>BSI TR-03151-1</source>
+        <requirement>SHALL be raised when Secure Element time retrieval fails</requirement>
+        <applicability>Time query operations</applicability>
+    </specification>
+    <thrownBy>
+        <function>getCurrentSeTime</function>
+    </thrownBy>
+</exception>

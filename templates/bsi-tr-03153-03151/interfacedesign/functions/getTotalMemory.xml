@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='utf-8'?>
+<function id="getTotalMemory" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/functions.xsd">
+  <name>getTotalMemory</name>
+  <category>Speicherverwaltung</category>
+  <description>The function getTotalMemory can be used to get the total capacity of the storage medium.</description>
+  <detailedSteps>
+    <step>
+      <number>1</number>
+      <originalText>If the referencing guideline limits the access to the functionality solely to authenticated users, the function SHALL check if the user that has invoked the function has the status authenticated. If the status is not authenticated, the function SHALL raise the exception ErrorUserNotAuthenticated and exit the function.</originalText>
+      <germanText>Falls die Richtlinie den Zugriff auf authentifizierte Benutzer beschränkt: Prüfe, ob der aufrufende Benutzer authentifiziert ist. Falls nicht: Werfe ErrorUserNotAuthenticated und beende Funktion.</germanText>
+      <pseudocode>WENN Benutzer NICHT authentifiziert DANN
+  WERFE ErrorUserNotAuthenticated
+  BEENDE_FUNKTION
+ENDE</pseudocode>
+      <errorCase>
+        <exception>ErrorUserNotAuthenticated</exception>
+        <trigger>Der Benutzer ist nicht authentifiziert</trigger>
+        <action>Funktion beenden</action>
+      </errorCase>
+    </step>
+    <step>
+      <number>2</number>
+      <originalText>If the referencing guideline limits the access to the functionality to certain roles, the function SHALL check in the corresponding role if the (unauthenticated) user is authorized to execute the function. If the user is not authorized, the function SHALL raise the exception ErrorUserNotAuthorized and exit the function.</originalText>
+      <germanText>Falls die Richtlinie den Zugriff auf bestimmte Rollen beschränkt: Prüfe in der entsprechenden Rolle, ob der (unauthentifizierte) Benutzer berechtigt ist, die Funktion auszuführen. Falls nicht: Werfe ErrorUserNotAuthorized und beende Funktion.</germanText>
+      <pseudocode>WENN Benutzer NICHT autorisiert DANN
+  WERFE ErrorUserNotAuthorized
+  BEENDE_FUNKTION
+ENDE</pseudocode>
+      <errorCase>
+        <exception>ErrorUserNotAuthorized</exception>
+        <trigger>Der Benutzer ist nicht berechtigt</trigger>
+        <action>Funktion beenden</action>
+      </errorCase>
+    </step>
+    <step>
+      <number>3</number>
+      <originalText>The function SHALL determine the capacity of the storage medium. If the determination of the capacity of the storage medium fails, the function SHALL raise the exception ErrorGetTotalMemoryFailed and exit the function.</originalText>
+      <germanText>Funktion ermittelt die Gesamtkapazität des Speichermediums. Bei Fehler: ErrorGetTotalMemoryFailed, Ende.</germanText>
+      <pseudocode>WENN Operation fehlgeschlagen DANN
+  WERFE ErrorGetTotalMemoryFailed
+  BEENDE_FUNKTION
+ENDE</pseudocode>
+      <errorCase>
+        <exception>ErrorGetTotalMemoryFailed</exception>
+        <trigger>Die Ermittlung der Speicherkapazität schlägt fehl</trigger>
+        <action>Funktion beenden</action>
+      </errorCase>
+    </step>
+    <step>
+      <number>4</number>
+      <originalText>If the determination of the capacity of the storage medium has been successful, the function SHALL return the capacity of the storage medium by usage of the output parameter totalMemory. Additionally, the function SHALL return without raising an exception to indicate that the execution of the function has been successful.</originalText>
+      <germanText>Bei Erfolg der Ermittlung: Gibt Speicherkapazität via Parameter totalMemory zurück. Keine Exception.</germanText>
+      <pseudocode>GEBE Gesamtspeichergröße zurück (totalMemory Parameter)
+RETURN ohne Exception</pseudocode>
+      <successCase>
+        <condition>Ermittlung der Speicherkapazität erfolgreich</condition>
+        <action>Gibt Speicherkapazität via Parameter zurück</action>
+      </successCase>
+    </step>
+  </detailedSteps>
+  <parameters />
+  <returnValue>
+    <type>long</type>
+    <description>the capacity of the storage medium in bytes.</description>
+  </returnValue>
+  <exceptions>
+    <exception>ErrorDeviceNotInitialized</exception>
+    <exception>ErrorFunctionFailed</exception>
+    <exception>ErrorFunctionNotSupported</exception>
+    <exception>ErrorGetTotalMemoryFailed</exception>
+    <exception>ErrorParameterSyntax</exception>
+    <exception>ErrorStorageMediumDisconnected</exception>
+    <exception>ErrorUserNotAuthenticated</exception>
+    <exception>ErrorUserNotAuthorized</exception>
+  </exceptions>
+</function>

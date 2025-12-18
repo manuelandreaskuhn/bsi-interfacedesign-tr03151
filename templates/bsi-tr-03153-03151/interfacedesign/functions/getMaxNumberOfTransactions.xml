@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='utf-8'?>
+<function id="getMaxNumberOfTransactions" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/functions.xsd">
+  <name>getMaxNumberOfTransactions</name>
+  <category>Client- und Transaktionsverwaltung</category>
+  <description>The function getMaxNumberOfTransactions can be used to obtain the maximum number of simultaneously open transactions that can be managed by the device.</description>
+  <detailedSteps>
+    <step>
+      <number>1</number>
+      <originalText>If the referencing guideline limits the access to the functionality solely to authenticated users, the function SHALL check if the user that has invoked the function has the status authenticated. If the status is not authenticated, the function SHALL raise the exception ErrorUserNotAuthenticated and exit the function.</originalText>
+      <germanText>Prüft, ob Nutzer authentifiziert. Falls nicht: Exception ErrorUserNotAuthenticated, Ende.</germanText>
+      <pseudocode>WENN Benutzer NICHT authentifiziert DANN
+  WERFE ErrorUserNotAuthenticated
+  BEENDE_FUNKTION
+ENDE</pseudocode>
+      <errorCase>
+        <exception>ErrorUserNotAuthenticated</exception>
+        <trigger>Der Benutzer ist nicht authentifiziert</trigger>
+        <action>Funktion beenden</action>
+      </errorCase>
+    </step>
+    <step>
+      <number>2</number>
+      <originalText>If the referencing guideline limits the access to the functionality to certain roles, the function SHALL check in the corresponding role if the (unauthenticated) user is authorized to execute the function. If the user is not authorized, the function SHALL raise the exception ErrorUserNotAuthorized and exit the function.</originalText>
+      <germanText>Prüft, ob Nutzer berechtigt. Falls nicht: Exception ErrorUserNotAuthorized, Ende.</germanText>
+      <pseudocode>WENN Benutzer NICHT autorisiert DANN
+  WERFE ErrorUserNotAuthorized
+  BEENDE_FUNKTION
+ENDE</pseudocode>
+      <errorCase>
+        <exception>ErrorUserNotAuthorized</exception>
+        <trigger>Der Benutzer ist nicht berechtigt</trigger>
+        <action>Funktion beenden</action>
+      </errorCase>
+    </step>
+    <step>
+      <number>3</number>
+      <originalText>The function SHALL determine the maximum number of transactions that can be managed by the device simultaneously. If the device supports a practically unlimited number of transactions, the function SHALL return the highest value that can be stored in the output parameter maxNumberTransactions. If the determination of the maximum number of transactions fails, the function SHALL raise the exception ErrorGetMaxNumberTransactionsFailed and exit the function.</originalText>
+      <germanText>Ermittelt maximale Transaktionsanzahl, die gleichzeitig verwaltet werden kann. Bei unbegrenzten Transaktionen: Gibt Höchstwert zurück. Bei Fehler: Exception ErrorGetMaxNumberTransactionsFailed, Ende.</germanText>
+      <pseudocode>VERSUCHE
+  ERMITTLE maximale Transaktionsanzahl
+BEI_FEHLER
+  WERFE ErrorGetMaxNumberTransactionsFailed
+  BEENDE_FUNKTION
+ENDE</pseudocode>
+      <errorCase>
+        <exception>ErrorGetMaxNumberTransactionsFailed</exception>
+        <trigger>Die Ermittlung der max. Transaktionsanzahl schlägt fehl</trigger>
+        <action>Funktion beenden</action>
+      </errorCase>
+    </step>
+    <step>
+      <number>4</number>
+      <originalText>If the determination of the maximal number of transaction is successful, the function SHALL return the number by the output parameter maxNumberTransactions. Additionally, the function SHALL return without raising an exception to indicate that the execution of the function has been successful.</originalText>
+      <germanText>Gibt maximale Transaktionsanzahl zurück. Bei Erfolg keine Exception.</germanText>
+      <pseudocode>GEBE maximale Transaktionsanzahl zurück (maxNumberTransactions Parameter)
+RETURN ohne Exception</pseudocode>
+      <successCase>
+        <condition>Die Ermittlung der maximalen Transaktionsanzahl war erfolgreich</condition>
+        <action>Gibt maximale Transaktionsanzahl zurück und kehrt ohne Exception zurück</action>
+      </successCase>
+    </step>
+  </detailedSteps>
+  <parameters />
+  <returnValue>
+    <type>long</type>
+    <description>the maximum number of simultaneously open transactions.</description>
+  </returnValue>
+  <exceptions>
+    <exception>ErrorDeviceNotInitialized</exception>
+    <exception>ErrorFunctionFailed</exception>
+    <exception>ErrorFunctionNotSupported</exception>
+    <exception>ErrorGetMaxNumberTransactionsFailed</exception>
+    <exception>ErrorParameterSyntax</exception>
+    <exception>ErrorSecureElementDisabled</exception>
+    <exception>ErrorUserNotAuthenticated</exception>
+    <exception>ErrorUserNotAuthorized</exception>
+  </exceptions>
+</function>

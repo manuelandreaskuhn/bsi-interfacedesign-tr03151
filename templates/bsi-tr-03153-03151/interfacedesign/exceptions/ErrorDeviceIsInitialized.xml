@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exception id="ErrorDeviceIsInitialized" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+    <name>ErrorDeviceIsInitialized</name>
+    <description>This exception is thrown if the SE API function initilize has already been invoked before.</description>
+    <category>Initialization</category>
+    <severity>Medium</severity>
+    <javadoc>
+        <summary>This class defines the exception ErrorDeviceIsInitialized that is thrown if the SE API function initilize has already been invoked before.</summary>
+    </javadoc>
+    <specification>
+        <source>BSI TR-03151-1</source>
+        <requirement>SHALL be raised when attempting to initialize an already initialized device</requirement>
+        <applicability>Device initialization when device already initialized</applicability>
+    </specification>
+    <thrownBy>
+        <function>initialize</function>
+    </thrownBy>
+</exception>

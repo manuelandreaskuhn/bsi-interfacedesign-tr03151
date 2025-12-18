@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exception id="ErrorPinBlocked" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+    <name>ErrorPinBlocked</name>
+    <description>This exception is thrown if the SE API function authenticateUser has been invoked with an incorrect PIN multiple times which lead to the PIN being blocked.</description>
+    <category>Authentication</category>
+    <severity>Critical</severity>
+    <javadoc>
+        <summary>This class defines the exception ErrorPinBlocked that is thrown if the SE API function authenticateUser has been invoked with an incorrect PIN multiple times which lead to the PIN being blocked.</summary>
+    </javadoc>
+    <specification>
+        <source>BSI TR-03151-1</source>
+        <requirement>SHALL be raised when PIN retry limit is exhausted and PIN becomes blocked</requirement>
+        <applicability>User authentication after multiple failed attempts</applicability>
+    </specification>
+    <thrownBy>
+        <function>authenticateUser</function>
+    </thrownBy>
+</exception>

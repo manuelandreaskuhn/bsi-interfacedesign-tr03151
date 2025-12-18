@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exception id="ErrorUnsupportedTimeSyncVariant" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+    <name>ErrorUnsupportedTimeSyncVariant</name>
+    <description>This exception is thrown if the updateTime function is called with an unsupported time synchronization variant.</description>
+    <category>Time Synchronization</category>
+    <severity>Medium</severity>
+    <javadoc>
+        <summary>This class defines the exception ErrorUnsupportedTimeSyncVariant that is thrown if the updateTime function is called with an unsupported time synchronization variant.</summary>
+    </javadoc>
+    <specification>
+        <source>BSI TR-03151-1</source>
+        <requirement>SHALL be raised when unsupported time sync variant is specified</requirement>
+        <applicability>Time update operations with variant specification</applicability>
+    </specification>
+    <thrownBy>
+        <function>updateTime</function>
+    </thrownBy>
+</exception>

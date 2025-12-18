@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exception id="ErrorTooManyRecords" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+    <name>ErrorTooManyRecords</name>
+    <description>This exception is thrown if the amount of requested records exceeds the passed value for the maximum number of records in the context of the export of stored data.</description>
+    <category>Data Export</category>
+    <severity>Medium</severity>
+    <javadoc>
+        <summary>This class defines the exception ErrorTooManyRecords that is thrown if the amount of requested records exceeds the passed value for the maximum number of records in the context of the export of stored data.</summary>
+    </javadoc>
+    <specification>
+        <source>BSI TR-03151-1</source>
+        <requirement>SHALL be raised when query results exceed specified maximum record count</requirement>
+        <applicability>Data export operations with record limits</applicability>
+    </specification>
+    <thrownBy>
+        <function>exportLogMessages</function>
+        <function>exportFilteredTransactionLogs</function>
+    </thrownBy>
+</exception>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exception id="ErrorRetrieveLogMessageFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+    <name>ErrorRetrieveLogMessageFailed</name>
+    <description>This exception is thrown if the retrieving of the log message parts that have been created by Secure Element most recently failed.</description>
+    <category>Logging</category>
+    <severity>High</severity>
+    <javadoc>
+        <summary>This class defines the exception ErrorRetrieveLogMessageFailed that is thrown if the retrieving of the log message parts that have been created by Secure Element most recently failed.</summary>
+    </javadoc>
+    <specification>
+        <source>BSI TR-03151-1</source>
+        <requirement>SHALL be raised when log message retrieval from Secure Element fails</requirement>
+        <applicability>Log message retrieval operations</applicability>
+    </specification>
+    <thrownBy>
+        <function>getLastLogMessage</function>
+        <function>getLastTransactionLogMessage</function>
+    </thrownBy>
+</exception>

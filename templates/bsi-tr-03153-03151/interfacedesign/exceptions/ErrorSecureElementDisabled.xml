@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exception id="ErrorSecureElementDisabled" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+    <name>ErrorSecureElementDisabled</name>
+    <description>This exception is thrown if SE API functions are invoked which need a non-disabled Secure Element but the Secure Element has been disabled.</description>
+    <category>Secure Element</category>
+    <severity>Critical</severity>
+    <javadoc>
+        <summary>This class defines the exception ErrorSecureElementDisabled that is thrown if SE API functions are invoked which need a non-disabled Secure Element but the Secure Element has been disabled.</summary>
+    </javadoc>
+    <specification>
+        <source>BSI TR-03151-1</source>
+        <requirement>SHALL be raised when attempting operations on a disabled Secure Element</requirement>
+        <applicability>All operations requiring active Secure Element</applicability>
+    </specification>
+    <thrownBy>
+        <function>authenticateUser</function>
+        <function>logOut</function>
+        <function>unblockPin</function>
+        <function>setDescription</function>
+        <function>selfTest</function>
+        <function>updateDevice</function>
+        <function>updateTime</function>
+        <function>getCurrentSeTime</function>
+        <function>configureLogging</function>
+        <function>exportLogMessages</function>
+        <function>registerClient</function>
+        <function>deregisterClient</function>
+        <function>startTransaction</function>
+        <function>updateTransaction</function>
+        <function>finishTransaction</function>
+        <function>lockTransactionLogging</function>
+        <function>unlockTransactionLogging</function>
+    </thrownBy>
+</exception>

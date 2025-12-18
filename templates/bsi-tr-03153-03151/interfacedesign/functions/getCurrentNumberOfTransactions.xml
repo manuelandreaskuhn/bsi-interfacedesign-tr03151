@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='utf-8'?>
+<function id="getCurrentNumberOfTransactions" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/functions.xsd">
+  <name>getCurrentNumberOfTransactions</name>
+  <category>Client- und Transaktionsverwaltung</category>
+  <description>The function getRegisteredClients can be used to get the list of currently registered transaction logging clients.</description>
+  <detailedSteps>
+    <step>
+      <number>1</number>
+      <originalText>If the referencing guideline limits the access to the functionality solely to authenticated users, the function SHALL check if the user that has invoked the function has the status authenticated. If the status is not authenticated, the function SHALL raise the exception ErrorUserNotAuthenticated and exit the function.</originalText>
+      <germanText>Prüft, ob Nutzer authentifiziert. Falls nicht: Exception ErrorUserNotAuthenticated, Ende.</germanText>
+      <pseudocode>WENN Benutzer NICHT authentifiziert DANN
+  WERFE ErrorUserNotAuthenticated
+  BEENDE_FUNKTION
+ENDE</pseudocode>
+      <errorCase>
+        <exception>ErrorUserNotAuthenticated</exception>
+        <trigger>Der Benutzer ist nicht authentifiziert</trigger>
+        <action>Funktion beenden</action>
+      </errorCase>
+    </step>
+    <step>
+      <number>2</number>
+      <originalText>If the referencing guideline limits the access to the functionality to certain roles, the function SHALL check in the corresponding role if the (unauthenticated) user is authorized to execute the function. If the user is not authorized, the function SHALL raise the exception ErrorUserNotAuthorized and exit the function.</originalText>
+      <germanText>Prüft, ob Nutzer berechtigt. Falls nicht: Exception ErrorUserNotAuthorized, Ende.</germanText>
+      <pseudocode>WENN Benutzer NICHT autorisiert DANN
+  WERFE ErrorUserNotAuthorized
+  BEENDE_FUNKTION
+ENDE</pseudocode>
+      <errorCase>
+        <exception>ErrorUserNotAuthorized</exception>
+        <trigger>Der Benutzer ist nicht berechtigt</trigger>
+        <action>Funktion beenden</action>
+      </errorCase>
+    </step>
+    <step>
+      <number>3</number>
+      <originalText>The function SHALL determine the number of transactions that are currently opened. If the determination of this number fails, the function SHALL raise the exception ErrorGetCurrentNumberOfTransactionsFailed and exit the function.</originalText>
+      <germanText>Ermittelt offene Transaktionen. Bei Fehler: Exception ErrorGetCurrentNumberOfTransactionsFailed, Ende.</germanText>
+      <pseudocode>VERSUCHE
+  ERMITTLE Anzahl aktuell offener Transaktionen
+BEI_FEHLER
+  WERFE ErrorGetCurrentNumberOfTransactionsFailed
+  BEENDE_FUNKTION
+ENDE</pseudocode>
+      <errorCase>
+        <exception>ErrorGetCurrentNumberOfTransactionsFailed</exception>
+        <trigger>Die Ermittlung schlägt fehl</trigger>
+        <action>Funktion beenden</action>
+      </errorCase>
+    </step>
+    <step>
+      <number>4</number>
+      <originalText>If the determination of the number of currently opened transactions is successful, the function SHALL return the number by usage of the output parameter currentNumberTransactions. Additionally, the function SHALL return without raising an exception to indicate that the execution of the function has been successful.</originalText>
+      <germanText>Gibt Anzahl zurück. Bei Erfolg keine Exception.</germanText>
+      <pseudocode>GEBE Transaktionsanzahl zurück (currentNumberTransactions Parameter)
+RETURN ohne Exception</pseudocode>
+      <successCase>
+        <condition>Ausführung war erfolgreich</condition>
+        <action>Funktion kehrt ohne Exception zurück</action>
+      </successCase>
+    </step>
+  </detailedSteps>
+  <parameters />
+  <returnValue>
+    <type>long</type>
+    <description>the number of open transactions.</description>
+  </returnValue>
+  <exceptions>
+    <exception>ErrorDeviceNotInitialized</exception>
+    <exception>ErrorFunctionFailed</exception>
+    <exception>ErrorFunctionNotSupported</exception>
+    <exception>ErrorGetCurrentNumberOfTransactionsFailed</exception>
+    <exception>ErrorParameterSyntax</exception>
+    <exception>ErrorSecureElementDisabled</exception>
+    <exception>ErrorUserNotAuthenticated</exception>
+    <exception>ErrorUserNotAuthorized</exception>
+  </exceptions>
+</function>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exception id="ErrorSecureElementPartsDisconnected" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+    <name>ErrorSecureElementPartsDisconnected</name>
+    <description>This exception is thrown if logical or physical parts of the Secure Element are not connected anymore.</description>
+    <category>Secure Element</category>
+    <severity>Critical</severity>
+    <javadoc>
+        <summary>This class defines the exception ErrorSecureElementPartsDisconnected that is thrown if logical or physical parts of the Secure Element are not connected anymore.</summary>
+    </javadoc>
+    <specification>
+        <source>BSI TR-03151-1</source>
+        <requirement>SHALL be raised when Secure Element components become disconnected</requirement>
+        <applicability>All Secure Element operations when component connectivity lost</applicability>
+    </specification>
+    <thrownBy>
+        <function>authenticateUser</function>
+        <function>logOut</function>
+        <function>unblockPin</function>
+        <function>initialize</function>
+        <function>selfTest</function>
+        <function>updateDevice</function>
+        <function>disableSecureElement</function>
+        <function>updateTime</function>
+        <function>getCurrentSeTime</function>
+        <function>startTransaction</function>
+        <function>updateTransaction</function>
+        <function>finishTransaction</function>
+    </thrownBy>
+</exception>

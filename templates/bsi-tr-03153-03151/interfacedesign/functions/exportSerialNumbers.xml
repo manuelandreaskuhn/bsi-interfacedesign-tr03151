@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='utf-8'?>
+<function id="exportSerialNumbers" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/functions.xsd">
+  <name>exportSerialNumbers</name>
+  <category>Logging</category>
+  <description>Exports the serial number(s) of the SE API. A serial number is a hash value of a public key that belongs to a key pair whose private key was used to sign log messages.</description>
+  <detailedSteps>
+    <step>
+      <number>1</number>
+      <originalText>If the referencing guideline limits the access to the functionality solely to authenticated users, the function SHALL check if the user that has invoked the function has the status authenticated. If the status is not authenticated, the function SHALL raise the exception ErrorUserNotAuthenticated and exit the function.</originalText>
+      <germanText>Prüft, ob Nutzer authentifiziert. Falls nicht: Exception ErrorUserNotAuthenticated, Ende.</germanText>
+      <pseudocode>WENN Benutzer NICHT authentifiziert DANN
+  WERFE ErrorUserNotAuthenticated
+  BEENDE_FUNKTION
+ENDE</pseudocode>
+      <errorCase>
+        <exception>ErrorUserNotAuthenticated</exception>
+        <trigger>Der Benutzer ist nicht authentifiziert</trigger>
+        <action>Funktion beenden</action>
+      </errorCase>
+    </step>
+    <step>
+      <number>2</number>
+      <originalText>If the referencing guideline limits the access to the functionality to certain roles, the function SHALL check in the corresponding role if the (unauthenticated) user is authorized to execute the function. If the user is not authorized, the function SHALL raise the exception ErrorUserNotAuthorized and exit the function.</originalText>
+      <germanText>Prüft, ob Nutzer berechtigt. Falls nicht: Exception ErrorUserNotAuthorized, Ende.</germanText>
+      <pseudocode>WENN Benutzer NICHT autorisiert DANN
+  WERFE ErrorUserNotAuthorized
+  BEENDE_FUNKTION
+ENDE</pseudocode>
+      <errorCase>
+        <exception>ErrorUserNotAuthorized</exception>
+        <trigger>Der Benutzer ist nicht berechtigt</trigger>
+        <action>Funktion beenden</action>
+      </errorCase>
+    </step>
+    <step>
+      <number>3</number>
+      <originalText>The function exportSerialNumbers SHALL collect the serial number(s) of the device. If the collection of serial numbers fails, the function SHALL raise the exception ErrorExportSerialNumbersFailed and exit the function.</originalText>
+      <germanText>Sammelt Seriennummer(n). Bei Fehler: Exception ErrorExportSerialNumbersFailed, Ende.</germanText>
+      <pseudocode>VERSUCHE
+  SAMMELE Seriennummern des Geräts
+BEI_FEHLER
+  WERFE ErrorExportSerialNumbersFailed
+  BEENDE_FUNKTION
+ENDE</pseudocode>
+      <errorCase>
+        <exception>ErrorExportSerialNumbersFailed</exception>
+        <trigger>Die Erfassung der Seriennummern schlägt fehl</trigger>
+        <action>Funktion beenden</action>
+      </errorCase>
+    </step>
+    <step>
+      <number>4</number>
+      <originalText>If the collection of the serial number(s) has been successful, the function SHALL return the determined serial number(s) over the output parameter serialNumbers. Additionally, the function SHALL return without raising an exception to indicate that the execution of the function has been successful.</originalText>
+      <germanText>Gibt Seriennummer(n) zurück. Bei Erfolg keine Exception.</germanText>
+      <pseudocode>GEBE Seriennummern zurück (serialNumbers Parameter)
+RETURN ohne Exception</pseudocode>
+      <successCase>
+        <condition>Die Seriennummern wurden erfolgreich erfasst</condition>
+        <action>Gibt Seriennummern zurück und kehrt ohne Exception zurück</action>
+      </successCase>
+    </step>
+  </detailedSteps>
+  <parameters />
+  <returnValue>
+    <type>byte[]</type>
+    <description>the serial numbers of the public keys used by the Secure Element.</description>
+  </returnValue>
+  <exceptions>
+    <exception>ErrorDeviceNotInitialized</exception>
+    <exception>ErrorExportSerialNumbersFailed</exception>
+    <exception>ErrorFunctionFailed</exception>
+    <exception>ErrorFunctionNotSupported</exception>
+    <exception>ErrorParameterSyntax</exception>
+    <exception>ErrorStorageMediumDisconnected</exception>
+    <exception>ErrorUserNotAuthenticated</exception>
+    <exception>ErrorUserNotAuthorized</exception>
+  </exceptions>
+</function>

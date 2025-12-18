@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exception id="ErrorUnknownUserId" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+    <name>ErrorUnknownUserId</name>
+    <description>This exception is thrown if an SE API is invoked with an unknown User-ID.</description>
+    <category>Authentication</category>
+    <severity>High</severity>
+    <javadoc>
+        <summary>This class defines the exception ErrorUnknownUserId that is thrown if an SE API is invoked with an unknown User-ID.</summary>
+    </javadoc>
+    <specification>
+        <source>BSI TR-03151-1</source>
+        <requirement>SHALL be raised when authentication operations use unrecognized User-ID</requirement>
+        <applicability>User authentication and management operations</applicability>
+    </specification>
+    <thrownBy>
+        <function>authenticateUser</function>
+        <function>logOut</function>
+        <function>unblockPin</function>
+    </thrownBy>
+</exception>

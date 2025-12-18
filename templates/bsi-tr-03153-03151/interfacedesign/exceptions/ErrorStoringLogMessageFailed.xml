@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exception id="ErrorStoringLogMessageFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+    <name>ErrorStoringLogMessageFailed</name>
+    <description>This exception is thrown if storing of the log message in the storage failed.</description>
+    <category>Logging</category>
+    <severity>Critical</severity>
+    <javadoc>
+        <summary>This class defines the exception ErrorStoringLogMessageFailed that is thrown if storing of the log message in the storage failed.</summary>
+    </javadoc>
+    <specification>
+        <source>BSI TR-03151-1</source>
+        <requirement>SHALL be raised when log message storage operation fails</requirement>
+        <applicability>All transaction operations that create log messages</applicability>
+    </specification>
+    <thrownBy>
+        <function>startTransaction</function>
+        <function>updateTransaction</function>
+        <function>finishTransaction</function>
+    </thrownBy>
+</exception>

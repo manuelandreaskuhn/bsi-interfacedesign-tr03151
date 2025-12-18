@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exception id="ErrorUpdateDeviceFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+    <name>ErrorUpdateDeviceFailed</name>
+    <description>This exception is thrown by the SE API function updateDevice when updating of the device failed.</description>
+    <category>Device Management</category>
+    <severity>Critical</severity>
+    <javadoc>
+        <summary>This class defines the exception ErrorUpdateDeviceFailed that is thrown by the SE API function updateDevice when updating of the device failed.</summary>
+    </javadoc>
+    <specification>
+        <source>BSI TR-03151-1</source>
+        <requirement>SHALL be raised when device update operation fails</requirement>
+        <applicability>Device update operations</applicability>
+    </specification>
+    <thrownBy>
+        <function>updateDevice</function>
+    </thrownBy>
+</exception>

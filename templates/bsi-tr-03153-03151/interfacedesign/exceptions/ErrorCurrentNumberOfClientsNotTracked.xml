@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exception id="ErrorCurrentNumberOfClientsNotTracked" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+    <name>ErrorCurrentNumberOfClientsNotTracked</name>
+    <description>This exception is thrown if the devices does not track the current number of (registered) clients. Therefore, the SE API function getCurrentNumberOfClients cannot provide a number.</description>
+    <category>Client Management</category>
+    <severity>Medium</severity>
+    <javadoc>
+        <summary>This class defines the exception ErrorCurrentNumberOfClientsNotTracked that is thrown if the devices does not track the current number of (registered) clients. Therefore, the SE API function getCurrentNumberOfClients cannot provide a number.</summary>
+    </javadoc>
+    <specification>
+        <source>BSI TR-03151-1</source>
+        <requirement>MAY be raised when device does not support client counting</requirement>
+        <applicability>Client counting query when feature not supported</applicability>
+    </specification>
+    <thrownBy>
+        <function>getCurrentNumberOfClients</function>
+    </thrownBy>
+</exception>

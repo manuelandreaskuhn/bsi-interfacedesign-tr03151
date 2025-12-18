@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exception id="ErrorGetComponentVersionsFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+    <name>ErrorGetComponentVersionsFailed</name>
+    <description>This exception is thrown if the SE API function getComponentVersions fails to determine the device information.</description>
+    <category>Information Retrieval</category>
+    <severity>Medium</severity>
+    <javadoc>
+        <summary>This class defines the exception ErrorGetComponentVersionsFailed that is thrown if the SE API function getComponentVersions fails to determine the device information.</summary>
+    </javadoc>
+    <specification>
+        <source>BSI TR-03151-1</source>
+        <requirement>SHALL be raised when component version retrieval fails</requirement>
+        <applicability>Device information retrieval operations</applicability>
+    </specification>
+    <thrownBy>
+        <function>getComponentVersions</function>
+    </thrownBy>
+</exception>

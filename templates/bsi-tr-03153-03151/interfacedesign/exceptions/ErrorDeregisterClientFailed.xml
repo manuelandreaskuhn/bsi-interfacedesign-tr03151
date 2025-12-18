@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exception id="ErrorDeregisterClientFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+    <name>ErrorDeregisterClientFailed</name>
+    <description>This exception is thrown if the SE API function deregisterClient fails to disable the invocation of startTransaction, updateTransaction and finishTransaction for the specified clientId.</description>
+    <category>Client Management</category>
+    <severity>High</severity>
+    <javadoc>
+        <summary>This class defines the exception ErrorDeregisterClientFailed that is thrown if the SE API function deregisterClient fails to disable the invocation of startTransaction, updateTransaction and finishTransaction for the specified clientId.</summary>
+    </javadoc>
+    <specification>
+        <source>BSI TR-03151-1</source>
+        <requirement>SHALL be raised when client deregistration operation fails</requirement>
+        <applicability>Client deregistration operations</applicability>
+    </specification>
+    <thrownBy>
+        <function>deregisterClient</function>
+    </thrownBy>
+</exception>

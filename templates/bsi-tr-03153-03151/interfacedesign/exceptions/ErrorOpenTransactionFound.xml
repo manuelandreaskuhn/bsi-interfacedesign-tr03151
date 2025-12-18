@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exception id="ErrorOpenTransactionFound" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+    <name>ErrorOpenTransactionFound</name>
+    <description>This exception is thrown if an open transition needs to be finished before the functionality can be performed.</description>
+    <category>Transaction</category>
+    <severity>High</severity>
+    <javadoc>
+        <summary>This class defines the exception ErrorOpenTransactionFound that is thrown if an open transition needs to be finished before the functionality can be performed.</summary>
+    </javadoc>
+    <specification>
+        <source>BSI TR-03151-1</source>
+        <requirement>SHALL be raised when operation requires no open transactions but open transactions exist</requirement>
+        <applicability>Operations requiring closed transaction state</applicability>
+    </specification>
+    <thrownBy>
+        <function>disableSecureElement</function>
+        <function>updateDevice</function>
+    </thrownBy>
+</exception>

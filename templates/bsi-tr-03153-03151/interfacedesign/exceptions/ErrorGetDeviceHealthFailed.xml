@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exception id="ErrorGetDeviceHealthFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+    <name>ErrorGetDeviceHealthFailed</name>
+    <description>This exception is thrown if the SE API function getDeviceHealth fails to determine health informations about the device.</description>
+    <category>Information Retrieval</category>
+    <severity>Medium</severity>
+    <javadoc>
+        <summary>This class defines the exception ErrorGetDeviceHealthFailed that is thrown if the SE API function getDeviceHealth fails to determine health informations about the device.</summary>
+    </javadoc>
+    <specification>
+        <source>BSI TR-03151-1</source>
+        <requirement>SHALL be raised when device health information retrieval fails</requirement>
+        <applicability>Device health query operations</applicability>
+    </specification>
+    <thrownBy>
+        <function>getDeviceHealth</function>
+    </thrownBy>
+</exception>

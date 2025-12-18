@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='utf-8'?>
+<function id="getComponentVersions" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/functions.xsd">
+  <name>getComponentVersions</name>
+  <category>Gerätewartung</category>
+  <description>The function getComponentVersions can be used to determine all device information including manufacturer and model number mapped to specific components.</description>
+  <detailedSteps>
+    <step>
+      <number>1</number>
+      <originalText>If the referencing guideline limits the access to the functionality solely to authenticated users, the function SHALL check if the user that has invoked the function has the status authenticated. If the status is not authenticated, the function SHALL raise the exception ErrorUserNotAuthenticated and exit the function.</originalText>
+      <germanText>Prüft, ob Nutzer authentifiziert. Falls nicht: Exception ErrorUserNotAuthenticated, Ende.</germanText>
+      <pseudocode>WENN Benutzer NICHT authentifiziert DANN
+  WERFE ErrorUserNotAuthenticated
+  BEENDE_FUNKTION
+ENDE</pseudocode>
+      <errorCase>
+        <exception>ErrorUserNotAuthenticated</exception>
+        <trigger>Der Benutzer ist nicht authentifiziert</trigger>
+        <action>Funktion beenden</action>
+      </errorCase>
+    </step>
+    <step>
+      <number>2</number>
+      <originalText>If the referencing guideline limits the access to the functionality to certain roles, the function SHALL check in the corresponding role if the (unauthenticated) user is authorized to execute the function. If the user is not authorized, the function SHALL raise the exception ErrorUserNotAuthorized and exit the function.</originalText>
+      <germanText>Prüft, ob Nutzer berechtigt. Falls nicht: Exception ErrorUserNotAuthorized, Ende.</germanText>
+      <pseudocode>WENN Benutzer NICHT autorisiert DANN
+  WERFE ErrorUserNotAuthorized
+  BEENDE_FUNKTION
+ENDE</pseudocode>
+      <errorCase>
+        <exception>ErrorUserNotAuthorized</exception>
+        <trigger>Der Benutzer ist nicht berechtigt</trigger>
+        <action>Funktion beenden</action>
+      </errorCase>
+    </step>
+    <step>
+      <number>3</number>
+      <originalText>The function SHALL determine all device information. This includes information such as the manufacturer and the model number mapped to a specific component. If the determination of this fails, the function SHALL raise the exception ErrorGetComponentVersionsFailed and exit the function.</originalText>
+      <germanText>Ermittelt Geräteinfos. Bei Fehler: Exception ErrorGetComponentVersionsFailed, Ende.</germanText>
+      <pseudocode>VERSUCHE
+  ERMITTLE alle Geräteinformationen
+BEI_FEHLER
+  WERFE ErrorGetComponentVersionsFailed
+  BEENDE_FUNKTION
+ENDE</pseudocode>
+      <errorCase>
+        <exception>ErrorGetComponentVersionsFailed</exception>
+        <trigger>Die Ermittlung schlägt fehl</trigger>
+        <action>Funktion beenden</action>
+      </errorCase>
+    </step>
+    <step>
+      <number>4</number>
+      <originalText>If the determination of the device information is successful, the function SHALL return this information by usage of the output parameter deviceInformationSet. Additionally, the function SHALL return without raising an exception to indicate that the execution of the function has been successful.</originalText>
+      <germanText>Gibt Geräteinfos zurück. Bei Erfolg keine Exception.</germanText>
+      <pseudocode>GEBE Geräteinformationen zurück (deviceInformationSet Parameter)
+RETURN ohne Exception</pseudocode>
+      <successCase>
+        <condition>Ausführung war erfolgreich</condition>
+        <action>Funktion kehrt ohne Exception zurück</action>
+      </successCase>
+    </step>
+  </detailedSteps>
+  <parameters />
+  <returnValue>
+    <type>byte[]</type>
+    <description>the version information for all components.</description>
+  </returnValue>
+  <exceptions>
+    <exception>ErrorDeviceNotInitialized</exception>
+    <exception>ErrorFunctionFailed</exception>
+    <exception>ErrorFunctionNotSupported</exception>
+    <exception>ErrorGetComponentVersionsFailed</exception>
+    <exception>ErrorParameterSyntax</exception>
+    <exception>ErrorSecureElementDisabled</exception>
+    <exception>ErrorStorageMediumDisconnected</exception>
+    <exception>ErrorUserNotAuthenticated</exception>
+    <exception>ErrorUserNotAuthorized</exception>
+  </exceptions>
+</function>

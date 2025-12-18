@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exception id="ErrorParameterMismatch" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+    <name>ErrorParameterMismatch</name>
+    <description>This exception is thrown if there is a mismatch regarding the particular parameters that have been provided in the context of the export of stored data.</description>
+    <category>Common Exception</category>
+    <severity>Medium</severity>
+    <javadoc>
+        <summary>This class defines the exception ErrorParameterMismatch that is thrown if there is a mismatch regarding the particular parameters that have been provided in the context of the export of stored data.</summary>
+    </javadoc>
+    <specification>
+        <source>BSI TR-03151-1</source>
+        <requirement>SHALL be raised when export parameters are incompatible or contradictory</requirement>
+        <applicability>Data export operations with filtering parameters</applicability>
+    </specification>
+    <thrownBy>
+        <function>exportLogMessages</function>
+        <function>exportFilteredTransactionLogs</function>
+    </thrownBy>
+</exception>

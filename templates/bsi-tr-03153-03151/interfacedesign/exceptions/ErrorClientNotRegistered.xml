@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exception id="ErrorClientNotRegistered" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+    <name>ErrorClientNotRegistered</name>
+    <description>This exception is thrown if an SE API function is invoked with a clientId, that has not been registered using registerClient beforehand. The clientId is therefore not registered.</description>
+    <category>Client Management</category>
+    <severity>High</severity>
+    <javadoc>
+        <summary>This class defines the exception ErrorClientNotRegistered that is thrown if an SE API function is invoked with a clientId, that has not been registered using registerClient beforehand. The clientId is therefore not registered.</summary>
+    </javadoc>
+    <specification>
+        <source>BSI TR-03151-1</source>
+        <requirement>SHALL be raised when invoking transaction functions with an unregistered clientId</requirement>
+        <applicability>Transaction operations requiring client registration</applicability>
+    </specification>
+    <thrownBy>
+        <function>startTransaction</function>
+        <function>updateTransaction</function>
+        <function>finishTransaction</function>
+        <function>deregisterClient</function>
+    </thrownBy>
+</exception>

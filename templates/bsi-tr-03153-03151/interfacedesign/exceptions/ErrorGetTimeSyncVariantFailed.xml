@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exception id="ErrorGetTimeSyncVariantFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+    <name>ErrorGetTimeSyncVariantFailed</name>
+    <description>This exception is thrown if the identification of the supported variant for updating the current date/time failed.</description>
+    <category>Time Synchronization</category>
+    <severity>Medium</severity>
+    <javadoc>
+        <summary>This class defines the exception ErrorGetTimeSyncVariantFailed that is thrown if the identification of the supported variant for updating the current date/time failed.</summary>
+    </javadoc>
+    <specification>
+        <source>BSI TR-03151-1</source>
+        <requirement>SHALL be raised when time sync variant query fails</requirement>
+        <applicability>Time synchronization variant query operations</applicability>
+    </specification>
+    <thrownBy>
+        <function>getTimeSyncVariant</function>
+    </thrownBy>
+</exception>

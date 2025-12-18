@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exception id="ErrorLoggingOfEventNotConfigurable" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+    <name>ErrorLoggingOfEventNotConfigurable</name>
+    <description>This exception is thrown by the SE API method configureLogging when specified event is not configurable.</description>
+    <category>Logging</category>
+    <severity>Medium</severity>
+    <javadoc>
+        <summary>This class defines the exception ErrorLoggingOfEventNotConfigurable that is thrown by the SE API method configureLogging when specified event is not configurable.</summary>
+    </javadoc>
+    <specification>
+        <source>BSI TR-03151-1</source>
+        <requirement>SHALL be raised when attempting to configure an event that is not configurable</requirement>
+        <applicability>Logging configuration operations</applicability>
+    </specification>
+    <thrownBy>
+        <function>configureLogging</function>
+    </thrownBy>
+</exception>

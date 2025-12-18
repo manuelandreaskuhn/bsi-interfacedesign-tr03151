@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exception id="ErrorSelftestFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+    <name>ErrorSelftestFailed</name>
+    <description>This exception is thrown if a the execution of the selftests of the device components failed.</description>
+    <category>Device Management</category>
+    <severity>Critical</severity>
+    <javadoc>
+        <summary>This class defines the exception ErrorSelftestFailed that is thrown if a the execution of the selftests of the device components failed.</summary>
+    </javadoc>
+    <specification>
+        <source>BSI TR-03151-1</source>
+        <requirement>SHALL be raised when device self-test execution fails</requirement>
+        <applicability>Device self-test operations</applicability>
+    </specification>
+    <thrownBy>
+        <function>selfTest</function>
+    </thrownBy>
+</exception>

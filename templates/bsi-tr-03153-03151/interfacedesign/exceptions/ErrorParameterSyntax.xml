@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exception id="ErrorParameterSyntax" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+    <name>ErrorParameterSyntax</name>
+    <description>This exception is thrown by any SE API method when at least one parameter is of invalid type.</description>
+    <category>Common Exception</category>
+    <severity>Medium</severity>
+    <javadoc>
+        <summary>This class defines the exception ErrorParameterSyntax that is thrown by any SE API method when at least one parameter is of invalid type.</summary>
+    </javadoc>
+    <specification>
+        <source>BSI TR-03151-1</source>
+        <requirement>SHALL be raised when parameter has invalid syntax or type</requirement>
+        <applicability>Common exception - applicable to all API functions with parameters</applicability>
+    </specification>
+    <thrownBy>
+        <function>authenticateUser</function>
+        <function>unblockPin</function>
+        <function>initialize</function>
+        <function>setDescription</function>
+        <function>updateDevice</function>
+        <function>updateTime</function>
+        <function>configureLogging</function>
+        <function>exportLogMessages</function>
+        <function>deleteLogMessages</function>
+        <function>restoreLogsFromBackup</function>
+        <function>registerClient</function>
+        <function>deregisterClient</function>
+        <function>startTransaction</function>
+        <function>updateTransaction</function>
+        <function>finishTransaction</function>
+        <function>exportFilteredTransactionLogs</function>
+        <function>getTransactionState</function>
+    </thrownBy>
+</exception>

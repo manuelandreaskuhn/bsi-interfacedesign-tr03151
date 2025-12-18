@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='utf-8'?>
+<function id="getSupportedTransactionUpdateVariants" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/functions.xsd">
+  <name>getSupportedTransactionUpdateVariants</name>
+  <category>Client- und Transaktionsverwaltung</category>
+  <description>The function getSupportedTransactionUpdateVariants can be used to obtain information how updates of transactions are performed.</description>
+  <detailedSteps>
+    <step>
+      <number>1</number>
+      <originalText>If the referencing guideline limits the access to the functionality solely to authenticated users, the function SHALL check if the user that has invoked the function has the status authenticated. If the status is not authenticated, the function SHALL raise the exception ErrorUserNotAuthenticated and exit the function.</originalText>
+      <germanText>Falls die Richtlinie den Zugriff auf authentifizierte Benutzer beschränkt: Prüfe, ob der aufrufende Benutzer authentifiziert ist. Falls nicht: Werfe ErrorUserNotAuthenticated und beende Funktion.</germanText>
+      <pseudocode>WENN Benutzer NICHT authentifiziert DANN
+  WERFE ErrorUserNotAuthenticated
+  BEENDE_FUNKTION
+ENDE</pseudocode>
+      <errorCase>
+        <exception>ErrorUserNotAuthenticated</exception>
+        <trigger>Der Benutzer ist nicht authentifiziert</trigger>
+        <action>Funktion beenden</action>
+      </errorCase>
+    </step>
+    <step>
+      <number>2</number>
+      <originalText>If the referencing guideline limits the access to the functionality to certain roles, the function SHALL check in the corresponding role if the (unauthenticated) user is authorized to execute the function. If the user is not authorized, the function SHALL raise the exception ErrorUserNotAuthorized and exit the function.</originalText>
+      <germanText>Falls die Richtlinie den Zugriff auf bestimmte Rollen beschränkt: Prüfe in der entsprechenden Rolle, ob der (unauthentifizierte) Benutzer berechtigt ist, die Funktion auszuführen. Falls nicht: Werfe ErrorUserNotAuthorized und beende Funktion.</germanText>
+      <pseudocode>WENN Benutzer NICHT autorisiert DANN
+  WERFE ErrorUserNotAuthorized
+  BEENDE_FUNKTION
+ENDE</pseudocode>
+      <errorCase>
+        <exception>ErrorUserNotAuthorized</exception>
+        <trigger>Der Benutzer ist nicht berechtigt</trigger>
+        <action>Funktion beenden</action>
+      </errorCase>
+    </step>
+    <step>
+      <number>3</number>
+      <originalText>The function getSupportedTransactionUpdateVariants SHALL identify the supported variants to update transactions.</originalText>
+      <germanText>Funktion identifiziert die unterstützten Varianten zum Aktualisieren von Transaktionen.</germanText>
+      <pseudocode>VERSUCHE
+  HOLE unterstützte Update-Varianten vom SE
+BEI_FEHLER
+  WERFE ErrorGetSupportedUpdateVariantsFailed
+ENDE</pseudocode>
+    </step>
+    <step>
+      <number>4</number>
+      <originalText>If the identification of the supported update variant(s) fails, the function SHALL raise the exception ErrorGetSupportedUpdateVariantsFailed and exit the function.</originalText>
+      <germanText>Falls die Identifikation schlägt fehl: Werfe ErrorGetSupportedUpdateVariantsFailed und beende Funktion.</germanText>
+      <pseudocode>WENN Operation fehlgeschlagen DANN
+  WERFE ErrorGetSupportedUpdateVariantsFailed
+  BEENDE_FUNKTION
+ENDE</pseudocode>
+      <errorCase>
+        <exception>ErrorGetSupportedUpdateVariantsFailed</exception>
+        <trigger>Die Identifikation der Update-Varianten schlägt fehl</trigger>
+        <action>Funktion beenden</action>
+      </errorCase>
+    </step>
+    <step>
+      <number>5</number>
+      <originalText>If the identification of the supported update variant(s) has been successful, the function SHALL return the information regarding the supported update variants over the output parameter supportedUpdateVariants. Additionally, the function SHALL return without raising an exception to indicate that the execution of the function has been successful.</originalText>
+      <germanText>Bei Erfolg der Identifikation: Gibt unterstützte Update-Varianten via Parameter supportedUpdateVariants zurück. Keine Exception.</germanText>
+      <pseudocode>GEBE Update-Varianten zurück (supportedUpdateVariants Parameter)
+RETURN ohne Exception</pseudocode>
+      <successCase>
+        <condition>Identifikation der Update-Varianten erfolgreich</condition>
+        <action>Gibt Update-Varianten via Parameter zurück</action>
+      </successCase>
+    </step>
+  </detailedSteps>
+  <parameters />
+  <returnValue>
+    <type>UpdateVariants</type>
+    <description>the transaction update variant(s) that the device supports (alwaysSigned, aggregating, or alwaysSignedAndAggregating).</description>
+  </returnValue>
+  <exceptions>
+    <exception>ErrorDeviceNotInitialized</exception>
+    <exception>ErrorFunctionFailed</exception>
+    <exception>ErrorFunctionNotSupported</exception>
+    <exception>ErrorGetSupportedUpdateVariantsFailed</exception>
+    <exception>ErrorParameterSyntax</exception>
+    <exception>ErrorSecureElementDisabled</exception>
+    <exception>ErrorUserNotAuthenticated</exception>
+    <exception>ErrorUserNotAuthorized</exception>
+  </exceptions>
+</function>

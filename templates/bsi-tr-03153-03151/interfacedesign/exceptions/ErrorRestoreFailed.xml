@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exception id="ErrorRestoreFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+    <name>ErrorRestoreFailed</name>
+    <description>This exception is thrown if the restore process in the context of a restoring from a backup in form of exported data failed.</description>
+    <category>Data Management</category>
+    <severity>Critical</severity>
+    <javadoc>
+        <summary>This class defines the exception ErrorRestoreFailed that is thrown if the restore process in the context of a restoring from a backup in form of exported data failed.</summary>
+    </javadoc>
+    <specification>
+        <source>BSI TR-03151-1</source>
+        <requirement>SHALL be raised when backup restore operation fails</requirement>
+        <applicability>Backup restore operations</applicability>
+    </specification>
+    <thrownBy>
+        <function>restoreLogsFromBackup</function>
+    </thrownBy>
+</exception>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exception id="ErrorDeviceInitializationFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+    <name>ErrorDeviceInitializationFailed</name>
+    <description>This exception is thrown if any necessary action to initialize the device fails.</description>
+    <category>Initialization</category>
+    <severity>Critical</severity>
+    <javadoc>
+        <summary>This class defines the exception ErrorDeviceInitializationFailed that is thrown if any necessary action to initialize the device fails.</summary>
+    </javadoc>
+    <specification>
+        <source>BSI TR-03151-1</source>
+        <requirement>SHALL be raised when device initialization process fails</requirement>
+        <applicability>Device initialization operations</applicability>
+    </specification>
+    <thrownBy>
+        <function>initialize</function>
+    </thrownBy>
+</exception>

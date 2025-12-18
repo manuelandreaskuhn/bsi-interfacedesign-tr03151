@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='utf-8'?>
+<function id="exportLogMessages" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/functions.xsd">
+  <name>exportLogMessages</name>
+  <category>Logging</category>
+  <description>This function is used to export &lt;ul&gt; &lt;li&gt;&lt;u&gt;all&lt;/u&gt; signed log messages,&lt;/li&gt; &lt;li&gt;certificates that are necessary for the verification of the log messages and&lt;/li&gt; &lt;li&gt;the device information.&lt;/li&gt; &lt;/ul&gt;</description>
+  <detailedSteps>
+    <step>
+      <number>1</number>
+      <originalText>If the referencing guideline limits the access to the functionality solely to authenticated users, the function SHALL check if the user that has invoked the function has the status authenticated. If the status is not authenticated, the function SHALL raise the exception ErrorUserNotAuthenticated and exit the function.</originalText>
+      <germanText>Prüft, ob Nutzer authentifiziert. Falls nicht: Exception ErrorUserNotAuthenticated, Ende.</germanText>
+      <pseudocode>WENN Benutzer NICHT authentifiziert DANN
+  WERFE ErrorUserNotAuthenticated
+  BEENDE_FUNKTION
+ENDE</pseudocode>
+      <errorCase>
+        <exception>ErrorUserNotAuthenticated</exception>
+        <trigger>Der Benutzer ist nicht authentifiziert</trigger>
+        <action>Funktion beenden</action>
+      </errorCase>
+    </step>
+    <step>
+      <number>2</number>
+      <originalText>If the referencing guideline limits the access to the functionality to certain roles, the function SHALL check in the corresponding role if the (unauthenticated) user is authorized to execute the function. If the user is not authorized, the function SHALL raise the exception ErrorUserNotAuthorized and exit the function.</originalText>
+      <germanText>Prüft, ob Nutzer berechtigt. Falls nicht: Exception ErrorUserNotAuthorized, Ende.</germanText>
+      <pseudocode>WENN Benutzer NICHT autorisiert DANN
+  WERFE ErrorUserNotAuthorized
+  BEENDE_FUNKTION
+ENDE</pseudocode>
+      <errorCase>
+        <exception>ErrorUserNotAuthorized</exception>
+        <trigger>Der Benutzer ist nicht berechtigt</trigger>
+        <action>Funktion beenden</action>
+      </errorCase>
+    </step>
+    <step>
+      <number>3</number>
+      <originalText>If no data is available, the function SHALL raise the exception ErrorNoDataAvailable and exit the function.</originalText>
+      <germanText>Prüft, ob Daten vorhanden. Falls nicht: Exception ErrorNoDataAvailable, Ende.</germanText>
+      <pseudocode>WENN keine Daten vorhanden DANN
+  WERFE ErrorNoDataAvailable
+  BEENDE_FUNKTION
+ENDE</pseudocode>
+      <errorCase>
+        <exception>ErrorNoDataAvailable</exception>
+        <trigger>Keine Daten vorhanden</trigger>
+        <action>Funktion beenden</action>
+      </errorCase>
+    </step>
+    <step>
+      <number>4</number>
+      <originalText>The function SHALL return all the stored data (as an output parameter) by exportLogMessages. The function SHALL return the file name for the TAR archive by fileName. Additionally, the function SHALL return without raising an exception to indicate that the execution of the function has been successful.</originalText>
+      <germanText>Gibt alle Daten und Dateinamen zurück. Bei Erfolg keine Exception.</germanText>
+      <pseudocode>GEBE alle Daten als TAR-Archiv zurück (exportLogMessages Parameter)
+GEBE Dateinamen des TAR-Archivs zurück (fileName Parameter)
+RETURN ohne Exception</pseudocode>
+      <successCase>
+        <condition>Ausführung war erfolgreich</condition>
+        <action>Funktion kehrt ohne Exception zurück</action>
+      </successCase>
+    </step>
+  </detailedSteps>
+  <parameters />
+  <returnValue>
+    <type>ExportDataResult</type>
+    <description>an ExportDataResult which contains an InputStream delivering a TAR archive with the log messages and certificates, and the filename of the TAR archive.</description>
+  </returnValue>
+  <exceptions>
+    <exception>ErrorDeviceNotInitialized</exception>
+    <exception>ErrorFunctionFailed</exception>
+    <exception>ErrorFunctionNotSupported</exception>
+    <exception>ErrorNoDataAvailable</exception>
+    <exception>ErrorParameterSyntax</exception>
+    <exception>ErrorStorageMediumDisconnected</exception>
+    <exception>ErrorUserNotAuthenticated</exception>
+    <exception>ErrorUserNotAuthorized</exception>
+  </exceptions>
+</function>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exception id="ErrorStorageMemoryFull" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+    <name>ErrorStorageMemoryFull</name>
+    <description>This exception is thrown if the memory of the storage medium of the device is full.</description>
+    <category>Storage</category>
+    <severity>Critical</severity>
+    <javadoc>
+        <summary>This class defines the exception ErrorStorageMemoryFull that is thrown if the memory of the storage medium of the device is full.</summary>
+    </javadoc>
+    <specification>
+        <source>BSI TR-03151-1</source>
+        <requirement>SHALL be raised when storage capacity is exhausted</requirement>
+        <applicability>All operations writing to storage</applicability>
+    </specification>
+    <thrownBy>
+        <function>setDescription</function>
+        <function>startTransaction</function>
+        <function>updateTransaction</function>
+        <function>finishTransaction</function>
+        <function>restoreLogsFromBackup</function>
+    </thrownBy>
+</exception>

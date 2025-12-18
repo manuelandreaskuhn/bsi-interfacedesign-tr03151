@@ -1,0 +1,278 @@
+<?xml version='1.0' encoding='utf-8'?>
+<function id="disableSecureElement" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/functions.xsd">
+  <name>disableSecureElement</name>
+  <category>Gerätewartung</category>
+  <description>The function disableSecureElement disables the Secure Element in a way that none of its functionality can be used anymore.</description>
+  <detailedSteps>
+    <step>
+      <number>1</number>
+      <originalText>If the referencing guideline limits the access to the functionality solely to authenticated users, the function SHALL check if the user that has invoked the function has the status authenticated. If the status is not authenticated, the function SHALL raise the exception ErrorUserNotAuthenticated and exit the function.</originalText>
+      <germanText>Prüft, ob Nutzer authentifiziert. Falls nicht: Exception ErrorUserNotAuthenticated, Ende.</germanText>
+      <pseudocode>WENN Benutzer NICHT authentifiziert DANN
+  WERFE ErrorUserNotAuthenticated
+  BEENDE_FUNKTION
+ENDE</pseudocode>
+      <errorCase>
+        <exception>ErrorUserNotAuthenticated</exception>
+        <trigger>Der Benutzer ist nicht authentifiziert</trigger>
+        <action>Funktion beenden</action>
+      </errorCase>
+    </step>
+    <step>
+      <number>2</number>
+      <originalText>If the referencing guideline limits the access to the functionality to certain roles, the function SHALL check in the corresponding role if the user is authorized to execute the function. If the (unauthenticated) user is not authorized, the function SHALL raise the exception ErrorUserNotAuthorized and exit the function.</originalText>
+      <germanText>Prüft, ob Nutzer berechtigt. Falls nicht: Exception ErrorUserNotAuthorized, Ende.</germanText>
+      <pseudocode>WENN Benutzer NICHT autorisiert DANN
+  WERFE ErrorUserNotAuthorized
+  BEENDE_FUNKTION
+ENDE</pseudocode>
+      <errorCase>
+        <exception>ErrorUserNotAuthorized</exception>
+        <trigger>Der Benutzer ist nicht berechtigt</trigger>
+        <action>Funktion beenden</action>
+      </errorCase>
+    </step>
+    <step>
+      <number>3</number>
+      <originalText>If the current time in the SE is not set, the function SHALL raise the exception ErrorTimeNotSet and exit the function.</originalText>
+      <germanText>Prüft, ob Zeit gesetzt. Falls nicht: Exception ErrorTimeNotSet, Ende.</germanText>
+      <pseudocode>WENN aktuelle Zeit im SE NICHT gesetzt DANN
+  WERFE ErrorTimeNotSet
+  BEENDE_FUNKTION
+ENDE</pseudocode>
+      <errorCase>
+        <exception>ErrorTimeNotSet</exception>
+        <trigger>Die aktuelle Zeit im SE ist nicht gesetzt</trigger>
+        <action>Funktion beenden</action>
+      </errorCase>
+    </step>
+    <step>
+      <number>4</number>
+      <originalText>The function SHALL invoke the functionality of the Secure Element to create the log message parts to log its deactivation. If the execution of this Secure Element functionality fails, the function disableSecureElement SHALL raise the exception ErrorSigningEventDataFailed and exit the function.</originalText>
+      <germanText>Erstellt Log für Deaktivierung. Bei Fehler: Exception ErrorSigningEventDataFailed, Ende.</germanText>
+      <pseudocode>VERSUCHE
+  RUFE SE-Funktionalität auf um Log-Nachricht-Teile für Deaktivierung zu erstellen
+BEI_FEHLER
+  WERFE ErrorSigningEventDataFailed
+  BEENDE_FUNKTION
+ENDE</pseudocode>
+      <errorCase>
+        <exception>ErrorSigningEventDataFailed</exception>
+        <trigger>Erstellung der Log-Nachricht-Teile schlägt fehl</trigger>
+        <action>Funktion beenden</action>
+      </errorCase>
+    </step>
+    <step>
+      <number>5</number>
+      <originalText>The function SHALL retrieve the parts of the log message determined by the Secure Element. If the retrieval of the log message parts fails, the function SHALL raise the exception ErrorRetrieveLogMessageFailed and exit the function.</originalText>
+      <germanText>Hole die Log-Nachricht-Teile vom Secure Element. Falls der Abruf fehlschlägt: Exception ErrorRetrieveLogMessageFailed, Ende.</germanText>
+      <pseudocode>VERSUCHE
+  HOLE Log-Nachricht-Teile vom SE
+BEI_FEHLER
+  WERFE ErrorRetrieveLogMessageFailed
+  BEENDE_FUNKTION
+ENDE</pseudocode>
+      <errorCase>
+        <exception>ErrorRetrieveLogMessageFailed</exception>
+        <trigger>Der Abruf der Log-Nachricht-Teile schlägt fehl</trigger>
+        <action>Funktion beenden</action>
+      </errorCase>
+    </step>
+    <step>
+      <number>6</number>
+      <originalText>The function SHALL invoke the functionality of the Secure Element for its deactivation. If the deactivation of the Secure Element fails, the function SHALL raise the exception ErrorDisableSecureElementFailed and exit the function.</originalText>
+      <germanText>Ruft SE-Funktionalität auf um SE zu deaktivieren. Bei Fehler: Exception ErrorDisableSecureElementFailed, Ende.</germanText>
+      <pseudocode>VERSUCHE
+  RUFE SE-Funktionalität auf um SE zu deaktivieren
+BEI_FEHLER
+  WERFE ErrorDisableSecureElementFailed
+  BEENDE_FUNKTION
+ENDE</pseudocode>
+      <errorCase>
+        <exception>ErrorDisableSecureElementFailed</exception>
+        <trigger>Das Deaktivieren des SE schlägt fehl</trigger>
+        <action>Funktion beenden</action>
+      </errorCase>
+    </step>
+    <step>
+      <number>7</number>
+      <originalText>If the deactivation of the Secure Element has been successful, the data of the retrieved log message parts SHALL be stored. If the data has not been stored successfully, the function SHALL raise the exception ErrorStoringLogMessageFailed and exit the function.</originalText>
+      <germanText>Speichert die Log-Nachricht-Teile. Bei Fehler: Exception ErrorStoringLogMessageFailed, Ende.</germanText>
+      <pseudocode>VERSUCHE
+  SPEICHERE Log-Nachricht-Teile
+BEI_FEHLER
+  WERFE ErrorStoringLogMessageFailed
+  BEENDE_FUNKTION
+ENDE</pseudocode>
+      <errorCase>
+        <exception>ErrorStoringLogMessageFailed</exception>
+        <trigger>Die Daten wurden nicht erfolgreich gespeichert</trigger>
+        <action>Funktion beenden</action>
+      </errorCase>
+    </step>
+    <step>
+      <number>8</number>
+      <originalText>If the data has been stored successfully, the function SHALL return without raising an exception to indicate that the execution of the function disableSecureElement has been successful.</originalText>
+      <germanText>Speicherung erfolgreich. Funktion beendet erfolgreich ohne Exception.</germanText>
+      <pseudocode>// Erfolgreicher Abschluss
+RETURNE ohne Exception</pseudocode>
+      <successCase>
+        <condition>Die Daten wurden erfolgreich gespeichert und SE ist deaktiviert</condition>
+        <action>Funktion kehrt ohne Exception zurück</action>
+      </successCase>
+    </step>
+  </detailedSteps>
+  <parameters />
+  <returnValue>
+    <type>void</type>
+    <description>This function does not return a value.</description>
+  </returnValue>
+  <exceptions>
+    <exception>ErrorDeviceNotInitialized</exception>
+    <exception>ErrorDisableSecureElementFailed</exception>
+    <exception>ErrorFunctionFailed</exception>
+    <exception>ErrorFunctionNotSupported</exception>
+    <exception>ErrorRetrieveLogMessageFailed</exception>
+    <exception>ErrorSecureElementDisabled</exception>
+    <exception>ErrorSecureElementPartsDisconnected</exception>
+    <exception>ErrorSignatureCounterOverflow</exception>
+    <exception>ErrorSignatureCounterExhausted</exception>
+    <exception>ErrorSigningEventDataFailed</exception>
+    <exception>ErrorStorageMediumDisconnected</exception>
+    <exception>ErrorStorageMemoryFull</exception>
+    <exception>ErrorStoringLogMessageFailed</exception>
+    <exception>ErrorTimeNotSet</exception>
+    <exception>ErrorUserNotAuthenticated</exception>
+    <exception>ErrorUserNotAuthorized</exception>
+  </exceptions>
+  <systemLog>
+    <logType>system</logType>
+    <requirement>MUST</requirement>
+    <asn1Structure>
+      <logMessage>LogMessage ::= SEQUENCE {
+  version                INTEGER (3),
+  certifiedDataType      OBJECT IDENTIFIER (id-SE-API-system-log),
+  certifiedData          SystemLogMessage,  -- embedded system log
+  serialNumber           OCTET STRING (SIZE (32)),
+  signatureAlgorithm     AlgorithmIdentifier,
+  seAuditData            OCTET STRING OPTIONAL,
+  signatureCounter       INTEGER,
+  signatureCreationTime  Time,
+  signatureValue         OCTET STRING
+}</logMessage>
+      <systemLogMessage>SystemLogMessage ::= SEQUENCE {
+  version                    INTEGER (3),
+  certifiedDataType          OBJECT IDENTIFIER (id-SE-API-system-log),
+  eventType                  [0] IMPLICIT PrintableString ("disableSecureElement"),
+  eventOrigin                [1] IMPLICIT PrintableString OPTIONAL,
+  eventTriggeredByUser       [2] IMPLICIT UserId OPTIONAL,
+  eventData                  [3] IMPLICIT DisableSecureElementEventData,
+  additionalInternalData     [4] IMPLICIT OCTET STRING OPTIONAL,
+  serialNumber               OCTET STRING (SIZE (32)),
+  signatureAlgorithm         AlgorithmIdentifier,
+  signatureCounter           INTEGER,
+  signatureCreationTime      Time,
+  signatureValue             OCTET STRING
+}
+
+DisableSecureElementEventData ::= SEQUENCE {
+    -- left empty intentionally
+}</systemLogMessage>
+    </asn1Structure>
+    <structure>
+      <field>
+        <name>version</name>
+        <type>INTEGER (3)</type>
+        <required>true</required>
+        <defaultValue>3</defaultValue>
+        <description>Version of the log message format. SHALL be set to '3'.</description>
+        <origin>Provided by the device</origin>
+      </field>
+      <field>
+        <name>certifiedDataType</name>
+        <type>OBJECT IDENTIFIER</type>
+        <required>true</required>
+        <defaultValue>id-SE-API-system-log</defaultValue>
+        <description>MUST be set to the OID id-SE-API-system-log.</description>
+        <origin>Provided by the device</origin>
+      </field>
+      <field>
+        <name>eventType</name>
+        <type>PrintableString</type>
+        <tag>[0] IMPLICIT</tag>
+        <required>true</required>
+        <defaultValue>disableSecureElement</defaultValue>
+        <description>MUST be set to 'disableSecureElement'.</description>
+        <origin>Provided by the device</origin>
+      </field>
+      <field>
+        <name>eventOrigin</name>
+        <type>PrintableString</type>
+        <tag>[1] IMPLICIT</tag>
+        <required>false</required>
+        <description>Component that triggered the event (e.g., component name).</description>
+        <origin>Provided by the device</origin>
+      </field>
+      <field>
+        <name>eventTriggeredByUser</name>
+        <type>UserId</type>
+        <tag>[2] IMPLICIT</tag>
+        <required>false</required>
+        <description>User ID of the user that triggered the event.</description>
+        <origin>Provided by the device</origin>
+      </field>
+      <field>
+        <name>eventData</name>
+        <type>DisableSecureElementEventData</type>
+        <tag>[3] IMPLICIT</tag>
+        <required>true</required>
+        <description>Function-specific event data.</description>
+        <origin>Provided by the device</origin>
+      </field>
+      <field>
+        <name>additionalInternalData</name>
+        <type>OCTET STRING</type>
+        <tag>[4] IMPLICIT</tag>
+        <required>false</required>
+        <description>MUST NOT be present. Reserved for future use.</description>
+        <note>RFU</note>
+        <origin>-</origin>
+      </field>
+      <field>
+        <name>serialNumber</name>
+        <type>OCTET STRING (SIZE (32))</type>
+        <required>true</required>
+        <description>Serial number of the Secure Element consisting of the hash value of the public key of the certificate used to verify system logs.</description>
+        <origin>Provided by the device</origin>
+      </field>
+      <field>
+        <name>signatureAlgorithm</name>
+        <type>AlgorithmIdentifier</type>
+        <required>true</required>
+        <description>Information about the signature creation.</description>
+        <origin>Provided by the device</origin>
+      </field>
+      <field>
+        <name>signatureCounter</name>
+        <type>INTEGER</type>
+        <required>true</required>
+        <description>Current count of signatures created with the log message signing key protected by the Secure Element.</description>
+        <origin>Provided by the Secure Element</origin>
+      </field>
+      <field>
+        <name>signatureCreationTime</name>
+        <type>Time</type>
+        <required>true</required>
+        <description>Point in time of the Secure Element when the log message was signed.</description>
+        <origin>Provided by the Secure Element</origin>
+      </field>
+      <field>
+        <name>signatureValue</name>
+        <type>OCTET STRING</type>
+        <required>true</required>
+        <description>Result of the signature computation encoded as octet string.</description>
+        <origin>Provided by the Secure Element</origin>
+      </field>
+    </structure>
+  </systemLog>
+</function>

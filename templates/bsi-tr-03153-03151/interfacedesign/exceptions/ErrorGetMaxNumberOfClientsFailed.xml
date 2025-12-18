@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exception id="ErrorGetMaxNumberOfClientsFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+    <name>ErrorGetMaxNumberOfClientsFailed</name>
+    <description>This exception is thrown if the determination of the maximum number of clients that could use the SE API simultaneously failed.</description>
+    <category>Client Management</category>
+    <severity>Medium</severity>
+    <javadoc>
+        <summary>This class defines the exception ErrorGetMaxNumberOfClientsFailed that is thrown if the determination of the maximum number of clients that could use the SE API simultaneously failed.</summary>
+    </javadoc>
+    <specification>
+        <source>BSI TR-03151-1</source>
+        <requirement>SHALL be raised when maximum client capacity query fails</requirement>
+        <applicability>Client capacity query operations</applicability>
+    </specification>
+    <thrownBy>
+        <function>getMaxNumberOfClients</function>
+    </thrownBy>
+</exception>

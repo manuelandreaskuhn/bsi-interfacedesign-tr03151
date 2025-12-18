@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exception id="ErrorStorageMediumDisconnected" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+    <name>ErrorStorageMediumDisconnected</name>
+    <description>This exception is thrown if the storage medium is disconnected / not available.</description>
+    <category>Storage</category>
+    <severity>Critical</severity>
+    <javadoc>
+        <summary>This class defines the exception ErrorStorageMediumDisconnected that is thrown if the storage medium is disconnected / not available.</summary>
+    </javadoc>
+    <specification>
+        <source>BSI TR-03151-1</source>
+        <requirement>SHALL be raised when storage medium becomes unavailable</requirement>
+        <applicability>All operations requiring storage access</applicability>
+    </specification>
+    <thrownBy>
+        <function>setDescription</function>
+        <function>getDescription</function>
+        <function>getTotalMemory</function>
+        <function>getUsedMemory</function>
+        <function>getFreeMemory</function>
+        <function>exportLogMessages</function>
+        <function>deleteLogMessages</function>
+        <function>exportSerialNumbers</function>
+        <function>restoreLogsFromBackup</function>
+        <function>getLastLogMessage</function>
+        <function>startTransaction</function>
+        <function>updateTransaction</function>
+        <function>finishTransaction</function>
+        <function>exportFilteredTransactionLogs</function>
+        <function>getLastTransactionLogMessage</function>
+    </thrownBy>
+</exception>

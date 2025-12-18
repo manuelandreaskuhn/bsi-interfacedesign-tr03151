@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exception id="ErrorCertificateExpired" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+    <name>ErrorCertificateExpired</name>
+    <description>This exception is thrown if a SE API function is invoked and the certificate with the public key for the verification of the appropriate type of log messages is expired. Even if a certificate expired, the log message parts are created by the Secure Element and stored by the SE API. In this case, the exception ErrorCertificateExpired is raised only after the data of the log message has been stored.</description>
+    <category>Logging</category>
+    <severity>Medium</severity>
+    <javadoc>
+        <summary>This class defines the exception ErrorCertificateExpired that is thrown if a SE API function is invoked and the certificate with the public key for the verification of the appropriate type of log messages is expired.</summary>
+    </javadoc>
+    <specification>
+        <source>BSI TR-03151-1</source>
+        <requirement>Raised after log message data has been stored when certificate is expired</requirement>
+        <applicability>Logging functions that verify certificates</applicability>
+    </specification>
+    <thrownBy>
+        <function>startTransaction</function>
+        <function>updateTransaction</function>
+        <function>finishTransaction</function>
+        <function>exportLogMessages</function>
+        <function>exportFilteredTransactionLogs</function>
+    </thrownBy>
+</exception>

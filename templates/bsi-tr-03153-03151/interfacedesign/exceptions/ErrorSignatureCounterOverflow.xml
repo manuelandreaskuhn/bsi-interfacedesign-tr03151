@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exception id="ErrorSignatureCounterOverflow" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+    <name>ErrorSignatureCounterOverflow</name>
+    <description>This exception is thrown if the signature counter reached its logical maximum.</description>
+    <category>Logging</category>
+    <severity>Critical</severity>
+    <javadoc>
+        <summary>This class defines the exception ErrorSignatureCounterOverflow that is thrown if the signature counter reached its logical maximum.</summary>
+    </javadoc>
+    <specification>
+        <source>BSI TR-03151-1</source>
+        <requirement>SHALL be raised when signature counter reaches maximum value</requirement>
+        <applicability>All logging operations when counter at maximum</applicability>
+    </specification>
+    <thrownBy>
+        <function>startTransaction</function>
+        <function>updateTransaction</function>
+        <function>finishTransaction</function>
+        <function>configureLogging</function>
+    </thrownBy>
+</exception>

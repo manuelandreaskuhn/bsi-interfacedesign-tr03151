@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exception id="ErrorSigningEventDataFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+    <name>ErrorSigningEventDataFailed</name>
+    <description>This exception is thrown if the determination of the log message parts for the event data by the Secure Element failed.</description>
+    <category>Logging</category>
+    <severity>Critical</severity>
+    <javadoc>
+        <summary>This class defines the exception ErrorSigningEventDataFailed that is thrown if the determination of the log message parts for the event data by the Secure Element failed.</summary>
+    </javadoc>
+    <specification>
+        <source>BSI TR-03151-1</source>
+        <requirement>SHALL be raised when Secure Element signing of event data fails</requirement>
+        <applicability>Transaction and logging operations requiring signatures</applicability>
+    </specification>
+    <thrownBy>
+        <function>startTransaction</function>
+        <function>updateTransaction</function>
+        <function>finishTransaction</function>
+    </thrownBy>
+</exception>

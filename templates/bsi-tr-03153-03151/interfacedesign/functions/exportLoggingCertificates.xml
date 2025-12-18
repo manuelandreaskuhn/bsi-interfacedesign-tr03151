@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='utf-8'?>
+<function id="exportLoggingCertificates" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/functions.xsd">
+  <name>exportLoggingCertificates</name>
+  <category>Logging</category>
+  <description>The function exportLoggingCertificates exports the certificates of the certificate chains. These certificates belong to the public keys of the key pairs that are used for the creation of signature values in log messages stored on the device. This includes the higher level certificates that form the complete certificate chain.</description>
+  <detailedSteps>
+    <step>
+      <number>1</number>
+      <originalText>If the referencing guideline limits the access to the functionality solely to authenticated users, the function SHALL check if the user that has invoked the function has the status authenticated. If the status is not authenticated, the function SHALL raise the exception ErrorUserNotAuthenticated and exit the function.</originalText>
+      <germanText>Prüft, ob Nutzer authentifiziert. Falls nicht: Exception ErrorUserNotAuthenticated, Ende.</germanText>
+      <pseudocode>WENN Benutzer NICHT authentifiziert DANN
+  WERFE ErrorUserNotAuthenticated
+  BEENDE_FUNKTION
+ENDE</pseudocode>
+      <errorCase>
+        <exception>ErrorUserNotAuthenticated</exception>
+        <trigger>Der Benutzer ist nicht authentifiziert</trigger>
+        <action>Funktion beenden</action>
+      </errorCase>
+    </step>
+    <step>
+      <number>2</number>
+      <originalText>If the referencing guideline limits the access to the functionality to certain roles, the function SHALL check in the corresponding role if the (unauthenticated) user is authorized to execute the function. If the user is not authorized, the function SHALL raise the exception ErrorUserNotAuthorized and exit the function.</originalText>
+      <germanText>Prüft, ob Nutzer berechtigt. Falls nicht: Exception ErrorUserNotAuthorized, Ende.</germanText>
+      <pseudocode>WENN Benutzer NICHT autorisiert DANN
+  WERFE ErrorUserNotAuthorized
+  BEENDE_FUNKTION
+ENDE</pseudocode>
+      <errorCase>
+        <exception>ErrorUserNotAuthorized</exception>
+        <trigger>Der Benutzer ist nicht berechtigt</trigger>
+        <action>Funktion beenden</action>
+      </errorCase>
+    </step>
+    <step>
+      <number>3</number>
+      <originalText>This function SHALL collect the certificates of the certificate chains. These certificates belong to the key pairs that are used to create signature values contained in log messages. If the collection of the certificates fails, the function SHALL raise the exception ErrorExportLoggingCertificateFailed and exit the function.</originalText>
+      <germanText>Sammelt Zertifikate. Bei Fehler: Exception ErrorExportLoggingCertificateFailed, Ende.</germanText>
+      <pseudocode>VERSUCHE
+  SAMMELE Zertifikate der Zertifikatsketten
+BEI_FEHLER
+  WERFE ErrorExportLoggingCertificateFailed
+  BEENDE_FUNKTION
+ENDE</pseudocode>
+      <errorCase>
+        <exception>ErrorExportLoggingCertificateFailed</exception>
+        <trigger>Die Erfassung der Zertifikate schlägt fehl</trigger>
+        <action>Funktion beenden</action>
+      </errorCase>
+    </step>
+    <step>
+      <number>4</number>
+      <originalText>The function SHALL return the collected certificates in a TAR archive by the output parameter certificates. The function SHALL return the file name for the TAR archive by fileName. Additionally, the function SHALL return without raising an exception to indicate that the execution of the function has been successful.</originalText>
+      <germanText>Gibt Zertifikate als TAR-Archiv zurück. Bei Erfolg keine Exception.</germanText>
+      <pseudocode>GEBE Zertifikate als TAR-Archiv zurück (certificates Parameter)
+GEBE Dateinamen des TAR-Archivs zurück (fileName Parameter)
+RETURN ohne Exception</pseudocode>
+      <successCase>
+        <condition>Ausführung war erfolgreich</condition>
+        <action>Funktion kehrt ohne Exception zurück</action>
+      </successCase>
+    </step>
+  </detailedSteps>
+  <parameters />
+  <returnValue>
+    <type>ExportDataResult</type>
+    <description>an ExportDataResult which contains an InputStream delivering a TAR archive with all certificates necessary for log message verification, and the filename of the TAR archive.</description>
+  </returnValue>
+  <exceptions>
+    <exception>ErrorDeviceNotInitialized</exception>
+    <exception>ErrorFunctionFailed</exception>
+    <exception>ErrorExportLoggingCertificateFailed</exception>
+    <exception>ErrorFunctionNotSupported</exception>
+    <exception>ErrorParameterSyntax</exception>
+    <exception>ErrorStorageMediumDisconnected</exception>
+    <exception>ErrorUserNotAuthenticated</exception>
+    <exception>ErrorUserNotAuthorized</exception>
+  </exceptions>
+</function>

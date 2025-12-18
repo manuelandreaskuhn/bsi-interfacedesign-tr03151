@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exception id="ErrorUserNotAuthorized" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+    <name>ErrorUserNotAuthorized</name>
+    <description>This exception is thrown if the user who has invoked a restricted SE API function is not authorized to execute this function.</description>
+    <category>Authentication</category>
+    <severity>High</severity>
+    <javadoc>
+        <summary>This class defines the exception ErrorUserNotAuthorized that is thrown if the user who has invoked a restricted SE API function is not authorized to execute this function.</summary>
+    </javadoc>
+    <specification>
+        <source>BSI TR-03151-1</source>
+        <requirement>SHALL be raised when authenticated user lacks required authorization for function</requirement>
+        <applicability>All restricted API functions with role-based access control</applicability>
+    </specification>
+    <thrownBy>
+        <function>logOut</function>
+        <function>unblockPin</function>
+        <function>setDescription</function>
+        <function>selfTest</function>
+        <function>updateDevice</function>
+        <function>disableSecureElement</function>
+        <function>updateTime</function>
+        <function>configureLogging</function>
+        <function>deleteLogMessages</function>
+        <function>restoreLogsFromBackup</function>
+        <function>registerClient</function>
+        <function>deregisterClient</function>
+        <function>lockTransactionLogging</function>
+        <function>unlockTransactionLogging</function>
+    </thrownBy>
+</exception>

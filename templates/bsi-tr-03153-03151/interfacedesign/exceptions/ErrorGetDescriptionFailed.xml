@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exception id="ErrorGetDescriptionFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+    <name>ErrorGetDescriptionFailed</name>
+    <description>This exception is thrown if the SE API function getDescription fails to determine the short description of the device.</description>
+    <category>Information Retrieval</category>
+    <severity>Medium</severity>
+    <javadoc>
+        <summary>This class defines the exception ErrorGetDescriptionFailed that is thrown if the SE API function getDescription fails to determine the short description of the device.</summary>
+    </javadoc>
+    <specification>
+        <source>BSI TR-03151-1</source>
+        <requirement>SHALL be raised when device description retrieval fails</requirement>
+        <applicability>Device description query operations</applicability>
+    </specification>
+    <thrownBy>
+        <function>getDescription</function>
+    </thrownBy>
+</exception>

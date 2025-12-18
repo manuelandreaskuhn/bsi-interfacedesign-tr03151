@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exception id="ErrorTransactionLoggingNotLocked" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+    <name>ErrorTransactionLoggingNotLocked</name>
+    <description>This exception is thrown by the SE API function unlockTransactionLogging if the transaction logging functionality is not currently locked.</description>
+    <category>Transaction</category>
+    <severity>Medium</severity>
+    <javadoc>
+        <summary>This class defines the exception ErrorTransactionLoggingNotLocked that is thrown by the SE API function unlockTransactionLogging if the transaction logging functionality is not currently locked.</summary>
+    </javadoc>
+    <specification>
+        <source>BSI TR-03151-1</source>
+        <requirement>SHALL be raised when attempting to unlock already unlocked transaction logging</requirement>
+        <applicability>Transaction logging unlock operations</applicability>
+    </specification>
+    <thrownBy>
+        <function>unlockTransactionLogging</function>
+    </thrownBy>
+</exception>

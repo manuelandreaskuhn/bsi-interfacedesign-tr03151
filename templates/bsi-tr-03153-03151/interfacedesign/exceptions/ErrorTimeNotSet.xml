@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exception id="ErrorTimeNotSet" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+    <name>ErrorTimeNotSet</name>
+    <description>This exception is thrown if an appropriate SE API function is invoked although the managed data/time in the Secure Element has not been updated after the initialization of the SE API or a period of absence of current for the Secure Element.</description>
+    <category>Time Synchronization</category>
+    <severity>High</severity>
+    <javadoc>
+        <summary>This class defines the exception ErrorTimeNotSet that is thrown if an appropriate SE API function is invoked although the managed data/time in the Secure Element has not been updated after the initialization of the SE API or a period of absence of current for the Secure Element.</summary>
+    </javadoc>
+    <specification>
+        <source>BSI TR-03151-1</source>
+        <requirement>SHALL be raised when time-dependent operations are invoked without time being set</requirement>
+        <applicability>All operations requiring valid time in Secure Element</applicability>
+    </specification>
+    <thrownBy>
+        <function>startTransaction</function>
+        <function>updateTransaction</function>
+        <function>finishTransaction</function>
+    </thrownBy>
+</exception>

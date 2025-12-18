@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exception id="ErrorUnexportedLogMessages" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+    <name>ErrorUnexportedLogMessages</name>
+    <description>This exception is thrown if deletion of data from the storage failed because the storage contains log messages that have not been exported.</description>
+    <category>Logging</category>
+    <severity>High</severity>
+    <javadoc>
+        <summary>This class defines the exception ErrorUnexportedLogMessages that is thrown if deletion of data from the storage failed because the storage contains log messages that have not been exported.</summary>
+    </javadoc>
+    <specification>
+        <source>BSI TR-03151-1</source>
+        <requirement>SHALL be raised when attempting to delete unexported log messages</requirement>
+        <applicability>Log message deletion operations</applicability>
+    </specification>
+    <thrownBy>
+        <function>deleteLogMessages</function>
+    </thrownBy>
+</exception>

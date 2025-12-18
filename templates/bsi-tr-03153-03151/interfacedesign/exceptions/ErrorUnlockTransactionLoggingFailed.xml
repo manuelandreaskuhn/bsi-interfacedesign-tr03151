@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exception id="ErrorUnlockTransactionLoggingFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+    <name>ErrorUnlockTransactionLoggingFailed</name>
+    <description>This exception is thrown by the SE API method unlockTransactionLogging when unlocking of the transaction logging functionality fails.</description>
+    <category>Transaction</category>
+    <severity>High</severity>
+    <javadoc>
+        <summary>This class defines the exception ErrorUnlockTransactionLoggingFailed that is thrown by the SE API method unlockTransactionLogging when unlocking of the transaction logging functionality fails.</summary>
+    </javadoc>
+    <specification>
+        <source>BSI TR-03151-1</source>
+        <requirement>SHALL be raised when transaction logging unlock operation fails</requirement>
+        <applicability>Transaction logging unlock operations</applicability>
+    </specification>
+    <thrownBy>
+        <function>unlockTransactionLogging</function>
+    </thrownBy>
+</exception>

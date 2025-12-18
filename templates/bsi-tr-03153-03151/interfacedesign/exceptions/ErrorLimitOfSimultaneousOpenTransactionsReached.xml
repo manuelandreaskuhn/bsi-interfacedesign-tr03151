@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exception id="ErrorLimitOfSimultaneousOpenTransactionsReached" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+    <name>ErrorLimitOfSimultaneousOpenTransactionsReached</name>
+    <description>This exception is thrown by the SE API function startTransaction if the maximum number of simultaneously open transaction managed by the device has been reached.</description>
+    <category>Transaction</category>
+    <severity>High</severity>
+    <javadoc>
+        <summary>This class defines the exception ErrorLimitOfSimultaneousOpenTransactionsReached that is thrown by the SE API function startTransaction if the maximum number of simultaneously open transaction managed by the device has been reached.</summary>
+    </javadoc>
+    <specification>
+        <source>BSI TR-03151-1</source>
+        <requirement>SHALL be raised when attempting to start a transaction after reaching maximum concurrent transaction limit</requirement>
+        <applicability>Transaction start operations at capacity</applicability>
+    </specification>
+    <thrownBy>
+        <function>startTransaction</function>
+    </thrownBy>
+</exception>

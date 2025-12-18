@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='utf-8'?>
+<function id="getCurrentLoggingSignatureCounters" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/functions.xsd">
+  <name>getCurrentLoggingSignatureCounters</name>
+  <category>Logging</category>
+  <description>The function getCurrentLoggingSignatureCounters can be used to obtain the current signature counters for each private key utilized in the secure element for signing log messages.</description>
+  <detailedSteps>
+    <step>
+      <number>1</number>
+      <originalText>If the referencing guideline limits the access to the functionality solely to authenticated users, the function SHALL check if the user that has invoked the function has the status authenticated. If the status is not authenticated, the function SHALL raise the exception ErrorUserNotAuthenticated and exit the function.</originalText>
+      <germanText>Prüft, ob Nutzer authentifiziert. Falls nicht: Exception ErrorUserNotAuthenticated, Ende.</germanText>
+      <pseudocode>WENN Benutzer NICHT authentifiziert DANN
+  WERFE ErrorUserNotAuthenticated
+  BEENDE_FUNKTION
+ENDE</pseudocode>
+      <errorCase>
+        <exception>ErrorUserNotAuthenticated</exception>
+        <trigger>Der Benutzer ist nicht authentifiziert</trigger>
+        <action>Funktion beenden</action>
+      </errorCase>
+    </step>
+    <step>
+      <number>2</number>
+      <originalText>If the referencing guideline limits the access to the functionality to certain roles, the function SHALL check in the corresponding role if the (unauthenticated) user is authorized to execute the function. If the user is not authorized, the function SHALL raise the exception ErrorUserNotAuthorized and exit the function.</originalText>
+      <germanText>Prüft, ob Nutzer berechtigt. Falls nicht: Exception ErrorUserNotAuthorized, Ende.</germanText>
+      <pseudocode>WENN Benutzer NICHT autorisiert DANN
+  WERFE ErrorUserNotAuthorized
+  BEENDE_FUNKTION
+ENDE</pseudocode>
+      <errorCase>
+        <exception>ErrorUserNotAuthorized</exception>
+        <trigger>Der Benutzer ist nicht berechtigt</trigger>
+        <action>Funktion beenden</action>
+      </errorCase>
+    </step>
+    <step>
+      <number>3</number>
+      <originalText>The function SHALL, for each private key utilized in the secure element for signing log messages, determine the signature counter that was provided by the secure element with the last signature. If the determination of the current signature counters fails, the function SHALL raise the exception ErrorGetCurrentSignatureCounterFailed and exit the function.</originalText>
+      <germanText>Ermittelt Signaturzähler. Bei Fehler: Exception ErrorGetCurrentSignatureCounterFailed, Ende.</germanText>
+      <pseudocode>VERSUCHE
+  ERMITTLE Signaturzähler für jeden privaten Schlüssel im SE
+BEI_FEHLER
+  WERFE ErrorGetCurrentSignatureCounterFailed
+  BEENDE_FUNKTION
+ENDE</pseudocode>
+      <errorCase>
+        <exception>ErrorGetCurrentSignatureCounterFailed</exception>
+        <trigger>Die Ermittlung der Signaturen-Zähler schlägt fehl</trigger>
+        <action>Funktion beenden</action>
+      </errorCase>
+    </step>
+    <step>
+      <number>4</number>
+      <originalText>If the determination of all current signature counters has been successful, the function SHALL return the current signature counters (as an output parameter) by signatureCounters. Additionally, the function SHALL return without raising an exception to indicate that the execution of the function has been successful.</originalText>
+      <germanText>Gibt Signaturzähler zurück. Bei Erfolg keine Exception.</germanText>
+      <pseudocode>GEBE Signaturzähler zurück (signatureCounters Parameter)
+RETURN ohne Exception</pseudocode>
+      <successCase>
+        <condition>Die Ermittlung aller aktuellen Signaturzähler war erfolgreich</condition>
+        <action>Gibt Signaturzähler zurück und kehrt ohne Exception zurück</action>
+      </successCase>
+    </step>
+  </detailedSteps>
+  <parameters />
+  <returnValue>
+    <type>byte[]</type>
+    <description>the current values of the signature counters for logging.</description>
+  </returnValue>
+  <exceptions>
+    <exception>ErrorDeviceNotInitialized</exception>
+    <exception>ErrorFunctionFailed</exception>
+    <exception>ErrorFunctionNotSupported</exception>
+    <exception>ErrorGetCurrentSignatureCounterFailed</exception>
+    <exception>ErrorParameterSyntax</exception>
+    <exception>ErrorSecureElementDisabled</exception>
+    <exception>ErrorUserNotAuthenticated</exception>
+    <exception>ErrorUserNotAuthorized</exception>
+  </exceptions>
+</function>

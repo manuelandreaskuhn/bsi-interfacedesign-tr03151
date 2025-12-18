@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exception id="ErrorFunctionFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+    <name>ErrorFunctionFailed</name>
+    <description>This exception is thrown if the SE API encounters a critical error which is not covered by the other defined exceptions. A critical error prevents the function from executing the defined process and producing expected results.</description>
+    <category>Common Exception</category>
+    <severity>Critical</severity>
+    <javadoc>
+        <summary>This class defines the exception ErrorFunctionFailed that is thrown if the SE API encounters a critical error which is not covered by the other defined exceptions.</summary>
+    </javadoc>
+    <specification>
+        <source>BSI TR-03151-1 Section 3.1.2.1</source>
+        <requirement>SHALL be raised whenever a critical error occurs during execution and the error is not covered by any other defined exception</requirement>
+        <applicability>Common exception - applicable to all API functions</applicability>
+    </specification>
+    <thrownBy>
+        <function>authenticateUser</function>
+        <function>logOut</function>
+        <function>unblockPin</function>
+        <function>initialize</function>
+        <function>setDescription</function>
+        <function>getDescription</function>
+        <function>selfTest</function>
+        <function>updateDevice</function>
+        <function>disableSecureElement</function>
+        <function>getTotalMemory</function>
+        <function>getUsedMemory</function>
+        <function>getFreeMemory</function>
+        <function>getDeviceHealth</function>
+        <function>getComponentVersions</function>
+        <function>getEndOfUsageDate</function>
+        <function>updateTime</function>
+        <function>getTimeSyncVariant</function>
+        <function>getCurrentSeTime</function>
+        <function>configureLogging</function>
+        <function>exportLogMessages</function>
+        <function>exportLoggingCertificates</function>
+        <function>deleteLogMessages</function>
+        <function>exportSerialNumbers</function>
+        <function>getCurrentLoggingSignatureCounters</function>
+        <function>restoreLogsFromBackup</function>
+        <function>getLastLogMessage</function>
+        <function>registerClient</function>
+        <function>deregisterClient</function>
+        <function>startTransaction</function>
+        <function>updateTransaction</function>
+        <function>finishTransaction</function>
+        <function>exportFilteredTransactionLogs</function>
+        <function>getSupportedTransactionUpdateVariants</function>
+        <function>getCurrentNumberOfClients</function>
+        <function>getMaxNumberOfClients</function>
+        <function>getRegisteredClients</function>
+        <function>getCurrentNumberOfTransactions</function>
+        <function>getMaxNumberOfTransactions</function>
+        <function>getTransactionState</function>
+        <function>getOpenTransactions</function>
+        <function>getCurrentTransactionCounter</function>
+        <function>getLastTransactionLogMessage</function>
+        <function>lockTransactionLogging</function>
+        <function>unlockTransactionLogging</function>
+    </thrownBy>
+</exception>

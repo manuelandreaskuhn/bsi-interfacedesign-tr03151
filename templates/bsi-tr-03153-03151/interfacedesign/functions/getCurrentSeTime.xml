@@ -1,0 +1,90 @@
+<?xml version='1.0' encoding='utf-8'?>
+<function id="getCurrentSeTime" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/functions.xsd">
+  <name>getCurrentSeTime</name>
+  <category>Zeitverwaltung</category>
+  <description>The function returns the current time set in the Secure Element.</description>
+  <detailedSteps>
+    <step>
+      <number>1</number>
+      <originalText>If the referencing guideline limits the access to the functionality solely to authenticated users, the function SHALL check if the user that has invoked the function has the status authenticated. If the status is not authenticated, the function SHALL raise the exception ErrorUserNotAuthenticated and exit the function.</originalText>
+      <germanText>Prüft, ob Nutzer authentifiziert. Falls nicht: Exception ErrorUserNotAuthenticated, Ende.</germanText>
+      <pseudocode>WENN Benutzer NICHT authentifiziert DANN
+  WERFE ErrorUserNotAuthenticated
+  BEENDE_FUNKTION
+ENDE</pseudocode>
+      <errorCase>
+        <exception>ErrorUserNotAuthenticated</exception>
+        <trigger>Der Benutzer ist nicht authentifiziert</trigger>
+        <action>Funktion beenden</action>
+      </errorCase>
+    </step>
+    <step>
+      <number>2</number>
+      <originalText>If the referencing guideline limits the access to the functionality to certain roles, the function SHALL check in the corresponding role if the (unauthenticated) user is authorized to execute the function. If the user is not authorized, the function SHALL raise the exception ErrorUserNotAuthorized and exit the function.</originalText>
+      <germanText>Prüft, ob Nutzer berechtigt. Falls nicht: Exception ErrorUserNotAuthorized, Ende.</germanText>
+      <pseudocode>WENN Benutzer NICHT autorisiert DANN
+  WERFE ErrorUserNotAuthorized
+  BEENDE_FUNKTION
+ENDE</pseudocode>
+      <errorCase>
+        <exception>ErrorUserNotAuthorized</exception>
+        <trigger>Der Benutzer ist nicht berechtigt</trigger>
+        <action>Funktion beenden</action>
+      </errorCase>
+    </step>
+    <step>
+      <number>3</number>
+      <originalText>If the current time in the SE is not set, the function SHALL raise the exception ErrorTimeNotSet and exit the function.</originalText>
+      <germanText>Prüft, ob Zeit gesetzt. Falls nicht: Exception ErrorTimeNotSet, Ende.</germanText>
+      <pseudocode>WENN aktuelle Zeit im SE NICHT gesetzt DANN
+  WERFE ErrorTimeNotSet
+  BEENDE_FUNKTION
+ENDE</pseudocode>
+      <errorCase>
+        <exception>ErrorTimeNotSet</exception>
+        <trigger>Die aktuelle Zeit im SE ist nicht gesetzt</trigger>
+        <action>Funktion beenden</action>
+      </errorCase>
+    </step>
+    <step>
+      <number>4</number>
+      <originalText>If the current time set in the SE could not be obtained, the function SHALL raise the exception ErrorGetCurrentSeTimeFailed and exit the function.</originalText>
+      <germanText>Kann Zeit nicht abrufen: Exception ErrorGetCurrentSeTimeFailed, Ende.</germanText>
+      <pseudocode>WENN Abruf fehlgeschlagen DANN
+  WERFE ErrorGetCurrentSeTimeFailed
+  BEENDE_FUNKTION
+ENDE</pseudocode>
+      <errorCase>
+        <exception>ErrorGetCurrentSeTimeFailed</exception>
+        <trigger>Die aktuelle Zeit im SE konnte nicht abgerufen werden</trigger>
+        <action>Funktion beenden</action>
+      </errorCase>
+    </step>
+    <step>
+      <number>5</number>
+      <originalText>If the current time in the SE was successfully obtained, the function SHALL return the time. Additionally, the function SHALL return without raising an exception to indicate that the execution of the function has been successful.</originalText>
+      <germanText>Falls die aktuelle Zeit erfolgreich abgerufen wurde: Gebe die Zeit zurück. Funktion kehrt ohne Exception zurück, um erfolgreiche Ausführung anzuzeigen.</germanText>
+      <pseudocode>GEBE aktuelle SE-Zeit zurück
+RETURN ohne Exception</pseudocode>
+      <successCase>
+        <condition>Die aktuelle Zeit im SE wurde erfolgreich abgerufen</condition>
+        <action>Gibt Zeit zurück und kehrt ohne Exception zurück</action>
+      </successCase>
+    </step>
+  </detailedSteps>
+  <parameters />
+  <returnValue>
+    <type>ZonedDateTime</type>
+    <description>the current date/time that is managed by the Secure Element.</description>
+  </returnValue>
+  <exceptions>
+    <exception>ErrorFunctionFailed</exception>
+    <exception>ErrorFunctionNotSupported</exception>
+    <exception>ErrorGetCurrentSeTimeFailed</exception>
+    <exception>ErrorParameterSyntax</exception>
+    <exception>ErrorSecureElementDisabled</exception>
+    <exception>ErrorTimeNotSet</exception>
+    <exception>ErrorUserNotAuthenticated</exception>
+    <exception>ErrorUserNotAuthorized</exception>
+  </exceptions>
+</function>
