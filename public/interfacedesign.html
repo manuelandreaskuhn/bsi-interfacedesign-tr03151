@@ -12,6 +12,33 @@
   <link rel="stylesheet" href="/css/interfacedesign.css">
   <style>
     /* Additional inline styles for Interface Design module */
+    .nav-item {
+      transition: all 0.2s ease;
+    }
+    .nav-item:hover {
+      background-color: rgba(16, 185, 129, 0.1);
+    }
+    .nav-item.active {
+      background-color: rgba(16, 185, 129, 0.15);
+      border-left: 3px solid #10b981;
+    }
+    .category-header {
+      position: sticky;
+      top: 0;
+      background: white;
+      z-index: 10;
+    }
+    .item-card {
+      transition: all 0.2s ease;
+    }
+    .item-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .badge {
+      font-size: 0.7rem;
+      padding: 0.15rem 0.4rem;
+    }
   </style>
 </head>
 <body>
@@ -44,6 +71,830 @@
     );
 
     // ============================================
+    // Navigation Items Configuration
+    // ============================================
+
+    const NAV_ITEMS = [
+      { 
+        id: 'functions', 
+        label: 'Funktionen', 
+        icon: 'code',
+        color: 'blue',
+        description: 'API-Funktionen der Schnittstelle'
+      },
+      { 
+        id: 'types', 
+        label: 'Datentypen', 
+        icon: 'cube',
+        color: 'purple',
+        description: 'Komplexe Datentypen und Strukturen'
+      },
+      { 
+        id: 'enums', 
+        label: 'Aufzählungen', 
+        icon: 'list-ol',
+        color: 'amber',
+        description: 'Enumerationen und Konstanten'
+      },
+      { 
+        id: 'exceptions', 
+        label: 'Exceptions', 
+        icon: 'exclamation-triangle',
+        color: 'red',
+        description: 'Fehler und Ausnahmen'
+      }
+    ];
+
+    // ============================================
+    // Sidebar Navigation Component
+    // ============================================
+
+    const Sidebar = ({ activeView, onViewChange, overview, loading }) => {
+      return (
+        <aside className="w-72 bg-white border-r flex flex-col flex-shrink-0 overflow-hidden min-h-0">
+          <div className="p-4 border-b bg-gray-50">
+            <h2 className="font-semibold text-gray-700 flex items-center">
+              <Icon name="sitemap" className="mr-2 text-emerald-600" />
+              Schnittstellenstruktur
+            </h2>
+          </div>
+          <nav className="flex-1 overflow-y-auto">
+            {/* Overview */}
+            <div 
+              className={`nav-item px-4 py-3 cursor-pointer flex items-center gap-3 border-b ${activeView === 'overview' ? 'active' : ''}`}
+              onClick={() => onViewChange('overview')}
+            >
+              <div className="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center">
+                <Icon name="th-large" className="text-emerald-600" />
+              </div>
+              <div className="flex-1">
+                <div className="font-medium text-gray-800">Übersicht</div>
+                <div className="text-xs text-gray-500">Alle Kategorien</div>
+              </div>
+            </div>
+
+            {/* Category Navigation */}
+            <div className="py-2">
+              <div className="px-4 py-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                Kategorien
+              </div>
+              {NAV_ITEMS.map(item => {
+                const count = overview?.[item.id]?.count || 0;
+                const categoryCount = overview?.[item.id]?.categories 
+                  ? Object.keys(overview[item.id].categories).length 
+                  : 0;
+                
+                const bgColorClass = `bg-${item.color}-100`;
+                const textColorClass = `text-${item.color}-600`;
+                const badgeBgClass = `bg-${item.color}-100`;
+                const badgeTextClass = `text-${item.color}-700`;
+                
+                return (
+                  <div 
+                    key={item.id}
+                    className={`nav-item px-4 py-3 cursor-pointer flex items-center gap-3 ${activeView === item.id ? 'active' : ''}`}
+                    onClick={() => onViewChange(item.id)}
+                  >
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                      item.color === 'blue' ? 'bg-blue-100' :
+                      item.color === 'purple' ? 'bg-purple-100' :
+                      item.color === 'amber' ? 'bg-amber-100' :
+                      item.color === 'red' ? 'bg-red-100' : 'bg-gray-100'
+                    }`}>
+                      <Icon name={item.icon} className={
+                        item.color === 'blue' ? 'text-blue-600' :
+                        item.color === 'purple' ? 'text-purple-600' :
+                        item.color === 'amber' ? 'text-amber-600' :
+                        item.color === 'red' ? 'text-red-600' : 'text-gray-600'
+                      } />
+                    </div>
+                    <div className="flex-1">
+                      <div className="font-medium text-gray-800 flex items-center justify-between">
+                        {item.label}
+                        {!loading && (
+                          <span className={`badge rounded-full ${
+                            item.color === 'blue' ? 'bg-blue-100 text-blue-700' :
+                            item.color === 'purple' ? 'bg-purple-100 text-purple-700' :
+                            item.color === 'amber' ? 'bg-amber-100 text-amber-700' :
+                            item.color === 'red' ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-700'
+                          }`}>
+                            {count}
+                          </span>
+                        )}
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        {loading ? 'Lädt...' : `${categoryCount} Gruppe${categoryCount !== 1 ? 'n' : ''}`}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </nav>
+
+          {/* Footer */}
+          <div className="p-3 border-t bg-gray-50 text-xs text-gray-500">
+            <div className="flex items-center gap-2">
+              <Icon name="info-circle" />
+              <span>BSI TR-03151 Schnittstelle</span>
+            </div>
+          </div>
+        </aside>
+      );
+    };
+
+    // ============================================
+    // Overview Component
+    // ============================================
+
+    const OverviewView = ({ overview, onNavigate }) => {
+      return (
+        <div className="p-6 fade-in">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+              <Icon name="th-large" className="mr-3 text-emerald-600" />
+              Schnittstellenübersicht
+            </h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {NAV_ITEMS.map(item => {
+                const data = overview?.[item.id] || { count: 0, categories: {} };
+                const categories = Object.entries(data.categories || {}).sort((a, b) => b[1] - a[1]);
+                
+                const gradientClass = 
+                  item.color === 'blue' ? 'from-blue-500 to-blue-600' :
+                  item.color === 'purple' ? 'from-purple-500 to-purple-600' :
+                  item.color === 'amber' ? 'from-amber-500 to-amber-600' :
+                  item.color === 'red' ? 'from-red-500 to-red-600' : 'from-gray-500 to-gray-600';
+                
+                const badgeClass = 
+                  item.color === 'blue' ? 'bg-blue-50 text-blue-700' :
+                  item.color === 'purple' ? 'bg-purple-50 text-purple-700' :
+                  item.color === 'amber' ? 'bg-amber-50 text-amber-700' :
+                  item.color === 'red' ? 'bg-red-50 text-red-700' : 'bg-gray-50 text-gray-700';
+                
+                return (
+                  <div 
+                    key={item.id}
+                    className="item-card bg-white rounded-xl shadow-md overflow-hidden cursor-pointer"
+                    onClick={() => onNavigate(item.id)}
+                  >
+                    <div className={`bg-gradient-to-r ${gradientClass} p-4 text-white`}>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center">
+                            <Icon name={item.icon} className="text-2xl" />
+                          </div>
+                          <div>
+                            <h3 className="text-xl font-bold">{item.label}</h3>
+                            <p className="text-sm opacity-90">{item.description}</p>
+                          </div>
+                        </div>
+                        <div className="text-3xl font-bold">{data.count}</div>
+                      </div>
+                    </div>
+                    <div className="p-4">
+                      {categories.length > 0 ? (
+                        <div className="space-y-2">
+                          <div className="text-xs font-semibold text-gray-500 uppercase">Gruppierung</div>
+                          <div className="flex flex-wrap gap-2">
+                            {categories.slice(0, 6).map(([cat, count]) => (
+                              <span 
+                                key={cat}
+                                className={`px-2 py-1 text-xs rounded-full ${badgeClass}`}
+                              >
+                                {cat} ({count})
+                              </span>
+                            ))}
+                            {categories.length > 6 && (
+                              <span className="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-600">
+                                +{categories.length - 6} weitere
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="text-sm text-gray-500">Keine Einträge</div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    // ============================================
+    // Functions List Component
+    // ============================================
+
+    const FunctionsView = ({ instance, onSelectItem }) => {
+      const [data, setData] = useState(null);
+      const [loading, setLoading] = useState(true);
+      const [searchTerm, setSearchTerm] = useState('');
+      const [expandedCategories, setExpandedCategories] = useState({});
+
+      useEffect(() => {
+        loadFunctions();
+      }, [instance]);
+
+      const loadFunctions = async () => {
+        setLoading(true);
+        try {
+          const response = await fetch(getApiUrl(instance, '/functions'));
+          const result = await response.json();
+          if (result.success) {
+            setData(result);
+            // Expand all categories by default
+            const expanded = {};
+            Object.keys(result.grouped || {}).forEach(cat => {
+              expanded[cat] = true;
+            });
+            setExpandedCategories(expanded);
+          }
+        } catch (err) {
+          console.error('Error loading functions:', err);
+        }
+        setLoading(false);
+      };
+
+      const toggleCategory = (category) => {
+        setExpandedCategories(prev => ({
+          ...prev,
+          [category]: !prev[category]
+        }));
+      };
+
+      const filteredGroups = useMemo(() => {
+        if (!data?.grouped) return {};
+        if (!searchTerm) return data.grouped;
+
+        const filtered = {};
+        Object.entries(data.grouped).forEach(([cat, items]) => {
+          const matchingItems = items.filter(item => 
+            item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            item.description?.toLowerCase().includes(searchTerm.toLowerCase())
+          );
+          if (matchingItems.length > 0) {
+            filtered[cat] = matchingItems;
+          }
+        });
+        return filtered;
+      }, [data, searchTerm]);
+
+      if (loading) {
+        return (
+          <div className="flex items-center justify-center h-64">
+            <div className="loading-spinner"></div>
+          </div>
+        );
+      }
+
+      return (
+        <div className="p-6 fade-in">
+          <div className="max-w-6xl mx-auto">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-gray-800 flex items-center">
+                <Icon name="code" className="mr-3 text-blue-600" />
+                Funktionen
+                <span className="ml-3 text-lg font-normal text-gray-500">({data?.count || 0})</span>
+              </h2>
+              
+              {/* Search */}
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Funktion suchen..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 pr-4 py-2 border rounded-lg w-64 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+                <Icon name="search" className="absolute left-3 top-3 text-gray-400" />
+              </div>
+            </div>
+
+            {/* Function Groups */}
+            <div className="space-y-4">
+              {Object.entries(filteredGroups).map(([category, items]) => (
+                <div key={category} className="bg-white rounded-lg shadow overflow-hidden">
+                  {/* Category Header */}
+                  <div 
+                    className="category-header px-4 py-3 bg-gray-50 border-b cursor-pointer flex items-center justify-between"
+                    onClick={() => toggleCategory(category)}
+                  >
+                    <div className="flex items-center gap-3">
+                      <Icon 
+                        name={expandedCategories[category] ? 'chevron-down' : 'chevron-right'} 
+                        className="text-gray-400"
+                      />
+                      <span className="font-semibold text-gray-700">{category}</span>
+                      <span className="badge bg-blue-100 text-blue-700 rounded-full">{items.length}</span>
+                    </div>
+                  </div>
+
+                  {/* Function Items */}
+                  {expandedCategories[category] && (
+                    <div className="divide-y">
+                      {items.map(func => (
+                        <div 
+                          key={func.id}
+                          className="p-4 hover:bg-gray-50 cursor-pointer transition-colors"
+                          onClick={() => onSelectItem && onSelectItem('function', func)}
+                        >
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2">
+                                <code className="text-blue-600 font-semibold">{func.name}</code>
+                                {func.hasSystemLog && (
+                                  <span className="badge bg-green-100 text-green-700 rounded">
+                                    <Icon name="file-alt" className="mr-1" />SystemLog
+                                  </span>
+                                )}
+                              </div>
+                              <p className="text-sm text-gray-600 mt-1 line-clamp-2">{func.description}</p>
+                              <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
+                                <span>
+                                  <Icon name="sign-in-alt" className="mr-1" />
+                                  {func.parameterCount} Parameter
+                                </span>
+                                <span>
+                                  <Icon name="sign-out-alt" className="mr-1" />
+                                  {func.returnValue?.type || 'void'}
+                                </span>
+                                <span>
+                                  <Icon name="list-ol" className="mr-1" />
+                                  {func.stepCount} Schritte
+                                </span>
+                                <span>
+                                  <Icon name="exclamation-circle" className="mr-1" />
+                                  {func.exceptionCount} Exceptions
+                                </span>
+                              </div>
+                            </div>
+                            <Icon name="chevron-right" className="text-gray-300" />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    // ============================================
+    // Types List Component
+    // ============================================
+
+    const TypesView = ({ instance, onSelectItem }) => {
+      const [data, setData] = useState(null);
+      const [loading, setLoading] = useState(true);
+      const [searchTerm, setSearchTerm] = useState('');
+      const [expandedCategories, setExpandedCategories] = useState({});
+
+      useEffect(() => {
+        loadTypes();
+      }, [instance]);
+
+      const loadTypes = async () => {
+        setLoading(true);
+        try {
+          const response = await fetch(getApiUrl(instance, '/types'));
+          const result = await response.json();
+          if (result.success) {
+            setData(result);
+            const expanded = {};
+            Object.keys(result.grouped || {}).forEach(cat => {
+              expanded[cat] = true;
+            });
+            setExpandedCategories(expanded);
+          }
+        } catch (err) {
+          console.error('Error loading types:', err);
+        }
+        setLoading(false);
+      };
+
+      const toggleCategory = (category) => {
+        setExpandedCategories(prev => ({
+          ...prev,
+          [category]: !prev[category]
+        }));
+      };
+
+      const filteredGroups = useMemo(() => {
+        if (!data?.grouped) return {};
+        if (!searchTerm) return data.grouped;
+
+        const filtered = {};
+        Object.entries(data.grouped).forEach(([cat, items]) => {
+          const matchingItems = items.filter(item => 
+            item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            item.description?.toLowerCase().includes(searchTerm.toLowerCase())
+          );
+          if (matchingItems.length > 0) {
+            filtered[cat] = matchingItems;
+          }
+        });
+        return filtered;
+      }, [data, searchTerm]);
+
+      if (loading) {
+        return (
+          <div className="flex items-center justify-center h-64">
+            <div className="loading-spinner"></div>
+          </div>
+        );
+      }
+
+      return (
+        <div className="p-6 fade-in">
+          <div className="max-w-6xl mx-auto">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-gray-800 flex items-center">
+                <Icon name="cube" className="mr-3 text-purple-600" />
+                Datentypen
+                <span className="ml-3 text-lg font-normal text-gray-500">({data?.count || 0})</span>
+              </h2>
+              
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Datentyp suchen..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 pr-4 py-2 border rounded-lg w-64 focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                />
+                <Icon name="search" className="absolute left-3 top-3 text-gray-400" />
+              </div>
+            </div>
+
+            {/* Type Groups */}
+            <div className="space-y-4">
+              {Object.entries(filteredGroups).map(([category, items]) => (
+                <div key={category} className="bg-white rounded-lg shadow overflow-hidden">
+                  <div 
+                    className="category-header px-4 py-3 bg-gray-50 border-b cursor-pointer flex items-center justify-between"
+                    onClick={() => toggleCategory(category)}
+                  >
+                    <div className="flex items-center gap-3">
+                      <Icon 
+                        name={expandedCategories[category] ? 'chevron-down' : 'chevron-right'} 
+                        className="text-gray-400"
+                      />
+                      <span className="font-semibold text-gray-700">{category}</span>
+                      <span className="badge bg-purple-100 text-purple-700 rounded-full">{items.length}</span>
+                    </div>
+                  </div>
+
+                  {expandedCategories[category] && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+                      {items.map(type => (
+                        <div 
+                          key={type.id}
+                          className="item-card p-4 border rounded-lg hover:border-purple-300 cursor-pointer"
+                          onClick={() => onSelectItem && onSelectItem('type', type)}
+                        >
+                          <div className="flex items-start gap-3">
+                            <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                              <Icon name="cube" className="text-purple-600" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <code className="text-purple-600 font-semibold text-sm block truncate">{type.name}</code>
+                              <p className="text-xs text-gray-600 mt-1 line-clamp-2">{type.description || 'Keine Beschreibung'}</p>
+                              <div className="flex items-center gap-2 mt-2">
+                                <span className="text-xs text-gray-500">
+                                  <Icon name="layer-group" className="mr-1" />
+                                  {type.fieldCount} Felder
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    // ============================================
+    // Enums List Component
+    // ============================================
+
+    const EnumsView = ({ instance, onSelectItem }) => {
+      const [data, setData] = useState(null);
+      const [loading, setLoading] = useState(true);
+      const [searchTerm, setSearchTerm] = useState('');
+
+      useEffect(() => {
+        loadEnums();
+      }, [instance]);
+
+      const loadEnums = async () => {
+        setLoading(true);
+        try {
+          const response = await fetch(getApiUrl(instance, '/enums'));
+          const result = await response.json();
+          if (result.success) {
+            setData(result);
+          }
+        } catch (err) {
+          console.error('Error loading enums:', err);
+        }
+        setLoading(false);
+      };
+
+      const filteredItems = useMemo(() => {
+        if (!data?.items) return [];
+        if (!searchTerm) return data.items;
+        return data.items.filter(item => 
+          item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          item.description?.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+      }, [data, searchTerm]);
+
+      if (loading) {
+        return (
+          <div className="flex items-center justify-center h-64">
+            <div className="loading-spinner"></div>
+          </div>
+        );
+      }
+
+      return (
+        <div className="p-6 fade-in">
+          <div className="max-w-6xl mx-auto">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-gray-800 flex items-center">
+                <Icon name="list-ol" className="mr-3 text-amber-600" />
+                Aufzählungen (Enums)
+                <span className="ml-3 text-lg font-normal text-gray-500">({data?.count || 0})</span>
+              </h2>
+              
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Enum suchen..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 pr-4 py-2 border rounded-lg w-64 focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                />
+                <Icon name="search" className="absolute left-3 top-3 text-gray-400" />
+              </div>
+            </div>
+
+            {/* Enum Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {filteredItems.map(enumItem => (
+                <div 
+                  key={enumItem.id}
+                  className="item-card bg-white rounded-lg shadow overflow-hidden cursor-pointer"
+                  onClick={() => onSelectItem && onSelectItem('enum', enumItem)}
+                >
+                  <div className="p-4 border-b bg-amber-50">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
+                        <Icon name="list-ol" className="text-amber-600" />
+                      </div>
+                      <div>
+                        <code className="text-amber-700 font-semibold">{enumItem.name}</code>
+                        <div className="text-xs text-gray-500">{enumItem.category}</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="p-4">
+                    <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                      {enumItem.description || 'Keine Beschreibung'}
+                    </p>
+                    <div className="text-xs font-semibold text-gray-500 mb-2">
+                      Werte ({enumItem.valueCount}):
+                    </div>
+                    <div className="flex flex-wrap gap-1">
+                      {enumItem.values.slice(0, 6).map((val, idx) => (
+                        <span 
+                          key={idx}
+                          className="px-2 py-0.5 text-xs rounded bg-gray-100 text-gray-700 font-mono"
+                        >
+                          {val.name}
+                          {val.numericValue !== undefined && (
+                            <span className="text-gray-400 ml-1">({val.numericValue})</span>
+                          )}
+                        </span>
+                      ))}
+                      {enumItem.values.length > 6 && (
+                        <span className="px-2 py-0.5 text-xs rounded bg-gray-100 text-gray-500">
+                          +{enumItem.values.length - 6}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    // ============================================
+    // Exceptions List Component
+    // ============================================
+
+    const ExceptionsView = ({ instance, onSelectItem }) => {
+      const [data, setData] = useState(null);
+      const [loading, setLoading] = useState(true);
+      const [searchTerm, setSearchTerm] = useState('');
+      const [filterSeverity, setFilterSeverity] = useState('all');
+      const [expandedCategories, setExpandedCategories] = useState({});
+
+      useEffect(() => {
+        loadExceptions();
+      }, [instance]);
+
+      const loadExceptions = async () => {
+        setLoading(true);
+        try {
+          const response = await fetch(getApiUrl(instance, '/exceptions'));
+          const result = await response.json();
+          if (result.success) {
+            setData(result);
+            const expanded = {};
+            Object.keys(result.grouped || {}).forEach(cat => {
+              expanded[cat] = true;
+            });
+            setExpandedCategories(expanded);
+          }
+        } catch (err) {
+          console.error('Error loading exceptions:', err);
+        }
+        setLoading(false);
+      };
+
+      const toggleCategory = (category) => {
+        setExpandedCategories(prev => ({
+          ...prev,
+          [category]: !prev[category]
+        }));
+      };
+
+      const getSeverityColor = (severity) => {
+        const colors = {
+          'Critical': 'red',
+          'High': 'orange',
+          'Medium': 'yellow',
+          'Low': 'green'
+        };
+        return colors[severity] || 'gray';
+      };
+
+      const getSeverityClasses = (severity) => {
+        switch (severity) {
+          case 'Critical': return 'bg-red-100 text-red-700';
+          case 'High': return 'bg-orange-100 text-orange-700';
+          case 'Medium': return 'bg-yellow-100 text-yellow-700';
+          case 'Low': return 'bg-green-100 text-green-700';
+          default: return 'bg-gray-100 text-gray-700';
+        }
+      };
+
+      const filteredGroups = useMemo(() => {
+        if (!data?.grouped) return {};
+
+        const filtered = {};
+        Object.entries(data.grouped).forEach(([cat, items]) => {
+          const matchingItems = items.filter(item => {
+            const matchesSearch = !searchTerm || 
+              item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+              item.description?.toLowerCase().includes(searchTerm.toLowerCase());
+            const matchesSeverity = filterSeverity === 'all' || item.severity === filterSeverity;
+            return matchesSearch && matchesSeverity;
+          });
+          if (matchingItems.length > 0) {
+            filtered[cat] = matchingItems;
+          }
+        });
+        return filtered;
+      }, [data, searchTerm, filterSeverity]);
+
+      if (loading) {
+        return (
+          <div className="flex items-center justify-center h-64">
+            <div className="loading-spinner"></div>
+          </div>
+        );
+      }
+
+      return (
+        <div className="p-6 fade-in">
+          <div className="max-w-6xl mx-auto">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-gray-800 flex items-center">
+                <Icon name="exclamation-triangle" className="mr-3 text-red-600" />
+                Exceptions
+                <span className="ml-3 text-lg font-normal text-gray-500">({data?.count || 0})</span>
+              </h2>
+              
+              <div className="flex items-center gap-4">
+                {/* Severity Filter */}
+                <select
+                  value={filterSeverity}
+                  onChange={(e) => setFilterSeverity(e.target.value)}
+                  className="px-3 py-2 border rounded-lg focus:ring-2 focus:ring-red-500"
+                >
+                  <option value="all">Alle Schweregrade</option>
+                  <option value="Critical">Critical</option>
+                  <option value="High">High</option>
+                  <option value="Medium">Medium</option>
+                  <option value="Low">Low</option>
+                </select>
+
+                {/* Search */}
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Exception suchen..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10 pr-4 py-2 border rounded-lg w-64 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  />
+                  <Icon name="search" className="absolute left-3 top-3 text-gray-400" />
+                </div>
+              </div>
+            </div>
+
+            {/* Exception Groups */}
+            <div className="space-y-4">
+              {Object.entries(filteredGroups).map(([category, items]) => (
+                <div key={category} className="bg-white rounded-lg shadow overflow-hidden">
+                  <div 
+                    className="category-header px-4 py-3 bg-gray-50 border-b cursor-pointer flex items-center justify-between"
+                    onClick={() => toggleCategory(category)}
+                  >
+                    <div className="flex items-center gap-3">
+                      <Icon 
+                        name={expandedCategories[category] ? 'chevron-down' : 'chevron-right'} 
+                        className="text-gray-400"
+                      />
+                      <span className="font-semibold text-gray-700">{category}</span>
+                      <span className="badge bg-red-100 text-red-700 rounded-full">{items.length}</span>
+                    </div>
+                  </div>
+
+                  {expandedCategories[category] && (
+                    <div className="divide-y">
+                      {items.map(exc => {
+                        return (
+                          <div 
+                            key={exc.id}
+                            className="p-4 hover:bg-gray-50 cursor-pointer transition-colors"
+                            onClick={() => onSelectItem && onSelectItem('exception', exc)}
+                          >
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2">
+                                  <code className="text-red-600 font-semibold">{exc.name}</code>
+                                  <span className={`badge rounded ${getSeverityClasses(exc.severity)}`}>
+                                    {exc.severity}
+                                  </span>
+                                </div>
+                                <p className="text-sm text-gray-600 mt-1 line-clamp-2">{exc.description}</p>
+                                {exc.thrownByCount > 0 && (
+                                  <div className="flex items-center gap-2 mt-2 text-xs text-gray-500">
+                                    <Icon name="code" className="mr-1" />
+                                    Verwendet in {exc.thrownByCount} Funktion{exc.thrownByCount !== 1 ? 'en' : ''}
+                                  </div>
+                                )}
+                              </div>
+                              <Icon name="chevron-right" className="text-gray-300" />
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    // ============================================
     // Main Application Component
     // ============================================
 
@@ -52,6 +903,9 @@
       const [loading, setLoading] = useState(true);
       const [error, setError] = useState(null);
       const [notification, setNotification] = useState(null);
+      const [activeView, setActiveView] = useState('overview');
+      const [overview, setOverview] = useState(null);
+      const [selectedItem, setSelectedItem] = useState(null);
       
       // Initialize
       useEffect(() => {
@@ -59,19 +913,20 @@
         setInstance(currentInstance);
         
         if (currentInstance) {
-          // Load interface design data
-          loadData();
+          loadOverview(currentInstance);
         } else {
           setLoading(false);
         }
       }, []);
 
-      const loadData = async () => {
+      const loadOverview = async (inst) => {
         setLoading(true);
         try {
-          // TODO: Load interface design data from API
-          // const response = await fetch(getApiUrl(instance, '/structure'));
-          // const data = await response.json();
+          const response = await fetch(getApiUrl(inst || instance, '/overview'));
+          const data = await response.json();
+          if (data.success) {
+            setOverview(data.overview);
+          }
           setLoading(false);
         } catch (err) {
           setError('Fehler beim Laden der Daten');
@@ -82,6 +937,12 @@
       const showNotification = (message, type = 'success') => {
         setNotification({ message, type });
         setTimeout(() => setNotification(null), 3000);
+      };
+
+      const handleSelectItem = (type, item) => {
+        setSelectedItem({ type, item });
+        // TODO: Show detail view
+        console.log('Selected:', type, item);
       };
 
       // Loading state
@@ -115,6 +976,24 @@
           </div>
         );
       }
+
+      // Render the appropriate view
+      const renderMainContent = () => {
+        switch (activeView) {
+          case 'overview':
+            return <OverviewView overview={overview} onNavigate={setActiveView} />;
+          case 'functions':
+            return <FunctionsView instance={instance} onSelectItem={handleSelectItem} />;
+          case 'types':
+            return <TypesView instance={instance} onSelectItem={handleSelectItem} />;
+          case 'enums':
+            return <EnumsView instance={instance} onSelectItem={handleSelectItem} />;
+          case 'exceptions':
+            return <ExceptionsView instance={instance} onSelectItem={handleSelectItem} />;
+          default:
+            return <OverviewView overview={overview} onNavigate={setActiveView} />;
+        }
+      };
 
       return (
         <div className="h-screen bg-gray-50 flex flex-col overflow-hidden">
@@ -162,7 +1041,7 @@
                 
                 {/* Refresh Button */}
                 <button
-                  onClick={loadData}
+                  onClick={() => loadOverview()}
                   className="p-2 hover:bg-emerald-600 rounded transition-colors"
                   title="Aktualisieren"
                 >
@@ -191,73 +1070,16 @@
           {/* Main Content */}
           <div className="flex flex-1 overflow-hidden min-h-0">
             {/* Sidebar */}
-            <aside className="w-80 bg-white border-r flex flex-col flex-shrink-0 overflow-hidden min-h-0">
-              <div className="p-4 border-b bg-gray-50">
-                <h2 className="font-semibold text-gray-700">
-                  <Icon name="list" className="mr-2" />
-                  Navigation
-                </h2>
-              </div>
-              <div className="flex-1 overflow-y-auto p-4">
-                <div className="text-center text-gray-500 py-8">
-                  <Icon name="folder-open" className="text-4xl mb-2 text-gray-300" />
-                  <p>Noch keine Schnittstellen definiert</p>
-                  <p className="text-sm mt-2">Erstellen Sie Ihre erste Schnittstellenbeschreibung</p>
-                </div>
-              </div>
-            </aside>
+            <Sidebar 
+              activeView={activeView} 
+              onViewChange={setActiveView} 
+              overview={overview}
+              loading={loading}
+            />
 
             {/* Main Area */}
-            <main className="flex-1 overflow-y-auto">
-              <div className="p-6 fade-in">
-                <div className="max-w-4xl mx-auto">
-                  {/* Welcome Card */}
-                  <div className="bg-white rounded-lg shadow-lg p-8 text-center">
-                    <Icon name="project-diagram" className="text-6xl text-emerald-500 mb-4" />
-                    <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                      Willkommen im Interface Design Modul
-                    </h2>
-                    <p className="text-gray-600 mb-6">
-                      Hier können Sie Schnittstellenbeschreibungen erstellen und verwalten.
-                      Dieses Modul befindet sich noch in der Entwicklung.
-                    </p>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
-                      <div className="p-4 bg-emerald-50 rounded-lg">
-                        <Icon name="file-alt" className="text-2xl text-emerald-600 mb-2" />
-                        <h3 className="font-semibold text-gray-800">Beschreibungen</h3>
-                        <p className="text-sm text-gray-600">Erstellen Sie detaillierte Schnittstellenbeschreibungen</p>
-                      </div>
-                      <div className="p-4 bg-blue-50 rounded-lg">
-                        <Icon name="code" className="text-2xl text-blue-600 mb-2" />
-                        <h3 className="font-semibold text-gray-800">Spezifikationen</h3>
-                        <p className="text-sm text-gray-600">Definieren Sie technische Spezifikationen</p>
-                      </div>
-                      <div className="p-4 bg-purple-50 rounded-lg">
-                        <Icon name="exchange-alt" className="text-2xl text-purple-600 mb-2" />
-                        <h3 className="font-semibold text-gray-800">Datenflüsse</h3>
-                        <p className="text-sm text-gray-600">Visualisieren Sie Datenflüsse zwischen Systemen</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Info Box */}
-                  <div className="mt-6 bg-amber-50 border border-amber-200 rounded-lg p-4">
-                    <div className="flex items-start gap-3">
-                      <Icon name="info-circle" className="text-amber-500 text-xl mt-0.5" />
-                      <div>
-                        <h3 className="font-semibold text-amber-800">Modul in Entwicklung</h3>
-                        <p className="text-sm text-amber-700 mt-1">
-                          Das Interface Design Modul wird derzeit entwickelt. 
-                          Die Schnittstellenbeschreibungen werden im Ordner 
-                          <code className="bg-amber-100 px-1 rounded mx-1">interfacedesign/</code> 
-                          innerhalb der Instanz gespeichert.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            <main className="flex-1 overflow-y-auto bg-gray-100">
+              {renderMainContent()}
             </main>
           </div>
         </div>

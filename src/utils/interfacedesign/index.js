@@ -1,12 +1,9 @@
 /**
  * InterfaceDesign Utility Exports
- * Placeholder for InterfaceDesign specific utilities
+ * Exports all utility modules for InterfaceDesign
  */
 
-// TODO: Import specific utility modules when implemented
-// const xml = require('./xml');
-// const fileSystem = require('./fileSystem');
-// const design = require('./design');
+const xmlParser = require('./xmlParser');
 
 /**
  * Placeholder: Read folder structure
@@ -18,34 +15,10 @@ const readFolderStructure = async (dirPath) => {
   return [];
 };
 
-/**
- * Placeholder: Parse design XML
- * @param {string} filePath - Path to XML file
- * @returns {Promise<Object>} - Parsed design object
- */
-const parseDesignXML = async (filePath) => {
-  // TODO: Implement XML parsing for InterfaceDesign
-  return {};
-};
-
-/**
- * Placeholder: Save design XML
- * @param {string} filePath - Path to save XML file
- * @param {Object} data - Design data to save
- * @returns {Promise<boolean>} - Success status
- */
-const saveDesignXML = async (filePath, data) => {
-  // TODO: Implement XML saving for InterfaceDesign
-  return false;
-};
-
 module.exports = {
+  // XML Parser utilities
+  ...xmlParser,
+  
   // File system utilities
-  readFolderStructure,
-  
-  // XML utilities
-  parseDesignXML,
-  saveDesignXML
-  
-  // TODO: Export additional utilities here
+  readFolderStructure
 };
