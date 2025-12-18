@@ -63,6 +63,127 @@
     };
 
     // ============================================
+    // URL Routing Helpers
+    // ============================================
+
+    // Parse the current URL to determine view and item
+    const parseUrlRoute = () => {
+      const pathParts = window.location.pathname.split('/').filter(Boolean);
+      // pathParts[0] = instance
+      // pathParts[1] = 'interfacedesign'
+      // pathParts[2] = view (functions, types, enums, exceptions, function, type, enum, exception)
+      // pathParts[3] = id (for detail views)
+      
+      const instance = pathParts[0] || null;
+      const viewPart = pathParts[2] || 'overview';
+      const itemId = pathParts[3] || null;
+      
+      let activeView = 'overview';
+      let selectedItem = null;
+      
+      // Map URL to view
+      switch (viewPart) {
+        case 'functions':
+          activeView = 'functions';
+          break;
+        case 'function':
+          if (itemId) {
+            activeView = 'function-detail';
+            selectedItem = { type: 'function', item: { id: itemId } };
+          } else {
+            activeView = 'functions';
+          }
+          break;
+        case 'types':
+          activeView = 'types';
+          break;
+        case 'type':
+          if (itemId) {
+            activeView = 'type-detail';
+            selectedItem = { type: 'type', item: { id: itemId } };
+          } else {
+            activeView = 'types';
+          }
+          break;
+        case 'enums':
+          activeView = 'enums';
+          break;
+        case 'enum':
+          if (itemId) {
+            activeView = 'enum-detail';
+            selectedItem = { type: 'enum', item: { id: itemId } };
+          } else {
+            activeView = 'enums';
+          }
+          break;
+        case 'exceptions':
+          activeView = 'exceptions';
+          break;
+        case 'exception':
+          if (itemId) {
+            activeView = 'exception-detail';
+            selectedItem = { type: 'exception', item: { id: itemId } };
+          } else {
+            activeView = 'exceptions';
+          }
+          break;
+        default:
+          activeView = 'overview';
+      }
+      
+      return { instance, activeView, selectedItem };
+    };
+
+    // Build URL for a given view and item
+    const buildUrl = (instance, view, itemId = null) => {
+      let url = `/${instance}/interfacedesign`;
+      
+      switch (view) {
+        case 'overview':
+          // No additional path
+          break;
+        case 'functions':
+          url += '/functions';
+          break;
+        case 'function-detail':
+          url += `/function/${itemId}`;
+          break;
+        case 'types':
+          url += '/types';
+          break;
+        case 'type-detail':
+          url += `/type/${itemId}`;
+          break;
+        case 'enums':
+          url += '/enums';
+          break;
+        case 'enum-detail':
+          url += `/enum/${itemId}`;
+          break;
+        case 'exceptions':
+          url += '/exceptions';
+          break;
+        case 'exception-detail':
+          url += `/exception/${itemId}`;
+          break;
+        default:
+          break;
+      }
+      
+      return url;
+    };
+
+    // Update browser URL without page reload
+    const updateUrl = (instance, view, itemId = null, replace = false) => {
+      const url = buildUrl(instance, view, itemId);
+      if (replace) {
+        window.history.replaceState({ view, itemId }, '', url);
+      } else {
+        window.history.pushState({ view, itemId }, '', url);
+      }
+    };
+
+    // ============================================
     // Icon Component
     // ============================================
 
@@ -1542,25 +1663,51 @@
     // ============================================
 
     const InterfaceDesignApp = () => {
-      const [instance, setInstance] = useState(getInstance());
+      // Parse initial state from URL
+      const initialRoute = parseUrlRoute();
+      
+      const [instance, setInstance] = useState(initialRoute.instance);
       const [loading, setLoading] = useState(true);
       const [error, setError] = useState(null);
       const [notification, setNotification] = useState(null);
-      const [activeView, setActiveView] = useState('overview');
+      const [activeView, setActiveView] = useState(initialRoute.activeView);
       const [overview, setOverview] = useState(null);
-      const [selectedItem, setSelectedItem] = useState(null);
+      const [selectedItem, setSelectedItem] = useState(initialRoute.selectedItem);
       
       // Initialize
       useEffect(() => {
-        const currentInstance = getInstance();
-        setInstance(currentInstance);
+        const route = parseUrlRoute();
+        setInstance(route.instance);
+        setActiveView(route.activeView);
+        setSelectedItem(route.selectedItem);
         
-        if (currentInstance) {
-          loadOverview(currentInstance);
+        if (route.instance) {
+          loadOverview(route.instance);
         } else {
           setLoading(false);
         }
+
+        // Handle browser back/forward buttons
+        const handlePopState = (event) => {
+          const route = parseUrlRoute();
+          setActiveView(route.activeView);
+          setSelectedItem(route.selectedItem);
+        };
+
+        window.addEventListener('popstate', handlePopState);
+        return () => window.removeEventListener('popstate', handlePopState);
       }, []);
+
+      // Update URL when view changes
+      const navigateToView = useCallback((view, itemId = null, replace = false) => {
+        setActiveView(view);
+        if (itemId) {
+          setSelectedItem({ type: view.replace('-detail', ''), item: { id: itemId } });
+        } else if (!view.includes('-detail')) {
+          setSelectedItem(null);
+        }
+        updateUrl(instance, view, itemId, replace);
+      }, [instance]);
 
       const loadOverview = async (inst) => {
         setLoading(true);
@@ -1583,35 +1730,53 @@
       };
 
       const handleSelectItem = (type, item) => {
+        const detailView = `${type}-detail`;
         setSelectedItem({ type, item });
-        if (type === 'exception') {
-          setActiveView('exception-detail');
-        } else if (type === 'enum') {
-          setActiveView('enum-detail');
-        }
+        setActiveView(detailView);
+        updateUrl(instance, detailView, item.id);
       };
 
       const handleBackFromDetail = () => {
         const previousType = selectedItem?.type;
         setSelectedItem(null);
         // Return to the appropriate list view based on type
+        let listView = 'overview';
         if (previousType === 'exception') {
-          setActiveView('exceptions');
+          listView = 'exceptions';
         } else if (previousType === 'enum') {
-          setActiveView('enums');
+          listView = 'enums';
+        } else if (previousType === 'function') {
+          listView = 'functions';
+        } else if (previousType === 'type') {
+          listView = 'types';
         }
+        setActiveView(listView);
+        updateUrl(instance, listView);
       };
 
       const handleNavigateToFunction = (funcName) => {
-        // Navigate to function detail (for future implementation)
-        console.log('Navigate to function:', funcName);
-        setActiveView('functions');
+        setSelectedItem({ type: 'function', item: { id: funcName } });
+        setActiveView('function-detail');
+        updateUrl(instance, 'function-detail', funcName);
       };
 
       const handleNavigateToEnum = (enumName) => {
-        // Navigate to enum detail
         setSelectedItem({ type: 'enum', item: { id: enumName } });
         setActiveView('enum-detail');
+        updateUrl(instance, 'enum-detail', enumName);
+      };
+
+      const handleNavigateToException = (excName) => {
+        setSelectedItem({ type: 'exception', item: { id: excName } });
+        setActiveView('exception-detail');
+        updateUrl(instance, 'exception-detail', excName);
+      };
+
+      // Handle navigation from sidebar and overview
+      const handleViewChange = (view) => {
+        setActiveView(view);
+        setSelectedItem(null);
+        updateUrl(instance, view);
       };
 
       // Loading state
@@ -1650,7 +1815,7 @@
       const renderMainContent = () => {
         switch (activeView) {
           case 'overview':
-            return <OverviewView overview={overview} onNavigate={setActiveView} />;
+            return <OverviewView overview={overview} onNavigate={handleViewChange} />;
           case 'functions':
             return <FunctionsView instance={instance} onSelectItem={handleSelectItem} />;
           case 'types':
@@ -1759,7 +1924,7 @@
             {/* Sidebar */}
             <Sidebar 
               activeView={activeView} 
-              onViewChange={setActiveView} 
+              onViewChange={handleViewChange} 
               overview={overview}
               loading={loading}
             />
