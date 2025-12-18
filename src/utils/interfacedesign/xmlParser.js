@@ -288,6 +288,95 @@ async function parseType(filePath) {
 }
 
 /**
+ * Parse a type XML file with full details
+ * @param {string} filePath - Path to type XML file
+ * @returns {Promise<Object>} - Full type data
+ */
+async function parseTypeDetail(filePath) {
+  const xml = await parseXmlFile(filePath);
+  if (!xml) return null;
+
+  // Types can have different root elements
+  const typeData = xml.type || xml.resultType || xml.eventData || Object.values(xml)[0];
+  if (!typeData) return null;
+
+  // Extract fields with all details
+  let fields = [];
+  if (typeData.fields && typeData.fields.field) {
+    const flds = Array.isArray(typeData.fields.field) 
+      ? typeData.fields.field 
+      : [typeData.fields.field];
+    fields = flds.map(f => ({
+      name: f.n || f.name || '',
+      type: f.type || '',
+      description: f.description || '',
+      optional: f.optional === 'true' || f.optional === true,
+      required: f.required === 'true' || f.required === true,
+      getter: f.getter || '',
+      setter: f.setter || '',
+      defaultValue: f.defaultValue || f.default || ''
+    }));
+  }
+
+  // Extract constraints
+  let constraints = [];
+  if (typeData.constraints && typeData.constraints.constraint) {
+    const cons = Array.isArray(typeData.constraints.constraint)
+      ? typeData.constraints.constraint
+      : [typeData.constraints.constraint];
+    constraints = cons.map(c => ({
+      type: c.type || '',
+      description: c.description || ''
+    }));
+  }
+
+  // Extract notes
+  let notes = [];
+  if (typeData.note) {
+    notes = Array.isArray(typeData.note) ? typeData.note : [typeData.note];
+  }
+
+  // Determine category based on name
+  let category = 'Uncategorized';
+  const name = typeData.n || typeData.name || path.basename(filePath, '.xml');
+  if (name.endsWith('EventData')) {
+    category = 'EventData';
+  } else if (name.endsWith('Result')) {
+    category = 'Result';
+  } else if (name.endsWith('Set')) {
+    category = 'Set';
+  }
+
+  // Determine type kind
+  const rootElement = Object.keys(xml)[0];
+  let typeKind = 'complex';
+  if (rootElement === 'resultType') {
+    typeKind = 'result';
+  } else if (typeData.baseType) {
+    typeKind = 'simple';
+  } else if (name.endsWith('EventData')) {
+    typeKind = 'eventData';
+  }
+
+  return {
+    id: typeData.id || name,
+    name: name,
+    category: typeData.category || category,
+    description: typeData.description || '',
+    baseType: typeData.baseType || '',
+    asn1Definition: typeData.asn1Definition || '',
+    usage: typeData.usage || '',
+    fields,
+    fieldCount: fields.length,
+    constraints,
+    notes,
+    rootElement,
+    typeKind,
+    filePath
+  };
+}
+
+/**
  * Parse an exception XML file and extract relevant data
  * @param {string} filePath - Path to exception XML file
  * @returns {Promise<Object>} - Exception data
@@ -491,6 +580,7 @@ module.exports = {
   parseEnum,
   parseEnumDetail,
   parseType,
+  parseTypeDetail,
   parseException,
   parseExceptionDetail,
   loadCategory,

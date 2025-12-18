@@ -276,7 +276,8 @@
                     className={`nav-item px-4 py-3 cursor-pointer flex items-center gap-3 ${
                       activeView === item.id || 
                       (item.id === 'exceptions' && activeView === 'exception-detail') ||
-                      (item.id === 'enums' && activeView === 'enum-detail') ? 'active' : ''
+                      (item.id === 'enums' && activeView === 'enum-detail') ||
+                      (item.id === 'types' && activeView === 'type-detail') ? 'active' : ''
                     }`}
                     onClick={() => onViewChange(item.id)}
                   >
@@ -708,6 +709,296 @@
                   )}
                 </div>
               ))}
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    // ============================================
+    // Type Detail View Component
+    // ============================================
+
+    const TypeDetailView = ({ instance, typeId, onBack, onNavigateToType }) => {
+      const [data, setData] = useState(null);
+      const [loading, setLoading] = useState(true);
+      const [error, setError] = useState(null);
+
+      useEffect(() => {
+        loadType();
+      }, [instance, typeId]);
+
+      const loadType = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+          const response = await fetch(getApiUrl(instance, `/type/${typeId}`));
+          const result = await response.json();
+          if (result.success) {
+            setData(result.type);
+          } else {
+            setError(result.error || 'Fehler beim Laden');
+          }
+        } catch (err) {
+          console.error('Error loading type:', err);
+          setError('Fehler beim Laden des Typs');
+        }
+        setLoading(false);
+      };
+
+      const getTypeKindInfo = (kind) => {
+        switch (kind) {
+          case 'simple': return { label: 'Einfacher Typ', icon: 'tag', color: 'green' };
+          case 'result': return { label: 'Ergebnis-Typ', icon: 'check-circle', color: 'blue' };
+          case 'eventData': return { label: 'Event-Daten', icon: 'bolt', color: 'yellow' };
+          default: return { label: 'Komplexer Typ', icon: 'cubes', color: 'purple' };
+        }
+      };
+
+      if (loading) {
+        return (
+          <div className="flex items-center justify-center h-64">
+            <div className="loading-spinner"></div>
+          </div>
+        );
+      }
+
+      if (error) {
+        return (
+          <div className="p-6">
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">
+              <Icon name="exclamation-triangle" className="mr-2" />
+              {error}
+            </div>
+          </div>
+        );
+      }
+
+      if (!data) return null;
+
+      const kindInfo = getTypeKindInfo(data.typeKind);
+
+      return (
+        <div className="p-6 fade-in">
+          <div className="max-w-4xl mx-auto">
+            {/* Back Button */}
+            <button
+              onClick={onBack}
+              className="mb-4 flex items-center text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              <Icon name="arrow-left" className="mr-2" />
+              Zurück zur Übersicht
+            </button>
+
+            {/* Header Card */}
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-6">
+              <div className="bg-gradient-to-r from-purple-600 to-purple-700 p-6 text-white">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-start gap-4">
+                    <div className="w-16 h-16 bg-white/20 rounded-xl flex items-center justify-center">
+                      <Icon name="cube" className="text-3xl" />
+                    </div>
+                    <div>
+                      <h1 className="text-2xl font-bold">{data.name}</h1>
+                      <div className="flex items-center gap-3 mt-2">
+                        {data.category && (
+                          <span className="px-3 py-1 bg-white/20 rounded-full text-sm">
+                            {data.category}
+                          </span>
+                        )}
+                        <span className={`px-3 py-1 rounded-full text-sm flex items-center gap-1 ${
+                          kindInfo.color === 'green' ? 'bg-green-600 text-green-100' :
+                          kindInfo.color === 'blue' ? 'bg-blue-600 text-blue-100' :
+                          kindInfo.color === 'yellow' ? 'bg-yellow-600 text-yellow-100' :
+                          'bg-purple-800 text-purple-100'
+                        }`}>
+                          <Icon name={kindInfo.icon} className="text-xs" />
+                          {kindInfo.label}
+                        </span>
+                        {data.fieldCount > 0 && (
+                          <span className="px-3 py-1 bg-white/20 rounded-full text-sm">
+                            {data.fieldCount} Felder
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Description */}
+              <div className="p-6">
+                <h2 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+                  <Icon name="info-circle" className="mr-2 text-blue-500" />
+                  Beschreibung
+                </h2>
+                <p className="text-gray-700 leading-relaxed">{data.description || 'Keine Beschreibung verfügbar.'}</p>
+              </div>
+            </div>
+
+            {/* Base Type (for simple types) */}
+            {data.baseType && (
+              <div className="bg-white rounded-lg shadow p-5 mb-6">
+                <h3 className="font-semibold text-gray-800 mb-3 flex items-center">
+                  <Icon name="link" className="mr-2 text-green-500" />
+                  Basistyp
+                </h3>
+                <code className="text-lg text-green-700 bg-green-50 px-3 py-1 rounded">{data.baseType}</code>
+              </div>
+            )}
+
+            {/* ASN.1 Definition */}
+            {data.asn1Definition && (
+              <div className="bg-white rounded-lg shadow p-5 mb-6">
+                <h3 className="font-semibold text-gray-800 mb-3 flex items-center">
+                  <Icon name="code" className="mr-2 text-indigo-500" />
+                  ASN.1 Definition
+                </h3>
+                <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg text-sm overflow-x-auto font-mono">
+                  {data.asn1Definition}
+                </pre>
+              </div>
+            )}
+
+            {/* Fields Table */}
+            {data.fields && data.fields.length > 0 && (
+              <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-6">
+                <div className="p-4 bg-gray-50 border-b">
+                  <h3 className="font-semibold text-gray-800 flex items-center">
+                    <Icon name="layer-group" className="mr-2 text-purple-500" />
+                    Felder
+                    <span className="ml-2 px-2 py-0.5 bg-purple-100 text-purple-700 text-xs rounded-full">
+                      {data.fields.length}
+                    </span>
+                  </h3>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead className="bg-gray-50 border-b">
+                      <tr>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Name</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Typ</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Beschreibung</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                      {data.fields.map((field, idx) => (
+                        <tr key={idx} className="hover:bg-gray-50">
+                          <td className="px-4 py-3">
+                            <code className="text-purple-700 font-semibold bg-purple-50 px-2 py-0.5 rounded">
+                              {field.name}
+                            </code>
+                            {field.getter && (
+                              <span className="block text-xs text-gray-400 mt-1 font-mono">
+                                {field.getter}
+                              </span>
+                            )}
+                          </td>
+                          <td className="px-4 py-3">
+                            <span className="px-2 py-0.5 bg-blue-50 text-blue-700 rounded text-sm font-mono">
+                              {field.type}
+                            </span>
+                          </td>
+                          <td className="px-4 py-3 text-sm text-gray-600 max-w-md">
+                            {field.description || '-'}
+                            {field.defaultValue && (
+                              <p className="text-gray-400 text-xs mt-1">
+                                Standard: <code>{field.defaultValue}</code>
+                              </p>
+                            )}
+                          </td>
+                          <td className="px-4 py-3">
+                            {field.optional ? (
+                              <span className="px-2 py-0.5 bg-gray-100 text-gray-600 rounded text-xs">
+                                Optional
+                              </span>
+                            ) : (
+                              <span className="px-2 py-0.5 bg-green-100 text-green-700 rounded text-xs">
+                                <Icon name="check" className="mr-1" />
+                                Pflicht
+                              </span>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {/* Additional Info Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Usage */}
+              {data.usage && (
+                <div className="bg-white rounded-lg shadow p-5">
+                  <h3 className="font-semibold text-gray-800 mb-3 flex items-center">
+                    <Icon name="crosshairs" className="mr-2 text-blue-500" />
+                    Verwendung
+                  </h3>
+                  <p className="text-gray-600 text-sm">{data.usage}</p>
+                </div>
+              )}
+
+              {/* Constraints */}
+              {data.constraints && data.constraints.length > 0 && (
+                <div className="bg-white rounded-lg shadow p-5">
+                  <h3 className="font-semibold text-gray-800 mb-3 flex items-center">
+                    <Icon name="lock" className="mr-2 text-red-500" />
+                    Einschränkungen
+                  </h3>
+                  <div className="space-y-2">
+                    {data.constraints.map((c, idx) => (
+                      <div key={idx} className="p-3 bg-red-50 rounded border-l-2 border-red-300">
+                        <span className="font-medium text-red-700 text-sm">{c.type}</span>
+                        {c.description && (
+                          <p className="text-red-600 text-xs mt-1">{c.description}</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Notes */}
+              {data.notes && data.notes.length > 0 && (
+                <div className="bg-white rounded-lg shadow p-5">
+                  <h3 className="font-semibold text-gray-800 mb-3 flex items-center">
+                    <Icon name="sticky-note" className="mr-2 text-yellow-500" />
+                    Hinweise
+                  </h3>
+                  <ul className="space-y-2">
+                    {data.notes.map((note, idx) => (
+                      <li key={idx} className="text-gray-600 text-sm flex items-start">
+                        <Icon name="angle-right" className="mr-2 mt-1 text-gray-400" />
+                        {note}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+
+            {/* Type Kind Info Box */}
+            <div className={`mt-6 p-4 rounded-lg border ${
+              kindInfo.color === 'green' ? 'bg-green-50 border-green-200 text-green-800' :
+              kindInfo.color === 'blue' ? 'bg-blue-50 border-blue-200 text-blue-800' :
+              kindInfo.color === 'yellow' ? 'bg-yellow-50 border-yellow-200 text-yellow-800' :
+              'bg-purple-50 border-purple-200 text-purple-800'
+            }`}>
+              <div className="flex items-center gap-3">
+                <Icon name={kindInfo.icon} className="text-xl" />
+                <div>
+                  <span className="font-semibold">{kindInfo.label}</span>
+                  <p className="text-sm opacity-80">
+                    {data.typeKind === 'simple' && 'Dieser Typ ist eine einfache Typ-Definition basierend auf einem Basistyp.'}
+                    {data.typeKind === 'result' && 'Dieser Typ wird als Rückgabewert von API-Funktionen verwendet.'}
+                    {data.typeKind === 'eventData' && 'Dieser Typ enthält Event-spezifische Daten für System-Log-Einträge.'}
+                    {data.typeKind === 'complex' && 'Dieser Typ ist eine komplexe Datenstruktur mit mehreren Feldern.'}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -1772,6 +2063,12 @@
         updateUrl(instance, 'exception-detail', excName);
       };
 
+      const handleNavigateToType = (typeName) => {
+        setSelectedItem({ type: 'type', item: { id: typeName } });
+        setActiveView('type-detail');
+        updateUrl(instance, 'type-detail', typeName);
+      };
+
       // Handle navigation from sidebar and overview
       const handleViewChange = (view) => {
         setActiveView(view);
@@ -1820,6 +2117,15 @@
             return <FunctionsView instance={instance} onSelectItem={handleSelectItem} />;
           case 'types':
             return <TypesView instance={instance} onSelectItem={handleSelectItem} />;
+          case 'type-detail':
+            return (
+              <TypeDetailView 
+                instance={instance} 
+                typeId={selectedItem?.item?.id}
+                onBack={handleBackFromDetail}
+                onNavigateToType={handleNavigateToType}
+              />
+            );
           case 'enums':
             return <EnumsView instance={instance} onSelectItem={handleSelectItem} />;
           case 'enum-detail':
@@ -1843,7 +2149,7 @@
               />
             );
           default:
-            return <OverviewView overview={overview} onNavigate={setActiveView} />;
+            return <OverviewView overview={overview} onNavigate={handleViewChange} />;
         }
       };
 

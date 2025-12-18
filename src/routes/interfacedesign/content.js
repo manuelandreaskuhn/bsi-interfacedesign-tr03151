@@ -212,6 +212,34 @@ router.get('/:instance/interfacedesign/exceptions', async (req, res) => {
 });
 
 /**
+ * GET /:instance/interfacedesign/type/:id
+ * Get a single type by ID with full details
+ */
+router.get('/:instance/interfacedesign/type/:id', async (req, res) => {
+  try {
+    const basePath = await getInterfaceDesignPath(req.params.instance);
+    if (!basePath) {
+      return res.status(404).json({ error: 'InterfaceDesign folder not found' });
+    }
+
+    const filePath = path.join(basePath, 'types', `${req.params.id}.xml`);
+    const typeData = await xmlParser.parseTypeDetail(filePath);
+    
+    if (!typeData) {
+      return res.status(404).json({ error: 'Type not found' });
+    }
+
+    res.json({
+      success: true,
+      type: typeData
+    });
+  } catch (error) {
+    console.error('Error getting type:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
  * GET /:instance/interfacedesign/enum/:id
  * Get a single enum by ID with full details
  */
