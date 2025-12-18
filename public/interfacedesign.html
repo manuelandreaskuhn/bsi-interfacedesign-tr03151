@@ -275,6 +275,7 @@
                     key={item.id}
                     className={`nav-item px-4 py-3 cursor-pointer flex items-center gap-3 ${
                       activeView === item.id || 
+                      (item.id === 'functions' && activeView === 'function-detail') ||
                       (item.id === 'exceptions' && activeView === 'exception-detail') ||
                       (item.id === 'enums' && activeView === 'enum-detail') ||
                       (item.id === 'types' && activeView === 'type-detail') ? 'active' : ''
@@ -569,6 +570,690 @@
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+      );
+    };
+
+    // ============================================
+    // Function Detail View Component
+    // ============================================
+
+    const FunctionDetailView = ({ instance, functionId, onBack, onNavigateToType, onNavigateToEnum, onNavigateToException }) => {
+      const [data, setData] = useState(null);
+      const [loading, setLoading] = useState(true);
+      const [error, setError] = useState(null);
+      const [availableTypes, setAvailableTypes] = useState([]);
+      const [availableEnums, setAvailableEnums] = useState([]);
+      const [availableExceptions, setAvailableExceptions] = useState([]);
+      const [stepViewMode, setStepViewMode] = useState('cards'); // 'cards', 'timeline', 'pseudocode', 'flowchart'
+      const [expandedSteps, setExpandedSteps] = useState({});
+      const [showOriginalText, setShowOriginalText] = useState(false);
+
+      useEffect(() => {
+        loadFunction();
+        loadAvailableItems();
+      }, [instance, functionId]);
+
+      const loadFunction = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+          const response = await fetch(getApiUrl(instance, `/function/${functionId}`));
+          const result = await response.json();
+          if (result.success) {
+            setData(result.function);
+            // Expand all steps by default
+            const expanded = {};
+            result.function.detailedSteps?.forEach(s => {
+              expanded[s.number] = true;
+            });
+            setExpandedSteps(expanded);
+          } else {
+            setError(result.error || 'Fehler beim Laden');
+          }
+        } catch (err) {
+          console.error('Error loading function:', err);
+          setError('Fehler beim Laden der Funktion');
+        }
+        setLoading(false);
+      };
+
+      const loadAvailableItems = async () => {
+        try {
+          const [typesRes, enumsRes, excRes] = await Promise.all([
+            fetch(getApiUrl(instance, '/types')),
+            fetch(getApiUrl(instance, '/enums')),
+            fetch(getApiUrl(instance, '/exceptions'))
+          ]);
+          
+          const typesResult = await typesRes.json();
+          if (typesResult.success) setAvailableTypes(typesResult.items.map(t => t.name));
+          
+          const enumsResult = await enumsRes.json();
+          if (enumsResult.success) setAvailableEnums(enumsResult.items.map(e => e.name));
+          
+          const excResult = await excRes.json();
+          if (excResult.success) setAvailableExceptions(excResult.items.map(e => e.name));
+        } catch (err) {
+          console.error('Error loading available items:', err);
+        }
+      };
+
+      // Render a type reference - links to type/enum if available
+      const renderTypeReference = (typeName) => {
+        if (!typeName || typeName === 'void') {
+          return <span className="text-gray-400 font-mono">{typeName || 'void'}</span>;
+        }
+        
+        if (availableTypes.includes(typeName)) {
+          return (
+            <span 
+              className="px-2 py-0.5 bg-purple-50 text-purple-700 rounded text-sm font-mono cursor-pointer hover:bg-purple-100 hover:underline transition-colors inline-flex items-center gap-1"
+              onClick={() => onNavigateToType && onNavigateToType(typeName)}
+              title={`Typ "${typeName}" anzeigen`}
+            >
+              <Icon name="cube" className="text-xs" />
+              {typeName}
+            </span>
+          );
+        }
+        
+        if (availableEnums.includes(typeName)) {
+          return (
+            <span 
+              className="px-2 py-0.5 bg-amber-50 text-amber-700 rounded text-sm font-mono cursor-pointer hover:bg-amber-100 hover:underline transition-colors inline-flex items-center gap-1"
+              onClick={() => onNavigateToEnum && onNavigateToEnum(typeName)}
+              title={`Enum "${typeName}" anzeigen`}
+            >
+              <Icon name="list-ol" className="text-xs" />
+              {typeName}
+            </span>
+          );
+        }
+        
+        return (
+          <span className="px-2 py-0.5 bg-blue-50 text-blue-700 rounded text-sm font-mono">
+            {typeName}
+          </span>
+        );
+      };
+
+      // Render an exception reference
+      const renderExceptionReference = (excName) => {
+        if (availableExceptions.includes(excName)) {
+          return (
+            <span 
+              className="px-2 py-0.5 bg-red-50 text-red-700 rounded text-sm font-mono cursor-pointer hover:bg-red-100 hover:underline transition-colors inline-flex items-center gap-1"
+              onClick={() => onNavigateToException && onNavigateToException(excName)}
+              title={`Exception "${excName}" anzeigen`}
+            >
+              <Icon name="exclamation-triangle" className="text-xs" />
+              {excName}
+            </span>
+          );
+        }
+        return (
+          <span className="px-2 py-0.5 bg-red-50 text-red-700 rounded text-sm font-mono">
+            {excName}
+          </span>
+        );
+      };
+
+      const toggleStep = (stepNum) => {
+        setExpandedSteps(prev => ({
+          ...prev,
+          [stepNum]: !prev[stepNum]
+        }));
+      };
+
+      const expandAllSteps = () => {
+        const expanded = {};
+        data?.detailedSteps?.forEach(s => {
+          expanded[s.number] = true;
+        });
+        setExpandedSteps(expanded);
+      };
+
+      const collapseAllSteps = () => {
+        setExpandedSteps({});
+      };
+
+      // Generate Mermaid flowchart from steps
+      const generateMermaidFlowchart = () => {
+        if (!data?.detailedSteps?.length) return '';
+        
+        let mermaid = 'flowchart TD\n';
+        mermaid += '    Start([Start]) --> Step1\n';
+        
+        data.detailedSteps.forEach((step, idx) => {
+          const stepId = `Step${step.number}`;
+          const nextStepId = idx < data.detailedSteps.length - 1 ? `Step${data.detailedSteps[idx + 1].number}` : 'End';
+          
+          // Truncate text for display
+          const shortText = (step.germanText || '').substring(0, 40) + (step.germanText?.length > 40 ? '...' : '');
+          mermaid += `    ${stepId}["${step.number}. ${shortText.replace(/"/g, "'")}"]\n`;
+          
+          // Add error cases as branches
+          if (step.errorCases?.length > 0) {
+            step.errorCases.forEach((ec, ecIdx) => {
+              const errorId = `Error${step.number}_${ecIdx}`;
+              mermaid += `    ${stepId} -->|Fehler| ${errorId}[/${ec.exception}/]\n`;
+              mermaid += `    ${errorId} --> EndError([Ende mit Fehler])\n`;
+            });
+          }
+          
+          // Success path
+          if (step.successCases?.length > 0 || idx === data.detailedSteps.length - 1) {
+            mermaid += `    ${stepId} -->|OK| ${nextStepId === 'End' ? 'End([Ende])' : nextStepId}\n`;
+          } else if (idx < data.detailedSteps.length - 1) {
+            mermaid += `    ${stepId} --> ${nextStepId}\n`;
+          }
+        });
+        
+        return mermaid;
+      };
+
+      if (loading) {
+        return (
+          <div className="flex items-center justify-center h-64">
+            <div className="loading-spinner"></div>
+          </div>
+        );
+      }
+
+      if (error) {
+        return (
+          <div className="p-6">
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">
+              <Icon name="exclamation-triangle" className="mr-2" />
+              {error}
+            </div>
+          </div>
+        );
+      }
+
+      if (!data) return null;
+
+      return (
+        <div className="p-6 fade-in">
+          <div className="max-w-5xl mx-auto">
+            {/* Back Button */}
+            <button
+              onClick={onBack}
+              className="mb-4 flex items-center text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              <Icon name="arrow-left" className="mr-2" />
+              Zurück zur Übersicht
+            </button>
+
+            {/* Header Card */}
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-6">
+              <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-6 text-white">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-start gap-4">
+                    <div className="w-16 h-16 bg-white/20 rounded-xl flex items-center justify-center">
+                      <Icon name="code" className="text-3xl" />
+                    </div>
+                    <div>
+                      <h1 className="text-2xl font-bold font-mono">{data.name}()</h1>
+                      <div className="flex items-center gap-3 mt-2 flex-wrap">
+                        <span className="px-3 py-1 bg-white/20 rounded-full text-sm">
+                          {data.category}
+                        </span>
+                        <span className="px-3 py-1 bg-white/20 rounded-full text-sm">
+                          <Icon name="list-ol" className="mr-1" />
+                          {data.stepCount} Schritte
+                        </span>
+                        <span className="px-3 py-1 bg-white/20 rounded-full text-sm">
+                          <Icon name="exclamation-triangle" className="mr-1" />
+                          {data.exceptionCount} Exceptions
+                        </span>
+                        {data.systemLog && (
+                          <span className="px-3 py-1 bg-green-600 rounded-full text-sm">
+                            <Icon name="file-alt" className="mr-1" />
+                            System-Log
+                          </span>
+                        )}
+                        {data.transactionLog && (
+                          <span className="px-3 py-1 bg-yellow-600 rounded-full text-sm">
+                            <Icon name="exchange-alt" className="mr-1" />
+                            Transaction-Log
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Description */}
+              <div className="p-6">
+                <h2 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+                  <Icon name="info-circle" className="mr-2 text-blue-500" />
+                  Beschreibung
+                </h2>
+                <p className="text-gray-700 leading-relaxed">{data.description || 'Keine Beschreibung verfügbar.'}</p>
+              </div>
+            </div>
+
+            {/* Function Signature Card */}
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-6">
+              <div className="p-4 bg-gray-800 text-gray-100 font-mono text-sm">
+                <span className="text-purple-400">{data.returnValue?.type || 'void'}</span>
+                <span className="text-yellow-300 ml-2">{data.name}</span>
+                <span className="text-gray-400">(</span>
+                {data.parameters?.map((p, idx) => (
+                  <span key={idx}>
+                    <span className="text-purple-400">{p.type}</span>
+                    <span className="text-blue-300 ml-1">{p.name}</span>
+                    {idx < data.parameters.length - 1 && <span className="text-gray-400">, </span>}
+                  </span>
+                ))}
+                <span className="text-gray-400">)</span>
+                {data.exceptions?.length > 0 && (
+                  <>
+                    <span className="text-gray-500 ml-2">throws</span>
+                    <span className="text-red-400 ml-1">{data.exceptions.slice(0, 3).join(', ')}</span>
+                    {data.exceptions.length > 3 && <span className="text-gray-500">...</span>}
+                  </>
+                )}
+              </div>
+            </div>
+
+            {/* Parameters Table */}
+            {data.parameters && data.parameters.length > 0 && (
+              <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-6">
+                <div className="p-4 bg-gray-50 border-b">
+                  <h3 className="font-semibold text-gray-800 flex items-center">
+                    <Icon name="sign-in-alt" className="mr-2 text-blue-500" />
+                    Parameter
+                    <span className="ml-2 px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full">
+                      {data.parameters.length}
+                    </span>
+                  </h3>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead className="bg-gray-50 border-b">
+                      <tr>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Name</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Typ</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Richtung</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Beschreibung</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Pflicht</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                      {data.parameters.map((param, idx) => (
+                        <tr key={idx} className="hover:bg-gray-50">
+                          <td className="px-4 py-3">
+                            <code className="text-blue-700 font-semibold">{param.name}</code>
+                          </td>
+                          <td className="px-4 py-3">
+                            {renderTypeReference(param.type)}
+                          </td>
+                          <td className="px-4 py-3">
+                            <span className={`px-2 py-0.5 rounded text-xs ${
+                              param.direction === 'INPUT' ? 'bg-green-100 text-green-700' :
+                              param.direction === 'OUTPUT' ? 'bg-orange-100 text-orange-700' :
+                              'bg-gray-100 text-gray-700'
+                            }`}>
+                              {param.direction}
+                            </span>
+                          </td>
+                          <td className="px-4 py-3 text-sm text-gray-600 max-w-md">
+                            {param.description || '-'}
+                          </td>
+                          <td className="px-4 py-3">
+                            {param.required ? (
+                              <span className="text-green-600"><Icon name="check" /></span>
+                            ) : (
+                              <span className="text-gray-400"><Icon name="minus" /></span>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {/* Return Value */}
+            {data.returnValue && data.returnValue.type !== 'void' && (
+              <div className="bg-white rounded-lg shadow p-5 mb-6">
+                <h3 className="font-semibold text-gray-800 mb-3 flex items-center">
+                  <Icon name="sign-out-alt" className="mr-2 text-green-500" />
+                  Rückgabewert
+                </h3>
+                <div className="flex items-center gap-4">
+                  {renderTypeReference(data.returnValue.type)}
+                  {data.returnValue.description && (
+                    <span className="text-gray-600 text-sm">– {data.returnValue.description}</span>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Exceptions */}
+            {data.exceptions && data.exceptions.length > 0 && (
+              <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-6">
+                <div className="p-4 bg-gray-50 border-b">
+                  <h3 className="font-semibold text-gray-800 flex items-center">
+                    <Icon name="exclamation-triangle" className="mr-2 text-red-500" />
+                    Mögliche Exceptions
+                    <span className="ml-2 px-2 py-0.5 bg-red-100 text-red-700 text-xs rounded-full">
+                      {data.exceptions.length}
+                    </span>
+                  </h3>
+                </div>
+                <div className="p-4">
+                  <div className="flex flex-wrap gap-2">
+                    {data.exceptions.map((exc, idx) => (
+                      <span key={idx}>
+                        {renderExceptionReference(exc)}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Detailed Steps */}
+            {data.detailedSteps && data.detailedSteps.length > 0 && (
+              <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-6">
+                <div className="p-4 bg-gray-50 border-b">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-semibold text-gray-800 flex items-center">
+                      <Icon name="tasks" className="mr-2 text-indigo-500" />
+                      Ausführungsschritte
+                      <span className="ml-2 px-2 py-0.5 bg-indigo-100 text-indigo-700 text-xs rounded-full">
+                        {data.detailedSteps.length}
+                      </span>
+                    </h3>
+                    <div className="flex items-center gap-2">
+                      {/* View Mode Buttons */}
+                      <div className="flex bg-gray-200 rounded-lg p-0.5">
+                        <button
+                          onClick={() => setStepViewMode('cards')}
+                          className={`px-3 py-1 rounded text-sm transition-colors ${
+                            stepViewMode === 'cards' ? 'bg-white shadow text-indigo-600' : 'text-gray-600 hover:text-gray-800'
+                          }`}
+                          title="Karten-Ansicht"
+                        >
+                          <Icon name="th-large" />
+                        </button>
+                        <button
+                          onClick={() => setStepViewMode('timeline')}
+                          className={`px-3 py-1 rounded text-sm transition-colors ${
+                            stepViewMode === 'timeline' ? 'bg-white shadow text-indigo-600' : 'text-gray-600 hover:text-gray-800'
+                          }`}
+                          title="Timeline-Ansicht"
+                        >
+                          <Icon name="stream" />
+                        </button>
+                        <button
+                          onClick={() => setStepViewMode('pseudocode')}
+                          className={`px-3 py-1 rounded text-sm transition-colors ${
+                            stepViewMode === 'pseudocode' ? 'bg-white shadow text-indigo-600' : 'text-gray-600 hover:text-gray-800'
+                          }`}
+                          title="Pseudocode-Ansicht"
+                        >
+                          <Icon name="code" />
+                        </button>
+                        <button
+                          onClick={() => setStepViewMode('flowchart')}
+                          className={`px-3 py-1 rounded text-sm transition-colors ${
+                            stepViewMode === 'flowchart' ? 'bg-white shadow text-indigo-600' : 'text-gray-600 hover:text-gray-800'
+                          }`}
+                          title="Flowchart-Ansicht"
+                        >
+                          <Icon name="project-diagram" />
+                        </button>
+                      </div>
+                      
+                      {/* Language Toggle */}
+                      <button
+                        onClick={() => setShowOriginalText(!showOriginalText)}
+                        className={`px-3 py-1 rounded text-sm border transition-colors ${
+                          showOriginalText ? 'bg-blue-50 border-blue-300 text-blue-700' : 'border-gray-300 text-gray-600 hover:bg-gray-50'
+                        }`}
+                        title={showOriginalText ? 'Deutsche Texte anzeigen' : 'Originaltexte anzeigen'}
+                      >
+                        {showOriginalText ? 'EN' : 'DE'}
+                      </button>
+
+                      {/* Expand/Collapse */}
+                      {stepViewMode === 'cards' && (
+                        <div className="flex gap-1">
+                          <button onClick={expandAllSteps} className="px-2 py-1 text-xs text-gray-500 hover:text-gray-700" title="Alle aufklappen">
+                            <Icon name="expand-arrows-alt" />
+                          </button>
+                          <button onClick={collapseAllSteps} className="px-2 py-1 text-xs text-gray-500 hover:text-gray-700" title="Alle zuklappen">
+                            <Icon name="compress-arrows-alt" />
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Cards View */}
+                {stepViewMode === 'cards' && (
+                  <div className="p-4 space-y-3">
+                    {data.detailedSteps.map((step, idx) => (
+                      <div key={step.number} className="border rounded-lg overflow-hidden">
+                        <div 
+                          className="p-3 bg-gray-50 cursor-pointer flex items-center justify-between hover:bg-gray-100 transition-colors"
+                          onClick={() => toggleStep(step.number)}
+                        >
+                          <div className="flex items-center gap-3">
+                            <span className="w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                              {step.number}
+                            </span>
+                            <span className="font-medium text-gray-800">
+                              {(showOriginalText ? step.originalText : step.germanText)?.substring(0, 80)}
+                              {((showOriginalText ? step.originalText : step.germanText)?.length || 0) > 80 ? '...' : ''}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            {step.errorCases?.length > 0 && (
+                              <span className="px-2 py-0.5 bg-red-100 text-red-700 text-xs rounded">
+                                {step.errorCases.length} Fehler
+                              </span>
+                            )}
+                            {step.successCases?.length > 0 && (
+                              <span className="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded">
+                                Erfolg
+                              </span>
+                            )}
+                            <Icon name={expandedSteps[step.number] ? 'chevron-up' : 'chevron-down'} className="text-gray-400" />
+                          </div>
+                        </div>
+                        
+                        {expandedSteps[step.number] && (
+                          <div className="p-4 border-t bg-white">
+                            <p className="text-gray-700 mb-4">
+                              {showOriginalText ? step.originalText : step.germanText}
+                            </p>
+                            
+                            {step.pseudocode && (
+                              <div className="mb-4">
+                                <h5 className="text-xs font-semibold text-gray-500 uppercase mb-2">Pseudocode</h5>
+                                <pre className="bg-gray-900 text-gray-100 p-3 rounded text-sm overflow-x-auto font-mono">
+                                  {step.pseudocode}
+                                </pre>
+                              </div>
+                            )}
+                            
+                            {step.errorCases?.length > 0 && (
+                              <div className="mb-4">
+                                <h5 className="text-xs font-semibold text-red-600 uppercase mb-2 flex items-center">
+                                  <Icon name="times-circle" className="mr-1" />
+                                  Fehlerfälle
+                                </h5>
+                                <div className="space-y-2">
+                                  {step.errorCases.map((ec, ecIdx) => (
+                                    <div key={ecIdx} className="p-3 bg-red-50 rounded border-l-4 border-red-400">
+                                      <div className="flex items-center gap-2 mb-1">
+                                        {renderExceptionReference(ec.exception)}
+                                      </div>
+                                      <p className="text-sm text-red-700"><strong>Auslöser:</strong> {ec.trigger}</p>
+                                      {ec.action && <p className="text-sm text-red-600"><strong>Aktion:</strong> {ec.action}</p>}
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                            
+                            {step.successCases?.length > 0 && (
+                              <div>
+                                <h5 className="text-xs font-semibold text-green-600 uppercase mb-2 flex items-center">
+                                  <Icon name="check-circle" className="mr-1" />
+                                  Erfolgsfälle
+                                </h5>
+                                <div className="space-y-2">
+                                  {step.successCases.map((sc, scIdx) => (
+                                    <div key={scIdx} className="p-3 bg-green-50 rounded border-l-4 border-green-400">
+                                      <p className="text-sm text-green-700"><strong>Bedingung:</strong> {sc.condition}</p>
+                                      {sc.action && <p className="text-sm text-green-600"><strong>Aktion:</strong> {sc.action}</p>}
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Timeline View */}
+                {stepViewMode === 'timeline' && (
+                  <div className="p-4">
+                    <div className="relative">
+                      {data.detailedSteps.map((step, idx) => (
+                        <div key={step.number} className="flex gap-4 mb-6 last:mb-0">
+                          <div className="flex flex-col items-center">
+                            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold ${
+                              step.errorCases?.length > 0 ? 'bg-red-500' :
+                              step.successCases?.length > 0 ? 'bg-green-500' :
+                              'bg-indigo-600'
+                            }`}>
+                              {step.number}
+                            </div>
+                            {idx < data.detailedSteps.length - 1 && (
+                              <div className="w-0.5 h-full bg-gray-300 mt-2"></div>
+                            )}
+                          </div>
+                          <div className="flex-1 pb-6">
+                            <p className="text-gray-800 font-medium mb-2">
+                              {showOriginalText ? step.originalText : step.germanText}
+                            </p>
+                            {step.errorCases?.length > 0 && (
+                              <div className="flex flex-wrap gap-1 mt-2">
+                                {step.errorCases.map((ec, ecIdx) => (
+                                  <span key={ecIdx}>{renderExceptionReference(ec.exception)}</span>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Pseudocode View */}
+                {stepViewMode === 'pseudocode' && (
+                  <div className="p-4">
+                    <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg text-sm overflow-x-auto font-mono">
+                      <code>
+                        <span className="text-purple-400">function</span> <span className="text-yellow-300">{data.name}</span>({data.parameters?.map(p => p.name).join(', ')}) {'{\n'}
+                        {data.detailedSteps.map(step => (
+                          <span key={step.number}>
+                            {`\n  `}<span className="text-gray-500">// Schritt {step.number}</span>{'\n'}
+                            {step.pseudocode ? 
+                              step.pseudocode.split('\n').map((line, i) => (
+                                <span key={i}>{`  ${line}\n`}</span>
+                              )) : 
+                              `  // ${(showOriginalText ? step.originalText : step.germanText)?.substring(0, 60)}...\n`
+                            }
+                          </span>
+                        ))}
+                        {'\n}'}
+                      </code>
+                    </pre>
+                  </div>
+                )}
+
+                {/* Flowchart View (Mermaid) */}
+                {stepViewMode === 'flowchart' && (
+                  <div className="p-4">
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <div className="text-center text-gray-500 mb-4">
+                        <Icon name="project-diagram" className="text-4xl mb-2" />
+                        <p>Flowchart-Darstellung</p>
+                      </div>
+                      <pre className="bg-gray-900 text-gray-100 p-4 rounded text-xs overflow-x-auto font-mono">
+                        {generateMermaidFlowchart()}
+                      </pre>
+                      <p className="text-xs text-gray-500 mt-2 text-center">
+                        Kopieren Sie den Mermaid-Code und fügen Sie ihn in einen 
+                        <a href="https://mermaid.live" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline ml-1">
+                          Mermaid Live Editor
+                        </a>
+                        ein
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Notes */}
+            {data.notes && data.notes.length > 0 && (
+              <div className="bg-white rounded-lg shadow p-5 mb-6">
+                <h3 className="font-semibold text-gray-800 mb-3 flex items-center">
+                  <Icon name="sticky-note" className="mr-2 text-yellow-500" />
+                  Hinweise
+                </h3>
+                <ul className="space-y-2">
+                  {data.notes.map((note, idx) => (
+                    <li key={idx} className="text-gray-600 text-sm flex items-start">
+                      <Icon name="angle-right" className="mr-2 mt-1 text-gray-400" />
+                      {typeof note === 'string' ? note : note.text}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* Pre/Post Conditions */}
+            {(data.precondition || data.postcondition) && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                {data.precondition && (
+                  <div className="bg-white rounded-lg shadow p-5">
+                    <h3 className="font-semibold text-gray-800 mb-3 flex items-center">
+                      <Icon name="door-open" className="mr-2 text-blue-500" />
+                      Vorbedingung
+                    </h3>
+                    <p className="text-gray-600 text-sm">{data.precondition}</p>
+                  </div>
+                )}
+                {data.postcondition && (
+                  <div className="bg-white rounded-lg shadow p-5">
+                    <h3 className="font-semibold text-gray-800 mb-3 flex items-center">
+                      <Icon name="door-closed" className="mr-2 text-green-500" />
+                      Nachbedingung
+                    </h3>
+                    <p className="text-gray-600 text-sm">{data.postcondition}</p>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       );
@@ -2176,6 +2861,17 @@
             return <OverviewView overview={overview} onNavigate={handleViewChange} />;
           case 'functions':
             return <FunctionsView instance={instance} onSelectItem={handleSelectItem} />;
+          case 'function-detail':
+            return (
+              <FunctionDetailView 
+                instance={instance} 
+                functionId={selectedItem?.item?.id}
+                onBack={handleBackFromDetail}
+                onNavigateToType={handleNavigateToType}
+                onNavigateToEnum={handleNavigateToEnum}
+                onNavigateToException={handleNavigateToException}
+              />
+            );
           case 'types':
             return <TypesView instance={instance} onSelectItem={handleSelectItem} />;
           case 'type-detail':

@@ -297,7 +297,7 @@ router.get('/:instance/interfacedesign/exception/:id', async (req, res) => {
 
 /**
  * GET /:instance/interfacedesign/function/:id
- * Get a single function by ID
+ * Get a single function by ID with full details
  */
 router.get('/:instance/interfacedesign/function/:id', async (req, res) => {
   try {
@@ -307,40 +307,15 @@ router.get('/:instance/interfacedesign/function/:id', async (req, res) => {
     }
 
     const filePath = path.join(basePath, 'functions', `${req.params.id}.xml`);
-    const func = await xmlParser.parseFunction(filePath);
+    const funcData = await xmlParser.parseFunctionDetail(filePath);
     
-    if (!func) {
+    if (!funcData) {
       return res.status(404).json({ error: 'Function not found' });
-    }
-
-    // Also parse detailed steps
-    const fs = require('fs').promises;
-    const content = await fs.readFile(filePath, 'utf-8');
-    const xml2js = require('xml2js');
-    const parser = new xml2js.Parser({ explicitArray: false, mergeAttrs: true, trim: true });
-    const fullXml = await parser.parseStringPromise(content);
-    
-    let detailedSteps = [];
-    if (fullXml.function && fullXml.function.detailedSteps && fullXml.function.detailedSteps.step) {
-      const steps = Array.isArray(fullXml.function.detailedSteps.step) 
-        ? fullXml.function.detailedSteps.step 
-        : [fullXml.function.detailedSteps.step];
-      detailedSteps = steps.map(s => ({
-        number: parseInt(s.number) || 0,
-        originalText: s.originalText || '',
-        germanText: s.germanText || '',
-        pseudocode: s.pseudocode || '',
-        errorCases: s.errorCase ? (Array.isArray(s.errorCase) ? s.errorCase : [s.errorCase]) : [],
-        successCases: s.successCase ? (Array.isArray(s.successCase) ? s.successCase : [s.successCase]) : []
-      }));
     }
 
     res.json({
       success: true,
-      function: {
-        ...func,
-        detailedSteps
-      }
+      function: funcData
     });
   } catch (error) {
     console.error('Error getting function:', error);

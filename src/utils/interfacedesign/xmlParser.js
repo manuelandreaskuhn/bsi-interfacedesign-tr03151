@@ -117,6 +117,144 @@ async function parseFunction(filePath) {
 }
 
 /**
+ * Parse a function XML file with full details
+ * @param {string} filePath - Path to function XML file
+ * @returns {Promise<Object>} - Full function data
+ */
+async function parseFunctionDetail(filePath) {
+  const xml = await parseXmlFile(filePath);
+  if (!xml || !xml.function) return null;
+
+  const func = xml.function;
+  
+  // Extract parameters with full details
+  let parameters = [];
+  if (func.parameters && func.parameters.parameter) {
+    const params = Array.isArray(func.parameters.parameter) 
+      ? func.parameters.parameter 
+      : [func.parameters.parameter];
+    parameters = params.map(p => ({
+      name: p.n || p.name || '',
+      type: p.type || '',
+      description: p.description || '',
+      direction: p.direction || 'INPUT',
+      required: p.required === 'true' || p.required === true,
+      defaultValue: p.defaultValue || ''
+    }));
+  }
+
+  // Extract exceptions
+  let exceptions = [];
+  if (func.exceptions && func.exceptions.exception) {
+    exceptions = Array.isArray(func.exceptions.exception) 
+      ? func.exceptions.exception 
+      : [func.exceptions.exception];
+  }
+
+  // Extract detailed steps with all information
+  let detailedSteps = [];
+  if (func.detailedSteps && func.detailedSteps.step) {
+    const steps = Array.isArray(func.detailedSteps.step) 
+      ? func.detailedSteps.step 
+      : [func.detailedSteps.step];
+    
+    detailedSteps = steps.map(s => {
+      // Extract error cases
+      let errorCases = [];
+      if (s.errorCase) {
+        const cases = Array.isArray(s.errorCase) ? s.errorCase : [s.errorCase];
+        errorCases = cases.map(ec => ({
+          exception: ec.exception || '',
+          trigger: ec.trigger || '',
+          action: ec.action || ''
+        }));
+      }
+      
+      // Extract success cases
+      let successCases = [];
+      if (s.successCase) {
+        const cases = Array.isArray(s.successCase) ? s.successCase : [s.successCase];
+        successCases = cases.map(sc => ({
+          condition: sc.condition || '',
+          action: sc.action || ''
+        }));
+      }
+      
+      return {
+        number: parseInt(s.number) || 0,
+        originalText: s.originalText || '',
+        germanText: s.germanText || '',
+        pseudocode: s.pseudocode || '',
+        errorCases,
+        successCases
+      };
+    });
+    
+    // Sort by step number
+    detailedSteps.sort((a, b) => a.number - b.number);
+  }
+
+  // Extract notes
+  let notes = [];
+  if (func.note) {
+    const noteList = Array.isArray(func.note) ? func.note : [func.note];
+    notes = noteList.map(n => {
+      if (typeof n === 'string') return { text: n, type: '' };
+      return { text: n._ || n, type: n.type || '' };
+    });
+  }
+
+  // Extract system log info
+  let systemLog = null;
+  if (func.systemLog) {
+    systemLog = {
+      logType: func.systemLog.logType || '',
+      requirement: func.systemLog.requirement || '',
+      asn1Structure: func.systemLog.asn1Structure ? {
+        logMessage: func.systemLog.asn1Structure.logMessage || '',
+        systemLogMessage: func.systemLog.asn1Structure.systemLogMessage || ''
+      } : null
+    };
+  }
+
+  // Extract transaction log info
+  let transactionLog = null;
+  if (func.transactionLog) {
+    transactionLog = {
+      logType: func.transactionLog.logType || '',
+      requirement: func.transactionLog.requirement || '',
+      asn1Structure: func.transactionLog.asn1Structure ? {
+        logMessage: func.transactionLog.asn1Structure.logMessage || '',
+        transactionLogMessage: func.transactionLog.asn1Structure.transactionLogMessage || ''
+      } : null
+    };
+  }
+
+  return {
+    id: func.id || func.n || path.basename(filePath, '.xml'),
+    name: func.n || func.name || '',
+    category: func.category || 'Uncategorized',
+    description: func.description || '',
+    parameters,
+    parameterCount: parameters.length,
+    returnValue: func.returnValue ? {
+      type: func.returnValue.type || 'void',
+      description: func.returnValue.description || ''
+    } : { type: 'void', description: '' },
+    exceptions,
+    exceptionCount: exceptions.length,
+    detailedSteps,
+    stepCount: detailedSteps.length,
+    precondition: func.precondition || '',
+    postcondition: func.postcondition || '',
+    notes,
+    systemLog,
+    transactionLog,
+    filePath
+  };
+}
+
+/**
  * Parse an enum XML file and extract relevant data
  * @param {string} filePath - Path to enum XML file
  * @returns {Promise<Object>} - Enum data
@@ -577,6 +715,7 @@ module.exports = {
   parseXmlFile,
   getXmlFilesFromDir,
   parseFunction,
+  parseFunctionDetail,
   parseEnum,
   parseEnumDetail,
   parseType,
