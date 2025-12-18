@@ -719,13 +719,16 @@
     // Type Detail View Component
     // ============================================
 
-    const TypeDetailView = ({ instance, typeId, onBack, onNavigateToType }) => {
+    const TypeDetailView = ({ instance, typeId, onBack, onNavigateToType, onNavigateToEnum }) => {
       const [data, setData] = useState(null);
       const [loading, setLoading] = useState(true);
       const [error, setError] = useState(null);
+      const [availableTypes, setAvailableTypes] = useState([]);
+      const [availableEnums, setAvailableEnums] = useState([]);
 
       useEffect(() => {
         loadType();
+        loadAvailableTypesAndEnums();
       }, [instance, typeId]);
 
       const loadType = async () => {
@@ -746,6 +749,26 @@
         setLoading(false);
       };
 
+      const loadAvailableTypesAndEnums = async () => {
+        try {
+          // Load types
+          const typesResponse = await fetch(getApiUrl(instance, '/types'));
+          const typesResult = await typesResponse.json();
+          if (typesResult.success) {
+            setAvailableTypes(typesResult.items.map(t => t.name));
+          }
+          
+          // Load enums
+          const enumsResponse = await fetch(getApiUrl(instance, '/enums'));
+          const enumsResult = await enumsResponse.json();
+          if (enumsResult.success) {
+            setAvailableEnums(enumsResult.items.map(e => e.name));
+          }
+        } catch (err) {
+          console.error('Error loading available types/enums:', err);
+        }
+      };
+
       const getTypeKindInfo = (kind) => {
         switch (kind) {
           case 'simple': return { label: 'Einfacher Typ', icon: 'tag', color: 'green' };
@@ -753,6 +776,46 @@
           case 'eventData': return { label: 'Event-Daten', icon: 'bolt', color: 'yellow' };
           default: return { label: 'Komplexer Typ', icon: 'cubes', color: 'purple' };
         }
+      };
+
+      // Render a type reference - links to type/enum if available
+      const renderTypeReference = (typeName) => {
+        if (!typeName) return <span className="text-gray-400">-</span>;
+        
+        // Check if it's an available type
+        if (availableTypes.includes(typeName)) {
+          return (
+            <span 
+              className="px-2 py-0.5 bg-purple-50 text-purple-700 rounded text-sm font-mono cursor-pointer hover:bg-purple-100 hover:underline transition-colors inline-flex items-center gap-1"
+              onClick={() => onNavigateToType && onNavigateToType(typeName)}
+              title={`Typ "${typeName}" anzeigen`}
+            >
+              <Icon name="cube" className="text-xs" />
+              {typeName}
+            </span>
+          );
+        }
+        
+        // Check if it's an available enum
+        if (availableEnums.includes(typeName)) {
+          return (
+            <span 
+              className="px-2 py-0.5 bg-amber-50 text-amber-700 rounded text-sm font-mono cursor-pointer hover:bg-amber-100 hover:underline transition-colors inline-flex items-center gap-1"
+              onClick={() => onNavigateToEnum && onNavigateToEnum(typeName)}
+              title={`Enum "${typeName}" anzeigen`}
+            >
+              <Icon name="list-ol" className="text-xs" />
+              {typeName}
+            </span>
+          );
+        }
+        
+        // Standard type (not linkable)
+        return (
+          <span className="px-2 py-0.5 bg-blue-50 text-blue-700 rounded text-sm font-mono">
+            {typeName}
+          </span>
+        );
       };
 
       if (loading) {
@@ -896,9 +959,7 @@
                             )}
                           </td>
                           <td className="px-4 py-3">
-                            <span className="px-2 py-0.5 bg-blue-50 text-blue-700 rounded text-sm font-mono">
-                              {field.type}
-                            </span>
+                            {renderTypeReference(field.type)}
                           </td>
                           <td className="px-4 py-3 text-sm text-gray-600 max-w-md">
                             {field.description || '-'}
@@ -2124,6 +2185,7 @@
                 typeId={selectedItem?.item?.id}
                 onBack={handleBackFromDetail}
                 onNavigateToType={handleNavigateToType}
+                onNavigateToEnum={handleNavigateToEnum}
               />
             );
           case 'enums':
