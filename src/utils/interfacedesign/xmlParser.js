@@ -153,6 +153,91 @@ async function parseEnum(filePath) {
 }
 
 /**
+ * Parse an enum XML file with full details
+ * @param {string} filePath - Path to enum XML file
+ * @returns {Promise<Object>} - Full enum data
+ */
+async function parseEnumDetail(filePath) {
+  const xml = await parseXmlFile(filePath);
+  if (!xml || !xml.enum) return null;
+
+  const enumData = xml.enum;
+
+  // Extract values with all details
+  let values = [];
+  if (enumData.values && enumData.values.value) {
+    const vals = Array.isArray(enumData.values.value) 
+      ? enumData.values.value 
+      : [enumData.values.value];
+    values = vals.map(v => ({
+      name: v.n || v.name || '',
+      numericValue: v.numericValue !== undefined ? parseInt(v.numericValue) : undefined,
+      hexValue: v.hexValue || '',
+      description: v.description || '',
+      germanText: v.germanText || '',
+      usage: v.usage || '',
+      deprecated: v.deprecated === 'true' || v.deprecated === true,
+      since: v.since || ''
+    }));
+  }
+
+  // Extract type info
+  let typeInfo = null;
+  if (enumData.typeInfo) {
+    typeInfo = {
+      asn1Type: enumData.typeInfo.asn1Type || '',
+      javaType: enumData.typeInfo.javaType || '',
+      cType: enumData.typeInfo.cType || '',
+      encoding: enumData.typeInfo.encoding || ''
+    };
+  }
+
+  // Extract constraints
+  let constraints = [];
+  if (enumData.constraints && enumData.constraints.constraint) {
+    const cons = Array.isArray(enumData.constraints.constraint)
+      ? enumData.constraints.constraint
+      : [enumData.constraints.constraint];
+    constraints = cons.map(c => ({
+      type: c.type || '',
+      description: c.description || ''
+    }));
+  }
+
+  // Extract related enumerations
+  let relatedEnumerations = [];
+  if (enumData.relatedEnumerations && enumData.relatedEnumerations.enumeration) {
+    relatedEnumerations = Array.isArray(enumData.relatedEnumerations.enumeration)
+      ? enumData.relatedEnumerations.enumeration
+      : [enumData.relatedEnumerations.enumeration];
+  }
+
+  // Extract notes
+  let notes = [];
+  if (enumData.note) {
+    notes = Array.isArray(enumData.note) ? enumData.note : [enumData.note];
+  }
+
+  return {
+    id: enumData.id || enumData.n || path.basename(filePath, '.xml'),
+    name: enumData.n || enumData.name || '',
+    category: enumData.category || 'Uncategorized',
+    description: enumData.description || '',
+    germanText: enumData.germanText || '',
+    values,
+    valueCount: values.length,
+    typeInfo,
+    constraints,
+    usageContext: enumData.usageContext || '',
+    relatedEnumerations,
+    notes,
+    version: enumData.version || '',
+    lastModified: enumData.lastModified || '',
+    filePath
+  };
+}
+
+/**
  * Parse a type XML file and extract relevant data
  * @param {string} filePath - Path to type XML file
  * @returns {Promise<Object>} - Type data
@@ -404,6 +489,7 @@ module.exports = {
   getXmlFilesFromDir,
   parseFunction,
   parseEnum,
+  parseEnumDetail,
   parseType,
   parseException,
   parseExceptionDetail,

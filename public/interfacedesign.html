@@ -153,7 +153,9 @@
                   <div 
                     key={item.id}
                     className={`nav-item px-4 py-3 cursor-pointer flex items-center gap-3 ${
-                      activeView === item.id || (item.id === 'exceptions' && activeView === 'exception-detail') ? 'active' : ''
+                      activeView === item.id || 
+                      (item.id === 'exceptions' && activeView === 'exception-detail') ||
+                      (item.id === 'enums' && activeView === 'enum-detail') ? 'active' : ''
                     }`}
                     onClick={() => onViewChange(item.id)}
                   >
@@ -706,6 +708,324 @@
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+      );
+    };
+
+    // ============================================
+    // Enum Detail View Component
+    // ============================================
+
+    const EnumDetailView = ({ instance, enumId, onBack, onNavigateToEnum }) => {
+      const [data, setData] = useState(null);
+      const [loading, setLoading] = useState(true);
+      const [error, setError] = useState(null);
+
+      useEffect(() => {
+        loadEnum();
+      }, [instance, enumId]);
+
+      const loadEnum = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+          const response = await fetch(getApiUrl(instance, `/enum/${enumId}`));
+          const result = await response.json();
+          if (result.success) {
+            setData(result.enum);
+          } else {
+            setError(result.error || 'Fehler beim Laden');
+          }
+        } catch (err) {
+          console.error('Error loading enum:', err);
+          setError('Fehler beim Laden des Enums');
+        }
+        setLoading(false);
+      };
+
+      if (loading) {
+        return (
+          <div className="flex items-center justify-center h-64">
+            <div className="loading-spinner"></div>
+          </div>
+        );
+      }
+
+      if (error) {
+        return (
+          <div className="p-6">
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">
+              <Icon name="exclamation-triangle" className="mr-2" />
+              {error}
+            </div>
+          </div>
+        );
+      }
+
+      if (!data) return null;
+
+      return (
+        <div className="p-6 fade-in">
+          <div className="max-w-4xl mx-auto">
+            {/* Back Button */}
+            <button
+              onClick={onBack}
+              className="mb-4 flex items-center text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              <Icon name="arrow-left" className="mr-2" />
+              Zurück zur Übersicht
+            </button>
+
+            {/* Header Card */}
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-6">
+              <div className="bg-gradient-to-r from-amber-500 to-amber-600 p-6 text-white">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-start gap-4">
+                    <div className="w-16 h-16 bg-white/20 rounded-xl flex items-center justify-center">
+                      <Icon name="list-ol" className="text-3xl" />
+                    </div>
+                    <div>
+                      <h1 className="text-2xl font-bold">{data.name}</h1>
+                      <div className="flex items-center gap-3 mt-2">
+                        {data.category && (
+                          <span className="px-3 py-1 bg-white/20 rounded-full text-sm">
+                            {data.category}
+                          </span>
+                        )}
+                        <span className="px-3 py-1 bg-white/20 rounded-full text-sm">
+                          {data.valueCount} Werte
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Description */}
+              <div className="p-6">
+                <h2 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+                  <Icon name="info-circle" className="mr-2 text-blue-500" />
+                  Beschreibung
+                </h2>
+                <p className="text-gray-700 leading-relaxed">{data.description || 'Keine Beschreibung verfügbar.'}</p>
+                {data.germanText && (
+                  <p className="text-gray-600 mt-2 italic">{data.germanText}</p>
+                )}
+              </div>
+            </div>
+
+            {/* Values Table */}
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-6">
+              <div className="p-4 bg-gray-50 border-b">
+                <h3 className="font-semibold text-gray-800 flex items-center">
+                  <Icon name="list" className="mr-2 text-amber-500" />
+                  Enumerationswerte
+                  <span className="ml-2 px-2 py-0.5 bg-amber-100 text-amber-700 text-xs rounded-full">
+                    {data.values.length}
+                  </span>
+                </h3>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-gray-50 border-b">
+                    <tr>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Name</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Wert</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Beschreibung</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200">
+                    {data.values.map((val, idx) => (
+                      <tr key={idx} className={`hover:bg-gray-50 ${val.deprecated ? 'opacity-60' : ''}`}>
+                        <td className="px-4 py-3">
+                          <code className="text-amber-700 font-semibold bg-amber-50 px-2 py-0.5 rounded">
+                            {val.name}
+                          </code>
+                        </td>
+                        <td className="px-4 py-3">
+                          <div className="flex items-center gap-2">
+                            {val.numericValue !== undefined && (
+                              <span className="px-2 py-0.5 bg-gray-100 text-gray-700 rounded text-sm font-mono">
+                                {val.numericValue}
+                              </span>
+                            )}
+                            {val.hexValue && (
+                              <span className="px-2 py-0.5 bg-blue-50 text-blue-700 rounded text-sm font-mono">
+                                {val.hexValue}
+                              </span>
+                            )}
+                            {val.numericValue === undefined && !val.hexValue && (
+                              <span className="text-gray-400 text-sm">-</span>
+                            )}
+                          </div>
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-600 max-w-md">
+                          {val.description || '-'}
+                          {val.germanText && (
+                            <p className="text-gray-400 text-xs mt-1 italic">{val.germanText}</p>
+                          )}
+                          {val.usage && (
+                            <p className="text-blue-600 text-xs mt-1">
+                              <Icon name="lightbulb" className="mr-1" />
+                              {val.usage}
+                            </p>
+                          )}
+                        </td>
+                        <td className="px-4 py-3">
+                          {val.deprecated ? (
+                            <span className="px-2 py-0.5 bg-red-100 text-red-700 rounded text-xs">
+                              <Icon name="exclamation-triangle" className="mr-1" />
+                              Veraltet
+                            </span>
+                          ) : (
+                            <span className="px-2 py-0.5 bg-green-100 text-green-700 rounded text-xs">
+                              <Icon name="check" className="mr-1" />
+                              Aktiv
+                            </span>
+                          )}
+                          {val.since && (
+                            <span className="block text-gray-400 text-xs mt-1">
+                              Seit: {val.since}
+                            </span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Additional Info Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Type Info */}
+              {data.typeInfo && (data.typeInfo.asn1Type || data.typeInfo.javaType || data.typeInfo.cType) && (
+                <div className="bg-white rounded-lg shadow p-5">
+                  <h3 className="font-semibold text-gray-800 mb-3 flex items-center">
+                    <Icon name="code" className="mr-2 text-purple-500" />
+                    Typ-Informationen
+                  </h3>
+                  <div className="space-y-2">
+                    {data.typeInfo.asn1Type && (
+                      <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                        <span className="text-sm text-gray-600">ASN.1 Type</span>
+                        <code className="text-sm text-purple-600">{data.typeInfo.asn1Type}</code>
+                      </div>
+                    )}
+                    {data.typeInfo.javaType && (
+                      <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                        <span className="text-sm text-gray-600">Java Type</span>
+                        <code className="text-sm text-orange-600">{data.typeInfo.javaType}</code>
+                      </div>
+                    )}
+                    {data.typeInfo.cType && (
+                      <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                        <span className="text-sm text-gray-600">C Type</span>
+                        <code className="text-sm text-blue-600">{data.typeInfo.cType}</code>
+                      </div>
+                    )}
+                    {data.typeInfo.encoding && (
+                      <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                        <span className="text-sm text-gray-600">Encoding</span>
+                        <code className="text-sm text-green-600">{data.typeInfo.encoding}</code>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Usage Context */}
+              {data.usageContext && (
+                <div className="bg-white rounded-lg shadow p-5">
+                  <h3 className="font-semibold text-gray-800 mb-3 flex items-center">
+                    <Icon name="crosshairs" className="mr-2 text-blue-500" />
+                    Verwendungskontext
+                  </h3>
+                  <p className="text-gray-600 text-sm">{data.usageContext}</p>
+                </div>
+              )}
+
+              {/* Constraints */}
+              {data.constraints && data.constraints.length > 0 && (
+                <div className="bg-white rounded-lg shadow p-5">
+                  <h3 className="font-semibold text-gray-800 mb-3 flex items-center">
+                    <Icon name="lock" className="mr-2 text-red-500" />
+                    Einschränkungen
+                  </h3>
+                  <div className="space-y-2">
+                    {data.constraints.map((c, idx) => (
+                      <div key={idx} className="p-2 bg-red-50 rounded border-l-2 border-red-300">
+                        <span className="font-medium text-red-700 text-sm">{c.type}</span>
+                        {c.description && (
+                          <p className="text-red-600 text-xs mt-1">{c.description}</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Related Enumerations */}
+              {data.relatedEnumerations && data.relatedEnumerations.length > 0 && (
+                <div className="bg-white rounded-lg shadow p-5">
+                  <h3 className="font-semibold text-gray-800 mb-3 flex items-center">
+                    <Icon name="link" className="mr-2 text-amber-500" />
+                    Verwandte Enums
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {data.relatedEnumerations.map((rel, idx) => (
+                      <span 
+                        key={idx}
+                        className="px-3 py-1 bg-amber-50 text-amber-700 rounded-full text-sm cursor-pointer hover:bg-amber-100 transition-colors"
+                        onClick={() => onNavigateToEnum && onNavigateToEnum(rel)}
+                      >
+                        {rel}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Notes */}
+              {data.notes && data.notes.length > 0 && (
+                <div className="bg-white rounded-lg shadow p-5">
+                  <h3 className="font-semibold text-gray-800 mb-3 flex items-center">
+                    <Icon name="sticky-note" className="mr-2 text-yellow-500" />
+                    Hinweise
+                  </h3>
+                  <ul className="space-y-2">
+                    {data.notes.map((note, idx) => (
+                      <li key={idx} className="text-gray-600 text-sm flex items-start">
+                        <Icon name="angle-right" className="mr-2 mt-1 text-gray-400" />
+                        {note}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+
+            {/* Metadata Footer */}
+            {(data.version || data.lastModified) && (
+              <div className="mt-6 p-4 bg-gray-50 rounded-lg border text-sm text-gray-500">
+                <div className="flex items-center gap-4">
+                  {data.version && (
+                    <span>
+                      <Icon name="tag" className="mr-1" />
+                      Version: {data.version}
+                    </span>
+                  )}
+                  {data.lastModified && (
+                    <span>
+                      <Icon name="clock" className="mr-1" />
+                      Zuletzt geändert: {data.lastModified}
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       );
@@ -1266,14 +1586,19 @@
         setSelectedItem({ type, item });
         if (type === 'exception') {
           setActiveView('exception-detail');
+        } else if (type === 'enum') {
+          setActiveView('enum-detail');
         }
       };
 
       const handleBackFromDetail = () => {
+        const previousType = selectedItem?.type;
         setSelectedItem(null);
         // Return to the appropriate list view based on type
-        if (selectedItem?.type === 'exception') {
+        if (previousType === 'exception') {
           setActiveView('exceptions');
+        } else if (previousType === 'enum') {
+          setActiveView('enums');
         }
       };
 
@@ -1281,6 +1606,12 @@
         // Navigate to function detail (for future implementation)
         console.log('Navigate to function:', funcName);
         setActiveView('functions');
+      };
+
+      const handleNavigateToEnum = (enumName) => {
+        // Navigate to enum detail
+        setSelectedItem({ type: 'enum', item: { id: enumName } });
+        setActiveView('enum-detail');
       };
 
       // Loading state
@@ -1326,6 +1657,15 @@
             return <TypesView instance={instance} onSelectItem={handleSelectItem} />;
           case 'enums':
             return <EnumsView instance={instance} onSelectItem={handleSelectItem} />;
+          case 'enum-detail':
+            return (
+              <EnumDetailView 
+                instance={instance} 
+                enumId={selectedItem?.item?.id}
+                onBack={handleBackFromDetail}
+                onNavigateToEnum={handleNavigateToEnum}
+              />
+            );
           case 'exceptions':
             return <ExceptionsView instance={instance} onSelectItem={handleSelectItem} />;
           case 'exception-detail':

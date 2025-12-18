@@ -241,6 +241,34 @@ router.get('/:instance/interfacedesign/exceptions', async (req, res) => {
 });
 
 /**
+ * GET /:instance/interfacedesign/enum/:id
+ * Get a single enum by ID with full details
+ */
+router.get('/:instance/interfacedesign/enum/:id', async (req, res) => {
+  try {
+    const basePath = await getInterfaceDesignPath(req.params.instance);
+    if (!basePath) {
+      return res.status(404).json({ error: 'InterfaceDesign folder not found' });
+    }
+
+    const filePath = path.join(basePath, 'enums', `${req.params.id}.xml`);
+    const enumData = await xmlParser.parseEnumDetail(filePath);
+    
+    if (!enumData) {
+      return res.status(404).json({ error: 'Enum not found' });
+    }
+
+    res.json({
+      success: true,
+      enum: enumData
+    });
+  } catch (error) {
+    console.error('Error getting enum:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
  * GET /:instance/interfacedesign/exception/:id
  * Get a single exception by ID with full details
  */
