@@ -241,6 +241,34 @@ router.get('/:instance/interfacedesign/exceptions', async (req, res) => {
 });
 
 /**
+ * GET /:instance/interfacedesign/exception/:id
+ * Get a single exception by ID with full details
+ */
+router.get('/:instance/interfacedesign/exception/:id', async (req, res) => {
+  try {
+    const basePath = await getInterfaceDesignPath(req.params.instance);
+    if (!basePath) {
+      return res.status(404).json({ error: 'InterfaceDesign folder not found' });
+    }
+
+    const filePath = path.join(basePath, 'exceptions', `${req.params.id}.xml`);
+    const exception = await xmlParser.parseExceptionDetail(filePath);
+    
+    if (!exception) {
+      return res.status(404).json({ error: 'Exception not found' });
+    }
+
+    res.json({
+      success: true,
+      exception
+    });
+  } catch (error) {
+    console.error('Error getting exception:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
  * GET /:instance/interfacedesign/function/:id
  * Get a single function by ID
  */

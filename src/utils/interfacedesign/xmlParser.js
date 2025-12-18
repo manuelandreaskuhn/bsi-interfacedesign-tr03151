@@ -241,6 +241,105 @@ async function parseException(filePath) {
 }
 
 /**
+ * Parse an exception XML file with full details
+ * @param {string} filePath - Path to exception XML file
+ * @returns {Promise<Object>} - Full exception data
+ */
+async function parseExceptionDetail(filePath) {
+  const xml = await parseXmlFile(filePath);
+  if (!xml || !xml.exception) return null;
+
+  const exc = xml.exception;
+
+  // Extract functions that throw this exception
+  let thrownBy = [];
+  if (exc.thrownBy && exc.thrownBy.function) {
+    thrownBy = Array.isArray(exc.thrownBy.function) 
+      ? exc.thrownBy.function 
+      : [exc.thrownBy.function];
+  }
+
+  // Extract related exceptions
+  let relatedExceptions = [];
+  if (exc.relatedExceptions && exc.relatedExceptions.exception) {
+    relatedExceptions = Array.isArray(exc.relatedExceptions.exception)
+      ? exc.relatedExceptions.exception
+      : [exc.relatedExceptions.exception];
+  }
+
+  // Extract trigger conditions
+  let triggerConditions = [];
+  if (exc.triggerConditions && exc.triggerConditions.condition) {
+    const conditions = Array.isArray(exc.triggerConditions.condition)
+      ? exc.triggerConditions.condition
+      : [exc.triggerConditions.condition];
+    triggerConditions = conditions.map(c => ({
+      description: c.description || '',
+      trigger: c.trigger || '',
+      action: c.action || ''
+    }));
+  }
+
+  // Extract notes
+  let notes = [];
+  if (exc.note) {
+    notes = Array.isArray(exc.note) ? exc.note : [exc.note];
+  }
+
+  // Extract javadoc
+  let javadoc = null;
+  if (exc.javadoc) {
+    let throws = [];
+    if (exc.javadoc.throws) {
+      throws = Array.isArray(exc.javadoc.throws) ? exc.javadoc.throws : [exc.javadoc.throws];
+    }
+    javadoc = {
+      summary: exc.javadoc.summary || '',
+      description: exc.javadoc.description || '',
+      throws,
+      since: exc.javadoc.since || '',
+      author: exc.javadoc.author || ''
+    };
+  }
+
+  // Extract specification
+  let specification = null;
+  if (exc.specification) {
+    let references = [];
+    if (exc.specification.reference) {
+      references = Array.isArray(exc.specification.reference) 
+        ? exc.specification.reference 
+        : [exc.specification.reference];
+    }
+    specification = {
+      source: exc.specification.source || '',
+      section: exc.specification.section || '',
+      requirement: exc.specification.requirement || '',
+      applicability: exc.specification.applicability || '',
+      references
+    };
+  }
+
+  return {
+    id: exc.id || exc.n || path.basename(filePath, '.xml'),
+    name: exc.n || exc.name || '',
+    category: exc.category || 'Uncategorized',
+    severity: exc.severity || 'Medium',
+    description: exc.description || '',
+    javadoc,
+    specification,
+    thrownBy,
+    thrownByCount: thrownBy.length,
+    relatedExceptions,
+    triggerConditions,
+    recovery: exc.recovery || '',
+    example: exc.example || '',
+    notes,
+    filePath
+  };
+}
+
+/**
  * Load all items from a category directory
  * @param {string} basePath - Base path for interfacedesign
  * @param {string} category - Category name (functions, enums, types, exceptions)
@@ -307,6 +406,7 @@ module.exports = {
   parseEnum,
   parseType,
   parseException,
+  parseExceptionDetail,
   loadCategory,
   getOverview
 };
