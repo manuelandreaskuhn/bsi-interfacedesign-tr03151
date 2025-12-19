@@ -131,16 +131,8 @@
     <state name="Caller Responsibility">Caller must handle the exception appropriately and determine recovery strategy based on error message, cause, and context information.</state>
   </postconditionality>
   <notes>
-    <note>ErrorFunctionFailed is the ultimate catch-all exception and should only be raised when no other specific exception applies. Its presence indicates an unexpected failure condition not covered by explicit API specification.</note>
-    <note>This exception can be raised by virtually ANY function in the SE API (43+ different functions). It is the most generic and broadly applicable exception in the API specification.</note>
-    <note>The exception has Critical severity because it represents a failure that prevents the function from completing its intended operation, regardless of the specific cause.</note>
-    <note>When ErrorFunctionFailed is raised, the error details, message, and stack trace are critically important for diagnosing the underlying issue. Comprehensive logging and analysis are essential.</note>
-    <note>Unlike specific exceptions (ErrorDeviceNotInitialized, ErrorSecureElementDisabled, ErrorSigningEventDataFailed, etc.), ErrorFunctionFailed provides minimal information about the failure cause. Callers must rely on exception messages, causes, and logs for diagnosis.</note>
-    <note>ErrorFunctionFailed may wrap or indicate a lower-level system error, hardware failure, resource exhaustion, communication breakdown, or other unexpected condition not explicitly handled by the API.</note>
-    <note>The exception should be handled by applications as a critical failure requiring investigation, appropriate error recovery, system diagnostics, or user notification depending on the application context.</note>
-    <note>Implementations should ensure that all specific exception conditions are thoroughly checked before raising ErrorFunctionFailed, to preserve the semantic value and diagnostic utility of the more specific exceptions.</note>
-    <note>ErrorFunctionFailed is universal and implementation-independent. Each SE API implementation may encounter unique failure conditions that are caught by this catch-all exception.</note>
-    <note>When ErrorFunctionFailed occurs repeatedly for the same operation or function, it typically indicates a systemic problem requiring professional investigation, device repair, or replacement.</note>
+    <note>Indication: A function failed to execute - generic error indicating function execution failure</note>
+    <note>Topics: Function Execution, Error Handling, General Failures, SE API Operations</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Unexpected Hardware Failure">

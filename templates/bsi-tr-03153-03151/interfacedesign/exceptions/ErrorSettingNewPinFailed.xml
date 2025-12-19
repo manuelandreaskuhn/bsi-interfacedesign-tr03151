@@ -96,21 +96,8 @@
     <state name="Retry Possible">The unblock operation can be retried after addressing the PIN format or policy issue.</state>
   </postconditionality>
   <notes>
-    <note>ErrorSettingNewPinFailed is thrown only by the unblockPin function - specific to PIN unblock operations</note>
-    <note>This exception indicates the new PIN setting step of unblock failed</note>
-    <note>The exception is distinct from ErrorUnblockingPinFailed which indicates PUK authentication failed</note>
-    <note>This exception indicates the PIN remains blocked - user authentication is still not possible</note>
-    <note>The exception has High severity because it leaves the user unable to authenticate</note>
-    <note>New PIN must meet device security policy requirements for length and characters</note>
-    <note>Device should validate new PIN format before attempting to store it</note>
-    <note>Storage failure is a serious issue - device may have storage problems</note>
-    <note>Communication reliability is important during critical PIN operations</note>
-    <note>Error messages should indicate whether the issue is PIN format or device storage</note>
-    <note>PUK consumption should be tracked - repeated failures may exhaust PUK attempts</note>
-    <note>User may need to contact administrator if PIN cannot be unblocked</note>
-    <note>Security policy should enforce PIN requirements that prevent weak PINs</note>
-    <note>Device should provide clear feedback about PIN policy requirements to users</note>
-    <note>Alternative authentication methods should be available if PIN unblock fails repeatedly</note>
+    <note>Indication: Setting of new PIN failed - PIN could not be updated</note>
+    <note>Topics: PIN Management, Authentication, Password Management, User Management</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: User PIN Unblock with Policy Validation">

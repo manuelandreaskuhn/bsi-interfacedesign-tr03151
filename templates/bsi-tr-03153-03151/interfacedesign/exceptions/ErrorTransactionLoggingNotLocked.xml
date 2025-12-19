@@ -88,21 +88,8 @@
     <state name="Caller Notified of Status">Caller receives notification that logging already unlocked.</state>
   </postconditionality>
   <notes>
-    <note>ErrorTransactionLoggingNotLocked is thrown by 1 function: unlockTransactionLogging</note>
-    <note>This is a Medium severity exception - logging already operational</note>
-    <note>Exception indicates operation is invalid, not a failure state</note>
-    <note>Logging is already in desired state (unlocked) when exception raised</note>
-    <note>Unlock operation is preventively rejected when logging already unlocked</note>
-    <note>Caller should verify logging lock status before attempting unlock</note>
-    <note>Lock status should be queryable through device diagnostics interface</note>
-    <note>Multiple unlock attempts should be protected against (idempotent)</note>
-    <note>Automatic lock expiration should be documented in operational procedures</note>
-    <note>Device reset may clear temporary locks automatically</note>
-    <note>Permanent policy-based locks should persist across device restart</note>
-    <note>Error messages should indicate current logging lock status</note>
-    <note>Exception distinguishes between lock/unlock errors clearly</note>
-    <note>Caller should log this exception for operational tracking</note>
-    <note>Operational procedures should include lock status verification</note>
+    <note>Indication: Transaction logging is not locked when it should be - lock expected</note>
+    <note>Topics: Transaction Logging, Logging Control, Lock Operations, State Validation</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Duplicate Unlock Attempt">

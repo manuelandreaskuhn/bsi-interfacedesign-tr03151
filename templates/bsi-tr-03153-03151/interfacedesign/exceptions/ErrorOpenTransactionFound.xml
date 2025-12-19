@@ -90,21 +90,8 @@
     <state name="No Cascading Failures">The exception does not trigger cascading failures or secondary exceptions.</state>
   </postconditionality>
   <notes>
-    <note>ErrorOpenTransactionFound is thrown by disableSecureElement and updateDevice - both device-level operations requiring closed transaction state</note>
-    <note>This exception indicates a prerequisite violation - device operations have specific state requirements that must be met</note>
-    <note>The exception has High severity because it prevents critical device operations like disable and update</note>
-    <note>Open transactions represent incomplete processing contexts that must be properly finalized before device-level operations</note>
-    <note>Recovery requires systematically closing all open transactions via finishTransaction before retrying the blocked operation</note>
-    <note>Applications should implement transaction tracking to ensure all transactions are properly completed, even in error paths</note>
-    <note>The transaction state check occurs before the device-level operation begins - the operation is prevented from proceeding</note>
-    <note>Different transaction types or transaction states may have different completion requirements - consult device specifications</note>
-    <note>This exception protects data consistency by preventing device operations while transaction processing is incomplete</note>
-    <note>Some implementations may allow forced termination of open transactions before proceeding with disable or update - consult device capabilities</note>
-    <note>Orphaned transactions (from client crashes) may need special handling to prevent indefinite blocking of device operations</note>
-    <note>Monitoring and alerting on open transaction count can help prevent this exception by proactive transaction completion</note>
-    <note>Error handling in transaction processing should include cleanup code to ensure transactions are closed even when exceptions occur</note>
-    <note>Applications should validate transaction state before attempting device-level operations to anticipate this exception</note>
-    <note>The error message should ideally specify how many open transactions exist to help debugging</note>
+    <note>Indication: An open transaction exists when it should not - transaction still active</note>
+    <note>Topics: Transaction Management, Transaction State, Transaction Validation, State Constraints</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Device Shutdown with Transaction Cleanup">

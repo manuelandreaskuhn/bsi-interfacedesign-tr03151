@@ -67,18 +67,6 @@
     <exception>ErrorDeregisterClientFailed</exception>
     <exception>ErrorFunctionFailed</exception>
   </relatedExceptions>
-  <notes>
-    <note>This exception is raised only when the registerClient function is implemented. If client registration is not implemented, validation of clientId character validity is performed instead.</note>
-    <note>ClientId is case-sensitive and must match exactly as registered with registerClient for transaction operations. Clients must use identical clientId values across all subsequent API calls.</note>
-    <note>Once a client is deregistered using deregisterClient, it must be re-registered with registerClient before it can initiate new transaction operations. Deregistration permanently invalidates the clientId until re-registration.</note>
-    <note>The Secure Element maintains an internal client registry that tracks all currently registered clientIds. This registry is checked for every transaction-related function call, making client validation a critical performance checkpoint in the API execution path.</note>
-    <note>In implementations supporting concurrent transaction operations, race conditions can occur where a clientId is deregistered while another thread is still executing a transaction operation. Applications must implement proper synchronization.</note>
-    <note>Client registration and deregistration are typically performed at application startup and shutdown respectively. However, dynamic registration changes during runtime may require special error handling and recovery logic.</note>
-    <note>The ErrorClientNotRegistered exception does NOT indicate device failure or corruption. It indicates an application-level error in client lifecycle management. Device state remains valid and further operations can proceed with correctly registered clients.</note>
-    <note>Some implementations may maintain a transaction history that references clientIds even after deregistration. Attempting to export or query transactions for a now-unregistered client may trigger this exception during export operations.</note>
-    <note>Client registration capacity is separate from the maximum number of transactions. A device may support up to N clients, but each client can potentially initiate multiple transactions up to the transaction limit.</note>
-    <note>If a clientId value contains special characters, spaces, or unicode sequences, ensure proper encoding and escaping throughout the application lifecycle. Invalid character detection may occur during registration (ErrorInvalidClientIdCharacter) or during usage (this exception if never properly registered).</note>
-  </notes>
   <executionSequence>
     <step number="1" name="Function Invocation">Function entry point is reached with clientId parameter provided (or null if operation type doesn't require clientId)</step>
     <step number="2" name="Parameter Validation">Basic parameter validation checks are performed to ensure inputs are non-null and properly formatted for initial processing</step>
@@ -98,6 +86,10 @@
     <state name="Caller State">The calling application receives the exception and must implement application-level error handling to recover or retry with a properly registered clientId</state>
     <state name="Device Availability">The Secure Element remains available and operational for subsequent API calls. The device itself has not failed; only this specific operation was rejected due to client registration validation</state>
   </postconditionality>
+  <notes>
+    <note>Indication: Operation attempted on a client ID that is not registered or has been deregistered</note>
+    <note>Topics: Client Management, Registration Status, Client Validation, Transaction Operations</note>
+  </notes>
   <usage>
     <scenario name="Scenario 1: Unregistered Client Transaction Attempt">
       <description>An application attempts to start a transaction without first registering the client, or after the client has been deregistered.</description>

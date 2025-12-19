@@ -94,21 +94,8 @@
     <state name="Audit Trail Protected">Audit trail integrity protected by preventing unlogged transactions.</state>
   </postconditionality>
   <notes>
-    <note>ErrorTransactionLoggingLocked is thrown by 3 core transaction functions</note>
-    <note>This is a High severity exception blocking all transaction functionality</note>
-    <note>Logging lock is an administrative or security policy control mechanism</note>
-    <note>Transactions are blocked to maintain audit trail integrity</note>
-    <note>Logging lock prevents execution of transactions that cannot be logged</note>
-    <note>Lock can be temporary (maintenance) or longer-term (security policy)</note>
-    <note>Lock reason should be documented for audit and compliance purposes</note>
-    <note>Audit trail protection is critical to transaction authenticity</note>
-    <note>Lock status should be visible through device diagnostic/status interface</note>
-    <note>Logging lock is distinct from logging storage availability</note>
-    <note>Transaction logging is essential security feature for non-repudiation</note>
-    <note>Lock might be triggered by security anomaly detection</note>
-    <note>Firmware updates may temporarily lock logging</note>
-    <note>Backup/export operations may set persistent locks</note>
-    <note>Lock should be documented with timestamp and reason for audit</note>
+    <note>Indication: Transaction logging is locked and cannot be modified</note>
+    <note>Topics: Transaction Logging, Logging Control, Lock Operations, Access Control</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Administrative Maintenance Lock">

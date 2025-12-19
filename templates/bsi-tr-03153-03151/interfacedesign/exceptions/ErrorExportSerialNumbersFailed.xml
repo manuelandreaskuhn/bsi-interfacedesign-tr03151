@@ -87,16 +87,8 @@
     <state name="Device Availability">Device functions continue to execute normally. The device remains operational and all API functions remain accessible.</state>
   </postconditionality>
   <notes>
-    <note>ErrorExportSerialNumbersFailed is thrown ONLY by the exportSerialNumbers function - it is the most specific exception for serial number collection failures during serial number export operations.</note>
-    <note>This exception indicates a critical failure in the Secure Element's serial number retrieval functionality during the export process. The exception is raised during the serial number collection phase (step 6b), before serial numbers are packaged into export data.</note>
-    <note>Unlike successful exportSerialNumbers execution, when this exception is raised, no export data of any kind is returned to the user - not even partial or incomplete serial number data.</note>
-    <note>After this exception is raised, the Secure Element remains unchanged and all its serial numbers remain securely stored. The export operation can be retried once the underlying serial number retrieval issue is resolved.</note>
-    <note>This exception has High severity because it prevents users from exporting essential device serial numbers needed for device identification, asset tracking, forensic analysis, and regulatory compliance verification of device operations.</note>
-    <note>The exception is raised during the serial number collection phase, which is early in the export process before data assembly, packaging, and return. This ensures no partial or incomplete data reaches the caller.</note>
-    <note>Serial number export is a critical operation for asset management and forensic analysis. If this exception occurs repeatedly, it indicates a serious issue with Secure Element serial number management, storage, or retrieval functionality.</note>
-    <note>The exportSerialNumbers function is part of the Export functionality category and provides users the ability to retrieve device serial numbers for device identification, inventory management, and administrative purposes.</note>
-    <note>Serial number export failures may prevent proper device identification and tracking in multi-device environments. This may affect compliance with regulatory requirements for device auditing and asset management.</note>
-    <note>Unlike ErrorExportLoggingCertificateFailed (which affects certificate export), this exception specifically affects serial number export. The two export operations are independent and one can fail while the other succeeds.</note>
+    <note>Indication: Export of device serial numbers failed - serial number data could not be retrieved</note>
+    <note>Topics: Device Information, Data Export, Device Identification, Serial Number Operations</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Hardware Failure During Serial Number Collection">

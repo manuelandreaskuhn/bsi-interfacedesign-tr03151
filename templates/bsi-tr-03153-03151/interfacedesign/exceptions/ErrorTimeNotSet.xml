@@ -97,21 +97,8 @@
     <state name="Manual Time Synchronization Required">The user must call updateTime to set device time before operations can proceed.</state>
   </postconditionality>
   <notes>
-    <note>ErrorTimeNotSet is thrown by 3 transaction functions that require valid timestamps</note>
-    <note>This exception indicates device time is not initialized or synchronized</note>
-    <note>The exception has High severity because accurate timestamps are essential for audit trail</note>
-    <note>Device time must be explicitly set via updateTime after initialization</note>
-    <note>Device may lose time after power loss or long offline period</note>
-    <note>Time accuracy is critical for transaction timestamp integrity</note>
-    <note>Timestamp manipulation prevention requires accurate time initialization</note>
-    <note>Time synchronization should be part of normal startup procedures</note>
-    <note>Regular time synchronization maintains device time accuracy</note>
-    <note>Error messages should clearly indicate time needs to be set</note>
-    <note>System clock source for updateTime must be accurate and reliable</note>
-    <note>Time drift can be detected by monitoring timestamp sequences</note>
-    <note>Device should store time persistently to survive short power disruptions</note>
-    <note>Long offline periods may require time resynchronization before operations</note>
-    <note>Audit trail integrity depends on accurate and non-decreasing timestamps</note>
+    <note>Indication: Time has not been set on the device - time synchronization required</note>
+    <note>Topics: Time Management, Device Initialization, Time Synchronization, System Setup</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Device Initialization with Time Setup">

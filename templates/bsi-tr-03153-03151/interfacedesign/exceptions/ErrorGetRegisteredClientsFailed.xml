@@ -87,21 +87,8 @@
     <state name="Recovery Preconditions Met">The device state after exception is consistent and allows for recovery operations. The underlying issue (hardware error, communication error, management system error) remains present, but the device is stable enough to accept diagnostic queries or recovery attempts.</state>
   </postconditionality>
   <notes>
-    <note>ErrorGetRegisteredClientsFailed is thrown ONLY by the getRegisteredClients function - it is the most specific and precise exception for Secure Element registered client retrieval failures</note>
-    <note>This exception indicates a failure in the Secure Element's ability to enumerate its registered clients. It is a critical information retrieval failure for client management and monitoring</note>
-    <note>Critical distinction from ErrorFunctionFailed: ErrorGetRegisteredClientsFailed specifically indicates client enumeration is unavailable at the client management subsystem level, while ErrorFunctionFailed indicates broader unspecified critical failures</note>
-    <note>Exception is raised during the client enumeration phase (steps 6-7), after device initialization and authentication checks have passed</note>
-    <note>After this exception, the Secure Element remains unchanged and registered clients continue to be maintained internally. Client enumeration queries can be retried once the underlying issue is resolved</note>
-    <note>This exception has High severity because it prevents users from enumerating and inspecting registered clients (critical for client management monitoring and diagnostics)</note>
-    <note>Registered client list provides detailed information about all currently registered clients for inspection, monitoring, and diagnostic purposes</note>
-    <note>The exception indicates client enumeration cannot be reliably performed; applications must not implement workarounds using external client tracking without explicit validation</note>
-    <note>Failure scenarios range from transient (temporary communication issues, temporary state) to persistent (storage corruption, hardware failure, firmware error)</note>
-    <note>If this exception occurs frequently or persistently, it indicates serious issues with Secure Element client management hardware, firmware, or registry that require diagnostic investigation</note>
-    <note>Client enumeration is a read-only query; failure does not modify any client state, so recovery typically requires only retrying the query once underlying issue is resolved</note>
-    <note>Registered client list may be large if many clients are registered; applications should handle variable response sizes</note>
-    <note>Client enumeration is essential for client lifecycle monitoring, diagnostics, and management in multi-client environments</note>
-    <note>Applications must implement appropriate error handling for client enumeration failures, especially in managed client environments</note>
-    <note>Repeated client enumeration failures may indicate device needs firmware update, client management reset, or hardware service - manufacturer support should be engaged</note>
+    <note>Indication: Retrieval of registered clients list failed - cannot determine registered clients</note>
+    <note>Topics: Client Management, Information Retrieval, Client Registry, Client Listing</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Active Client Monitoring and Client Lifecycle Management">

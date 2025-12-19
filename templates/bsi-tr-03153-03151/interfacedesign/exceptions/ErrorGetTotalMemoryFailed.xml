@@ -87,21 +87,8 @@
     <state name="Recovery Preconditions Met">The device state after exception is consistent and allows for recovery operations. The underlying issue (hardware error, communication error, resource management error) remains present, but the device is stable enough to accept diagnostic queries or recovery attempts.</state>
   </postconditionality>
   <notes>
-    <note>ErrorGetTotalMemoryFailed is thrown ONLY by the getTotalMemory function - it is the most specific and precise exception for Secure Element total memory capacity retrieval failures</note>
-    <note>This exception indicates a failure in the Secure Element's ability to report its total storage capacity</note>
-    <note>Critical distinction from ErrorFunctionFailed: ErrorGetTotalMemoryFailed specifically indicates memory capacity enumeration is unavailable at the resource management subsystem level, while ErrorFunctionFailed indicates broader unspecified critical failures</note>
-    <note>Exception is raised during the capacity enumeration phase (steps 6-7), after device initialization and authentication checks have passed</note>
-    <note>After this exception, the Secure Element remains unchanged and total storage capacity continues to be maintained internally. Capacity queries can be retried once the underlying issue is resolved</note>
-    <note>This exception has High severity because it prevents users from determining total storage resources (critical for resource planning and capacity management)</note>
-    <note>Total memory represents the complete storage capacity available on the Secure Element for all data and operations</note>
-    <note>The exception indicates storage capacity cannot be reliably determined; applications must not implement workarounds using external capacity estimates without explicit validation</note>
-    <note>Failure scenarios range from transient (temporary communication issues, temporary state) to persistent (memory metadata corruption, hardware failure, firmware error)</note>
-    <note>If this exception occurs frequently or persistently, it indicates serious issues with Secure Element memory or resource management hardware, firmware, or metadata that require diagnostic investigation</note>
-    <note>Memory capacity enumeration is a read-only query; failure does not modify any storage state, so recovery typically requires only retrying the query once underlying issue is resolved</note>
-    <note>Total memory information is essential for resource planning, capacity management, and understanding device storage capabilities</note>
-    <note>Applications must implement appropriate error handling for memory capacity retrieval failures when assessing device resources</note>
-    <note>Repeated memory capacity retrieval failures may indicate device needs firmware update, memory management reset, or hardware service - manufacturer support should be engaged</note>
-    <note>Different device models and configurations may have different total memory capacities - consult device specifications for storage capacity details</note>
+    <note>Indication: Retrieval of total memory failed - total memory capacity unknown</note>
+    <note>Topics: Memory Management, Device Resources, Information Retrieval, Storage Information</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Device Resource Assessment and Capacity Planning">

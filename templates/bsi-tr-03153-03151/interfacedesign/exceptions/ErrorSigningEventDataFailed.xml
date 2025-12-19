@@ -110,21 +110,8 @@
     <state name="Transaction State Uncertain">The transaction state is uncertain - it may or may not have been processed.</state>
   </postconditionality>
   <notes>
-    <note>ErrorSigningEventDataFailed is thrown by 3 transaction functions: startTransaction, updateTransaction, finishTransaction</note>
-    <note>This exception indicates a critical cryptographic or device failure</note>
-    <note>The exception has Critical severity because event signing is essential for audit trail integrity</note>
-    <note>Digital signatures provide cryptographic proof of transaction authenticity and integrity</note>
-    <note>Failure to sign events means transactions are not protected by cryptographic proof</note>
-    <note>Event data must be carefully formatted before signing to ensure signature validity</note>
-    <note>Cryptographic signing requires proper keys and operational cryptographic processor</note>
-    <note>Communication reliability is critical during signature operations</note>
-    <note>Log message parts must be generated and stored atomically with signatures</note>
-    <note>Error messages should distinguish between event data issues vs. cryptographic issues</note>
-    <note>Device should not silently skip signature generation - signing failure must be reported</note>
-    <note>Cryptographic keys must be protected and properly initialized for signing</note>
-    <note>Event data should be validated before transmission to device for signing</note>
-    <note>Audit trail integrity depends on reliable event signing</note>
-    <note>Transactions without valid signatures may not be admissible in audit or legal proceedings</note>
+    <note>Indication: Signing of event data failed - cryptographic operation unsuccessful</note>
+    <note>Topics: Logging Operations, Cryptography, Signature Operations, Event Signing</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Transaction Signing with Cryptographic Failure">

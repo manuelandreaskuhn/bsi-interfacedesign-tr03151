@@ -92,21 +92,8 @@
     <state name="Caller Must Verify Number">Caller should verify transaction number is correct and exists.</state>
   </postconditionality>
   <notes>
-    <note>ErrorTransactionNumberNotFound is thrown by 2 transaction query functions</note>
-    <note>This is a Medium severity exception - no results match query</note>
-    <note>Exception indicates transaction number not found, not a failure</note>
-    <note>Transaction numbers are unique identifiers for each transaction</note>
-    <note>Query search must be exact match on transaction number</note>
-    <note>Transaction number format must match expected pattern</note>
-    <note>Transaction may have been deleted or archived reducing available numbers</note>
-    <note>Different devices maintain separate transaction number sequences</note>
-    <note>Error messages should indicate which transaction number(s) not found</note>
-    <note>Caller should verify transaction numbers before querying</note>
-    <note>Alternative query filters (date range, status) may help find transactions</note>
-    <note>Transaction listing functions can help identify valid transaction numbers</note>
-    <note>Transaction number ranges indicate device transaction volume history</note>
-    <note>Range-based queries can work if specific numbers unknown</note>
-    <note>Archives or backups may contain deleted transaction records</note>
+    <note>Indication: Transaction with the specified number not found - transaction does not exist</note>
+    <note>Topics: Transaction Management, Transaction Identification, Data Retrieval, Transaction State</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Export with Invalid Transaction Number">

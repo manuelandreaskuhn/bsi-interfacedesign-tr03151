@@ -91,21 +91,8 @@
     <state name="Recovery Preconditions Met">The application can immediately retry the operation with a corrected clientId. No recovery procedures or administrative intervention is required - the error is user/application data error.</state>
   </postconditionality>
   <notes>
-    <note>ErrorInvalidClientIdCharacter is thrown ONLY when clientId format validation detects disallowed characters - it is the most specific exception for client ID character set violations</note>
-    <note>This exception indicates input data error (invalid clientId format) rather than a system or device error</note>
-    <note>Critical distinction from ErrorInvalidClientIdLength: ErrorInvalidClientIdCharacter indicates character set violation, while ErrorInvalidClientIdLength indicates length constraint violation</note>
-    <note>Exception is raised during the character validation phase (steps 4), before any Secure Element communication or state changes</note>
-    <note>After this exception, the device state remains completely unchanged and the application can immediately retry with corrected input</note>
-    <note>This exception has High severity because it represents either a coding error in the application or potentially malicious input that violates format constraints</note>
-    <note>Client ID character set restrictions are security-critical - they prevent injection attacks, path traversal, and other format-based vulnerabilities</note>
-    <note>The allowed character set for clientId is strictly defined in the BSI TR-03151-1 specification - consult the specification for exact permitted characters</note>
-    <note>Character encoding must match the specification - UTF-8 or ASCII encoding is typically required</note>
-    <note>If this exception occurs frequently, it suggests the application may not be properly validating or generating clientIds - application-side validation should be added</note>
-    <note>Client ID validation is a mandatory input validation requirement - it occurs for all client operations regardless of device state</note>
-    <note>Applications should implement client-side clientId validation to detect format errors early before calling SE API functions</note>
-    <note>ErrorInvalidClientIdCharacter is an expected, normal exception in workflows where untrusted clientIds might be processed</note>
-    <note>The error message should ideally indicate which character(s) are invalid to facilitate debugging and correction</note>
-    <note>Different client operations (register, deregister, transaction operations) all apply the same clientId character set validation rules</note>
+    <note>Indication: Client ID contains invalid characters - client ID format does not meet requirements</note>
+    <note>Topics: Client Management, Input Validation, Client Identification, Parameter Validation</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Client Registration with Format Validation">

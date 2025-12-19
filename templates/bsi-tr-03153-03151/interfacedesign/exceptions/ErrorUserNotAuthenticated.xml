@@ -132,21 +132,8 @@
     <state name="Caller Must Authenticate">Caller must call authenticateUser before retrying restricted operation.</state>
   </postconditionality>
   <notes>
-    <note>ErrorUserNotAuthenticated is thrown by 14 restricted functions</note>
-    <note>This is a High severity exception - access control violation</note>
-    <note>Restricted functions require authenticated user status</note>
-    <note>Authentication established by successful authenticateUser call</note>
-    <note>Authentication state is maintained by device</note>
-    <note>Session timeout may expire authentication after inactivity</note>
-    <note>logOut explicitly clears authenticated status</note>
-    <note>Device reset may clear authentication state</note>
-    <note>Authentication is user/session specific</note>
-    <note>Restricted functions include configuration, management, PIN, logging control</note>
-    <note>Error messages should indicate authentication requirement</note>
-    <note>Application should check authentication before calling restricted functions</note>
-    <note>Session timeout behavior should be configurable</note>
-    <note>Authentication failures should be logged for security audit</note>
-    <note>Access control is essential for device security model</note>
+    <note>Indication: User is not authenticated - authentication required for this operation</note>
+    <note>Topics: Authentication, User Management, Access Control, Security</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Restricted Function Without Authentication">

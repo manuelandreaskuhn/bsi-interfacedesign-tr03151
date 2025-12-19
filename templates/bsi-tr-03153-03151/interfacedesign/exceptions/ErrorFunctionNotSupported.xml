@@ -126,16 +126,8 @@
     <state name="Caller Responsibility">The application must handle the exception gracefully and implement alternative functionality or notify users of the unavailable feature.</state>
   </postconditionality>
   <notes>
-    <note>ErrorFunctionNotSupported is raised ONLY for optional functions that are not implemented on the device. All mandatory functions must be supported by every compliant SE API device implementation.</note>
-    <note>This exception has Medium severity because it indicates a feature limitation rather than a critical failure - the device is functioning correctly, but a particular optional feature is simply not available.</note>
-    <note>Unlike ErrorFunctionFailed (which indicates an unexpected critical error), ErrorFunctionNotSupported indicates a predictable and expected limitation of the device implementation.</note>
-    <note>Applications should perform device capability discovery during initialization or early in execution, rather than failing at runtime when calling unsupported optional functions.</note>
-    <note>The device's hardware capabilities, firmware version, and implementation variant determine which optional functions are available. Different device models may support different subsets of optional functions.</note>
-    <note>Applications must be designed to gracefully handle the absence of optional functions using try-catch blocks or feature discovery mechanisms to prevent user-facing errors.</note>
-    <note>When this exception is raised, the function receives immediate rejection from the device at the entry point without any processing or state modification, ensuring fast error reporting and no side effects.</note>
-    <note>Developers should document which device models, firmware versions, and hardware variants are required to use specific optional functions in application documentation and requirements.</note>
-    <note>Optional functions may require minimum firmware versions, specific hardware capabilities, or certain device variants. Check function documentation for prerequisites.</note>
-    <note>Firmware upgrades may enable support for previously unavailable optional functions, providing a path forward for applications that require newly available features.</note>
+    <note>Indication: The requested function is not supported by this device or implementation</note>
+    <note>Topics: Function Support, Device Capabilities, Feature Availability, API Compatibility</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Feature Discovery During Initialization">

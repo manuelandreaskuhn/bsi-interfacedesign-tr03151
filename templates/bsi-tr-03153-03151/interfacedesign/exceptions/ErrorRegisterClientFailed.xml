@@ -94,21 +94,8 @@
     <state name="Retry Possible">The registration operation can be retried after addressing the underlying cause of the failure.</state>
   </postconditionality>
   <notes>
-    <note>ErrorRegisterClientFailed is thrown ONLY by the registerClient function - it is the specific exception for client registration failures</note>
-    <note>This exception indicates a client registration operation failure - the client is not successfully added to the device</note>
-    <note>The exception has High severity because it prevents clients from being registered and performing operations</note>
-    <note>Client registration is typically the first step in a client's lifecycle - failed registration prevents subsequent operations</note>
-    <note>Device client capacity is finite - maximum capacity is typically configurable or a device characteristic</note>
-    <note>Client IDs must be unique - duplicate client IDs cannot be registered</note>
-    <note>Different failure reasons require different recovery actions (capacity vs. already registered vs. communication error)</note>
-    <note>Applications should check device capacity before attempting registration to anticipate capacity-based failures</note>
-    <note>Some devices may require deregistration of obsolete clients to free capacity for new clients</note>
-    <note>Client registration failures should be logged and reported to administrators or support</note>
-    <note>Retry strategies should be implemented with appropriate backoff to avoid overwhelming the device</note>
-    <note>Error messages should identify the specific cause of the registration failure (capacity, duplicate, communication, etc.)</note>
-    <note>Monitoring systems should track client registration success/failure rates as a health metric</note>
-    <note>Device should maintain consistent client registry - registration failures should not leave partial or corrupt state</note>
-    <note>Administrative tools should provide means to query and manage the client registry</note>
+    <note>Indication: Registration of a new client failed - client could not be registered</note>
+    <note>Topics: Client Management, Registration, Client Lifecycle, Registry Operations</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Client Registration with Capacity Check">

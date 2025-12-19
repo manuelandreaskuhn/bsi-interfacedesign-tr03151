@@ -88,21 +88,8 @@
     <state name="Pagination Required">The caller must implement pagination to retrieve results in batches.</state>
   </postconditionality>
   <notes>
-    <note>ErrorTooManyRecords is thrown by 2 export functions: exportLogMessages, exportFilteredTransactionLogs</note>
-    <note>This exception indicates the result set exceeds the specified maximum, not a failure</note>
-    <note>The exception has Medium severity because it's a query limitation, not a critical error</note>
-    <note>maxRecords parameter protects against memory exhaustion from large result sets</note>
-    <note>Query parameters should be refined to narrow results for better performance</note>
-    <note>Pagination allows retrieving large result sets in manageable chunks</note>
-    <note>Error messages should indicate how many records matched vs maximum allowed</note>
-    <note>Date range filters effectively narrow large result sets</note>
-    <note>Status or type filters can reduce result set size significantly</note>
-    <note>Batch processing is essential for exporting large volumes of data</note>
-    <note>Export procedures should account for large result sets in design</note>
-    <note>Memory management requires limiting result set size per request</note>
-    <note>Network bandwidth should be considered when sizing maximum record counts</note>
-    <note>Pagination implementation should be transparent to business logic</note>
-    <note>Export performance can be optimized by refining query specificity</note>
+    <note>Indication: Query result contains too many records - result set exceeds limits</note>
+    <note>Topics: Data Retrieval, Result Management, Query Operations, Resource Limits</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Export with Result Set Exceeding Maximum">

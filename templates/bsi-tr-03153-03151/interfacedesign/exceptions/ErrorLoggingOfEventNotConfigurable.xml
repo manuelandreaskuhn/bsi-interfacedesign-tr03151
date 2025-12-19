@@ -89,21 +89,8 @@
     <state name="Reconfiguration Possible for Other Events">Other events that are configurable can still have their logging configuration modified via configureLogging calls.</state>
   </postconditionality>
   <notes>
-    <note>ErrorLoggingOfEventNotConfigurable is thrown ONLY by the configureLogging function - it is the specific exception for non-configurable event types</note>
-    <note>This exception indicates a capability constraint - the event type simply does not support configuration changes</note>
-    <note>The set of configurable event types is device-specific and may vary between different Secure Element implementations</note>
-    <note>Some event types may be mandatory-log by device policy or security requirements and therefore are not configurable</note>
-    <note>Applications should query available configurable event types before attempting to configure logging</note>
-    <note>This exception has Medium severity because it indicates a configuration incompatibility, not a system failure</note>
-    <note>The error message should identify which event type is not configurable to help applications implement appropriate filtering</note>
-    <note>Device specifications should document which event types are configurable and which have fixed behavior</note>
-    <note>Some implementations may provide a list of configurable event types that can be queried to prevent configuration attempts on non-configurable events</note>
-    <note>Configuration of multiple events should handle ErrorLoggingOfEventNotConfigurable gracefully by skipping non-configurable events</note>
-    <note>Event type identifiers should be validated against the device's supported event types before attempting configuration</note>
-    <note>Different event types may have different configuration options (enable/disable, log level, filter settings, etc.) - not all options are configurable for all events</note>
-    <note>The concept of "configurable" applies to the ability to change logging behavior - mandatory events are logging regardless of configuration</note>
-    <note>Device manufacturers should document the event logging configuration matrix identifying which events support which configuration options</note>
-    <note>Applications should implement robust error handling for non-configurable events to support multiple device types with different capabilities</note>
+    <note>Indication: The specified event type cannot be configured for logging - event not configurable</note>
+    <note>Topics: Logging Configuration, Event Management, Configuration Constraints, Logging Events</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Adaptive Logging Configuration with Event Type Discovery">

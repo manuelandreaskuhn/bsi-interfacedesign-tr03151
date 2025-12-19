@@ -89,21 +89,8 @@
     <state name="Potential Rapid Re-block">If the user makes another failed PIN attempt, they may be re-blocked more quickly than expected due to the unreset counter.</state>
   </postconditionality>
   <notes>
-    <note>ErrorResettingRetryCounterFailed is thrown ONLY by the unblockPin function - specific to PIN unblocking</note>
-    <note>This exception indicates a partial failure - PIN is unblocked but retry counter is not reset</note>
-    <note>The exception has High severity because it leaves the account in an inconsistent state</note>
-    <note>The PIN is usable despite the exception - it is not blocked again due to the counter not being reset</note>
-    <note>However, the account remains vulnerable to rapid re-blocking if the counter is not reset properly</note>
-    <note>The retry counter should be reset as part of PIN unblocking to provide a clean slate for new authentication attempts</note>
-    <note>Failure to reset the counter may cause users to experience unintended re-blocking after the first failed attempt</note>
-    <note>Device transaction management should ensure atomic operations for PIN/counter updates</note>
-    <note>Error handling should detect partial failures and either roll back or complete the operation</note>
-    <note>Monitoring should track counter reset failures to identify device issues</note>
-    <note>Administrative tools should provide capability to manually reset retry counters if automated reset fails</note>
-    <note>Error messages should clearly indicate that PIN is unblocked but counter was not reset</note>
-    <note>Users should be informed that the account is in an inconsistent state and counter should be reset</note>
-    <note>The exception is distinct from PIN unblocking failures - the PIN IS unblocked here</note>
-    <note>Transaction logs should record both the successful PIN unblock and the failed counter reset</note>
+    <note>Indication: Resetting of retry counter failed - counter could not be reset</note>
+    <note>Topics: PIN Management, Counter Operations, Retry Operations, Authentication</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: PIN Unblock with Partial Failure Handling">

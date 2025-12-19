@@ -102,21 +102,8 @@
     <state name="Device Requires Investigation">Device requires diagnostics and investigation after update failure.</state>
   </postconditionality>
   <notes>
-    <note>ErrorUpdateDeviceFailed is thrown by 1 function: updateDevice</note>
-    <note>This is a Critical severity exception affecting device security/functionality</note>
-    <note>Update failure may leave device in unstable or undefined state</note>
-    <note>Cryptographic verification is essential for update security</note>
-    <note>Data integrity checks prevent corrupted update installation</note>
-    <note>Compatibility verification ensures update is appropriate for device</note>
-    <note>Device state validation prevents update during incompatible operations</note>
-    <note>Multiple verification stages protect update process integrity</note>
-    <note>Hardware errors during update are critical and require investigation</note>
-    <note>Post-install verification confirms update completed successfully</note>
-    <note>Update packages should be signed and verified</note>
-    <note>Rollback capability may be available for failed updates</note>
-    <note>Device diagnostics recommended after update failure</note>
-    <note>Update history should track all update attempts</note>
-    <note>Security patches should be prioritized for update retries</note>
+    <note>Indication: Device update operation failed - device could not be updated</note>
+    <note>Topics: Device Updates, Update Operations, Device Management, Software Updates</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Signature Verification Failure">

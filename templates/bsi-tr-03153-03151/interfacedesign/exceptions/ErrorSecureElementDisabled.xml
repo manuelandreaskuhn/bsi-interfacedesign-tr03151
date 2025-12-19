@@ -118,21 +118,8 @@
     <state name="Manual Intervention Required">Re-enabling the device requires administrative action or management interface interaction.</state>
   </postconditionality>
   <notes>
-    <note>ErrorSecureElementDisabled is raised by 17 SE API functions that require an active Secure Element</note>
-    <note>The disabled state is a device-level state affecting all SE API operations</note>
-    <note>The exception has Critical severity because it blocks ALL SE API functionality</note>
-    <note>Disabled state is typically set through administrative management interface or policy</note>
-    <note>The device must be explicitly re-enabled before operations can resume</note>
-    <note>Disabled state may be temporary (during recovery) or permanent (deactivation)</note>
-    <note>Security policy may automatically disable device under certain conditions</note>
-    <note>Device initialization must be complete before device can be enabled</note>
-    <note>All state-changing operations require enabled Secure Element</note>
-    <note>Query operations (getDeviceInfo, getDescription) may not require enabled state - check specification</note>
-    <note>Backup/restore operations may be restricted on disabled Secure Element</note>
-    <note>Transaction operations cannot proceed if device is disabled</note>
-    <note>Authentication operations require enabled Secure Element to process credentials</note>
-    <note>Error messages should indicate the device is disabled not broken</note>
-    <note>Disabled state should be queryable through device status API</note>
+    <note>Indication: The Secure Element is disabled and cannot perform required operations</note>
+    <note>Topics: Secure Element Management, Device State, SE Operations, Device Status</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Operation Blocked by Device Disabled State">

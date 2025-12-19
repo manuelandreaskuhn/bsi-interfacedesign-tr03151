@@ -118,21 +118,8 @@
     <state name="Hardware Intervention Required">Physical repair or reconnection of storage is necessary.</state>
   </postconditionality>
   <notes>
-    <note>ErrorStorageMediumDisconnected is thrown by 15 SE API functions that require storage access</note>
-    <note>This exception indicates hardware failure or disconnection, not software error</note>
-    <note>The exception has Critical severity because storage is essential for device operation</note>
-    <note>Storage disconnection makes the device effectively unusable for most operations</note>
-    <note>Physical connectivity must be verified to restore storage access</note>
-    <note>Storage is used for transaction logs, configuration, user data, and audit trail</note>
-    <note>Loss of storage access means loss of access to all stored data and logs</note>
-    <note>Error messages should identify which storage component or interface is affected</note>
-    <note>Device should not continue operation with disconnected storage</note>
-    <note>Storage reconnection should be verified before resuming operations</note>
-    <note>Critical data may be inaccessible if storage is disconnected</note>
-    <note>Business continuity plans must account for storage disconnection scenarios</note>
-    <note>Storage backup/redundancy can provide resilience against storage failures</note>
-    <note>Regular storage health monitoring can detect early signs of failure</note>
-    <note>Storage interface and medium should be protected from physical damage</note>
+    <note>Indication: Storage medium is disconnected and inaccessible</note>
+    <note>Topics: Storage Operations, Device Hardware, Storage Status, Device Connectivity</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Storage Disconnection During Transaction Processing">

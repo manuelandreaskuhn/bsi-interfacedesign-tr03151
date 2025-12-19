@@ -87,21 +87,8 @@
     <state name="Recovery Preconditions Met">The device is stable and operational. Recovery is possible by completing existing transactions to reduce the open count. The situation is expected and handled through normal transaction lifecycle management.</state>
   </postconditionality>
   <notes>
-    <note>ErrorLimitOfSimultaneousOpenTransactionsReached is thrown ONLY by the startTransaction function - it is the most specific exception for transaction capacity constraints</note>
-    <note>This exception indicates a capacity constraint, not a system error or device malfunction - it is an expected condition when transaction load approaches device capacity</note>
-    <note>Transaction capacity is a device characteristic determined at manufacturing/configuration time - different device models may have different limits</note>
-    <note>Maximum transaction capacity can typically be queried via getMaxNumberTransactionsFailed function to enable application-level capacity planning</note>
-    <note>Current open transaction count can be determined via getCurrentTransactionCounter or getOpenTransactions functions</note>
-    <note>This exception has High severity because it impacts application ability to perform transaction operations - capacity management is critical in high-load scenarios</note>
-    <note>Applications must implement transaction queuing, pooling, or retry strategies to handle capacity constraints in production environments</note>
-    <note>Long-running transactions can consume device capacity - applications should implement transaction timeout or monitoring to identify stalled transactions</note>
-    <note>Proper transaction lifecycle management (always calling finishTransaction) is essential to prevent capacity starvation</note>
-    <note>If this exception occurs frequently, it indicates application design may not match device capacity - capacity planning or design changes may be needed</note>
-    <note>Multiple concurrent threads or processes creating transactions simultaneously can quickly reach device capacity - synchronization and queuing may be needed</note>
-    <note>ErrorLimitOfSimultaneousOpenTransactionsReached is an expected, normal exception in high-load scenarios - applications must handle it gracefully</note>
-    <note>Capacity constraints apply only to simultaneously open transactions - completed and closed transactions do not consume capacity</note>
-    <note>Applications should monitor transaction creation failures and implement metrics/alerts when approaching capacity limits</note>
-    <note>Different transaction types or transaction states may have different impacts on capacity - consult device specifications for details</note>
+    <note>Indication: Maximum number of simultaneously open transactions has been reached</note>
+    <note>Topics: Transaction Management, Resource Limits, Transaction Constraints, Concurrency</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: High-Load Transaction Processing with Capacity Management">

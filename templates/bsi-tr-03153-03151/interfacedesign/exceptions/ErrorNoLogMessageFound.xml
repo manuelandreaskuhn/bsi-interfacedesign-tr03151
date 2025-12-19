@@ -88,21 +88,8 @@
     <state name="No Data Loss">The exception does not cause loss or corruption of any existing data. All previously stored messages, if any, remain intact.</state>
   </postconditionality>
   <notes>
-    <note>ErrorNoLogMessageFound is thrown by getLastLogMessage and exportLogMessages - both log message retrieval functions</note>
-    <note>This exception indicates the logging storage contains no messages - it is an expected condition, not a system error</note>
-    <note>The exception has Medium severity because it indicates empty storage, not a device failure</note>
-    <note>Log messages may be absent for legitimate reasons: logging disabled, no events logged yet, or recent message deletion</note>
-    <note>Applications should distinguish between "no messages available" (ErrorNoLogMessageFound) and log retrieval operation failures</note>
-    <note>Transaction logging must be enabled for the device to record log messages - disabled logging will result in empty storage</note>
-    <note>The type and amount of events that generate log messages depend on the device's logging configuration and event policies</note>
-    <note>Log messages may be removed by explicit deletion operations (deleteLogMessages) or automatic retention policies</note>
-    <note>The getLastLogMessage function retrieves the most recent log message - ErrorNoLogMessageFound means no messages exist at all</note>
-    <note>The exportLogMessages function exports all logged messages or filtered subsets - ErrorNoLogMessageFound means no messages match the criteria</note>
-    <note>Different device models may have different default logging settings and event logging policies</note>
-    <note>Applications should wait for operations to complete before retrieving logs - retrieving immediately after device initialization may yield empty logs</note>
-    <note>Log message retrieval is typically read-only - ErrorNoLogMessageFound has no side effects on device state</note>
-    <note>Comprehensive logging requires appropriate configuration of which events are logged and what information is captured</note>
-    <note>Monitor logging status and event logging capacity to understand when to expect populated versus empty log storage</note>
+    <note>Indication: No log message found matching the query criteria</note>
+    <note>Topics: Logging Operations, Message Retrieval, Log Search, Data Availability</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Device Initialization Verification with Log Status Check">

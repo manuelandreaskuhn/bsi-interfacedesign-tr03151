@@ -88,21 +88,8 @@
     <state name="No Cascading Effects">The failed export operation does not trigger cascading failures or secondary exceptions.</state>
   </postconditionality>
   <notes>
-    <note>ErrorNoDataAvailable is thrown by exportLogMessages and exportFilteredTransactionLogs - both data export functions</note>
-    <note>This exception indicates no data matches the filter criteria - it is an expected condition, not a system error</note>
-    <note>The exception has Medium severity because it indicates an empty result, not a device failure</note>
-    <note>Filter criteria should be validated before export attempts to anticipate and handle potentially empty result sets</note>
-    <note>Applications should distinguish between "no data available" (ErrorNoDataAvailable) and export operation failures (other exceptions)</note>
-    <note>Date ranges and time-based filters are common causes of empty result sets - care should be taken in specifying time windows</note>
-    <note>Export operations are typically read-only - ErrorNoDataAvailable does not modify the device state or stored data</note>
-    <note>Multiple levels of filtering (date range, event type, client ID, transaction state) can combine to produce empty results</note>
-    <note>Some devices may support query operations to determine what data is available before attempting export - this can prevent ErrorNoDataAvailable</note>
-    <note>The error message or return value should ideally include information about the filter criteria that produced the empty result</note>
-    <note>Applications managing multiple devices should be prepared for different devices to have different data availability depending on their histories</note>
-    <note>Logging may be disabled or configured to not log certain events - this can cause expected empty results for those event types</note>
-    <note>Data retention policies may cause old data to be automatically purged, resulting in empty results for historical date ranges</note>
-    <note>Export functions should be retryable with different filter criteria to explore available data</note>
-    <note>Comprehensive documentation of logged event types, date ranges, and retention policies helps applications use export functions effectively</note>
+    <note>Indication: No data is available for the requested operation - data not found</note>
+    <note>Topics: Data Retrieval, Data Availability, Search Operations, Information Retrieval</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Audit Log Export with Date Range Specification">

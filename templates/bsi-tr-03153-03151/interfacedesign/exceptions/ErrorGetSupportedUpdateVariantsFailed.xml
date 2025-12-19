@@ -87,21 +87,8 @@
     <state name="Recovery Preconditions Met">The device state after exception is consistent and allows for recovery operations. The underlying issue (hardware error, communication error, information system error) remains present, but the device is stable enough to accept diagnostic queries or recovery attempts.</state>
   </postconditionality>
   <notes>
-    <note>ErrorGetSupportedUpdateVariantsFailed is thrown ONLY by the getSupportedUpdateVariants function - it is the most specific and precise exception for Secure Element device capabilities update variants retrieval failures</note>
-    <note>This exception indicates a failure in the Secure Element's ability to enumerate its supported firmware update variants and mechanisms</note>
-    <note>Critical distinction from ErrorFunctionFailed: ErrorGetSupportedUpdateVariantsFailed specifically indicates device capabilities enumeration is unavailable at the device information subsystem level, while ErrorFunctionFailed indicates broader unspecified critical failures</note>
-    <note>Exception is raised during the capabilities enumeration phase (steps 6-7), after device initialization and authentication checks have passed</note>
-    <note>After this exception, the Secure Element remains unchanged and firmware update capabilities continue to be maintained internally. Variant queries can be retried once the underlying issue is resolved</note>
-    <note>This exception has High severity because it prevents users from determining which firmware update strategies are available (critical for update planning and compatibility verification)</note>
-    <note>Supported update variants describe which update mechanisms and configuration variants the Secure Element supports for firmware update operations</note>
-    <note>The exception indicates device capabilities cannot be reliably enumerated; applications must not implement workarounds using external capability tracking without explicit validation</note>
-    <note>Failure scenarios range from transient (temporary communication issues, temporary state) to persistent (firmware metadata corruption, hardware failure, firmware error)</note>
-    <note>If this exception occurs frequently or persistently, it indicates serious issues with Secure Element device information hardware, firmware, or capabilities metadata that require diagnostic investigation</note>
-    <note>Device capabilities enumeration is a read-only query; failure does not modify any device state, so recovery typically requires only retrying the query once underlying issue is resolved</note>
-    <note>Supported update variants information is essential for update planning and ensuring compatibility of firmware update packages with device capabilities</note>
-    <note>Applications must implement appropriate error handling for update capabilities enumeration failures when planning firmware update operations</note>
-    <note>Repeated device capabilities retrieval failures may indicate device needs firmware update, device information reset, or hardware service - manufacturer support should be engaged</note>
-    <note>Different device models and firmware versions may support different update variants - consult device specifications for supported update mechanism details</note>
+    <note>Indication: Retrieval of supported update variants failed - update options unknown</note>
+    <note>Topics: Device Updates, Update Operations, Device Capabilities, Update Management</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Firmware Update Planning and Compatibility Assessment">

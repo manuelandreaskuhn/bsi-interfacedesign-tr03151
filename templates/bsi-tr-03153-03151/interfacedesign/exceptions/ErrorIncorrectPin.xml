@@ -87,21 +87,8 @@
     <state name="Recovery Preconditions Met">The device state after exception is consistent and allows for recovery operations. User can immediately retry authentication with the correct PIN. No special recovery procedures are required unless PIN blocking is triggered or PIN reset is needed.</state>
   </postconditionality>
   <notes>
-    <note>ErrorIncorrectPin is thrown ONLY by the authenticateUser function - it is the specific exception for PIN verification failures during user authentication</note>
-    <note>This exception indicates the supplied PIN does not match the registered authentication credential - this is an authentication failure, not a system error</note>
-    <note>Critical distinction from ErrorAuthenticationFailed: ErrorIncorrectPin specifically indicates PIN verification mismatch, while ErrorAuthenticationFailed may indicate broader authentication system issues</note>
-    <note>Exception is raised during the PIN verification phase (steps 6-7), after input validation and authentication permission checks have passed</note>
-    <note>After this exception, the user remains unauthenticated and the registered credential remains unchanged. The user can immediately retry authentication with the correct PIN</note>
-    <note>This exception has High severity because it indicates either user credential mismatch or potential unauthorized access attempts (brute force)</note>
-    <note>PIN verification is a critical security operation - incorrect PIN detection is a fundamental authentication security control</note>
-    <note>The Secure Element typically implements PIN retry counters and blocking mechanisms - repeated incorrect attempts may trigger PIN blocking</note>
-    <note>Multiple rapid ErrorIncorrectPin exceptions indicate either repeated user errors or potential brute force attack - both scenarios require attention</note>
-    <note>If this exception occurs frequently with correct PIN entries, it indicates potential credential synchronization issues or user confusion about the correct PIN</note>
-    <note>Each ErrorIncorrectPin exception should be logged and monitored to detect brute force attacks or unusual authentication patterns</note>
-    <note>PIN-based authentication is a security-critical function - ErrorIncorrectPin indicates a fundamental security control is functioning (rejecting incorrect credentials)</note>
-    <note>Applications must implement appropriate user guidance when ErrorIncorrectPin is raised - clear indication that the PIN is incorrect and user should retry</note>
-    <note>After repeated ErrorIncorrectPin exceptions, PIN blocking may be triggered - users should be warned when approaching authentication attempt limits</note>
-    <note>PIN reset procedures may be required if PIN is forgotten after repeated failed authentication attempts - contact device administrator for assistance</note>
+    <note>Indication: PIN provided does not match the stored PIN - authentication failed</note>
+    <note>Topics: Authentication, PIN Management, User Verification, Access Control</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: User Authentication and Secure Access Control">

@@ -87,21 +87,8 @@
     <state name="Recovery Preconditions Met">The device state after exception is consistent and allows for recovery operations. User can immediately retry PIN unblock with the correct PUK. No special recovery procedures are required unless PUK blocking is triggered or administrative assistance is needed.</state>
   </postconditionality>
   <notes>
-    <note>ErrorIncorrectPuk is thrown ONLY by the unblockPin function - it is the specific exception for PUK verification failures during PIN unblock</note>
-    <note>This exception indicates the supplied PUK does not match the registered PIN Unblock Key - this is a security verification failure, not a system error</note>
-    <note>Critical distinction from ErrorUnblockPinFailed: ErrorIncorrectPuk specifically indicates PUK verification mismatch, while ErrorUnblockPinFailed may indicate broader unblock system issues</note>
-    <note>Exception is raised during the PUK verification phase (steps 6-7), after input validation and PIN block status checks have passed</note>
-    <note>After this exception, the PIN remains blocked and the registered PUK remains unchanged. The user can immediately retry PIN unblock with the correct PUK</note>
-    <note>This exception has High severity because it indicates either user credential mismatch or potential unauthorized access attempts (brute force PIN unblock)</note>
-    <note>PUK verification is a critical security operation - incorrect PUK detection is a fundamental PIN unblock security control</note>
-    <note>The Secure Element typically implements PUK retry counters and blocking mechanisms - repeated incorrect attempts may trigger PUK blocking</note>
-    <note>Multiple rapid ErrorIncorrectPuk exceptions indicate either repeated user errors or potential brute force PIN unblock attack - both scenarios require attention</note>
-    <note>If this exception occurs frequently with correct PUK entries, it indicates potential PUK credential synchronization issues or user confusion about the correct PUK</note>
-    <note>Each ErrorIncorrectPuk exception should be logged and monitored to detect brute force attacks or unusual PIN unblock patterns</note>
-    <note>PUK-based PIN unblock is a security-critical function - ErrorIncorrectPuk indicates a fundamental security control is functioning (rejecting incorrect PUKs)</note>
-    <note>Applications must implement appropriate user guidance when ErrorIncorrectPuk is raised - clear indication that the PUK is incorrect and user should retry or contact administrator</note>
-    <note>After repeated ErrorIncorrectPuk exceptions, PUK blocking may be triggered - users should be warned when approaching unblock attempt limits</note>
-    <note>PUK reset or recovery procedures may be required if PUK is forgotten after repeated failed unblock attempts - contact device administrator for assistance</note>
+    <note>Indication: PUK provided does not match the stored PUK - PUK verification failed</note>
+    <note>Topics: Authentication, PIN Management, User Verification, Unblocking Operations</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: PIN Unblock Recovery and Access Restoration">

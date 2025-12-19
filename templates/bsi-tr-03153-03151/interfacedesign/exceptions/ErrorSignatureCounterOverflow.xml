@@ -108,21 +108,8 @@
     <state name="Device Requires Replacement">The device must be replaced or decommissioned.</state>
   </postconditionality>
   <notes>
-    <note>ErrorSignatureCounterOverflow is thrown by 4 functions: startTransaction, updateTransaction, finishTransaction, configureLogging</note>
-    <note>This exception indicates the counter has reached its logical limit, not a software or hardware failure</note>
-    <note>The exception has Critical severity because it permanently blocks transaction processing</note>
-    <note>This is an extremely rare condition expected only after extraordinarily long device operation</note>
-    <note>Counter overflow prevents audit trail wraparound which would compromise security</note>
-    <note>Counter size should be chosen to exceed expected device lifetime and transaction volume</note>
-    <note>64-bit counters (2^64 maximum) provide extremely large capacity for most applications</note>
-    <note>Counter overflow typically indicates either: exceptionally long device lifetime, extremely high transaction load, or counter design issue</note>
-    <note>Capacity planning should account for maximum counter value and design counter appropriately</note>
-    <note>Error messages should indicate the counter maximum value and current value</note>
-    <note>Device monitoring should warn well before counter approaches maximum (at 80-90% capacity)</note>
-    <note>Business continuity plans must account for device reaching counter maximum</note>
-    <note>Transaction logs should be exported and archived when counter reaches critical levels</note>
-    <note>Counter overflow is different from counter exhaustion (physical memory limits)</note>
-    <note>Device manufacturers should provide high-capacity counters (64-bit or larger) to prevent overflow</note>
+    <note>Indication: Signature counter would overflow - maximum capacity exceeded</note>
+    <note>Topics: Signature Operations, Counter Management, Resource Limits, Overflow Protection</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Counter Overflow After Decades of Operation">

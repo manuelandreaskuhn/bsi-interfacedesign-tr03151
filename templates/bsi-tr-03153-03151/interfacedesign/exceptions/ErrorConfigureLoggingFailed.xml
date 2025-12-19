@@ -57,16 +57,6 @@
     <exception>ErrorLoggingOfEventNotConfigurable</exception>
     <exception>ErrorFunctionFailed</exception>
   </relatedExceptions>
-  <notes>
-    <note>This exception is specific to the configureLogging function and indicates a failure at the Secure Element or device level rather than invalid parameters. Parameter validation occurs before this exception is raised, so the parameters themselves are valid.</note>
-    <note>The exception may indicate issues with Secure Element communication, memory constraints, logging buffer exhaustion, or device state inconsistencies that prevent the logging subsystem from accepting new configurations.</note>
-    <note>Recovery actions should focus on verifying device status, examining available resources, and potentially reinitializing the device or Secure Element to restore the logging subsystem to a operational state.</note>
-    <note>Unlike configuration parameter validation errors, ErrorConfigureLoggingFailed represents an operational failure in applying a valid configuration, not a problem with the configuration itself.</note>
-    <note>The logging subsystem may enter a degraded or restricted mode after this exception. Subsequent logging configuration attempts may also fail or may succeed with reduced capability until the device is reinitialized.</note>
-    <note>Device implementations may have variant behavior regarding logging capacity, resource constraints, and recovery mechanisms. Some implementations may support configuration rollback, while others may leave the logging subsystem in a partially configured state.</note>
-    <note>This exception does not necessarily indicate data corruption or security issues. It is primarily a resource management or state consistency issue within the logging subsystem.</note>
-    <note>Some device implementations may queue configuration requests and process them asynchronously. A delayed retry may succeed even without explicit recovery actions, as the device may have recovered from temporary resource constraints.</note>
-  </notes>
   <executionSequence>
     <step number="1" name="Function Invocation">Function entry point is reached with parameters for component name, event type, and desired logging level provided by the caller</step>
     <step number="2" name="Parameter Validation">The Secure Element validates that component name and event type are valid and correspond to known logging targets in the device configuration</step>
@@ -88,6 +78,10 @@
     <state name="Function Exit">The function exits abnormally via exception propagation without completing its intended configuration operation</state>
     <state name="Device Availability">The Secure Element remains available for subsequent API calls, although the logging subsystem may have limited or degraded functionality. The device itself has not failed; only the specific logging configuration operation was rejected.</state>
   </postconditionality>
+  <notes>
+    <note>Indication: Configuration of logging events failed during a configureLogging operation</note>
+    <note>Topics: Logging Configuration, Event Management, System Configuration, SE API Settings</note>
+  </notes>
   <usage>
     <scenario name="Scenario 1: Logging Configuration Failure During Startup">
       <description>An application attempts to configure event logging during device initialization, but the logging subsystem is not yet fully operational or encounters an error.</description>

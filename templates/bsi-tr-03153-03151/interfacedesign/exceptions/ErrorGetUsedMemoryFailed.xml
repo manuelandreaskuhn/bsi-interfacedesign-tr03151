@@ -87,21 +87,8 @@
     <state name="Recovery Preconditions Met">The device state after exception is consistent and allows for recovery operations. The underlying issue (hardware error, communication error, resource management error) remains present, but the device is stable enough to accept diagnostic queries or recovery attempts.</state>
   </postconditionality>
   <notes>
-    <note>ErrorGetUsedMemoryFailed is thrown ONLY by the getUsedMemory function - it is the most specific and precise exception for Secure Element used memory retrieval failures</note>
-    <note>This exception indicates a failure in the Secure Element's ability to report its current memory utilization</note>
-    <note>Critical distinction from ErrorFunctionFailed: ErrorGetUsedMemoryFailed specifically indicates memory accounting enumeration is unavailable at the resource management subsystem level, while ErrorFunctionFailed indicates broader unspecified critical failures</note>
-    <note>Exception is raised during the utilization query phase (steps 6-7), after device initialization and authentication checks have passed</note>
-    <note>After this exception, the Secure Element remains unchanged and actual memory utilization continues to be tracked internally. Utilization queries can be retried once the underlying issue is resolved</note>
-    <note>This exception has High severity because it prevents users from determining current storage utilization (critical for resource monitoring and capacity management)</note>
-    <note>Used memory represents the amount of storage currently consumed by all data, structures, and operations on the Secure Element</note>
-    <note>The exception indicates storage accounting cannot be reliably determined; applications must not implement workarounds using external memory estimates without explicit validation</note>
-    <note>Failure scenarios range from transient (temporary communication issues, temporary state) to persistent (accounting metadata corruption, hardware failure, firmware error)</note>
-    <note>If this exception occurs frequently or persistently, it indicates serious issues with Secure Element memory accounting hardware, firmware, or resource tracking that require diagnostic investigation</note>
-    <note>Memory utilization accounting is a read-only query; failure does not modify any storage state, so recovery typically requires only retrying the query once underlying issue is resolved</note>
-    <note>Used memory information is essential for monitoring actual resource consumption and understanding available capacity</note>
-    <note>Applications must implement appropriate error handling for memory utilization retrieval failures when monitoring device resources</note>
-    <note>Repeated memory utilization retrieval failures may indicate device needs firmware update, accounting reset, or hardware service - manufacturer support should be engaged</note>
-    <note>Different device models and configurations may have different memory consumption patterns - consult device specifications for resource details</note>
+    <note>Indication: Retrieval of used memory information failed - cannot determine memory usage</note>
+    <note>Topics: Memory Management, Device Resources, Information Retrieval, Storage Status</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Real-Time Memory Utilization Monitoring and Resource Tracking">

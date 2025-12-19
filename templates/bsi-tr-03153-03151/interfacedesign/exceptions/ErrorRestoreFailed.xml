@@ -98,21 +98,8 @@
     <state name="Retry Possible">The restore operation can be retried after addressing the underlying cause of the failure.</state>
   </postconditionality>
   <notes>
-    <note>ErrorRestoreFailed is thrown ONLY by the restoreLogsFromBackup function - specific to backup restore operations</note>
-    <note>This exception indicates a backup restore operation failure - the backup data could not be imported into the device</note>
-    <note>The exception has Critical severity because backup restore is a critical data recovery operation</note>
-    <note>Restore failure means audit trail recovery may not be possible - this is a serious situation</note>
-    <note>Backup data format compatibility is essential - only backups compatible with the device can be restored</note>
-    <note>Backup data integrity must be verified before restore attempts</note>
-    <note>Device storage capacity must be verified to be sufficient for the restore</note>
-    <note>Device communication must be reliable during restore - data transmission is critical</note>
-    <note>Backup data should be preserved after failed restore - retry may be possible</note>
-    <note>Multiple backups or backup redundancy strategies can provide recovery alternatives if restore fails</note>
-    <note>Device manufacturers should document backup format specifications and version compatibility</note>
-    <note>Restore operations should be atomic - either fully commit or fully rollback, no partial restores</note>
-    <note>Error messages should include detailed information about the restore failure (format issue, corruption, capacity, etc.)</note>
-    <note>Monitoring and alerting on restore failures is important for disaster recovery planning</note>
-    <note>Regular backup testing (restore drills) can help identify compatibility or corruption issues before they are critical</note>
+    <note>Indication: Restoration of logs from backup failed - logs could not be restored</note>
+    <note>Topics: Backup Operations, Log Management, Data Recovery, Restoration</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Backup Restore with Failure Detection and Verification">

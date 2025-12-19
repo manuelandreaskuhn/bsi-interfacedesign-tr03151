@@ -91,21 +91,8 @@
     <state name="Audit Trail Integrity Preserved">Audit trail integrity protected by preventing unarchived data deletion.</state>
   </postconditionality>
   <notes>
-    <note>ErrorUnexportedLogMessages is thrown by 1 function: deleteLogMessages</note>
-    <note>This is a High severity exception protecting data integrity</note>
-    <note>Exception prevents permanent loss of unarchived audit trail data</note>
-    <note>Export must occur before deletion for compliance and data retention</note>
-    <note>Export status should be tracked for each log message</note>
-    <note>Deletion scope should be carefully validated against export history</note>
-    <note>Storage cleanup must be aware of export requirements</note>
-    <note>Automatic storage cleanup should export before deleting</note>
-    <note>Error messages should indicate how many messages are unexported</note>
-    <note>Proactive export scheduling can prevent this condition</note>
-    <note>Export to archival system should be documented for compliance</note>
-    <note>Data retention policies should guide deletion schedules</note>
-    <note>Compliance audits should verify export before deletion</note>
-    <note>Emergency storage cleanup may require special authorization</note>
-    <note>Export performance may limit deletion timing in large systems</note>
+    <note>Indication: Log messages exist that have not been exported - unhandled log data</note>
+    <note>Topics: Logging Operations, Data Export, Log Management, Export Operations</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Storage Cleanup with Unexported Messages">

@@ -90,21 +90,8 @@
     <state name="Replacement or Reset Required">Device replacement or counter reset procedure is required to restore functionality.</state>
   </postconditionality>
   <notes>
-    <note>ErrorTransactionCounterOverflow is thrown by 3 core transaction functions</note>
-    <note>This is a Critical severity exception blocking all transaction functionality</note>
-    <note>Counter has a logical maximum based on counter data type representation</note>
-    <note>Overflow represents counter end-of-life after many transactions</note>
-    <note>Counter typically uses 64-bit or 128-bit integer representation</note>
-    <note>Maximum value is extraordinarily large (billions or trillions for 64-bit)</note>
-    <note>Extended device operation will eventually lead to counter overflow</note>
-    <note>Device lifetime is often measured by counter capacity rather than time</note>
-    <note>Transaction authenticity depends on continuous counter incrementing</note>
-    <note>Counter reset compromises audit trail integrity and transaction authenticity</note>
-    <note>Device replacement is preferred over counter reset for security</note>
-    <note>Counter overflow is a device lifecycle event, not a failure</note>
-    <note>Reaching counter maximum indicates successful extended operation</note>
-    <note>Monitoring counter value enables predictive end-of-life planning</note>
-    <note>Counter value can be tracked for estimating remaining device lifetime</note>
+    <note>Indication: Transaction counter would overflow - maximum capacity exceeded</note>
+    <note>Topics: Transaction Management, Counter Management, Resource Limits, Overflow Protection</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Counter Reaches Maximum After Extended Operation">

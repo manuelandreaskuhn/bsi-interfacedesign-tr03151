@@ -104,21 +104,8 @@
     <state name="Hardware Intervention Required">Hardware inspection and repair may be required to restore component connectivity.</state>
   </postconditionality>
   <notes>
-    <note>ErrorSecureElementPartsDisconnected is thrown by 12 SE API functions requiring component connectivity</note>
-    <note>This exception indicates hardware failure not software error</note>
-    <note>The exception has Critical severity because component disconnection compromises device security</note>
-    <note>Component connectivity must be verified during Secure Element initialization</note>
-    <note>Component disconnection may be permanent (hardware failure) or temporary (loose connection)</note>
-    <note>Secure Element components must communicate reliably for all operations to succeed</note>
-    <note>Physical security modules typically have redundant connectivity checks</note>
-    <note>Error messages should identify the specific component or subsystem that is disconnected</note>
-    <note>Device should not be used for security operations after component disconnection detected</note>
-    <note>Component connectivity failures may cascade - one failure may cause others</note>
-    <note>Manufacturer documentation should detail component architecture and connectivity requirements</note>
-    <note>Hardware health monitoring can detect component issues before failures occur</note>
-    <note>Device repair or replacement may be required for persistent component disconnection</note>
-    <note>Data on the device should not be considered secure if components have disconnected</note>
-    <note>Business continuity plans should account for device failure due to component disconnection</note>
+    <note>Indication: Parts of the Secure Element are disconnected - component communication failed</note>
+    <note>Topics: Secure Element Management, Hardware, Component Communication, Device Status</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Component Disconnection Detection During Authentication">

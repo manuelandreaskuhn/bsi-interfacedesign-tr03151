@@ -89,21 +89,8 @@
     <state name="Caller Must Provide Valid User-ID">Caller must provide registered User-ID for operation to succeed.</state>
   </postconditionality>
   <notes>
-    <note>ErrorUnknownUserId is thrown by 3 user-related functions</note>
-    <note>This is a High severity exception blocking user operations</note>
-    <note>User-IDs must be registered in device user registry</note>
-    <note>User registry contains all valid, authorized User-IDs</note>
-    <note>User-ID format must match expected pattern</note>
-    <note>User lookup is exact match on User-ID value</note>
-    <note>Users deleted from registry will raise this exception</note>
-    <note>User registration is separate from User-ID authentication</note>
-    <note>Different devices may have different User-IDs</note>
-    <note>Error messages should indicate which User-ID was not found</note>
-    <note>Query user registry to identify valid User-IDs</note>
-    <note>User management operations control registry membership</note>
-    <note>User deactivation/deletion removes from registry</note>
-    <note>User roles or permissions may be associated with User-IDs</note>
-    <note>Audit trail should log all unknown User-ID attempts</note>
+    <note>Indication: The specified user ID is not known to the device - user not recognized</note>
+    <note>Topics: User Management, Authentication, User Identification, Access Control</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Authentication Attempt with Wrong User-ID">

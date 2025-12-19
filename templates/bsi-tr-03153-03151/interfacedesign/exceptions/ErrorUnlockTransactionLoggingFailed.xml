@@ -95,21 +95,8 @@
     <state name="Transaction Recording Remains Blocked">Transaction recording capability remains unavailable.</state>
   </postconditionality>
   <notes>
-    <note>ErrorUnlockTransactionLoggingFailed is thrown by 1 function: unlockTransactionLogging</note>
-    <note>This is a High severity exception blocking transaction recording restoration</note>
-    <note>Unlock requires appropriate authorization to prevent unauthorized re-enablement</note>
-    <note>Authorization checks must occur before lock state modification</note>
-    <note>Lock state must be persisted for persistence across device operations</note>
-    <note>Hardware errors can prevent unlock even with correct authorization</note>
-    <note>Device state issues may prevent unlock in certain modes</note>
-    <note>Unlock failure keeps logging locked - transactions cannot be recorded</note>
-    <note>Unlock operations should be logged for audit trail</note>
-    <note>Lock state recovery should persist lock across restarts if policy-based</note>
-    <note>Unlock failure may indicate security issue requiring investigation</note>
-    <note>Repeated failures should be escalated to support/service</note>
-    <note>Device diagnostics can help identify persistent unlock issues</note>
-    <note>Communication with Secure Element must be reliable for unlock</note>
-    <note>Authorization requirements should be enforced consistently</note>
+    <note>Indication: Unlocking of transaction logging failed - logging remains locked</note>
+    <note>Topics: Transaction Logging, Logging Control, Lock Operations, Access Control</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Authorization Denial for Unlock">

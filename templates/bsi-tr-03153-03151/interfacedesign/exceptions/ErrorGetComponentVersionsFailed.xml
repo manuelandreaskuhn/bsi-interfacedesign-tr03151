@@ -85,16 +85,8 @@
     <state name="Version Information">Version information remains stored and available on the device. The retrieval can be retried if the underlying issue is resolved.</state>
   </postconditionality>
   <notes>
-    <note>ErrorGetComponentVersionsFailed is thrown ONLY by the getComponentVersions function - it is the most specific exception for component version retrieval failures.</note>
-    <note>This exception indicates a failure in the device's ability to report component and firmware version information during the retrieval phase (step 5b), before version data assembly.</note>
-    <note>Unlike ErrorFunctionFailed (which indicates unexpected critical errors), ErrorGetComponentVersionsFailed specifically indicates version information is unavailable, which may be recoverable or indicate a specific version management issue.</note>
-    <note>After this exception is raised, the device remains unchanged and all component versions remain stored on the device. The query can be retried once the underlying version retrieval issue is resolved.</note>
-    <note>This exception has Medium severity because it prevents users from determining device composition and versions, but does not prevent device operation or other functions.</note>
-    <note>Component version information is essential for compatibility checks, firmware update verification, understanding device capabilities, and system administration purposes.</note>
-    <note>The getComponentVersions function typically retrieves information about firmware, Secure Element, bootloader, and other critical component versions needed for system administration and device maintenance.</note>
-    <note>Applications should implement appropriate error handling for version retrieval failures and not assume version information is always available or consistent across device calls.</note>
-    <note>If this exception occurs repeatedly, it indicates a serious issue with device version management or internal version storage that may require professional investigation.</note>
-    <note>Unlike export operations (ErrorExportLoggingCertificateFailed, ErrorExportSerialNumbersFailed), version retrieval does not modify device state and failures are typically recoverable by retrying.</note>
+    <note>Indication: Retrieval of component version information failed</note>
+    <note>Topics: Device Information, Version Management, Component Management, Information Retrieval</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Device Capability Assessment During Initialization">

@@ -109,21 +109,8 @@
     <state name="Transaction Integrity Unverified">The transaction integrity cannot be verified without audit trail record.</state>
   </postconditionality>
   <notes>
-    <note>ErrorStoringLogMessageFailed is thrown by 3 transaction functions that create log messages</note>
-    <note>This exception indicates critical audit trail failure</note>
-    <note>The exception has Critical severity because transaction recording is essential</note>
-    <note>Log messages provide tamper-proof audit trail for all transactions</note>
-    <note>Storage failure means transaction is not reliably recorded</note>
-    <note>Digital signatures on log messages provide integrity and authenticity proof</note>
-    <note>Storage capacity must be adequate for transaction volume</note>
-    <note>Regular log export and deletion maintains available storage space</note>
-    <note>Communication reliability is critical for log storage operations</note>
-    <note>Error messages should indicate whether issue is capacity, connectivity, or storage hardware</note>
-    <note>Device should not proceed with transaction if log storage fails</note>
-    <note>Log storage integrity should be verified before confirming transaction completion</note>
-    <note>Audit trail completeness is essential for compliance and legal proceedings</note>
-    <note>Failed log storage may require transaction rollback or manual review</note>
-    <note>Business continuity plans must account for log storage failures</note>
+    <note>Indication: Storing of log message failed - message could not be persisted</note>
+    <note>Topics: Logging Operations, Storage Operations, Data Persistence, Log Management</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Transaction Log Storage Failure During Processing">

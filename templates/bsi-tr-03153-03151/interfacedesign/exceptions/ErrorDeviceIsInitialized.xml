@@ -58,18 +58,6 @@
     <exception>ErrorDeviceNotInitialized</exception>
     <exception>ErrorFunctionFailed</exception>
   </relatedExceptions>
-  <notes>
-    <note>This exception serves as a protective state check that prevents duplicate initialization of an already initialized device. It is a safeguard against application-level state management errors.</note>
-    <note>The initialize function can only be called once successfully; subsequent calls will raise this exception immediately without performing any initialization actions. The device cannot be re-initialized without explicit reset/deinitialization.</note>
-    <note>Applications should track the initialization status (using flags, boolean fields, or state machines) and ensure they do not attempt to initialize the device multiple times during the device lifecycle.</note>
-    <note>This exception has Medium severity as it represents a state management error rather than a critical initialization failure - the device is already initialized and fully functional.</note>
-    <note>Unlike ErrorDeviceInitializationFailed (which indicates initialization failure), ErrorDeviceIsInitialized indicates that initialization has already succeeded and the device is operational.</note>
-    <note>The exception is raised very early in the initialize function (at the prerequisite state check) and does not attempt any initialization actions. The device state remains completely unchanged.</note>
-    <note>In multi-threaded environments, this exception may indicate a race condition where initialization was attempted concurrently by multiple threads. Applications should implement initialization synchronization using mutexes or atomic operations.</note>
-    <note>Some applications may intentionally check for this exception to verify that initialization has already occurred. This exception can serve as a confirmation that the device is in the expected initialized state.</note>
-    <note>If an application truly requires device re-initialization (e.g., after recovery from corruption), explicit device deinitialization, reset, or factory reset operations may be required before retrying initialization.</note>
-    <note>The exception does not indicate whether the device is currently operational or in an error state. The device is initialized but may have encountered errors after initialization. Applications should use getDeviceHealth or similar functions to verify operational status.</note>
-  </notes>
   <executionSequence>
     <step number="1" name="Function Invocation">Function entry point is reached for initialize with no parameters required</step>
     <step number="2" name="Initialization State Check">The device immediately checks whether it is already in an initialized state by examining internal state flags and device status indicators</step>
@@ -88,6 +76,10 @@
     <state name="Function Exit">The function exits via exception propagation without performing any initialization actions or modifying device state</state>
     <state name="Device Availability">The device remains fully available and operational for all SE API functions. The device is ready for use and all operations can proceed normally.</state>
   </postconditionality>
+  <notes>
+    <note>Indication: Attempted to initialize a device that is already initialized - reinitialization not allowed</note>
+    <note>Topics: Device Initialization, Device State, State Management, Initialization Constraints</note>
+  </notes>
   <usage>
     <scenario name="Scenario 1: Application State Management Error">
       <description>An application loses track of whether initialization has been performed and attempts to initialize the device twice during startup. The exception indicates initialization has already succeeded.</description>

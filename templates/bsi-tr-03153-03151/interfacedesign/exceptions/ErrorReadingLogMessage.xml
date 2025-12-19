@@ -91,21 +91,8 @@
     <state name="Retry Potentially Possible">The operation may be retryable depending on whether the error is transient or persistent.</state>
   </postconditionality>
   <notes>
-    <note>ErrorReadingLogMessage is thrown by getLastLogMessage and exportLogMessages - both log retrieval functions</note>
-    <note>This exception indicates a device-level read failure - messages exist but cannot be accessed</note>
-    <note>The exception has High severity because it indicates a device malfunction or serious storage issue</note>
-    <note>This is distinct from ErrorNoLogMessageFound - this exception means messages exist but cannot be read</note>
-    <note>Read failures may indicate device storage corruption, hardware issues, or internal device errors</note>
-    <note>Applications should distinguish between "no messages" (ErrorNoLogMessageFound) and "read failure" (ErrorReadingLogMessage)</note>
-    <note>Read failures should trigger device diagnostics and potentially manufacturer support contact</note>
-    <note>Device health monitoring should track ErrorReadingLogMessage occurrences as a sign of device degradation</note>
-    <note>Communication failures during data transmission can cause this exception - check network/transport</note>
-    <note>Device resource exhaustion can prevent successful read operations - monitor device resource usage</note>
-    <note>Storage corruption or access violations may require device maintenance or recovery procedures</note>
-    <note>Retry strategies should be implemented carefully - persistent failures indicate serious issues</note>
-    <note>Error messages should include device error codes to guide troubleshooting</note>
-    <note>Log message backup or redundancy strategies may help mitigate impact of read failures</note>
-    <note>Device manufacturers should document recovery procedures for storage read failures</note>
+    <note>Indication: Reading of a log message failed - message data could not be retrieved</note>
+    <note>Topics: Logging Operations, Message Retrieval, Storage Operations, Data Access</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Log Retrieval with Error Detection and Retry">

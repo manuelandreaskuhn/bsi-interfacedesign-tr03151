@@ -92,21 +92,8 @@
     <state name="No Data Loss">The exception does not result in data loss or corruption of any kind.</state>
   </postconditionality>
   <notes>
-    <note>ErrorParameterTooLong is a common exception applicable to any SE API function that accepts length-constrained parameters</note>
-    <note>This exception indicates a parameter length constraint violation - the function does not attempt to truncate oversized parameters</note>
-    <note>The exception has Medium severity because it indicates invalid input, not a system failure</note>
-    <note>Length validation occurs early in function execution, before any device communication</note>
-    <note>Each SE API function and each parameter has specific length requirements documented in device specifications</note>
-    <note>Applications should validate parameter lengths before calling SE API functions to prevent ErrorParameterTooLong exceptions</note>
-    <note>Common length-constrained parameters include: client IDs, descriptions, authentication values (PIN/PUK), transaction data</note>
-    <note>Error messages should identify which specific parameter is too long and what the maximum length is</note>
-    <note>Different functions may have different parameter length limits - always consult function-specific documentation</note>
-    <note>Some parameters may have variable maximum lengths depending on device configuration</note>
-    <note>Truncation should be used carefully - some parameters (IDs, PINs) may have specific length requirements for functionality</note>
-    <note>Character encoding (UTF-8 vs ASCII) may affect length calculations for string parameters</note>
-    <note>Binary data parameters should be validated for byte length, not character length</note>
-    <note>Input validation utilities in client applications can reduce ErrorParameterTooLong exceptions</note>
-    <note>Documentation should clearly specify maximum length for each parameter to guide client implementations</note>
+    <note>Indication: Function parameter exceeds maximum length - parameter too large</note>
+    <note>Topics: Parameter Validation, Length Validation, Input Limits, Parameter Constraints</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Client ID Registration with Length Validation">

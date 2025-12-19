@@ -100,21 +100,8 @@
     <state name="Audit Trail Incomplete">Audit trail entry not recorded for this transaction update.</state>
   </postconditionality>
   <notes>
-    <note>ErrorUpdateTransactionFailed is thrown by 1 function: updateTransaction</note>
-    <note>This is a High severity exception affecting transaction integrity</note>
-    <note>Transaction update requires active transaction to exist</note>
-    <note>Transaction data must pass format and range validation</note>
-    <note>Transaction counter must be successfully incremented</note>
-    <note>Transaction data must be written to persistent storage</note>
-    <note>Audit trail logging must succeed for completeness</note>
-    <note>Transaction state consistency is critical</note>
-    <note>Failed updates may require transaction rollback</note>
-    <note>Storage availability is essential for transaction updates</note>
-    <note>Hardware errors during update are critical</note>
-    <note>Counter exhaustion is distinct failure scenario</note>
-    <note>Logging lock prevents audit trail recording</note>
-    <note>Multiple updates may occur within single transaction</note>
-    <note>Update failures should be logged for debugging</note>
+    <note>Indication: Update of transaction data failed - transaction could not be modified</note>
+    <note>Topics: Transaction Management, Transaction Updates, Data Modification, Logging Operations</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Update Without Active Transaction">

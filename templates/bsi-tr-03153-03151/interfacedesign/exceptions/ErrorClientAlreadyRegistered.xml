@@ -69,16 +69,8 @@
     <state>No state inconsistency - client registry remains consistent with only one entry per unique clientId</state>
   </postconditionality>
   <notes>
-    <note>ErrorClientAlreadyRegistered is thrown ONLY by the registerClient function - it is specific to client registration operations</note>
-    <note>This exception enforces the uniqueness constraint of clientIds - each registered client must have a unique identifier</note>
-    <note>Unlike ErrorClientNotRegistered (which is raised when a function is invoked with an unregistered clientId), ErrorClientAlreadyRegistered is raised when attempting to register a clientId that already exists</note>
-    <note>After this exception, the client registry remains unchanged and the duplicate client is not added</note>
-    <note>This exception has Medium severity because it indicates a registration conflict but does not indicate a device or security failure</note>
-    <note>The duplicate check is performed early in the registerClient function (step 6), before other validation steps, to fail fast on this error condition</note>
-    <note>Applications must implement clientId uniqueness checks or be prepared to handle this exception when registration conflicts occur</note>
-    <note>The exception is raised by the device after checking its own client registry, providing authoritative feedback on duplicate registrations</note>
-    <note>If the application has deregistered a client, the clientId becomes available for reregistration and ErrorClientAlreadyRegistered will no longer be raised for that ID</note>
-    <note>Multiple clients cannot have the same ID - this exception ensures that constraint is enforced at the device level</note>
+    <note>Indication: Attempted to register a client ID that is already registered - duplicate client registration detected</note>
+    <note>Topics: Client Management, Registration, Client Registry, Uniqueness Constraints</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Duplicate Client Registration Attempt">

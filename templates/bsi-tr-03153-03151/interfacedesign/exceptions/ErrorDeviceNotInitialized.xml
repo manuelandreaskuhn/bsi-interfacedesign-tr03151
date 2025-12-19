@@ -95,18 +95,6 @@
     <exception>ErrorDeviceIsInitialized</exception>
     <exception>ErrorFunctionFailed</exception>
   </relatedExceptions>
-  <notes>
-    <note>This exception enforces the critical mandatory prerequisite that device initialization must be completed before any dependent API function can be executed. It is a fundamental safeguard of the SE API architecture.</note>
-    <note>The initialize function must be called first and complete successfully before the device can be used for any other operations - this is a non-negotiable requirement of the SE API. All 44 dependent functions share this prerequisite.</note>
-    <note>This exception is thrown by 44 different API functions, making it one of the most commonly encountered exceptions in the specification when applications fail to properly initialize the device. All these functions have device initialization as a mandatory prerequisite.</note>
-    <note>Applications must implement device state tracking and ensure the initialize function is called exactly once during the device lifecycle and completes successfully, and must not call dependent functions until initialization is definitively complete.</note>
-    <note>This exception has Critical severity as it represents a fundamental architectural violation - attempting to use the device before it has been initialized prevents all API functionality from operating correctly and indicates a serious application logic error.</note>
-    <note>The prerequisite check for device initialization is the first step performed by all 44 listed functions and should be performed very early in the function execution, before any other checks, operations, or state modifications.</note>
-    <note>Unlike ErrorDeviceInitializationFailed (which indicates initialization was attempted but failed), ErrorDeviceNotInitialized indicates that initialization was never completed successfully, whether never attempted or failed without proper error handling.</note>
-    <note>The exception serves dual purposes: it prevents incorrect API usage by catching uninitialized device access, and it provides clear diagnostic information that the application must call initialize before proceeding.</note>
-    <note>In multi-threaded or multi-process environments, great care must be taken to ensure that initialization is performed in a thread-safe manner before any concurrent access to the device occurs.</note>
-    <note>The comprehensive list of 44 dependent functions spans all major SE API functionality areas (authentication, device management, logging, client management, transaction management), emphasizing that initialization is truly a universal prerequisite.</note>
-  </notes>
   <executionSequence>
     <step number="1" name="Function Invocation">Entry point is reached for any of the 44 device-dependent API functions (such as startTransaction, registerClient, getDeviceHealth, etc.)</step>
     <step number="2" name="Initialization State Check">The function immediately checks whether the device is in an initialized state by examining the device initialization status flags</step>
@@ -125,6 +113,10 @@
     <state name="Function Execution">The intended function has not been executed. None of its operations have been performed. The function exits immediately upon initialization state verification.</state>
     <state name="Application Responsibility">The application must call the initialize function before any further operations can proceed. This is a mandatory step that cannot be bypassed or deferred.</state>
   </postconditionality>
+  <notes>
+    <note>Indication: Operation attempted on a device that has not been initialized - device not ready</note>
+    <note>Topics: Device Initialization, Device State, Initialization Requirements, System Setup</note>
+  </notes>
   <usage>
     <scenario name="Scenario 1: Missing Initialization in Application Startup">
       <description>An application attempts to register a client (registerClient) without first calling initialize. The application skipped or forgot the initialization step in its startup sequence.</description>

@@ -87,16 +87,8 @@
     <state name="Device Availability">Device functions continue to execute normally. The device remains operational and all API functions remain accessible.</state>
   </postconditionality>
   <notes>
-    <note>ErrorExportLoggingCertificateFailed is thrown ONLY by the exportLoggingCertificates function - it is the most specific exception for certificate collection failures during certificate export operations.</note>
-    <note>This exception indicates a critical failure in the Secure Element's certificate retrieval functionality during the export process. The exception is raised during the certificate collection phase (step 6b), before certificates are packaged into export data.</note>
-    <note>Unlike successful exportLoggingCertificates execution, when this exception is raised, no export data of any kind is returned to the user - not even partial or incomplete certificate data.</note>
-    <note>After this exception is raised, the Secure Element remains unchanged and all its certificates remain securely stored. The export operation can be retried once the underlying certificate retrieval issue is resolved.</note>
-    <note>This exception has High severity because it prevents users from exporting essential logging certificates needed for audit trail validation, forensic analysis, and regulatory compliance verification of device operations.</note>
-    <note>The exception is raised during the certificate collection phase, which is early in the export process before data assembly, packaging, and return. This ensures no partial or incomplete data reaches the caller.</note>
-    <note>Certificate export is a critical operation for audit trails and regulatory compliance. If this exception occurs repeatedly, it indicates a serious issue with Secure Element certificate management, storage, or retrieval functionality.</note>
-    <note>The exportLoggingCertificates function is part of the Export functionality category and provides users the ability to retrieve certificates for validating log message authenticity, integrity, and non-repudiation.</note>
-    <note>Certificate export failures may indicate that log messages cannot be independently verified outside the device. This may affect compliance with regulatory requirements for evidence preservation and audit trails.</note>
-    <note>Unlike ErrorExportSerialNumbersFailed (which affects serial number export), this exception specifically affects certificate export. The two export operations are independent and one can fail while the other succeeds.</note>
+    <note>Indication: Export of logging certificates failed - certificate data could not be retrieved</note>
+    <note>Topics: Certificate Management, Data Export, Certificate Operations, Security Credentials</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Hardware Failure During Certificate Collection">

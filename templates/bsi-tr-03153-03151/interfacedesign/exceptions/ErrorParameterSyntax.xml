@@ -128,21 +128,8 @@
     <state name="No Data Loss">The exception does not result in data loss or corruption of any kind.</state>
   </postconditionality>
   <notes>
-    <note>ErrorParameterSyntax is a common exception applicable to any SE API function that accepts parameters</note>
-    <note>This exception indicates a parameter type or syntax error - the function does not attempt to process invalid parameters</note>
-    <note>The exception has Medium severity because it indicates invalid input, not a system failure</note>
-    <note>Input validation (type and syntax checks) occurs before the function's main operation logic begins</note>
-    <note>Each SE API function has specific parameter requirements documented in BSI TR-03151-1 and function-specific documentation</note>
-    <note>Applications should validate parameters before calling SE API functions to prevent ErrorParameterSyntax exceptions</note>
-    <note>Common syntax/type errors include: wrong data type, invalid string format, incorrect date format, out-of-range values</note>
-    <note>Error messages should identify which specific parameter has the syntax or type error for efficient debugging</note>
-    <note>Different functions may have different parameter requirements - always consult function-specific documentation</note>
-    <note>Complex parameters (objects, arrays) may have required fields that must be present and properly structured</note>
-    <note>String parameters may have character set restrictions or format requirements (e.g., alphanumeric only, no special characters)</note>
-    <note>Numeric parameters may have range restrictions (e.g., ports 1-65535, percentages 0-100)</note>
-    <note>Date/time parameters typically require specific formats (e.g., ISO 8601: YYYY-MM-DD)</note>
-    <note>Boolean parameters must be actual boolean values, not strings like "true" or "false"</note>
-    <note>Input validation reduces the chance of ErrorParameterSyntax - implement parameter validation utilities in client applications</note>
+    <note>Indication: Function parameter has invalid syntax - does not conform to required format</note>
+    <note>Topics: Parameter Validation, Input Validation, Syntax Checking, Format Requirements</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Client ID Validation with Character Set Checking">

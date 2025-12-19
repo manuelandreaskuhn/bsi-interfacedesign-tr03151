@@ -81,16 +81,8 @@
     <state>Function returns successfully to caller despite raising exception - log operation did not fail</state>
   </postconditionality>
   <notes>
-    <note>ErrorCertificateExpired is unique among exceptions because it is raised AFTER the primary operation succeeds, not instead of it succeeding</note>
-    <note>This exception indicates a warning condition, not a failure condition - the log message was created and stored successfully</note>
-    <note>Unlike ErrorSigningEventDataFailed (which indicates signing failure preventing log creation), ErrorCertificateExpired indicates successful creation with an expired certificate</note>
-    <note>After this exception, the log message is already persisted in device storage and cannot be undone</note>
-    <note>This exception has Medium severity because it indicates a certificate validity issue but does not prevent logging operations from succeeding</note>
-    <note>Applications must handle this exception by recognizing the operation succeeded while noting the certificate validity concern</note>
-    <note>The exception is raised after the log message has been stored (step 7), ensuring logging continuity even when certificates expire</note>
-    <note>Multiple logging functions may raise this exception if they all use the same expired certificate, indicating a device-wide certificate issue</note>
-    <note>Certificate expiration does not prevent log message creation - it only signals a maintenance/renewal requirement to the application</note>
-    <note>This exception may be optionally implemented by certain functions - not all implementations may raise it</note>
+    <note>Indication: A logging operation completed successfully, but the signing certificate has expired - operation succeeded despite certificate validity issue</note>
+    <note>Topics: Certificate Management, Logging Operations, Certificate Validation, Secure Element Operations</note>
   </notes>
   <usage>
     <scenario name="Certificate Expiration Detection">

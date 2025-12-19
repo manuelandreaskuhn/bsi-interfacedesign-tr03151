@@ -87,21 +87,8 @@
     <state name="Recovery Preconditions Met">The device state after exception is consistent and allows for recovery operations. The underlying issue (storage error, communication error, information system error) remains present, but the device is stable enough to accept diagnostic queries or recovery attempts.</state>
   </postconditionality>
   <notes>
-    <note>ErrorGetDescriptionFailed is thrown ONLY by the getDescription function - it is the most specific and precise exception for Secure Element device description retrieval failures</note>
-    <note>This exception indicates a failure in the Secure Element's ability to report its short device description. It is an informational failure, not a critical operational failure</note>
-    <note>Critical distinction from ErrorFunctionFailed: ErrorGetDescriptionFailed specifically indicates device description information is unavailable at the information subsystem level, while ErrorFunctionFailed indicates broader unspecified critical failures</note>
-    <note>Exception is raised during the description retrieval phase (steps 6-7), after device initialization and authentication checks have passed</note>
-    <note>After this exception, the Secure Element remains unchanged and continues to maintain device identification information internally. Description queries can be retried once the underlying issue is resolved</note>
-    <note>This exception has Medium severity because it prevents users from retrieving device description text (impacting device identification and user interface presentation) but does not prevent device operation or other SE API functions</note>
-    <note>Device description is a static informational property that typically does not change during device operation, unlike dynamic device state information</note>
-    <note>The exception indicates description data cannot be reliably obtained; applications must not implement workarounds using external device identifiers without explicit validation</note>
-    <note>Failure scenarios range from transient (temporary communication issues, temporary state) to persistent (storage corruption, hardware failure, firmware error)</note>
-    <note>If this exception occurs frequently or persistently, it indicates serious issues with Secure Element information storage hardware, firmware, or device information subsystem that require diagnostic investigation or device replacement</note>
-    <note>Description retrieval is a read-only query; failure does not modify any Secure Element state, so recovery typically requires only retrying the query once underlying issue is resolved</note>
-    <note>Device description text format and encoding may vary by device manufacturer and firmware version - consult device specifications for expected format</note>
-    <note>Description is the short human-readable identification for the device, distinct from version numbers, serial numbers, or detailed component information</note>
-    <note>Applications must implement appropriate error handling for description retrieval failures, especially in multi-device deployments where device identification is important</note>
-    <note>Repeated description retrieval failures may indicate device needs firmware update, information subsystem reset, or hardware service - manufacturer support should be engaged for persistent issues</note>
+    <note>Indication: Retrieval of device description failed - description data could not be retrieved</note>
+    <note>Topics: Device Information, Data Retrieval, Device Properties, Information Management</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Device Identification and User Interface Display">

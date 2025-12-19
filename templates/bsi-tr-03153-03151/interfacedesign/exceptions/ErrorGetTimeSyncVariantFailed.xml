@@ -87,21 +87,8 @@
     <state name="Recovery Preconditions Met">The device state after exception is consistent and allows for recovery operations. The underlying issue (hardware error, communication error, time management error) remains present, but the device is stable enough to accept diagnostic queries or recovery attempts.</state>
   </postconditionality>
   <notes>
-    <note>ErrorGetTimeSyncVariantFailed is thrown ONLY by the getTimeSyncVariant function - it is the most specific and precise exception for Secure Element time sync variant retrieval failures</note>
-    <note>This exception indicates a failure in the Secure Element's ability to determine its supported time synchronization mechanism</note>
-    <note>Critical distinction from ErrorFunctionFailed: ErrorGetTimeSyncVariantFailed specifically indicates time sync variant enumeration is unavailable at the time management subsystem level, while ErrorFunctionFailed indicates broader unspecified critical failures</note>
-    <note>Exception is raised during the variant enumeration phase (steps 6-7), after device initialization and authentication checks have passed</note>
-    <note>After this exception, the Secure Element remains unchanged and time synchronization capabilities continue to be maintained internally. Variant queries can be retried once the underlying issue is resolved</note>
-    <note>This exception has High severity because it prevents users from determining which time synchronization strategy is supported (critical for time synchronization planning)</note>
-    <note>Time sync variant describes which time synchronization mechanism and protocol the Secure Element supports for time synchronization operations</note>
-    <note>The exception indicates time sync capabilities cannot be reliably determined; applications must not implement workarounds using external capability tracking without explicit validation</note>
-    <note>Failure scenarios range from transient (temporary communication issues, temporary state) to persistent (time management metadata corruption, hardware failure, firmware error)</note>
-    <note>If this exception occurs frequently or persistently, it indicates serious issues with Secure Element time management hardware, firmware, or metadata that require diagnostic investigation</note>
-    <note>Time sync capability enumeration is a read-only query; failure does not modify any time state, so recovery typically requires only retrying the query once underlying issue is resolved</note>
-    <note>Time sync variant information is essential for determining which time synchronization mechanisms are available and supported by the device</note>
-    <note>Applications must implement appropriate error handling for time sync capability enumeration failures when planning time synchronization operations</note>
-    <note>Repeated time management capability retrieval failures may indicate device needs firmware update, time management reset, or hardware service - manufacturer support should be engaged</note>
-    <note>Different device models and firmware versions may support different time synchronization variants - consult device specifications for supported time sync mechanism details</note>
+    <note>Indication: Retrieval of time synchronization variant failed - time sync method unknown</note>
+    <note>Topics: Time Management, Time Synchronization, Device Configuration, System Time</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Time Synchronization Planning and Protocol Selection">

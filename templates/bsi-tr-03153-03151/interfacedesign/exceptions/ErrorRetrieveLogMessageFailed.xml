@@ -118,21 +118,8 @@
     <state name="Retry Possible">The retrieval operation can be retried after addressing the underlying cause of the failure.</state>
   </postconditionality>
   <notes>
-    <note>ErrorRetrieveLogMessageFailed is thrown by getLastLogMessage and getLastTransactionLogMessage functions - specific to log message retrieval</note>
-    <note>This exception indicates a log retrieval failure - the message exists but cannot be accessed</note>
-    <note>This exception is distinct from ErrorNoLogMessageFound which indicates no log messages exist</note>
-    <note>This exception is distinct from ErrorReadingLogMessage which indicates generic log read failure in export context</note>
-    <note>The exception has High severity because it prevents access to audit trail information</note>
-    <note>Communication failures during retrieval are a common cause - connection reliability is important</note>
-    <note>Log message data should be validated after retrieval to ensure integrity</note>
-    <note>Device storage integrity is critical for successful log retrieval</note>
-    <note>Log messages are immutable once created - failed retrieval does not indicate data loss</note>
-    <note>Retry strategies should include communication reset and device re-initialization attempts</note>
-    <note>Error messages should distinguish between "no log messages exist" vs. "cannot retrieve log messages"</note>
-    <note>Monitoring log retrieval failures can indicate device issues requiring maintenance</note>
-    <note>Backup/export mechanisms can provide alternative access to audit trails if retrieval fails</note>
-    <note>The most recent log message is important for transaction verification and audit trail continuity</note>
-    <note>Successful retrieval confirms both device connectivity and log storage accessibility</note>
+    <note>Indication: Retrieval of log message failed - message data could not be obtained</note>
+    <note>Topics: Logging Operations, Message Retrieval, Data Access, Log Management</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Transaction Verification with Log Message Retrieval">

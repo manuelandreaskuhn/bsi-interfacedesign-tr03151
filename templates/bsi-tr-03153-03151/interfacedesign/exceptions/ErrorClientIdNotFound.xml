@@ -79,16 +79,8 @@
     <state>No state inconsistency - function exits at filter matching phase</state>
   </postconditionality>
   <notes>
-    <note>ErrorClientIdNotFound is thrown ONLY by the exportFilteredTransactionLogs function when a clientId filter is applied - it is specific to filtered export operations</note>
-    <note>This exception indicates that no transaction data exists for the specified clientId, distinguishing it from ErrorNoDataAvailable which may indicate broader search criteria with no matches</note>
-    <note>Unlike ErrorClientNotRegistered (which indicates a client is not registered for transaction operations), ErrorClientIdNotFound indicates that the client may be registered but has no transaction log data</note>
-    <note>After this exception, the transaction storage remains unchanged and the application can retry with different filter parameters or a different clientId</note>
-    <note>This exception has Medium severity because it indicates a filter that does not match any data but does not indicate a storage or device failure</note>
-    <note>The exception is raised after verifying that no data matches the clientId filter (step 6a), ensuring deterministic behavior</note>
-    <note>Applications should differentiate this exception from ErrorNoDataAvailable - one means no data for the client specifically, the other means no data for the overall criteria</note>
-    <note>The clientId filter can be combined with other filter parameters (transaction numbers, date ranges) - the exception is raised if combined criteria match no data</note>
-    <note>If a client has performed transactions but all its transactions have been deleted, ErrorClientIdNotFound will be raised when exporting by that clientId</note>
-    <note>Applications should implement error handling to gracefully handle the case where a specific client has no transaction data available for export</note>
+    <note>Indication: Cannot find data for the specified client ID during export or filtering operations</note>
+    <note>Topics: Data Export, Client Identification, Transaction Filtering, Data Retrieval</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Client-Filtered Export with No Data">

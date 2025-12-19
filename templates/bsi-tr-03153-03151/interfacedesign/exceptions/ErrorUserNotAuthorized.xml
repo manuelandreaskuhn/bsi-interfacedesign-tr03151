@@ -132,21 +132,8 @@
     <state name="Caller Must Obtain Authorization">Caller must receive authorization upgrade to execute operation.</state>
   </postconditionality>
   <notes>
-    <note>ErrorUserNotAuthorized is thrown by 14 restricted functions</note>
-    <note>This is a High severity exception - authorization violation</note>
-    <note>Authorization is distinct from authentication</note>
-    <note>User can be authenticated but not authorized</note>
-    <note>Authorization is role-based or permission-based</note>
-    <note>Different functions require different authorization levels</note>
-    <note>Authorization expiration can occur after extended time</note>
-    <note>Administrator can grant/revoke authorization</note>
-    <note>Multi-factor authorization may be required for sensitive operations</note>
-    <note>Authorization should be validated on each restricted call</note>
-    <note>Error messages should indicate required authorization</note>
-    <note>Application should check authorization before calling restricted functions</note>
-    <note>Authorization cache may be used for performance</note>
-    <note>Authorization violations should be logged for security audit</note>
-    <note>Role-based access control enforces security policies</note>
+    <note>Indication: User is not authorized for this operation - insufficient permissions</note>
+    <note>Topics: Authorization, User Management, Access Control, Permissions</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Basic User Lacks Admin Authorization">

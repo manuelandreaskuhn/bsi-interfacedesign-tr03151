@@ -88,21 +88,8 @@
     <state name="Recovery Preconditions Met">The application can immediately retry the operation with corrected time parameters. No recovery procedures or device intervention is required - the error is input data error.</state>
   </postconditionality>
   <notes>
-    <note>ErrorInvalidTime is thrown ONLY when time parameter validation detects out-of-range or invalid values - it is the most specific exception for time value validation failures</note>
-    <note>This exception indicates input data error (invalid time parameters) rather than a system or device error</note>
-    <note>Critical distinction from ErrorSetCurrentSeTimeFailed: ErrorInvalidTime indicates parameter validation failure, while ErrorSetCurrentSeTimeFailed indicates system-level time update failure</note>
-    <note>Exception is raised during the parameter validation phase (steps 4-5), before any Secure Element communication or time modification</note>
-    <note>After this exception, the device time remains completely unchanged and the application can immediately retry with corrected input</note>
-    <note>This exception has High severity because it represents either a coding error in the application or potential security issues with invalid timestamps</note>
-    <note>Time parameter validation is a mandatory input validation requirement - strict range checking prevents invalid time values from being set</note>
-    <note>The valid year range depends on device specifications - consult device documentation for minimum and maximum supported years</note>
-    <note>Leap year calculations must follow standard rules: divisible by 4 except for century years, which must be divisible by 400</note>
-    <note>If this exception occurs frequently, it suggests the application may not be properly validating time parameters - application-side validation should be added</note>
-    <note>Time parameter validation occurs consistently regardless of current device state, authorization, or other factors</note>
-    <note>Applications should implement client-side time validation to detect format errors early and provide better user experience</note>
-    <note>ErrorInvalidTime is an expected, normal exception in workflows where external or user-supplied time values might be processed</note>
-    <note>The error message should ideally indicate which specific time parameter is invalid to facilitate debugging and correction</note>
-    <note>Standard library time functions should be used when possible to avoid manual time validation errors</note>
+    <note>Indication: Provided time value is invalid - time does not meet requirements</note>
+    <note>Topics: Time Management, Input Validation, Parameter Validation, Time Operations</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Time Synchronization with User Input">

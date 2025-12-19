@@ -74,16 +74,8 @@
     <state>Capacity constraint remains in effect - device continues to enforce client limit</state>
   </postconditionality>
   <notes>
-    <note>ErrorClientLimitReached is thrown ONLY by the registerClient function - it is specific to client registration operations at capacity</note>
-    <note>This exception enforces a hard device capacity limit - the maximum number of simultaneous clients is a fixed device characteristic</note>
-    <note>Unlike ErrorClientAlreadyRegistered (which indicates duplicate IDs), ErrorClientLimitReached indicates device capacity exhaustion</note>
-    <note>After this exception, the client registry remains unchanged and the failed client is not added</note>
-    <note>This exception has High severity because it prevents new client registrations and may require manual intervention (deregistration)</note>
-    <note>The capacity check is performed early in the registerClient function (step 5), before other validation steps, to fail fast on capacity issues</note>
-    <note>The maximum number of clients is typically fixed by hardware or firmware constraints and cannot be dynamically increased</note>
-    <note>Applications must implement robust deregistration procedures to ensure clients are properly released and capacity is freed</note>
-    <note>The device's maximum client capacity can be queried at runtime using getMaxNumberOfClients to allow dynamic adaptation</note>
-    <note>If ErrorClientLimitReached is raised frequently, it indicates the device's capacity is insufficient for the application's requirements</note>
+    <note>Indication: Maximum number of allowed clients has been reached - no additional clients can be registered</note>
+    <note>Topics: Client Management, Registration, Resource Limits, Device Constraints</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Capacity Check Before Registration">

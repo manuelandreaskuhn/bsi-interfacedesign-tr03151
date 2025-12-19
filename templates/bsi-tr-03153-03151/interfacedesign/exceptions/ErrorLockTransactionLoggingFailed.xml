@@ -91,21 +91,8 @@
     <state name="Error Reporting Available">The device and lock management subsystem remain operational. Error details and diagnostic information about the lock failure are available for investigation.</state>
   </postconditionality>
   <notes>
-    <note>ErrorLockTransactionLoggingFailed is thrown ONLY by the lockTransactionLogging function - it is the specific exception for transaction logging lock failures</note>
-    <note>This exception indicates the transaction logging system could not be transitioned to locked state - the system remains in an unverified state</note>
-    <note>Transaction logging lock operations are critical for security and audit trail integrity - lock failures require careful investigation</note>
-    <note>The purpose of locking transaction logging is typically to create a finalized, immutable audit trail - lock failure prevents achieving this security goal</note>
-    <note>Lock failures may indicate device issues, permission problems, or communication issues - the root cause must be identified for proper recovery</note>
-    <note>This exception has High severity because it prevents achieving transaction logging immutability - a critical security requirement</note>
-    <note>Some devices may require specific prerequisites before locking transaction logging (e.g., no active transactions, sufficient resources)</note>
-    <note>The transaction logging system state should be queried after a lock failure to determine the current state and appropriate recovery action</note>
-    <note>Repeated lock failures may indicate systemic issues requiring device reconfiguration or replacement</note>
-    <note>Applications should implement retry logic with appropriate backoff to handle transient lock failures</note>
-    <note>The transaction logging lock is typically permanent or long-lived - once locked, logging typically cannot be resumed on that device</note>
-    <note>Lock failure should trigger alerts or notifications as it indicates inability to achieve transaction logging immutability</note>
-    <note>Authorization checks should be performed early to provide clear feedback if insufficient permissions are the cause</note>
-    <note>Device error diagnostics should be consulted if lock failures persist after retry attempts</note>
-    <note>Some implementations may support time-limited locks or conditional locks - consult device specifications for lock semantics</note>
+    <note>Indication: Locking of transaction logging failed - logging could not be locked</note>
+    <note>Topics: Transaction Logging, Logging Control, Lock Operations, Access Control</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Device Decommissioning with Audit Trail Finalization">

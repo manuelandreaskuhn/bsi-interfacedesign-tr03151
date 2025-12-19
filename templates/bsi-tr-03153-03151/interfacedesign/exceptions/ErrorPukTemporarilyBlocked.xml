@@ -90,21 +90,8 @@
     <state name="Timeout Continues">The PUK remains in temporary block state with the timeout period continuing until expiration.</state>
   </postconditionality>
   <notes>
-    <note>ErrorPukTemporarilyBlocked is thrown ONLY by the unblockPin function - it is specific to PIN unblocking operations</note>
-    <note>This exception indicates a temporary lockout state - the PUK will become available again after the timeout expires</note>
-    <note>The exception has High severity because it prevents users from recovering from blocked PINs temporarily</note>
-    <note>PUK temporary blocking is a security feature that protects against brute-force attacks on PUK</note>
-    <note>The temporary block timeout is typically configurable (commonly 15-60 minutes)</note>
-    <note>The temporary block automatically expires after the timeout period - no manual intervention needed to restore the PUK</note>
-    <note>Different from ErrorPukBlocked which represents permanent PUK block requiring administrative intervention</note>
-    <note>The failed PUK attempt counter is typically reset when the temporary block expires</note>
-    <note>PUK temporary blocks may be device-wide or per-user depending on implementation</note>
-    <note>Applications should inform users of the timeout and suggest retrying after the timeout period</note>
-    <note>Security monitoring should alert on frequent ErrorPukTemporarilyBlocked exceptions (potential attacks)</note>
-    <note>Concurrent attempts from multiple sources can trigger the temporary block more quickly</note>
-    <note>The error message should ideally include the approximate time remaining in the temporary block period</note>
-    <note>Rate limiting and backoff strategies can help prevent accidental PUK temporary blocking from user mistakes</note>
-    <note>Administrative procedures may exist to override or reset the temporary PUK block in emergency situations</note>
+    <note>Indication: PUK is temporarily blocked after too many incorrect attempts</note>
+    <note>Topics: Authentication, PIN Management, Security, Unblocking, Temporary Blocks</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: PIN Recovery with Temporary PUK Block">

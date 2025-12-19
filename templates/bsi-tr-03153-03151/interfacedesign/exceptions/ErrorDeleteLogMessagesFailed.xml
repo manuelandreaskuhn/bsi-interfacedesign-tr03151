@@ -63,18 +63,6 @@
     <exception>ErrorUnexportedLogMessages</exception>
     <exception>ErrorStorageMediumDisconnected</exception>
   </relatedExceptions>
-  <notes>
-    <note>This exception indicates a storage system failure during the deletion phase of log message management. It represents a critical issue that prevents successful removal of exported log data from persistent storage.</note>
-    <note>The exception may be raised even if preliminary checks (such as exported log verification via ErrorUnexportedLogMessages) have succeeded, indicating a failure during actual data removal from the storage medium.</note>
-    <note>Applications should ensure that critical log messages are exported before attempting deletion using exportLogMessages to prevent data loss if the deletion operation fails.</note>
-    <note>Unlike ErrorStoringLogMessageFailed (which indicates inability to write new log entries), ErrorDeleteLogMessagesFailed indicates inability to remove previously stored log entries, affecting log retention and storage space management.</note>
-    <note>Storage integrity should be verified through device diagnostics if repeated deletion failures occur, as this may indicate hardware-level issues, file system corruption, or storage medium degradation that requires professional intervention.</note>
-    <note>The log messages that failed to be deleted remain in storage. If the failure is not resolved, repeated deletion attempts will continue to fail for the same messages, and storage capacity will not be freed.</note>
-    <note>Some device implementations may support partial deletion where only a subset of requested log messages are successfully deleted. Applications should verify the number of deleted messages to detect partial deletion scenarios.</note>
-    <note>If the storage medium is externally connected (e.g., USB, network storage), the deletion failure may indicate disconnection, network issues, or external device malfunction. Physical and network connectivity should be verified.</note>
-    <note>In systems with redundant storage or backup logging, deletion failure on one storage path should not necessarily prevent continued operation. Alternative storage paths may remain operational.</note>
-    <note>The exception does not indicate whether specific log message data has been corrupted or rendered unrecoverable. Storage recovery services may be able to retrieve deleted or partially deleted log entries from the storage medium.</note>
-  </notes>
   <executionSequence>
     <step number="1" name="Function Invocation">Function entry point is reached with parameters specifying the log message selection criteria (date range, clientId, transaction id, or other filters)</step>
     <step number="2" name="Parameter Validation">The Secure Element validates that filter parameters are valid and correspond to supported filtering criteria</step>
@@ -97,6 +85,10 @@
     <state name="Function Exit">The function exits abnormally via exception propagation without completing the log message deletion operation</state>
     <state name="Device Availability">The Secure Element and logging subsystem remain available for subsequent API calls, though the storage error condition may persist and affect future delete operations. The device continues to operate, but with the storage issue unresolved.</state>
   </postconditionality>
+  <notes>
+    <note>Indication: Deletion of log messages failed - log data could not be removed</note>
+    <note>Topics: Logging Operations, Data Deletion, Log Management, Storage Operations</note>
+  </notes>
   <usage>
     <scenario name="Scenario 1: Storage Medium Disconnection During Deletion">
       <description>An application initiates deletion of log messages to free storage space, but the external storage medium becomes disconnected during the deletion operation, causing this exception.</description>

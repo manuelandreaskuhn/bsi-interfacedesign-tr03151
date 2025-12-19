@@ -91,21 +91,8 @@
     <state name="Retry Possible with Corrected Parameters">The operation can be retried immediately after correcting the parameter values to be consistent.</state>
   </postconditionality>
   <notes>
-    <note>ErrorParameterMismatch is thrown by exportLogMessages and exportFilteredTransactionLogs - both data export functions</note>
-    <note>This exception indicates a parameter validation failure - the parameters are logically inconsistent or violate constraints</note>
-    <note>The exception has Medium severity because it indicates invalid input, not a system failure</note>
-    <note>Parameter validation occurs before any device communication - invalid parameters are detected early</note>
-    <note>Common causes include invalid date ranges (start &gt; end), mutually exclusive options both specified, and out-of-range values</note>
-    <note>Applications should validate parameters before calling export functions to anticipate and prevent this exception</note>
-    <note>Error messages should identify which specific parameters have conflicts to guide debugging</note>
-    <note>Different parameter combinations may have different constraint requirements - consult documentation for each function</note>
-    <note>Date/time parameter validation is critical - start/end date ordering and time window validity should be verified</note>
-    <note>Some parameter combinations may be device-specific - verify constraints against actual device capabilities</note>
-    <note>Applications should implement parameter validation utilities to catch errors before calling export functions</note>
-    <note>Complex filtering with many parameters increases the likelihood of parameter interaction issues</note>
-    <note>Parameter documentation should clearly specify which options are mutually exclusive and what ranges are acceptable</note>
-    <note>Error handling should provide detailed feedback about which parameters caused the mismatch</note>
-    <note>Testing should include edge cases and boundary conditions for parameter values</note>
+    <note>Indication: Function parameters do not match expected types or formats</note>
+    <note>Topics: Parameter Validation, Input Validation, Function Parameters, Type Checking</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Date Range Export with Validation">

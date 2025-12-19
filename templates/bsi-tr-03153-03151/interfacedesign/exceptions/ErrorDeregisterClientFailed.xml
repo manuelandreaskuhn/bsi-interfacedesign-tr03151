@@ -63,18 +63,6 @@
     <exception>ErrorClientAlreadyRegistered</exception>
     <exception>ErrorClientLimitReached</exception>
   </relatedExceptions>
-  <notes>
-    <note>This exception indicates a failure in the internal client management system during the deregistration phase of client lifecycle management. It represents a critical issue preventing proper cleanup of client resources.</note>
-    <note>The exception is raised after the deregistration log message has been successfully created and stored in the audit trail, indicating the failure occurs during the actual state transition to disable the client in the active registry.</note>
-    <note>Once this exception is raised, the client state may be partially updated: the deregistration log entry exists, but the client may still be present in the active registry. The application should verify the client's actual status and may need to retry or handle the inconsistent state appropriately.</note>
-    <note>The deregistration process includes disabling the ability to invoke startTransaction, updateTransaction, and finishTransaction for the specified clientId; failure in this step triggers the exception.</note>
-    <note>Unlike ErrorRegisterClientFailed (which fails at registration time), ErrorDeregisterClientFailed fails at deregistration time, preventing client cleanup and potentially leaving the client registry in an inconsistent state.</note>
-    <note>The existence of a deregistration log entry does not guarantee that the client has been successfully deregistered. Applications must verify deregistration completion by attempting to use the client for transactions or by querying the client registry.</note>
-    <note>In multi-threaded environments, race conditions may occur where a client is deregistered while another thread is initiating a transaction with that client. Error handling must account for both ErrorClientNotRegistered and ErrorDeregisterClientFailed.</note>
-    <note>Some implementations may support partial deregistration where the client is removed from some internal data structures but not others. Applications should verify complete deregistration by checking transaction restrictions.</note>
-    <note>If open transactions are blocking deregistration, the client lifecycle is extended until transactions are explicitly closed. Applications must manage transaction completion as part of client cleanup procedures.</note>
-    <note>The exception does not indicate whether the client registry is corrupted or simply inconsistent. Device reinitalization may be necessary if deregistration failures persist across multiple clients.</note>
-  </notes>
   <executionSequence>
     <step number="1" name="Function Invocation">Function entry point is reached with clientId parameter specifying the client to be deregistered</step>
     <step number="2" name="Parameter Validation">The Secure Element validates that clientId is non-null and properly formatted for internal client registry lookups</step>
@@ -98,6 +86,10 @@
     <state name="Device State">The device remains operational, but the client management subsystem has encountered an error condition. Subsequent client registration and deregistration operations may also fail or may succeed depending on whether the underlying issue is transient.</state>
     <state name="Function Exit">The function exits abnormally via exception propagation without completing the client deregistration operation</state>
   </postconditionality>
+  <notes>
+    <note>Indication: Deregistration of a client failed - client remains registered</note>
+    <note>Topics: Client Management, Deregistration, Client Lifecycle, Registry Operations</note>
+  </notes>
   <usage>
     <scenario name="Scenario 1: Client Cleanup with Blocking Transactions">
       <description>An application attempts to deregister a client at shutdown time, but the client has one or more open transactions that prevent deregistration. The application must close all transactions before deregistration can succeed.</description>

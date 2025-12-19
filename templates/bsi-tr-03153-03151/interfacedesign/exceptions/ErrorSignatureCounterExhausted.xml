@@ -108,21 +108,8 @@
     <state name="Device Requires Replacement">The device has reached end-of-life and requires replacement or maintenance.</state>
   </postconditionality>
   <notes>
-    <note>ErrorSignatureCounterExhausted is thrown by 4 functions: startTransaction, updateTransaction, finishTransaction, configureLogging</note>
-    <note>This exception indicates device physical memory exhaustion, not software error</note>
-    <note>The exception has Critical severity because it prevents transaction processing</note>
-    <note>Signature counter is critical for audit trail integrity and replay attack protection</note>
-    <note>Physical memory backing signature counter has limited write endurance (100K to 1M cycles typically)</note>
-    <note>Signature counter memory exhaustion indicates device is reaching end-of-life</note>
-    <note>Device manufacturers should design counters to minimize write frequency</note>
-    <note>Wear-leveling techniques can extend signature counter memory life</note>
-    <note>Error messages should indicate the approximate remaining signature counter capacity</note>
-    <note>Device monitoring should alert on signature counter memory approaching exhaustion</note>
-    <note>Business continuity plans should account for device failure due to signature counter exhaustion</note>
-    <note>Device replacement should be proactive before signature counter is completely exhausted</note>
-    <note>Transaction logs should be exported before device reaches end-of-life</note>
-    <note>Signature counter value should be recorded during device decommissioning for audit purposes</note>
-    <note>New device should be provisioned with fresh signature counter initialized to zero or appropriate value</note>
+    <note>Indication: Signature counter has reached its maximum value - no more signatures possible</note>
+    <note>Topics: Signature Operations, Counter Management, Resource Limits, Signing Capacity</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Production Device Reaching End-of-Life">

@@ -63,18 +63,6 @@
     <exception>ErrorSigningEventDataFailed</exception>
     <exception>ErrorSecureElementDisabled</exception>
   </relatedExceptions>
-  <notes>
-    <note>This exception indicates a critical failure in the device initialization process that prevents the device from reaching an initialized state suitable for API operations. The device is unusable until initialization succeeds.</note>
-    <note>The exception is raised when one or more necessary actions to initialize the device fail, which may include Secure Element initialization, internal state setup, client registry creation, logging system initialization, or cryptographic key loading.</note>
-    <note>The initialize function MUST be invoked before any other API functions can be used; if this function fails, the device remains in an uninitialized state and cannot be used for any SE API operations.</note>
-    <note>This exception has Critical severity as it represents a fundamental failure that prevents proper device operation and may indicate hardware damage, firmware corruption, or a failed manufacturing/shipping state.</note>
-    <note>Unlike ErrorDeviceIsInitialized (which indicates the device is already initialized), ErrorDeviceInitializationFailed indicates that the current initialization attempt has failed, potentially leaving the device in a partially initialized or inconsistent state.</note>
-    <note>Repeated initialization failures may indicate persistent hardware issues, firmware corruption, or internal state corruption that cannot be resolved through retry alone. Device replacement or factory reset may be necessary.</note>
-    <note>Some device variants may perform extensive self-testing during initialization that can take significant time. Initialization failures may indicate that self-tests have detected hardware issues rather than initialization logic failures.</note>
-    <note>The device state after this exception is indeterminate. Some internal state may have been initialized successfully while other critical components failed. The device should be considered non-operational until successful initialization is achieved.</note>
-    <note>In systems with redundant or backup devices, initialization failure on one device should trigger failover to alternative devices. The failed device should be removed from service for diagnostics and repair.</note>
-    <note>The exception does not indicate whether the failure is transient (recoverable through retry) or permanent (requiring hardware replacement). Applications should implement retry logic with appropriate backoff and eventual escalation to hardware diagnostics and replacement.</note>
-  </notes>
   <executionSequence>
     <step number="1" name="Function Invocation">Function entry point is reached for initialize with no parameters required</step>
     <step number="2" name="Current State Check">The device checks its current state to verify it is not already initialized. If already initialized, ErrorDeviceIsInitialized is raised instead (not taken in this exception case)</step>
@@ -99,6 +87,10 @@
     <state name="Data Integrity State">Existing data in device storage may be inaccessible or unverified due to incomplete initialization. The device cannot be relied upon to provide data consistency.</state>
     <state name="Function Exit">The function exits abnormally via exception propagation without completing device initialization</state>
   </postconditionality>
+  <notes>
+    <note>Indication: Device initialization failed - device could not be properly set up</note>
+    <note>Topics: Device Initialization, Setup Operations, Device State, System Configuration</note>
+  </notes>
   <usage>
     <scenario name="Scenario 1: Hardware Failure During First Initialization">
       <description>A newly deployed device fails during the initial initialization attempt due to a hardware component being non-functional. The device requires hardware diagnosis and repair.</description>

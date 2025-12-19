@@ -88,16 +88,8 @@
     <state name="Function Exit">The function exits abnormally via exception propagation without completing any device state modifications or audit trail entries</state>
   </postconditionality>
   <notes>
-    <note>ErrorDisableSecureElementFailed is thrown ONLY by the disableSecureElement function - it is the most specific exception for Secure Element deactivation failures and the only function that can raise this exception.</note>
-    <note>This exception indicates a critical failure at the Secure Element level during deactivation. The exception is raised at step 6b during the deactivation command execution, before any log message creation or state modification.</note>
-    <note>Unlike successful disableSecureElement execution, when this exception is raised, no deactivation log message is created or stored. The deactivation event is not recorded in the audit trail due to the pre-logging failure.</note>
-    <note>After this exception is raised, the Secure Element remains in an enabled state and retains all its functionality including cryptographic operations, signing capabilities, and logging features. All dependent API functions can continue to be executed.</note>
-    <note>This exception has Critical severity because it indicates the function's primary objective (Secure Element deactivation) could not be achieved, potentially leaving the device in a state that was not intended.</note>
-    <note>The exception is raised during the deactivation phase itself (step 6b), not during subsequent log message creation or storage phases. Deactivation is the critical point of failure.</note>
-    <note>If this exception is raised, the device should implement robust error handling and potentially attempt recovery through diagnostics, hardware inspection, communication channel verification, or professional support.</note>
-    <note>The specification notes that functions not involving the Secure Element can still be executed (e.g., export operations). This remains valid after this exception is raised - the Secure Element remains enabled and fully operational.</note>
-    <note>Unlike ErrorSecureElementDisabled (which indicates the Secure Element is already disabled and some operations cannot proceed), ErrorDisableSecureElementFailed indicates an attempted deactivation that failed, leaving the Secure Element still enabled.</note>
-    <note>This exception represents a significant operational issue as it prevents the intended security state transition (Secure Element deactivation). The device may need to be taken offline or serviced if this exception occurs repeatedly.</note>
+    <note>Indication: Attempt to disable the Secure Element failed - device remains in current state</note>
+    <note>Topics: Secure Element Management, Device Control, Security Operations, SE State</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Secure Element Hardware Failure During Deactivation">

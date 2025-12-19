@@ -93,21 +93,8 @@
     <state name="Alternative Variant Required">Different time sync approach must be selected.</state>
   </postconditionality>
   <notes>
-    <note>ErrorUnsupportedTimeSyncVariant is thrown by 1 function: updateTime</note>
-    <note>This is a Medium severity exception - operation is invalid</note>
-    <note>Device capabilities determine which time sync variants are supported</note>
-    <note>Variants may include absolute time, relative correction, external sync</note>
-    <note>Different devices may support different variant combinations</note>
-    <note>Variant support depends on device configuration and capabilities</note>
-    <note>Firmware version may affect variant availability</note>
-    <note>Device capability query should list supported variants</note>
-    <note>Error messages should indicate which variant is not supported</note>
-    <note>Error messages should suggest available alternatives</note>
-    <note>Variant validation should occur early in processing</note>
-    <note>Variant support may be affected by device configuration</note>
-    <note>Device capabilities should be documented for integrators</note>
-    <note>Firmware upgrades may enable additional variants</note>
-    <note>Configuration management should control variant availability</note>
+    <note>Indication: The specified time synchronization variant is not supported</note>
+    <note>Topics: Time Management, Time Synchronization, Feature Support, Time Operations</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Unsupported External Sync Variant">

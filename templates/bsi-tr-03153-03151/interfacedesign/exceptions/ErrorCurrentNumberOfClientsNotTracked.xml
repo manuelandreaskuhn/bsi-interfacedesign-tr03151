@@ -57,16 +57,6 @@
     <exception>ErrorGetMaxNumberOfClientsFailed</exception>
     <exception>ErrorDeviceNotInitialized</exception>
   </relatedExceptions>
-  <notes>
-    <note>This exception indicates a capability limitation rather than a failure. The device is functioning normally but does not support client counting. This is an informational exception, not an error condition.</note>
-    <note>Devices that support unlimited simultaneous clients often do not implement client tracking mechanisms to avoid performance overhead and memory consumption. Client counting adds complexity and latency to client management operations.</note>
-    <note>Applications should handle this exception gracefully and implement alternative approaches to monitor or limit client connections if client counting is essential to the application logic.</note>
-    <note>The absence of client tracking does not necessarily imply that client registration (registerClient, deregisterClient) is not implemented. Some devices may support client registration and management without tracking aggregate client counts.</note>
-    <note>Unlike ErrorGetCurrentNumberOfClientsFailed (which indicates a transient failure), ErrorCurrentNumberOfClientsNotTracked indicates a permanent capability limitation specific to this device variant or configuration.</note>
-    <note>Device variants may differ significantly in whether they implement client tracking. Applications targeting multiple device variants must implement fallback mechanisms or conditional logic to handle both tracking and non-tracking devices.</note>
-    <note>If client capacity management is critical to application security or stability, applications should verify at initialization time whether client tracking is available and take appropriate action if it is not.</note>
-    <note>Some device implementations may provide alternative mechanisms for capacity monitoring, such as performance degradation monitoring, resource utilization queries, or transaction capacity limits, even when client counting is not directly available.</note>
-  </notes>
   <executionSequence>
     <step number="1" name="Function Invocation">Function entry point is reached for getCurrentNumberOfClients with no parameters required</step>
     <step number="2" name="Device Capability Check">The device checks whether client tracking capability is available and enabled on this device instance</step>
@@ -86,6 +76,10 @@
     <state name="Function Exit">The function exits via exception propagation without providing client count information or returning normally</state>
     <state name="Application Awareness">The calling application learns through this exception that it cannot depend on server-side client counting for this device and must implement alternative strategies</state>
   </postconditionality>
+  <notes>
+    <note>Indication: Current number of registered clients cannot be retrieved - tracking information unavailable</note>
+    <note>Topics: Client Management, Device State, Information Retrieval, Resource Tracking</note>
+  </notes>
   <usage>
     <scenario name="Scenario 1: Device Capability Discovery at Initialization">
       <description>An application attempts to query client count at initialization time to discover device capabilities. The exception indicates that client tracking is not available, prompting the application to implement client-side tracking.</description>

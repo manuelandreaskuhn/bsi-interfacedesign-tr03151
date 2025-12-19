@@ -90,21 +90,8 @@
     <state name="Unblock Required">PIN unblocking via unblockPin function is required before authentication can resume.</state>
   </postconditionality>
   <notes>
-    <note>ErrorPinBlocked is thrown ONLY by the authenticateUser function - it is specific to PIN authentication</note>
-    <note>This exception indicates a critical security lock state - the PIN must be unblocked before authentication can proceed</note>
-    <note>The exception has Critical severity because it completely prevents user authentication</note>
-    <note>PIN blocking is a security feature that protects accounts from brute-force attacks by limiting authentication attempts</note>
-    <note>The maximum number of failed PIN attempts before blocking is typically configurable (commonly 3-5)</note>
-    <note>Once blocked, the PIN can only be unblocked by providing the correct PUK via unblockPin function</note>
-    <note>PIN blocking is persistent across device restarts - blocked PINs remain blocked after power cycles</note>
-    <note>Different user accounts have independent PIN blocks - one user's blocked PIN does not affect other users</note>
-    <note>Failed PIN attempts should be logged for security auditing and attack detection</note>
-    <note>Rate limiting or backoff strategies can help prevent legitimate users from accidentally blocking their PINs</note>
-    <note>If the PUK is lost or unknown, administrative PIN reset procedures may be required</note>
-    <note>Applications should handle ErrorPinBlocked gracefully and guide users to the PIN unblocking process</note>
-    <note>User notification and clear error messages are important - users must understand why authentication failed</note>
-    <note>Security monitoring systems should alert on PIN blocking events, as they may indicate attacks</note>
-    <note>PUK management and recovery procedures must be documented for user support and administration</note>
+    <note>Indication: PIN is blocked due to too many failed authentication attempts</note>
+    <note>Topics: Authentication, PIN Management, Security, Access Control, Blocking</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: User Authentication with PIN Block Detection">

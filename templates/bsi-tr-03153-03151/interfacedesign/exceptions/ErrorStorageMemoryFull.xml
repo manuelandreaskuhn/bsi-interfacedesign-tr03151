@@ -104,21 +104,8 @@
     <state name="Manual Intervention Required">Storage management (export, delete) is needed to free space.</state>
   </postconditionality>
   <notes>
-    <note>ErrorStorageMemoryFull is thrown by 5 functions that require storage writes</note>
-    <note>This exception indicates storage capacity exhaustion, not hardware failure</note>
-    <note>The exception has Critical severity because it blocks transaction processing</note>
-    <note>Storage is used for transaction logs, configuration, and audit trail data</note>
-    <note>Storage capacity should be adequate for expected transaction volume</note>
-    <note>Regular log export and deletion procedures maintain available storage space</note>
-    <note>Proactive storage monitoring can warn before storage becomes full</note>
-    <note>Storage utilization should be tracked and forecasted for capacity planning</note>
-    <note>Error messages should indicate current storage utilization and free space</note>
-    <note>Device should prevent critical data loss by rejecting writes when storage is full</note>
-    <note>Archive procedures should automate log export to maintain storage availability</note>
-    <note>Storage sizing should account for transaction volume and retention requirements</note>
-    <note>Storage monitoring and alerting should provide early warning of approaching full capacity</note>
-    <note>Tiered storage strategies can use on-device storage for current logs and external storage for archives</note>
-    <note>Business continuity plans should account for storage full scenarios</note>
+    <note>Indication: Storage memory is full - no space available for new data</note>
+    <note>Topics: Storage Operations, Memory Management, Storage Capacity, Resource Limits</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Storage Full During Peak Transaction Load">

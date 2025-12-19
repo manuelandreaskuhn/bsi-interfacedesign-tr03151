@@ -99,21 +99,8 @@
     <state name="Transaction Timestamps Unreliable">Transaction timestamps may be inaccurate until time is properly synchronized.</state>
   </postconditionality>
   <notes>
-    <note>ErrorUpdateTimeFailed is thrown by 1 function: updateTime</note>
-    <note>This is a High severity exception affecting time-dependent operations</note>
-    <note>Time accuracy is critical to transaction integrity and security</note>
-    <note>Time data validation occurs in Secure Element</note>
-    <note>Time values must be within acceptable range</note>
-    <note>Time format depends on selected synchronization variant</note>
-    <note>Hardware errors during clock update are critical</note>
-    <note>Device state validation prevents time update during incompatible operations</note>
-    <note>Post-update verification confirms time was properly set</note>
-    <note>Time update failures should be logged for audit trail</note>
-    <note>Multiple retries may help transient failures</note>
-    <note>Device diagnostics can identify persistent time issues</note>
-    <note>Time synchronization should be performed regularly</note>
-    <note>Failed time updates may indicate device issues requiring service</note>
-    <note>Transaction timestamps depend on accurate device time</note>
+    <note>Indication: Update of device time failed - time could not be synchronized</note>
+    <note>Topics: Time Management, Time Synchronization, Time Operations, System Configuration</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Time Data Validation Failure">

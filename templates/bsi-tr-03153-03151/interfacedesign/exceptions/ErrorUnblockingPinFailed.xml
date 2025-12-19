@@ -96,21 +96,8 @@
     <state name="PIN-Protected Operations Remain Blocked">Operations requiring PIN remain unavailable.</state>
   </postconditionality>
   <notes>
-    <note>ErrorUnblockingPinFailed is thrown by 1 function: unblockPin</note>
-    <note>This is a High severity exception blocking PIN restoration</note>
-    <note>PIN unblock requires correct unblock PIN (PUK) for verification</note>
-    <note>PUK is a separate, distinct credential from regular PIN</note>
-    <note>Unblock failure keeps PIN locked - users cannot access PIN-protected functions</note>
-    <note>Multiple unblock failures may trigger additional security responses</note>
-    <note>Hardware errors can prevent unblock even with correct PUK</note>
-    <note>Device state issues may prevent unblock in certain modes</note>
-    <note>New PIN must meet security policy requirements if being set</note>
-    <note>Unblock operations should be logged for audit trail</note>
-    <note>PUK itself may be protected to prevent unauthorized unblocking</note>
-    <note>Unblock failure may indicate compromised device requiring investigation</note>
-    <note>Repeated failures should be escalated to support/service</note>
-    <note>Device diagnostics can help identify persistent unblock issues</note>
-    <note>New PIN format validation occurs during unblock (not separate call)</note>
+    <note>Indication: Unblocking of PIN failed - PIN remains blocked</note>
+    <note>Topics: PIN Management, Authentication, Unblocking, PIN Recovery</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Incorrect Unblock PIN Provided">

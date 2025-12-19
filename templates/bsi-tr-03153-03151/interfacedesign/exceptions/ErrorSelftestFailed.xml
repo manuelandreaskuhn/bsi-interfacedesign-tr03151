@@ -93,21 +93,8 @@
     <state name="Diagnostic Information Available">Error message and logs contain information about which test failed.</state>
   </postconditionality>
   <notes>
-    <note>ErrorSelftestFailed is thrown only by the selfTest function - specific to device diagnostics</note>
-    <note>This exception indicates device component failure or integrity issue</note>
-    <note>The exception has Critical severity because self-test failure indicates device may not be trustworthy</note>
-    <note>Self-test is typically invoked during device initialization to verify operational readiness</note>
-    <note>Self-test can be invoked periodically to monitor device health during operation</note>
-    <note>Self-test results should be logged for compliance and audit purposes</note>
-    <note>Persistent self-test failures indicate hardware problems requiring maintenance</note>
-    <note>Intermittent self-test failures may indicate environmental issues (power, temperature) or component degradation</note>
-    <note>Device should not be used for critical operations if self-test fails</note>
-    <note>Self-test comprehensive checks include cryptography, memory, communication, and security functions</note>
-    <note>Error messages should identify the specific test that failed (cryptographic, memory, communication, etc.)</note>
-    <note>Device manufacturers should provide detailed self-test failure analysis and diagnostic information</note>
-    <note>Self-test execution time may be significant - plan for test duration in system design</note>
-    <note>Some devices may support abbreviated self-test for faster operation verification</note>
-    <note>Business continuity plans should account for device failure due to self-test failure</note>
+    <note>Indication: Self-test of the device failed - device integrity check unsuccessful</note>
+    <note>Topics: Device Health, Self-Test, Diagnostics, Device Validation</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Device Initialization Self-Test Verification">

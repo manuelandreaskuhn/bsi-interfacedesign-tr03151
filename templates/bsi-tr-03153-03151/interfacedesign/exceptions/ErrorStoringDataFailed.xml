@@ -92,21 +92,8 @@
     <state name="Retry Possible">The storage operation can be retried after addressing the storage issue.</state>
   </postconditionality>
   <notes>
-    <note>ErrorStoringDataFailed is thrown by 2 functions: setDescription, initialize</note>
-    <note>This exception indicates a storage write failure, not data validation failure</note>
-    <note>The exception has High severity because it prevents configuration and data management</note>
-    <note>Data storage is critical for device configuration and operation</note>
-    <note>Storage write failures may indicate hardware or capacity issues</note>
-    <note>Failed writes do not update the device's stored data - previous values remain</note>
-    <note>Storage capacity must be verified before attempting data writes</note>
-    <note>Communication reliability is important during data storage operations</note>
-    <note>Data should be validated before transmission to device for storage</note>
-    <note>Error messages should indicate whether issue is capacity, connectivity, or hardware</note>
-    <note>Device should not corrupt or lose data during failed storage operations</note>
-    <note>Storage integrity should be verified after write operations</note>
-    <note>Device should provide clear status on storage health and capacity</note>
-    <note>Retry logic should include delays to allow temporary issues to resolve</note>
-    <note>Data persistence is essential for configuration management across device resets</note>
+    <note>Indication: Storing of data failed - data could not be written to storage</note>
+    <note>Topics: Storage Operations, Data Writing, Storage Management, Data Persistence</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Device Description Update with Storage Failure">

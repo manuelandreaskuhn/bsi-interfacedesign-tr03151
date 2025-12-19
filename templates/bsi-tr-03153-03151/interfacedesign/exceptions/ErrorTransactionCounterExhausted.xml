@@ -90,21 +90,8 @@
     <state name="Transaction Authenticity At Risk">Transaction recording capability compromised due to counter memory exhaustion.</state>
   </postconditionality>
   <notes>
-    <note>ErrorTransactionCounterExhausted is thrown by 3 core transaction functions</note>
-    <note>This is a Critical severity exception blocking all transaction functionality</note>
-    <note>Counter memory is a finite persistent resource that can be exhausted</note>
-    <note>Physical memory wear can cause reliability degradation over extended operation</note>
-    <note>Memory threshold monitoring is essential for early exhaustion detection</note>
-    <note>Device self-test should regularly monitor counter memory state</note>
-    <note>Critical threshold triggers protective exception to prevent catastrophic failure</note>
-    <note>Hardware memory error detection helps identify imminent failures</note>
-    <note>Manufacturer service is required to restore counter functionality</note>
-    <note>Counter memory replacement may be necessary in advanced degradation</note>
-    <note>Transaction volume directly correlates with counter memory consumption rate</note>
-    <note>Extended device operation will eventually lead to counter memory exhaustion</note>
-    <note>Device maintenance planning should account for counter memory lifecycle</note>
-    <note>Early diagnostics can identify approaching exhaustion for proactive service</note>
-    <note>Transaction authenticity depends on reliable counter memory operation</note>
+    <note>Indication: Transaction counter has reached its maximum value - no more transactions possible</note>
+    <note>Topics: Transaction Management, Counter Management, Resource Limits, Transaction Capacity</note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Counter Exhaustion During High Transaction Volume">
