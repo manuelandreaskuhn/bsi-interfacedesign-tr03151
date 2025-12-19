@@ -1254,7 +1254,419 @@
                 )}
               </div>
             )}
+
+            {/* Logging Section */}
+            {(data.systemLog || data.transactionLog) && (
+              <LoggingSection 
+                systemLog={data.systemLog} 
+                transactionLog={data.transactionLog}
+                functionName={data.name}
+                onNavigateToType={onNavigateToType}
+                availableTypes={availableTypes}
+              />
+            )}
           </div>
+        </div>
+      );
+    };
+
+    // ============================================
+    // Logging Section Component
+    // ============================================
+    
+    const LoggingSection = ({ systemLog, transactionLog, functionName, onNavigateToType, availableTypes }) => {
+      const [activeLogTab, setActiveLogTab] = useState(transactionLog ? 'transaction' : 'system');
+      const [logViewMode, setLogViewMode] = useState('overview'); // 'overview', 'asn1', 'fields', 'diagram'
+      
+      const activeLog = activeLogTab === 'transaction' ? transactionLog : systemLog;
+      
+      // Get origin badge color
+      const getOriginColor = (origin) => {
+        if (!origin || origin === '-') return 'bg-gray-100 text-gray-600';
+        if (origin.includes('device')) return 'bg-blue-100 text-blue-700';
+        if (origin.includes('Secure Element')) return 'bg-purple-100 text-purple-700';
+        if (origin.includes('External')) return 'bg-green-100 text-green-700';
+        return 'bg-gray-100 text-gray-600';
+      };
+
+      // Render type reference
+      const renderFieldType = (typeName) => {
+        if (!typeName) return <span className="text-gray-400">-</span>;
+        
+        // Check if it's a known type
+        if (availableTypes?.includes(typeName)) {
+          return (
+            <span 
+              className="px-2 py-0.5 bg-purple-50 text-purple-700 rounded text-xs font-mono cursor-pointer hover:bg-purple-100 hover:underline"
+              onClick={() => onNavigateToType && onNavigateToType(typeName)}
+            >
+              {typeName}
+            </span>
+          );
+        }
+        
+        return <span className="font-mono text-xs text-blue-600">{typeName}</span>;
+      };
+
+      // Generate simplified ASN.1 diagram
+      const generateAsn1Diagram = () => {
+        if (!activeLog?.fields) return '';
+        
+        let diagram = `┌─────────────────────────────────────────────────────────────┐\n`;
+        diagram += `│  ${activeLogTab === 'transaction' ? 'TransactionLogMessage' : 'SystemLogMessage'} (SEQUENCE)\n`;
+        diagram += `├─────────────────────────────────────────────────────────────┤\n`;
+        
+        activeLog.fields.forEach((field, idx) => {
+          const reqMarker = field.required ? '●' : '○';
+          const tagInfo = field.tag ? ` ${field.tag}` : '';
+          diagram += `│ ${reqMarker} ${field.name.padEnd(25)} : ${field.type}${tagInfo}\n`;
+        });
+        
+        diagram += `└─────────────────────────────────────────────────────────────┘`;
+        return diagram;
+      };
+
+      if (!activeLog) return null;
+
+      return (
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-6">
+          {/* Header with tabs */}
+          <div className="bg-gradient-to-r from-emerald-600 to-teal-600 p-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-white font-semibold flex items-center text-lg">
+                <Icon name="file-alt" className="mr-2" />
+                Logging-Anforderungen
+              </h3>
+              
+              {/* Log Type Tabs */}
+              {systemLog && transactionLog && (
+                <div className="flex bg-white/20 rounded-lg p-0.5">
+                  <button
+                    onClick={() => setActiveLogTab('transaction')}
+                    className={`px-4 py-1.5 rounded text-sm font-medium transition-colors ${
+                      activeLogTab === 'transaction' 
+                        ? 'bg-white text-emerald-700' 
+                        : 'text-white hover:bg-white/10'
+                    }`}
+                  >
+                    <Icon name="exchange-alt" className="mr-1" />
+                    Transaction-Log
+                  </button>
+                  <button
+                    onClick={() => setActiveLogTab('system')}
+                    className={`px-4 py-1.5 rounded text-sm font-medium transition-colors ${
+                      activeLogTab === 'system' 
+                        ? 'bg-white text-emerald-700' 
+                        : 'text-white hover:bg-white/10'
+                    }`}
+                  >
+                    <Icon name="cog" className="mr-1" />
+                    System-Log
+                  </button>
+                </div>
+              )}
+            </div>
+            
+            {/* Log Type Badge */}
+            <div className="flex items-center gap-3 mt-3">
+              <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                activeLogTab === 'transaction' 
+                  ? 'bg-yellow-500 text-yellow-900' 
+                  : 'bg-blue-500 text-blue-100'
+              }`}>
+                {activeLog.logType}
+              </span>
+              <span className="px-3 py-1 bg-white/20 rounded-full text-white text-sm">
+                {activeLog.requirement}
+              </span>
+              {activeLog.fields && (
+                <span className="px-3 py-1 bg-white/20 rounded-full text-white text-sm">
+                  {activeLog.fields.length} Felder
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* View Mode Switcher */}
+          <div className="p-4 bg-gray-50 border-b flex items-center justify-between">
+            <div className="flex bg-gray-200 rounded-lg p-0.5">
+              <button
+                onClick={() => setLogViewMode('overview')}
+                className={`px-3 py-1.5 rounded text-sm transition-colors ${
+                  logViewMode === 'overview' ? 'bg-white shadow text-emerald-600' : 'text-gray-600 hover:text-gray-800'
+                }`}
+              >
+                <Icon name="th-large" className="mr-1" />
+                Übersicht
+              </button>
+              <button
+                onClick={() => setLogViewMode('fields')}
+                className={`px-3 py-1.5 rounded text-sm transition-colors ${
+                  logViewMode === 'fields' ? 'bg-white shadow text-emerald-600' : 'text-gray-600 hover:text-gray-800'
+                }`}
+              >
+                <Icon name="table" className="mr-1" />
+                Felder
+              </button>
+              <button
+                onClick={() => setLogViewMode('asn1')}
+                className={`px-3 py-1.5 rounded text-sm transition-colors ${
+                  logViewMode === 'asn1' ? 'bg-white shadow text-emerald-600' : 'text-gray-600 hover:text-gray-800'
+                }`}
+              >
+                <Icon name="code" className="mr-1" />
+                ASN.1
+              </button>
+              <button
+                onClick={() => setLogViewMode('diagram')}
+                className={`px-3 py-1.5 rounded text-sm transition-colors ${
+                  logViewMode === 'diagram' ? 'bg-white shadow text-emerald-600' : 'text-gray-600 hover:text-gray-800'
+                }`}
+              >
+                <Icon name="sitemap" className="mr-1" />
+                Struktur
+              </button>
+            </div>
+          </div>
+
+          {/* Overview Mode */}
+          {logViewMode === 'overview' && (
+            <div className="p-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Quick Info Cards */}
+                <div className="space-y-4">
+                  <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100">
+                    <h4 className="font-semibold text-blue-800 mb-2 flex items-center">
+                      <Icon name="info-circle" className="mr-2" />
+                      Log-Typ
+                    </h4>
+                    <p className="text-blue-700">{activeLog.logType}</p>
+                  </div>
+                  
+                  <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-100">
+                    <h4 className="font-semibold text-green-800 mb-2 flex items-center">
+                      <Icon name="check-circle" className="mr-2" />
+                      Anforderung
+                    </h4>
+                    <p className="text-green-700 text-sm">{activeLog.requirement}</p>
+                  </div>
+
+                  {/* Required Fields Summary */}
+                  {activeLog.fields && (
+                    <div className="p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-100">
+                      <h4 className="font-semibold text-purple-800 mb-2 flex items-center">
+                        <Icon name="asterisk" className="mr-2" />
+                        Pflichtfelder
+                      </h4>
+                      <div className="flex flex-wrap gap-1">
+                        {activeLog.fields.filter(f => f.required).map((field, idx) => (
+                          <span key={idx} className="px-2 py-0.5 bg-purple-100 text-purple-700 rounded text-xs font-mono">
+                            {field.name}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Field Origin Distribution */}
+                {activeLog.fields && (
+                  <div className="p-4 bg-gray-50 rounded-lg border">
+                    <h4 className="font-semibold text-gray-800 mb-3 flex items-center">
+                      <Icon name="sitemap" className="mr-2 text-gray-500" />
+                      Feld-Herkunft
+                    </h4>
+                    <div className="space-y-2">
+                      {(() => {
+                        const origins = {};
+                        activeLog.fields.forEach(f => {
+                          const origin = f.origin || 'Unbekannt';
+                          origins[origin] = (origins[origin] || 0) + 1;
+                        });
+                        return Object.entries(origins).map(([origin, count], idx) => (
+                          <div key={idx} className="flex items-center justify-between">
+                            <span className={`px-2 py-1 rounded text-xs ${getOriginColor(origin)}`}>
+                              {origin}
+                            </span>
+                            <span className="text-gray-500 text-sm">{count} Felder</span>
+                          </div>
+                        ));
+                      })()}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Fields Table Mode */}
+          {logViewMode === 'fields' && activeLog.fields && (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-50 border-b">
+                  <tr>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Feld</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Typ</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Tag</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Pflicht</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Standard</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Beschreibung</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Herkunft</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {activeLog.fields.map((field, idx) => (
+                    <tr key={idx} className={`hover:bg-gray-50 ${field.note === 'RFU' ? 'opacity-50' : ''}`}>
+                      <td className="px-4 py-3">
+                        <code className="text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded text-sm">
+                          {field.name}
+                        </code>
+                        {field.note && (
+                          <span className="ml-2 px-1.5 py-0.5 bg-yellow-100 text-yellow-700 text-xs rounded">
+                            {field.note}
+                          </span>
+                        )}
+                      </td>
+                      <td className="px-4 py-3">
+                        {renderFieldType(field.type)}
+                      </td>
+                      <td className="px-4 py-3">
+                        {field.tag ? (
+                          <code className="text-xs text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded">
+                            {field.tag}
+                          </code>
+                        ) : (
+                          <span className="text-gray-300">-</span>
+                        )}
+                      </td>
+                      <td className="px-4 py-3">
+                        {field.required ? (
+                          <span className="text-green-600"><Icon name="check-circle" /></span>
+                        ) : (
+                          <span className="text-gray-300"><Icon name="minus" /></span>
+                        )}
+                      </td>
+                      <td className="px-4 py-3">
+                        {field.defaultValue ? (
+                          <code className="text-xs text-orange-600 bg-orange-50 px-1.5 py-0.5 rounded">
+                            {field.defaultValue}
+                          </code>
+                        ) : (
+                          <span className="text-gray-300">-</span>
+                        )}
+                      </td>
+                      <td className="px-4 py-3 text-sm text-gray-600 max-w-xs">
+                        {field.description || '-'}
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className={`px-2 py-0.5 rounded text-xs ${getOriginColor(field.origin)}`}>
+                          {field.origin || '-'}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {/* ASN.1 Mode */}
+          {logViewMode === 'asn1' && activeLog.asn1Structure && (
+            <div className="p-6 space-y-6">
+              {/* LogMessage Structure */}
+              <div>
+                <h4 className="font-semibold text-gray-700 mb-2 flex items-center">
+                  <Icon name="file-code" className="mr-2 text-blue-500" />
+                  LogMessage Struktur
+                </h4>
+                <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg text-sm overflow-x-auto font-mono">
+                  <code>{activeLog.asn1Structure.logMessage}</code>
+                </pre>
+              </div>
+              
+              {/* Specific Log Message Structure */}
+              <div>
+                <h4 className="font-semibold text-gray-700 mb-2 flex items-center">
+                  <Icon name="file-code" className="mr-2 text-purple-500" />
+                  {activeLogTab === 'transaction' ? 'TransactionLogMessage' : 'SystemLogMessage'} Struktur
+                </h4>
+                <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg text-sm overflow-x-auto font-mono">
+                  <code>
+                    {activeLogTab === 'transaction' 
+                      ? activeLog.asn1Structure.transactionLogMessage 
+                      : activeLog.asn1Structure.systemLogMessage}
+                  </code>
+                </pre>
+              </div>
+            </div>
+          )}
+
+          {/* Structure Diagram Mode */}
+          {logViewMode === 'diagram' && activeLog.fields && (
+            <div className="p-6">
+              {/* Visual Structure */}
+              <div className="space-y-4">
+                <h4 className="font-semibold text-gray-700 mb-3 flex items-center">
+                  <Icon name="project-diagram" className="mr-2 text-indigo-500" />
+                  Visuelle Feldstruktur
+                </h4>
+                
+                {/* Nested Structure Visualization */}
+                <div className="bg-gray-50 rounded-lg p-4 border">
+                  <div className="font-mono text-sm">
+                    <div className="text-purple-600 font-bold mb-2">
+                      {activeLogTab === 'transaction' ? 'TransactionLogMessage' : 'SystemLogMessage'} ::= SEQUENCE {'{'}
+                    </div>
+                    <div className="ml-4 space-y-1">
+                      {activeLog.fields.map((field, idx) => (
+                        <div key={idx} className={`flex items-start gap-2 py-1 px-2 rounded ${
+                          field.required ? 'bg-green-50' : 'bg-gray-100'
+                        } ${field.note === 'RFU' ? 'opacity-50' : ''}`}>
+                          <span className={`w-4 h-4 rounded-full flex-shrink-0 mt-0.5 flex items-center justify-center text-xs ${
+                            field.required ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'
+                          }`}>
+                            {field.required ? '●' : '○'}
+                          </span>
+                          <div className="flex-1">
+                            <span className="text-blue-600">{field.name}</span>
+                            {field.tag && <span className="text-gray-400 ml-2">{field.tag}</span>}
+                            <span className="text-gray-500 mx-2">:</span>
+                            <span className="text-purple-600">{field.type}</span>
+                            {!field.required && <span className="text-orange-500 ml-2">OPTIONAL</span>}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="text-purple-600 font-bold mt-2">{'}'}</div>
+                  </div>
+                </div>
+
+                {/* ASCII Diagram */}
+                <div>
+                  <h4 className="font-semibold text-gray-700 mb-2 flex items-center">
+                    <Icon name="terminal" className="mr-2 text-gray-500" />
+                    ASCII-Darstellung
+                  </h4>
+                  <pre className="bg-gray-900 text-green-400 p-4 rounded-lg text-xs overflow-x-auto font-mono">
+                    {generateAsn1Diagram()}
+                  </pre>
+                </div>
+
+                {/* Legend */}
+                <div className="flex items-center gap-6 text-sm text-gray-600 mt-4 p-3 bg-gray-100 rounded-lg">
+                  <span className="flex items-center gap-1">
+                    <span className="w-3 h-3 rounded-full bg-green-500"></span> Pflichtfeld
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <span className="w-3 h-3 rounded-full bg-gray-300"></span> Optional
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <span className="opacity-50">Ausgegraut</span> = RFU (Reserved for Future Use)
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       );
     };

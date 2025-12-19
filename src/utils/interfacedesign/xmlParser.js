@@ -204,29 +204,47 @@ async function parseFunctionDetail(filePath) {
     });
   }
 
-  // Extract system log info
+  // Helper function to parse log fields
+  const parseLogFields = (structure) => {
+    if (!structure || !structure.field) return [];
+    const fields = Array.isArray(structure.field) ? structure.field : [structure.field];
+    return fields.map(f => ({
+      name: f.n || f.name || '',
+      type: f.type || '',
+      tag: f.tag || '',
+      required: f.required === 'true' || f.required === true,
+      defaultValue: f.defaultValue || '',
+      description: f.description || '',
+      note: f.note || '',
+      origin: f.origin || ''
+    }));
+  };
+
+  // Extract system log info with full details
   let systemLog = null;
   if (func.systemLog) {
     systemLog = {
-      logType: func.systemLog.logType || '',
+      logType: func.systemLog.logType || 'system',
       requirement: func.systemLog.requirement || '',
       asn1Structure: func.systemLog.asn1Structure ? {
         logMessage: func.systemLog.asn1Structure.logMessage || '',
         systemLogMessage: func.systemLog.asn1Structure.systemLogMessage || ''
-      } : null
+      } : null,
+      fields: parseLogFields(func.systemLog.structure)
     };
   }
 
-  // Extract transaction log info
+  // Extract transaction log info with full details
   let transactionLog = null;
   if (func.transactionLog) {
     transactionLog = {
-      logType: func.transactionLog.logType || '',
+      logType: func.transactionLog.logType || 'transaction-log',
       requirement: func.transactionLog.requirement || '',
       asn1Structure: func.transactionLog.asn1Structure ? {
         logMessage: func.transactionLog.asn1Structure.logMessage || '',
         transactionLogMessage: func.transactionLog.asn1Structure.transactionLogMessage || ''
-      } : null
+      } : null,
+      fields: parseLogFields(func.transactionLog.structure)
     };
   }
 
