@@ -4,11 +4,63 @@
  */
 
 const fs = require('fs').promises;
+const fsSync = require('fs');
 const path = require('path');
 const { INSTANCES_ROOT, TEMPLATES_ROOT } = require('../../config');
 
 // Valid instance name pattern (URL-safe)
 const INSTANCE_NAME_PATTERN = /^[a-zA-Z0-9_-]+$/;
+
+/**
+ * Count XML files in a directory
+ */
+async function countXmlFiles(dirPath) {
+  try {
+    const files = await fs.readdir(dirPath);
+    return files.filter(f => f.endsWith('.xml')).length;
+  } catch {
+    return 0;
+  }
+}
+
+/**
+ * Get InterfaceDesign statistics for a path
+ */
+async function getInterfaceStats(interfacedesignPath) {
+  const stats = {
+    hasInterfaces: false,
+    functionCount: 0,
+    exceptionCount: 0,
+    typeCount: 0,
+    enumCount: 0
+  };
+
+  try {
+    await fs.access(interfacedesignPath);
+    stats.hasInterfaces = true;
+
+    // Count functions
+    const functionsPath = path.join(interfacedesignPath, 'functions');
+    stats.functionCount = await countXmlFiles(functionsPath);
+
+    // Count exceptions
+    const exceptionsPath = path.join(interfacedesignPath, 'exceptions');
+    stats.exceptionCount = await countXmlFiles(exceptionsPath);
+
+    // Count types
+    const typesPath = path.join(interfacedesignPath, 'types');
+    stats.typeCount = await countXmlFiles(typesPath);
+
+    // Count enums
+    const enumsPath = path.join(interfacedesignPath, 'enums');
+    stats.enumCount = await countXmlFiles(enumsPath);
+
+  } catch {
+    stats.hasInterfaces = false;
+  }
+
+  return stats;
+}
 
 
 async function getInstances() {
@@ -20,6 +72,9 @@ async function getInstances() {
       if (entry.isDirectory() && INSTANCE_NAME_PATTERN.test(entry.name)) {
         const instancePath = path.join(INSTANCES_ROOT, entry.name);
         const interfacedesignPath = path.join(instancePath, 'interfacedesign');
+        
+        // Get interface design stats
+        const interfaceStats = await getInterfaceStats(interfacedesignPath);
         
         let info = {
           id: entry.name,
@@ -33,11 +88,13 @@ async function getInstances() {
           moduleCount: 0,
           testcaseCount: 0,
           filteredTestcaseCount: 0,
-          hasInterfaces: true,
+          hasInterfaces: interfaceStats.hasInterfaces,
+          functionCount: interfaceStats.functionCount,
+          exceptionCount: interfaceStats.exceptionCount,
+          typeCount: interfaceStats.typeCount,
+          enumCount: interfaceStats.enumCount,
           hasTestCases: false
         };
-
-        // TODO Check for interfaces
         
         instances.push(info);
       }
@@ -60,17 +117,22 @@ async function getTemplates() {
         const templatePath = path.join(TEMPLATES_ROOT, entry.name);
         const interfacedesignPath = path.join(templatePath, 'interfacedesign');
         
+        // Get interface design stats
+        const interfaceStats = await getInterfaceStats(interfacedesignPath);
+        
         let template = {
           id: entry.name,
           name: entry.name,
           description: '',
           moduleCount: 0,
           testcaseCount: 0,
-          hasInterfaces: true,
+          hasInterfaces: interfaceStats.hasInterfaces,
+          functionCount: interfaceStats.functionCount,
+          exceptionCount: interfaceStats.exceptionCount,
+          typeCount: interfaceStats.typeCount,
+          enumCount: interfaceStats.enumCount,
           hasTestCases: false
         };
-        
-        // Todo Check for Interfaces
         
         templates.push(template);
       }
