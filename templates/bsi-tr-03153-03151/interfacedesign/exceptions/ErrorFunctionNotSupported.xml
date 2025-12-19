@@ -1,16 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <exception id="ErrorFunctionNotSupported" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
     <name>ErrorFunctionNotSupported</name>
-    <description>This exception is thrown if an optional SE API function is invoked which is not supported by the device.</description>
-    <category>Common Exception</category>
+    <description>This exception is thrown if an optional SE API function is invoked which is not supported by the device. ErrorFunctionNotSupported indicates that the requested function has not been implemented on the target device due to hardware limitations, firmware configuration, or intentional implementation restrictions. The exception is raised when an application attempts to call an optional SE API function that exists in the specification but is not present in this particular device's implementation. This exception distinguishes between mandatory functions that all compliant devices must support and optional functions whose availability depends on device capabilities and firmware version. The exception is raised immediately upon entry to the optional function when the device detects that the function is not implemented, preventing any attempted execution.</description>
+    <category>Common Exception - Feature Support</category>
     <severity>Medium</severity>
     <javadoc>
         <summary>This class defines the exception ErrorFunctionNotSupported that is thrown if an optional SE API function is invoked which is not supported by the device.</summary>
+        <description>The SE API specification defines both mandatory and optional functions. This exception is raised when an application attempts to invoke an optional function that has not been implemented on the target device. When this exception occurs, the function does not execute, and the device returns no partial results. The exception indicates that the device does not support this particular function due to hardware limitations, firmware version constraints, or intentional implementation restrictions. Applications should handle this exception gracefully and either implement alternative functionality or inform users that this feature is not available on their device.</description>
+        <constructors>
+            <constructor>
+                <signature>ErrorFunctionNotSupported()</signature>
+                <description>Constructs a new ErrorFunctionNotSupported exception with null as the value for its detail message</description>
+            </constructor>
+            <constructor>
+                <signature>ErrorFunctionNotSupported(String message)</signature>
+                <description>Constructs a new ErrorFunctionNotSupported exception whereby its detail message is initialized with the passed value</description>
+                <parameter name="message">value for the detail message of the exception, typically describing which function is not supported</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorFunctionNotSupported(String message, Throwable cause)</signature>
+                <description>Constructs a new ErrorFunctionNotSupported exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorFunctionNotSupported(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+                <description>Constructs a new ErrorFunctionNotSupported exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+            </constructor>
+        </constructors>
     </javadoc>
     <specification>
         <source>BSI TR-03151-1</source>
-        <requirement>SHALL be raised when an optional function is invoked that is not implemented by the device</requirement>
-        <applicability>Common exception - applicable to optional API functions</applicability>
+        <section>3.1.2.1 Exception Categories</section>
+        <requirement>ErrorFunctionNotSupported SHALL be raised when an application attempts to invoke an optional SE API function that is not implemented or supported by the device. The SE API defines both mandatory functions that all devices must support and optional functions that may or may not be implemented depending on the device hardware and firmware. This exception distinguishes between devices that do not support particular optional features.</requirement>
+        <applicability>Common exception - applicable to optional API functions that may not be supported by all device implementations</applicability>
+        <reference>SE API Common Exceptions (3.1.2.1) and Function Implementation Requirements</reference>
     </specification>
     <thrownBy>
         <function>authenticateUser</function>
@@ -57,4 +85,112 @@
         <function>unlockTransactionLogging</function>
         <function>getLastTransactionLogMessage</function>
     </thrownBy>
+    <triggerConditions>
+        <condition>
+            <scenario>Optional function invocation on unsupporting device</scenario>
+            <description>Application attempts to invoke an optional SE API function that has not been implemented in the target device's firmware or configuration.</description>
+            <trigger>The application calls an optional SE API function. The device checks if this function is supported in its implementation. If the function is not supported (marked as optional and not implemented), ErrorFunctionNotSupported is raised and the function exits immediately without attempting execution.</trigger>
+        </condition>
+        <condition>
+            <scenario>Device firmware does not include optional function</scenario>
+            <description>The device's firmware version or implementation variant does not include the requested optional function due to hardware constraints or firmware configuration.</description>
+            <trigger>Device firmware has been configured or developed without support for a particular optional function. When invoked, the device immediately raises ErrorFunctionNotSupported to indicate the function cannot be executed.</trigger>
+        </condition>
+        <condition>
+            <scenario>Hardware limitations prevent function implementation</scenario>
+            <description>The device hardware lacks the necessary capabilities to implement a particular optional function. The function cannot be supported on this hardware platform.</description>
+            <trigger>Hardware-level constraints prevent implementation of an optional function. The device raises ErrorFunctionNotSupported when the function is invoked.</trigger>
+        </condition>
+        <condition>
+            <scenario>Device configuration variant excludes optional function</scenario>
+            <description>The device is a specific variant or configuration that intentionally excludes certain optional functions to meet deployment requirements or cost constraints.</description>
+            <trigger>Device implementation variant has been configured to exclude specific optional functions. When invoked, ErrorFunctionNotSupported is raised immediately.</trigger>
+        </condition>
+        <condition>
+            <scenario>Firmware upgrade required for function support</scenario>
+            <description>An optional function requires a minimum firmware version that is not currently installed on the device. The function will become available after a firmware upgrade.</description>
+            <trigger>The device firmware version does not meet the minimum requirements for an optional function. When invoked, ErrorFunctionNotSupported is raised indicating the feature is not available.</trigger>
+        </condition>
+    </triggerConditions>
+    <executionSequence>
+        <step number="1" name="Function Invocation">User or application calls an optional SE API function</step>
+        <step number="2" name="Request Reception">Device receives the function invocation request</step>
+        <step number="3" name="Function Support Check">Device checks if the function is implemented in its current firmware version, hardware configuration, and device variant</step>
+        <step number="4" name="Supported Function Path">If the function is supported and implemented in the device, execution continues to step 5 (not taken in this exception case)</step>
+        <step number="5" name="Function Execution">Supported function executes normally according to its specification (not taken in this exception case)</step>
+        <step number="6" name="Unsupported Function Detection">If the function is NOT supported (marked as optional and not implemented), execution branches to exception handling</step>
+        <step number="7" name="Exception Context Preparation">Exception context is prepared including the function name, minimum required firmware version (if applicable), and device capability information</step>
+        <step number="8" name="ErrorFunctionNotSupported Creation">ErrorFunctionNotSupported exception instance is created with error message indicating the function is not supported on this device</step>
+        <step number="9" name="Exception Propagation">Exception is raised and propagated up the call stack immediately without any function processing</step>
+        <step number="10" name="Device State Verification">Device state remains unchanged. The function rejection happened at the entry point before any processing or state modifications.</step>
+    </executionSequence>
+    <recovery>
+        <step>Review the exception message carefully to confirm which optional function is not supported on the device</step>
+        <step>Check the device specification, documentation, and capability lists to verify which optional functions are implemented on this device</step>
+        <step>Use device capability discovery functions (if available) to query supported features and optional function lists</step>
+        <step>Query the device for supported variants, optional function lists, and device capabilities to plan implementation around unavailable features</step>
+        <step>Implement alternative functionality or workarounds in the application that do not depend on the unsupported optional function</step>
+        <step>Verify that the application's core requirements do not depend critically on this specific optional function</step>
+        <step>Check the device manufacturer's documentation to determine if a firmware update is available that includes support for the required optional function</step>
+        <step>If a suitable firmware update exists, plan and execute the firmware upgrade to enable the required optional function</step>
+        <step>Design application logic to gracefully degrade functionality and continue operation when optional functions are unavailable</step>
+        <step>Document in application configuration and user documentation which device models, firmware versions, and variants support which optional functions</step>
+    </recovery>
+    <relatedExceptions>
+        <exception>ErrorFunctionFailed</exception>
+        <exception>ErrorDeviceNotInitialized</exception>
+        <exception>ErrorClientNotRegistered</exception>
+    </relatedExceptions>
+    <postconditionality>
+        <state name="Function Execution Status">Function execution is prevented entirely. The optional function is not executed because it is not available on this device.</state>
+        <state name="Device State">Device state remains completely unchanged. The function rejection happens at entry point before any processing or state modifications.</state>
+        <state name="Execution Results">No results are returned from the function. There are no partial results, incomplete data, or fallback values.</state>
+        <state name="Device Functionality">All other supported functions (including other optional functions that are implemented) remain fully operational and accessible.</state>
+        <state name="No State Inconsistency">No state inconsistency exists. The function was rejected before any processing began, ensuring device state remains consistent.</state>
+        <state name="Caller Responsibility">The application must handle the exception gracefully and implement alternative functionality or notify users of the unavailable feature.</state>
+    </postconditionality>
+    <notes>
+        <note>ErrorFunctionNotSupported is raised ONLY for optional functions that are not implemented on the device. All mandatory functions must be supported by every compliant SE API device implementation.</note>
+        <note>This exception has Medium severity because it indicates a feature limitation rather than a critical failure - the device is functioning correctly, but a particular optional feature is simply not available.</note>
+        <note>Unlike ErrorFunctionFailed (which indicates an unexpected critical error), ErrorFunctionNotSupported indicates a predictable and expected limitation of the device implementation.</note>
+        <note>Applications should perform device capability discovery during initialization or early in execution, rather than failing at runtime when calling unsupported optional functions.</note>
+        <note>The device's hardware capabilities, firmware version, and implementation variant determine which optional functions are available. Different device models may support different subsets of optional functions.</note>
+        <note>Applications must be designed to gracefully handle the absence of optional functions using try-catch blocks or feature discovery mechanisms to prevent user-facing errors.</note>
+        <note>When this exception is raised, the function receives immediate rejection from the device at the entry point without any processing or state modification, ensuring fast error reporting and no side effects.</note>
+        <note>Developers should document which device models, firmware versions, and hardware variants are required to use specific optional functions in application documentation and requirements.</note>
+        <note>Optional functions may require minimum firmware versions, specific hardware capabilities, or certain device variants. Check function documentation for prerequisites.</note>
+        <note>Firmware upgrades may enable support for previously unavailable optional functions, providing a path forward for applications that require newly available features.</note>
+    </notes>
+    <usage>
+        <scenario name="Scenario 1: Feature Discovery During Initialization">
+            <description>An application initializes a multi-device environment and needs to discover which optional functions are available on each device. For each optional function, the application attempts to call it and catches ErrorFunctionNotSupported to build a capability profile for each device.</description>
+            <relatedFunctions>getComponentVersions, getSupportedTransactionUpdateVariants, getTimeSyncVariant</relatedFunctions>
+            <errorContext>Device capability discovery phase determining which optional functions are supported</errorContext>
+        </scenario>
+        <scenario name="Scenario 2: Graceful Feature Degradation">
+            <description>A user calls a function like restoreLogsFromBackup which is optional on some device models. The application wraps the call in try-catch, and if ErrorFunctionNotSupported is raised, implements an alternative approach using standard log retrieval instead of restore.</description>
+            <relatedFunctions>restoreLogsFromBackup, exportLogMessages, configureLogging</relatedFunctions>
+            <errorContext>Optional function unavailable requiring fallback to standard functionality</errorContext>
+        </scenario>
+        <scenario name="Scenario 3: User Notification of Unavailable Features">
+            <description>An application attempts to use an advanced optional function like getCurrentLoggingSignatureCounters. When ErrorFunctionNotSupported is raised, the application displays a user-friendly message explaining that this feature requires a specific device model or firmware version.</description>
+            <relatedFunctions>getCurrentLoggingSignatureCounters, updateTransaction, getSupportedTransactionUpdateVariants</relatedFunctions>
+            <errorContext>Optional feature unavailable requiring user communication</errorContext>
+        </scenario>
+        <scenario name="Scenario 4: Device Upgrade Path Assessment">
+            <description>An enterprise deployment requires a specific optional function. When connecting to a device that raises ErrorFunctionNotSupported for this function, the application identifies the minimum required firmware version and recommends a firmware upgrade to the user, enabling the required functionality.</description>
+            <relatedFunctions>updateDevice, getComponentVersions, any optional function</relatedFunctions>
+            <errorContext>Optional function unavailable but can be enabled through firmware upgrade</errorContext>
+        </scenario>
+    </usage>
+    <implementationContext>
+        <note>Different device models, hardware versions, and firmware versions support different subsets of optional functions as defined by their implementation specifications.</note>
+        <note>Some devices may implement all optional functions defined in the SE API specification, while others may implement only a subset based on hardware capabilities and design decisions.</note>
+        <note>Firmware updates may add support for previously unavailable optional functions, providing a migration path for applications requiring newly available features.</note>
+        <note>Applications should not assume that all SE API devices support an identical set of optional functions - capability discovery is essential for multi-device environments.</note>
+        <note>Optional functions are distinguished from mandatory functions in the SE API specification. All compliant devices must implement mandatory functions, but optional functions are conditionally supported.</note>
+        <note>The exception message should include information about the unavailable function name and may include recommendations for enabling the feature (such as required firmware version).</note>
+        <note>Applications deploying to multiple device types should maintain a capability matrix documenting which optional functions are supported on which devices and firmware versions.</note>
+        <note>Feature parity across devices may require either designing applications to work with only mandatory functions or implementing conditional logic for optional functions.</note>
+    </implementationContext>
 </exception>

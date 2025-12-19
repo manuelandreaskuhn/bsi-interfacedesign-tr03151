@@ -1,19 +1,165 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <exception id="ErrorNoDataAvailable" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
     <name>ErrorNoDataAvailable</name>
-    <description>This exception is thrown if no data has been found for the provided selection in the context of the export of stored data.</description>
-    <category>Data Export</category>
+    <description>This exception is thrown if the SE API export functions cannot find any data matching the provided selection or filter criteria. The functions exportLogMessages or exportFilteredTransactionLogs attempt to export stored data (log messages, transaction records, or other logged information) based on the caller's filtering or selection parameters, but no data in the Secure Element's storage matches those selection criteria. ErrorNoDataAvailable indicates that the export query returned an empty result set - the requested data simply does not exist or has been purged from the device.</description>
+    <category>Data Export - No Match Condition</category>
     <severity>Medium</severity>
     <javadoc>
         <summary>This class defines the exception ErrorNoDataAvailable that is thrown if no data has been found for the provided selection in the context of the export of stored data.</summary>
+        <description>This exception is thrown when export functions attempt to retrieve and export stored data based on selection criteria but find that no data matches the specified criteria. Functions such as exportLogMessages and exportFilteredTransactionLogs accept filtering parameters (e.g., date range, event type, client ID, transaction ID) to specify which stored data should be exported. ErrorNoDataAvailable is raised when the Secure Element searches its storage using these criteria and finds zero matching records. This is an expected condition when no data matches the filter, not an error condition - it indicates the export operation cannot proceed because there is no matching data to export. Recovery requires adjusting the selection criteria (expanding date ranges, removing filters, etc.) to find matching data, or confirming that the expected data has not been logged or has been deleted.</description>
+        <constructors>
+            <constructor>
+                <signature>ErrorNoDataAvailable()</signature>
+                <description>Constructs a new ErrorNoDataAvailable exception with null as the value for its detail message</description>
+            </constructor>
+            <constructor>
+                <signature>ErrorNoDataAvailable(String message)</signature>
+                <description>Constructs a new ErrorNoDataAvailable exception whereby its detail message is initialized with the passed value</description>
+                <parameter name="message">value for the detail message of the exception, typically describing the filter criteria that returned no results</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorNoDataAvailable(String message, Throwable cause)</signature>
+                <description>Constructs a new ErrorNoDataAvailable exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorNoDataAvailable(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+                <description>Constructs a new ErrorNoDataAvailable exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+            </constructor>
+        </constructors>
     </javadoc>
     <specification>
         <source>BSI TR-03151-1</source>
-        <requirement>SHALL be raised when export query returns no matching data</requirement>
-        <applicability>Data export operations with filtering</applicability>
+        <section>3.3.2 Data Export Operations - exportLogMessages and exportFilteredTransactionLogs</section>
+        <requirement>The functions exportLogMessages and exportFilteredTransactionLogs SHALL search the Secure Element's storage for data matching the provided selection or filter criteria and export matching data. If the Secure Element searches the storage based on the provided selection criteria and finds no matching data (i.e., the result set is empty), the functions SHALL raise the exception ErrorNoDataAvailable. This exception indicates that no data matches the selection criteria - it is an expected condition, not a device error.</requirement>
+        <applicability>Data export operations - exportLogMessages and exportFilteredTransactionLogs functions only, when filter criteria return no matches</applicability>
+        <reference>exportLogMessages – Function (3.3.2); exportFilteredTransactionLogs – Function (3.3.2)</reference>
     </specification>
     <thrownBy>
         <function>exportLogMessages</function>
         <function>exportFilteredTransactionLogs</function>
     </thrownBy>
+    <triggerConditions>
+        <condition>
+            <scenario>Filter criteria outside available data range</scenario>
+            <description>The selection criteria (date range, time window, event type) does not match any stored data</description>
+            <trigger>The application calls exportLogMessages with a date range (e.g., January 1-10, 2020) but the Secure Element only contains log entries from 2025. The export function searches for matching records in the specified date range, finds none, and raises ErrorNoDataAvailable.</trigger>
+        </condition>
+        <condition>
+            <scenario>Storage is empty or purged</scenario>
+            <description>The Secure Element's data storage contains no records at all or all records have been deleted</description>
+            <trigger>The device was recently initialized or all stored data has been deleted via purge operations. An export function attempts to export data but finds no records matching any criteria. ErrorNoDataAvailable is raised.</trigger>
+        </condition>
+        <condition>
+            <scenario>Event type filter matches no logged events</scenario>
+            <description>The filter specifies a particular event type that has never occurred or does not exist in the stored logs</description>
+            <trigger>The application calls exportLogMessages with a filter specifying event type "EventTypeX" but this event type has never been logged. The export function searches the logs for this event type and finds no matching entries. ErrorNoDataAvailable is raised.</trigger>
+        </condition>
+        <condition>
+            <scenario>Client ID filter matches no transactions</scenario>
+            <description>The filter specifies a client ID that has no associated transaction records</description>
+            <trigger>The application calls exportFilteredTransactionLogs with a filter for client ID "UnknownClient" that does not exist in the transaction logs. The export function searches for transactions by this client and finds none. ErrorNoDataAvailable is raised.</trigger>
+        </condition>
+        <condition>
+            <scenario>Combined filter criteria produce empty result set</scenario>
+            <description>Multiple filter conditions together produce an empty result (while each individual filter might match some data)</description>
+            <trigger>The application calls exportFilteredTransactionLogs with complex filter criteria combining date range AND client ID AND transaction state. While data exists for each filter individually, the combination of all filters matches no records. ErrorNoDataAvailable is raised.</trigger>
+        </condition>
+    </triggerConditions>
+    <executionSequence>
+        <step number="1">User/application calls exportLogMessages or exportFilteredTransactionLogs function with selection/filter parameters</step>
+        <step number="2">Function validates input parameters including filter criteria, date ranges, event types, client IDs, etc.</step>
+        <step number="3">Function checks authorization and device state for data export operations</step>
+        <step number="4">Function initiates communication with Secure Element and prepares export query</step>
+        <step number="5">Function transmits export/search command with filter criteria to Secure Element</step>
+        <step number="6">Secure Element searches its data storage for records matching the filter criteria</step>
+        <step number="6a">If matching data is found → proceed to step 7</step>
+        <step number="6b">If NO matching data is found (empty result set) → ErrorNoDataAvailable raised, function exits</step>
+        <step number="7">Function receives matching data from Secure Element</step>
+        <step number="8">Function formats and packages data for export</step>
+        <step number="9">Function closes communication channel with Secure Element</step>
+        <step number="10">Function returns exported data to caller</step>
+    </executionSequence>
+    <recovery>
+        <step>Review filter criteria - examine the selection/filter parameters used in the export function call</step>
+        <step>Check date ranges - verify that the date range or time window specified actually includes times when data was logged</step>
+        <step>Verify event types - confirm that the specified event type(s) are correct and have actually been logged on the device</step>
+        <step>Check client IDs - if filtering by client ID, verify that the client ID is correct and has been registered/used on the device</step>
+        <step>Query available data - call query functions (if available) to determine what data is stored and what filter criteria would match it</step>
+        <step>Expand filter criteria - try less restrictive filters to see if data exists when some filters are removed</step>
+        <step>Try broadening date range - if using date/time filters, try expanding the date range to see if data exists outside the original range</step>
+        <step>Check device storage status - determine if the storage contains any data at all via device status functions</step>
+        <step>Try exporting all data - attempt export with no filters or minimal filters to see if any data exists on the device</step>
+        <step>If no data exists, confirm this is expected - verify that the expected data should have been logged based on operations performed on the device</step>
+    </recovery>
+    <relatedExceptions>
+        <exception>ErrorExportLoggingCertificateFailed</exception>
+        <exception>ErrorExportSerialNumbersFailed</exception>
+        <exception>ErrorDeleteLogMessagesFailed</exception>
+        <exception>ErrorGetEventTypesForLoggingFailed</exception>
+        <exception>ErrorFunctionFailed</exception>
+    </relatedExceptions>
+    <postconditionality>
+        <state name="No Data Exported">No data is exported or returned to the caller. The export operation produces no output because no matching data exists to export.</state>
+        <state name="Storage Unchanged">The device's data storage remains completely unchanged by the failed export attempt. Storage contents and all data remain in their pre-call state.</state>
+        <state name="Device State Unmodified">The device's overall state is unmodified by the exception. The export operation is read-only and does not modify device state.</state>
+        <state name="Data Integrity Preserved">All data in the device's storage remains intact and unaffected. The absence of matching data does not compromise data that exists outside the filter criteria.</state>
+        <state name="Alternative Queries Possible">The caller can retry the export operation with different filter criteria to potentially find matching data.</state>
+        <state name="No Cascading Effects">The failed export operation does not trigger cascading failures or secondary exceptions.</state>
+    </postconditionality>
+    <notes>
+        <note>ErrorNoDataAvailable is thrown by exportLogMessages and exportFilteredTransactionLogs - both data export functions</note>
+        <note>This exception indicates no data matches the filter criteria - it is an expected condition, not a system error</note>
+        <note>The exception has Medium severity because it indicates an empty result, not a device failure</note>
+        <note>Filter criteria should be validated before export attempts to anticipate and handle potentially empty result sets</note>
+        <note>Applications should distinguish between "no data available" (ErrorNoDataAvailable) and export operation failures (other exceptions)</note>
+        <note>Date ranges and time-based filters are common causes of empty result sets - care should be taken in specifying time windows</note>
+        <note>Export operations are typically read-only - ErrorNoDataAvailable does not modify the device state or stored data</note>
+        <note>Multiple levels of filtering (date range, event type, client ID, transaction state) can combine to produce empty results</note>
+        <note>Some devices may support query operations to determine what data is available before attempting export - this can prevent ErrorNoDataAvailable</note>
+        <note>The error message or return value should ideally include information about the filter criteria that produced the empty result</note>
+        <note>Applications managing multiple devices should be prepared for different devices to have different data availability depending on their histories</note>
+        <note>Logging may be disabled or configured to not log certain events - this can cause expected empty results for those event types</note>
+        <note>Data retention policies may cause old data to be automatically purged, resulting in empty results for historical date ranges</note>
+        <note>Export functions should be retryable with different filter criteria to explore available data</note>
+        <note>Comprehensive documentation of logged event types, date ranges, and retention policies helps applications use export functions effectively</note>
+    </notes>
+    <usage>
+        <scenario name="Scenario 1: Audit Log Export with Date Range Specification">
+            <description>An audit system attempts to export transaction logs for a specific date range (e.g., "December 1-10, 2025"). When exportFilteredTransactionLogs raises ErrorNoDataAvailable, it indicates no transactions occurred on the device during that date range. The system responds by expanding the date range or checking if transactions actually occurred during the specified period.</description>
+            <relatedFunctions>exportLogMessages, exportFilteredTransactionLogs</relatedFunctions>
+            <errorContext>Date range filter criteria match no data</errorContext>
+        </scenario>
+        <scenario name="Scenario 2: Event Type Filtering with Selective Data Discovery">
+            <description>A monitoring application attempts to export only specific event types (e.g., "PinEntry" events). When ErrorNoDataAvailable is raised, it indicates either that no such events have been logged or that all such events have been deleted. The application adapts by trying broader event type filters or querying available event types first.</description>
+            <relatedFunctions>exportLogMessages, getEventTypesForLogging</relatedFunctions>
+            <errorContext>Event type filter produces empty result set</errorContext>
+        </scenario>
+        <scenario name="Scenario 3: Transaction Log Export with Complex Filtering">
+            <description>An enterprise system exports transaction logs with complex filter criteria (date range AND client ID AND transaction state). When exportFilteredTransactionLogs raises ErrorNoDataAvailable, it indicates that while data may exist for individual filter criteria, the combination of all filters matches no records. The system responds by progressively loosening filters to identify which criteria eliminate all matching data.</description>
+            <relatedFunctions>exportFilteredTransactionLogs, exportLogMessages</relatedFunctions>
+            <errorContext>Combined filter criteria eliminate all matching data</errorContext>
+        </scenario>
+        <scenario name="Scenario 4: Device Status Verification After Initialization or Purge">
+            <description>After device initialization or data purge operations, an application attempts to export existing data. When ErrorNoDataAvailable is raised, it confirms that the device storage is empty (as expected after purge or new initialization). The application can then proceed with validation or configuration knowing the device state.</description>
+            <relatedFunctions>exportLogMessages, exportFilteredTransactionLogs, deleteLogMessages</relatedFunctions>
+            <errorContext>Empty storage confirmed - expected condition after purge or initialization</errorContext>
+        </scenario>
+    </usage>
+    <implementationContext>
+        <note>The exportLogMessages and exportFilteredTransactionLogs functions must search stored data and report empty results as ErrorNoDataAvailable</note>
+        <note>Filter criteria can include date ranges, event types, client IDs, transaction states, and other selection parameters</note>
+        <note>The combination of multiple filter criteria can produce empty result sets even when individual filters would match data</note>
+        <note>Export functions should return clear information about filter criteria in error messages to help applications understand why no data was found</note>
+        <note>Some devices may log data in circular buffers or with retention policies that automatically delete old data</note>
+        <note>Applications should be prepared to handle empty export results as a normal, expected condition</note>
+        <note>Query or discovery functions (if available) can help applications understand available data before attempting export</note>
+        <note>Date range specifications are particularly important for export operations - incorrect date ranges commonly result in ErrorNoDataAvailable</note>
+        <note>Export operations are typically read-only and do not modify device state, so ErrorNoDataAvailable has no side effects</note>
+    </implementationContext>
 </exception>

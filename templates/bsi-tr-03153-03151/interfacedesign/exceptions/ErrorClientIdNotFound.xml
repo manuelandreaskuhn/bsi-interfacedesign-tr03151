@@ -1,19 +1,144 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <exception id="ErrorClientIdNotFound" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
     <name>ErrorClientIdNotFound</name>
-    <description>This exception is thrown if no data has been found for the provided clientID in the context of the export of stored data.</description>
-    <category>Client Management</category>
+    <description>This exception is thrown if no data has been found for the provided clientID in the context of the export of stored data. The exportFilteredTransactionLogs function attempts to export transaction log data filtered by a specific clientId, but no matching data exists for that client in the storage.</description>
+    <category>Data Export - Transaction Filtering</category>
     <severity>Medium</severity>
     <javadoc>
         <summary>This class defines the exception ErrorClientIdNotFound that is thrown if no data has been found for the provided clientID in the context of the export of stored data.</summary>
+        <description>The ErrorClientIdNotFound exception occurs during transaction log export operations when a specified clientId has no associated transaction log data in storage. This exception is raised after verifying that the clientId does not have any matching transaction data, indicating that the specified client either has not performed any transactions, or all its transaction data has been deleted or previously exported. The exception is raised specifically when a clientId filter is applied to the exportFilteredTransactionLogs function and no data matches the filter criteria.</description>
+        <constructors>
+            <constructor>
+                <signature>ErrorClientIdNotFound()</signature>
+                <description>Constructs a new ErrorClientIdNotFound exception with null as the value for its detail message</description>
+            </constructor>
+            <constructor>
+                <signature>ErrorClientIdNotFound(String message)</signature>
+                <description>Constructs a new ErrorClientIdNotFound exception whereby its detail message is initialized with the passed value</description>
+                <parameter name="message">value for the detail message of the exception, typically containing the clientId for which no data was found</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorClientIdNotFound(String message, Throwable cause)</signature>
+                <description>Constructs a new ErrorClientIdNotFound exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorClientIdNotFound(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+                <description>Constructs a new ErrorClientIdNotFound exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+            </constructor>
+        </constructors>
     </javadoc>
     <specification>
         <source>BSI TR-03151-1</source>
-        <requirement>SHALL be raised when exporting data for a clientId that has no associated data</requirement>
-        <applicability>Data export operations with client filtering</applicability>
+        <section>3.3.17 Transaction Export - exportFilteredTransactionLogs Function (3.3.17.4)</section>
+        <requirement>The exception ErrorClientIdNotFound SHALL be raised by the function exportFilteredTransactionLogs if no data is available for the provided clientId. If the parameter clientId is provided and no transaction data is available for this clientId in storage, the function SHALL raise the exception ErrorClientIdNotFound and exit the function without returning any export data. This ensures that the application is informed when a client filter does not match any stored transactions.</requirement>
+        <applicability>Transaction log export operations using the exportFilteredTransactionLogs function when a client-specific filter is applied without any matching data</applicability>
+        <reference>exportFilteredTransactionLogs – Function (3.3.17) - Section 3.3.17.4 Exception Specification</reference>
     </specification>
     <thrownBy>
         <function>exportFilteredTransactionLogs</function>
-        <function>exportLogMessages</function>
     </thrownBy>
+    <triggerConditions>
+        <condition>
+            <scenario>Client filter with no matching data</scenario>
+            <description>The exportFilteredTransactionLogs function is invoked with a clientId parameter that has no associated transaction log data in storage</description>
+            <trigger>The function queries the device storage for transaction logs matching the specified clientId. The storage contains no transactions for this clientId. ErrorClientIdNotFound is raised.</trigger>
+        </condition>
+        <condition>
+            <scenario>Client filter combined with transaction number filter</scenario>
+            <description>The exportFilteredTransactionLogs function is invoked with a clientId parameter in combination with a transactionNumber parameter, but no data matches both criteria</description>
+            <trigger>The function searches for transactions matching both the clientId and transactionNumber filters. No transaction exists that matches both criteria. ErrorClientIdNotFound is raised.</trigger>
+        </condition>
+        <condition>
+            <scenario>Client filter combined with date range filter</scenario>
+            <description>The exportFilteredTransactionLogs function is invoked with a clientId parameter in combination with a date range, but the clientId has no data in that date range</description>
+            <trigger>The function searches for transactions from the specified clientId within the specified date range. The clientId has transactions but none within the date range. ErrorClientIdNotFound is raised.</trigger>
+        </condition>
+        <condition>
+            <scenario>Client has never performed transactions</scenario>
+            <description>The clientId corresponds to a registered or previously registered client that has never initiated any transactions</description>
+            <trigger>The client was registered but never performed any transaction operations. When exportFilteredTransactionLogs is called with this clientId, no data is found. ErrorClientIdNotFound is raised.</trigger>
+        </condition>
+    </triggerConditions>
+    <executionSequence>
+        <step number="1">User/application calls exportFilteredTransactionLogs function with filter parameters including clientId</step>
+        <step number="2">Function checks authentication status (if required by referencing guideline)</step>
+        <step number="3">Function checks authorization (if required by referencing guideline)</step>
+        <step number="4">Function checks device initialization status</step>
+        <step number="5">Function validates filter parameters for format and validity</step>
+        <step number="6">Function queries device storage for transactions matching filter criteria</step>
+        <step number="6a">If clientId filter is specified and no transactions match → ErrorClientIdNotFound raised and function exits</step>
+        <step number="7">If transactions match the filter criteria, function retrieves matching transaction log data</step>
+        <step number="8">Function packages transaction data into export structure</step>
+        <step number="9">Function returns export data containing filtered transactions to the user</step>
+    </executionSequence>
+    <recovery>
+        <step>Verify that the clientId is spelled correctly and matches the actual client identifier</step>
+        <step>Check if the clientId has ever performed any transaction operations using getTransactionState or similar functions</step>
+        <step>Query getRegisteredClients to verify that the clientId exists in the system and determine which clients have data</step>
+        <step>Review the list of registered clients to identify which clients have available transaction log data for export</step>
+        <step>If exporting data for a specific client, verify that transactions were actually started and finished for that client</step>
+        <step>Try exporting without the clientId filter to see if other clients have data, confirming that storage is working correctly</step>
+        <step>If the client has no transaction history, acknowledge that no data is available and consider whether this is expected behavior</step>
+        <step>Adjust filter parameters (date range, transaction numbers) to broaden the export criteria and match available data</step>
+        <step>Use alternative export functions (e.g., exportLogMessages) to retrieve logging data if transaction export is not applicable</step>
+        <step>Document which clients have available transaction data for future export operations</step>
+    </recovery>
+    <relatedExceptions>
+        <exception>ErrorNoDataAvailable</exception>
+        <exception>ErrorParameterMismatch</exception>
+        <exception>ErrorFunctionFailed</exception>
+        <exception>ErrorDeviceNotInitialized</exception>
+    </relatedExceptions>
+    <postconditionality>
+        <state>Export operation not completed - no data returned to caller</state>
+        <state>Transaction storage unchanged - no data was retrieved or removed</state>
+        <state>Device state unchanged - no modifications made during failed export attempt</state>
+        <state>Filter criteria not matched - the specified clientId has no transaction data</state>
+        <state>Function exits without creating export data - export operation failed to retrieve data</state>
+        <state>No state inconsistency - function exits at filter matching phase</state>
+    </postconditionality>
+    <notes>
+        <note>ErrorClientIdNotFound is thrown ONLY by the exportFilteredTransactionLogs function when a clientId filter is applied - it is specific to filtered export operations</note>
+        <note>This exception indicates that no transaction data exists for the specified clientId, distinguishing it from ErrorNoDataAvailable which may indicate broader search criteria with no matches</note>
+        <note>Unlike ErrorClientNotRegistered (which indicates a client is not registered for transaction operations), ErrorClientIdNotFound indicates that the client may be registered but has no transaction log data</note>
+        <note>After this exception, the transaction storage remains unchanged and the application can retry with different filter parameters or a different clientId</note>
+        <note>This exception has Medium severity because it indicates a filter that does not match any data but does not indicate a storage or device failure</note>
+        <note>The exception is raised after verifying that no data matches the clientId filter (step 6a), ensuring deterministic behavior</note>
+        <note>Applications should differentiate this exception from ErrorNoDataAvailable - one means no data for the client specifically, the other means no data for the overall criteria</note>
+        <note>The clientId filter can be combined with other filter parameters (transaction numbers, date ranges) - the exception is raised if combined criteria match no data</note>
+        <note>If a client has performed transactions but all its transactions have been deleted, ErrorClientIdNotFound will be raised when exporting by that clientId</note>
+        <note>Applications should implement error handling to gracefully handle the case where a specific client has no transaction data available for export</note>
+    </notes>
+    <usage>
+        <scenario name="Client-Filtered Export with No Data">
+            <description>Attempt to export transaction logs filtered by a specific clientId and handle the case where no data exists for that client.</description>
+            <example>try { List<Transaction> logs = device.exportFilteredTransactionLogs(clientId, null, null); } catch (ErrorClientIdNotFound e) { logger.info("No transaction data for client " + clientId); }</example>
+        </scenario>
+        <scenario name="Fallback to Broader Export">
+            <description>When a client-specific export fails, fall back to exporting all transaction data without client filtering.</description>
+            <example>try { List<Transaction> logs = device.exportFilteredTransactionLogs(clientId, null, null); } catch (ErrorClientIdNotFound e) { List<Transaction> allLogs = device.exportFilteredTransactionLogs(null, null, null); }</example>
+        </scenario>
+        <scenario name="Client Data Verification">
+            <description>Check if a client has available transaction data before attempting export, using registered client list.</description>
+            <example>List<String> clients = device.getRegisteredClients(); if (clients.contains(targetClientId)) { try { device.exportFilteredTransactionLogs(targetClientId, null, null); } catch (ErrorClientIdNotFound e) { recordClientHasNoData(targetClientId); } }</example>
+        </scenario>
+        <scenario name="Multi-Client Export with Error Handling">
+            <description>Export transaction data for each registered client, handling clients with no transaction data gracefully.</description>
+            <example>for (String clientId : device.getRegisteredClients()) { try { List<Transaction> logs = device.exportFilteredTransactionLogs(clientId, null, null); processClientData(clientId, logs); } catch (ErrorClientIdNotFound e) { skipClientWithNoData(clientId); } }</example>
+        </scenario>
+    </usage>
+    <implementationContext>
+        <note>The exportFilteredTransactionLogs function allows filtering transaction logs by multiple criteria including clientId, transaction numbers, and date ranges</note>
+        <note>The clientId identifies which client performed the transactions - each client can have zero or more transactions</note>
+        <note>A client may be registered or previously registered but still have no transaction data if it never initiated any transactions</note>
+        <note>Transaction log data is persistent and is only removed through explicit deletion operations (deleteLogMessages)</note>
+        <note>The clientId filter is optional - if not specified, transactions from all clients are returned</note>
+        <note>ErrorClientIdNotFound specifically indicates the clientId filter matched no data, distinguishing it from other filter mismatches</note>
+    </implementationContext>
 </exception>

@@ -1,18 +1,178 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <exception id="ErrorUpdateTransactionFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
     <name>ErrorUpdateTransactionFailed</name>
-    <description>This exception is thrown if the execution of the Secure Element functionality for updating a transaction failed.</description>
-    <category>Transaction</category>
+    <description>This exception is thrown if the execution of the Secure Element functionality for updating a transaction fails. The updateTransaction function modifies or extends an in-progress transaction after it has been started with startTransaction. UpdateTransaction records intermediate data, status changes, or additional information within an active transaction. ErrorUpdateTransactionFailed is raised when the Secure Element's transaction update functionality encounters failures during execution, which may occur due to invalid transaction state, hardware errors, counter issues, storage failures, or other operational problems. ErrorUpdateTransactionFailed is a High severity exception because transaction integrity is compromised if updates cannot be recorded.</description>
+    <category>Transaction Management - Update Failure</category>
     <severity>High</severity>
     <javadoc>
-        <summary>This class defines the exception ErrorUpdateTransactionFailed that is thrown if the execution of the Secure Element functionality for updating a transaction failed.</summary>
+        <summary>This class defines the exception ErrorUpdateTransactionFailed that is thrown if the Secure Element transaction update functionality fails during execution.</summary>
+        <description>This exception is thrown when the updateTransaction function fails to successfully update an active transaction in the Secure Element. The updateTransaction function modifies or extends in-progress transactions with intermediate data or status changes. Transaction updates are recorded in the audit trail and transaction counter. If the Secure Element transaction update functionality encounters errors during execution, verification fails, hardware issues prevent completion, transaction state is invalid, or other issues block the operation, ErrorUpdateTransactionFailed is raised. This indicates the transaction update could not be successfully completed. The transaction may be left in inconsistent state. ErrorUpdateTransactionFailed is a High severity exception because transaction integrity is critical. Recovery requires investigating the failure and potentially rolling back the transaction.</description>
+        <constructors>
+            <constructor>
+                <signature>ErrorUpdateTransactionFailed()</signature>
+                <description>Constructs a new ErrorUpdateTransactionFailed exception with null as the value for its detail message</description>
+            </constructor>
+            <constructor>
+                <signature>ErrorUpdateTransactionFailed(String message)</signature>
+                <description>Constructs a new ErrorUpdateTransactionFailed exception whereby its detail message is initialized with the passed value</description>
+                <parameter name="message">value for the detail message of the exception, typically describing reason for transaction update failure</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorUpdateTransactionFailed(String message, Throwable cause)</signature>
+                <description>Constructs a new ErrorUpdateTransactionFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorUpdateTransactionFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+                <description>Constructs a new ErrorUpdateTransactionFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+            </constructor>
+        </constructors>
     </javadoc>
     <specification>
         <source>BSI TR-03151-1</source>
-        <requirement>SHALL be raised when transaction update operation in Secure Element fails</requirement>
-        <applicability>Transaction update operations</applicability>
+        <section>3.2.2 Transaction Management - Transaction Update Operations</section>
+        <requirement>The updateTransaction function modifies or extends an active transaction that has been started with startTransaction. UpdateTransaction records intermediate data, status changes, or other information within an active transaction. The transaction is recorded in the audit trail and transaction counter is incremented. If the Secure Element transaction update functionality encounters failures during execution (invalid transaction state, hardware errors, counter issues, storage failures, logging failures), the Secure Element SHALL raise ErrorUpdateTransactionFailed. This indicates the transaction update could not be successfully completed. The transaction state may be undefined or inconsistent. ErrorUpdateTransactionFailed is a High severity exception because transaction integrity is compromised. Recovery requires investigating the failure and potentially rolling back the failed transaction.</requirement>
+        <applicability>Transaction update operations: updateTransaction</applicability>
+        <reference>Transaction Management (3.2.2), Transaction Operations (3.2.2), updateTransaction – Function (3.2.2)</reference>
     </specification>
     <thrownBy>
         <function>updateTransaction</function>
     </thrownBy>
+    <triggerConditions>
+        <condition>
+            <scenario>No active transaction to update</scenario>
+            <description>updateTransaction called when no transaction is currently active</description>
+            <trigger>updateTransaction called without prior startTransaction. No active transaction state. ErrorUpdateTransactionFailed raised.</trigger>
+        </condition>
+        <condition>
+            <scenario>Transaction data validation fails</scenario>
+            <description>Provided transaction data fails format or range validation</description>
+            <trigger>updateTransaction provides transaction data. Secure Element validates, finds format invalid or data out of range. ErrorUpdateTransactionFailed raised.</trigger>
+        </condition>
+        <condition>
+            <scenario>Transaction counter update fails</scenario>
+            <description>Hardware or storage error prevents counter increment</description>
+            <trigger>updateTransaction increments transaction counter. Counter update fails due to hardware error. ErrorUpdateTransactionFailed raised.</trigger>
+        </condition>
+        <condition>
+            <scenario>Transaction storage write fails</scenario>
+            <description>Transaction data cannot be written to persistent storage</description>
+            <trigger>updateTransaction writes transaction record. Storage write fails. ErrorUpdateTransactionFailed raised.</trigger>
+        </condition>
+        <condition>
+            <scenario>Transaction logging fails</scenario>
+            <description>Audit trail logging for transaction update fails</description>
+            <trigger>updateTransaction logs update to audit trail. Logging fails (logging locked or storage full). ErrorUpdateTransactionFailed raised.</trigger>
+        </condition>
+    </triggerConditions>
+    <executionSequence>
+        <step number="1">User/application calls updateTransaction function with transaction data</step>
+        <step number="2">Function validates input parameters including transaction data format</step>
+        <step number="2a">If parameters invalid → may raise ErrorParameterSyntax or ErrorParameterMismatch</step>
+        <step number="2b">If parameters valid → proceed to step 3</step>
+        <step number="3">Function initiates communication with Secure Element</step>
+        <step number="4">Secure Element receives transaction update request</step>
+        <step number="5">Secure Element validates active transaction exists</step>
+        <step number="5a">If no active transaction → ErrorUpdateTransactionFailed raised</step>
+        <step number="5b">If active transaction exists → proceed to step 6</step>
+        <step number="6">Secure Element validates transaction data format and range</step>
+        <step number="6a">If data invalid → ErrorUpdateTransactionFailed raised, operation aborted</step>
+        <step number="6b">If data valid → proceed to step 7</step>
+        <step number="7">Secure Element prepares transaction update record</step>
+        <step number="8">Secure Element increments transaction counter</step>
+        <step number="8a">If counter update fails → ErrorUpdateTransactionFailed raised</step>
+        <step number="8b">If counter succeeds → proceed to step 9</step>
+        <step number="9">Secure Element writes transaction update to storage</step>
+        <step number="9a">If storage write fails → ErrorUpdateTransactionFailed raised</step>
+        <step number="9b">If storage succeeds → proceed to step 10</step>
+        <step number="10">Secure Element logs update to transaction audit trail</step>
+        <step number="10a">If logging fails → ErrorUpdateTransactionFailed raised</step>
+        <step number="10b">If logging succeeds → proceed to step 11</step>
+        <step number="11">Secure Element returns success to function</step>
+        <step number="12">Function returns to caller indicating transaction successfully updated</step>
+    </executionSequence>
+    <recovery>
+        <step>Review error message - understand reason for transaction update failure</step>
+        <step>Verify transaction state - confirm active transaction exists</step>
+        <step>Verify transaction data - confirm provided data is valid</step>
+        <step>Check transaction counter - verify counter state and availability</step>
+        <step>Check storage - verify storage is available and not full</step>
+        <step>Check logging - verify transaction logging is not locked</step>
+        <step>Check device state - verify device is operational</step>
+        <step>Retry update - attempt updateTransaction again with verified data</step>
+        <step>Rollback transaction - if update cannot be recovered, finish/rollback current transaction</step>
+        <step>Start new transaction - begin new transaction after rollback</step>
+        <step>Run diagnostics - execute device diagnostics to assess transaction functionality</step>
+        <step>Contact support - if updates fail persistently, contact device support</step>
+    </recovery>
+    <relatedExceptions>
+        <exception>ErrorStartTransactionFailed</exception>
+        <exception>ErrorFinishTransactionFailed</exception>
+        <exception>ErrorTransactionCounterExhausted</exception>
+        <exception>ErrorStorageMemoryFull</exception>
+    </relatedExceptions>
+    <postconditionality>
+        <state name="Transaction Update Not Completed">Transaction update operation does not complete successfully.</state>
+        <state name="Transaction State Undefined">Transaction state may be undefined or inconsistent after failure.</state>
+        <state name="Transaction Not Modified">Transaction is not updated with new data.</state>
+        <state name="Counter Not Incremented">Transaction counter may not be incremented.</state>
+        <state name="High Exception Returned">Function returns ErrorUpdateTransactionFailed High exception to caller.</state>
+        <state name="Audit Trail Incomplete">Audit trail entry not recorded for this transaction update.</state>
+    </postconditionality>
+    <notes>
+        <note>ErrorUpdateTransactionFailed is thrown by 1 function: updateTransaction</note>
+        <note>This is a High severity exception affecting transaction integrity</note>
+        <note>Transaction update requires active transaction to exist</note>
+        <note>Transaction data must pass format and range validation</note>
+        <note>Transaction counter must be successfully incremented</note>
+        <note>Transaction data must be written to persistent storage</note>
+        <note>Audit trail logging must succeed for completeness</note>
+        <note>Transaction state consistency is critical</note>
+        <note>Failed updates may require transaction rollback</note>
+        <note>Storage availability is essential for transaction updates</note>
+        <note>Hardware errors during update are critical</note>
+        <note>Counter exhaustion is distinct failure scenario</note>
+        <note>Logging lock prevents audit trail recording</note>
+        <note>Multiple updates may occur within single transaction</note>
+        <note>Update failures should be logged for debugging</note>
+    </notes>
+    <usage>
+        <scenario name="Scenario 1: Update Without Active Transaction">
+            <description>Application calls updateTransaction but no transaction is currently active. No prior startTransaction call or transaction already finished. ErrorUpdateTransactionFailed raised. Application calls startTransaction first, then retries updateTransaction successfully.</description>
+            <relatedFunctions>updateTransaction, startTransaction, finishTransaction</relatedFunctions>
+            <errorContext>No active transaction - must start transaction first</errorContext>
+        </scenario>
+        <scenario name="Scenario 2: Storage Full During Update">
+            <description>Transaction active and application calls updateTransaction. Device begins update. Storage fills before transaction record can be written. ErrorUpdateTransactionFailed raised due to storage failure. Application exports logs and deletes old records to free space, then retries transaction update.</description>
+            <relatedFunctions>updateTransaction, exportLogMessages, deleteLogMessages</relatedFunctions>
+            <errorContext>Storage full - reclaim space and retry transaction</errorContext>
+        </scenario>
+        <scenario name="Scenario 3: Transaction Logging Locked During Update">
+            <description>Transaction update in progress. Logging lock is activated for maintenance. Update reaches logging stage. Logging denied due to lock. ErrorUpdateTransactionFailed raised. Maintenance completes, logging unlocked. Application retries updateTransaction successfully.</description>
+            <relatedFunctions>updateTransaction, lockTransactionLogging, unlockTransactionLogging</relatedFunctions>
+            <errorContext>Logging locked - wait for unlock and retry</errorContext>
+        </scenario>
+        <scenario name="Scenario 4: Counter Exhaustion During Update">
+            <description>Transaction active with counter near exhaustion. updateTransaction attempts to increment counter. Counter at maximum, cannot increment. ErrorUpdateTransactionFailed raised. Device replacement or counter reset required before transactions can resume.</description>
+            <relatedFunctions>updateTransaction, startTransaction</relatedFunctions>
+            <errorContext>Transaction counter exhausted - device service required</errorContext>
+        </scenario>
+    </usage>
+    <implementationContext>
+        <note>Transaction state must be validated before update processing</note>
+        <note>Transaction data must be validated for format and range</note>
+        <note>Transaction counter increment must be verified</note>
+        <note>Transaction record write must include error handling</note>
+        <note>Logging must succeed for audit trail completeness</note>
+        <note>Update operation should be atomic when possible</note>
+        <note>Failure should not leave transaction in inconsistent state</note>
+        <note>Error messages should indicate specific failure reason</note>
+        <note>Failed updates should trigger rollback handling</note>
+        <note>Device diagnostics should include transaction update testing</note>
+    </implementationContext>
 </exception>

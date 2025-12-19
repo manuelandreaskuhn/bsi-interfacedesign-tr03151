@@ -1,18 +1,163 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <exception id="ErrorIncorrectPuk" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
     <name>ErrorIncorrectPuk</name>
-    <description>This exception is thrown if the SE API function unblockPin has been invoked with an incorrect PUK.</description>
-    <category>Authentication</category>
+    <description>This exception is thrown if the SE API function unblockPin fails because an incorrect PUK (PIN Unblock Key) was provided. The function attempts to unblock a blocked PIN by verifying the supplied PUK, but the provided PUK does not match the registered PIN unblock credential, causing the unblock operation to fail and be rejected.</description>
+    <category>Authentication - PIN Unblock Security</category>
     <severity>High</severity>
     <javadoc>
         <summary>This class defines the exception ErrorIncorrectPuk that is thrown if the SE API function unblockPin has been invoked with an incorrect PUK.</summary>
+        <description>This exception is thrown when the unblockPin function receives an incorrect PUK that does not match the registered PIN unblock credential. PUK verification is a critical security operation that controls access to PIN unblock functionality and prevents unauthorized PIN reset attempts. ErrorIncorrectPuk indicates that the supplied PUK does not match the registered PIN Unblock Key stored on the Secure Element. When this exception occurs, the PIN unblock operation fails and the PIN remains blocked. The Secure Element may also track failed PUK verification attempts and implement security countermeasures (PUK retry counter decrement, potential PUK blocking after maximum failures). Recovery requires supplying the correct PUK in a subsequent unblock attempt, or requesting administrative assistance if the PUK is incorrect or unknown.</description>
+        <constructors>
+            <constructor>
+                <signature>ErrorIncorrectPuk()</signature>
+                <description>Constructs a new ErrorIncorrectPuk exception with null as the value for its detail message</description>
+            </constructor>
+            <constructor>
+                <signature>ErrorIncorrectPuk(String message)</signature>
+                <description>Constructs a new ErrorIncorrectPuk exception whereby its detail message is initialized with the passed value</description>
+                <parameter name="message">value for the detail message of the exception, typically describing the incorrect PUK error</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorIncorrectPuk(String message, Throwable cause)</signature>
+                <description>Constructs a new ErrorIncorrectPuk exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorIncorrectPuk(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+                <description>Constructs a new ErrorIncorrectPuk exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+            </constructor>
+        </constructors>
     </javadoc>
     <specification>
         <source>BSI TR-03151-1</source>
-        <requirement>SHALL be raised when PIN unblock attempt uses incorrect PUK</requirement>
-        <applicability>PIN unblock operations</applicability>
+        <section>3.5.3 User Authentication - unblockPin</section>
+        <requirement>The function unblockPin SHALL unblock a blocked PIN by verifying the provided PUK (PIN Unblock Key) against the registered PIN unblock credential. If the provided PUK does not match the registered credential, the function SHALL raise the exception ErrorIncorrectPuk and reject the PIN unblock operation without unblocking the PIN. The Secure Element SHALL track failed PUK verification attempts and may implement security countermeasures including PUK retry counter management.</requirement>
+        <applicability>PIN unblock operations - unblockPin function only</applicability>
+        <reference>unblockPin – Function (3.5.3)</reference>
     </specification>
     <thrownBy>
         <function>unblockPin</function>
     </thrownBy>
+    <triggerConditions>
+        <condition>
+            <scenario>User supplies incorrect PUK value</scenario>
+            <description>The user provides a PUK that does not match the registered PIN unblock credential</description>
+            <trigger>The user/application calls unblockPin with a PUK parameter that does not match the registered PIN Unblock Key stored on the Secure Element. The Secure Element verifies the supplied PUK against the registered credential and finds a mismatch. The verification fails and the Secure Element raises ErrorIncorrectPuk to reject the unblock operation.</trigger>
+        </condition>
+        <condition>
+            <scenario>PUK verification failure due to typo or user error</scenario>
+            <description>User accidentally enters an incorrect PUK due to typing error, transcription error, or other accidental input errors</description>
+            <trigger>The user enters a PUK that is similar to but not identical to the correct PUK (single character difference, transposed digits, etc.). When unblockPin verifies the PUK, the mismatch is detected and ErrorIncorrectPuk is raised.</trigger>
+        </condition>
+        <condition>
+            <scenario>Malicious or brute force PIN unblock attempt</scenario>
+            <description>An attacker attempts PIN unblock with incorrect PUKs in a brute force attack or denial of service attempt</description>
+            <trigger>An attacker or unauthorized party calls unblockPin multiple times with various incorrect PUK values attempting to guess the correct PUK. Each incorrect PUK triggers ErrorIncorrectPuk. The Secure Element may track these repeated failures and implement security countermeasures including PUK blocking.</trigger>
+        </condition>
+        <condition>
+            <scenario>PIN unblock attempt with outdated or incorrect PUK credential</scenario>
+            <description>User attempts to use an incorrect or outdated PUK value (possibly from a previous device configuration or incorrect record)</description>
+            <trigger>The user attempts PIN unblock using a PUK that was never valid, was changed through administrative procedures, or was misrecorded. When unblockPin verifies this PUK against the registered credential, the verification fails due to mismatch, triggering ErrorIncorrectPuk.</trigger>
+        </condition>
+        <condition>
+            <scenario>PUK verification with corrupted or incomplete PUK data</scenario>
+            <description>The PIN unblock attempt uses a PUK that is incomplete, corrupted, or improperly formatted</description>
+            <trigger>The user supplies a PUK that is incomplete (fewer characters than required), corrupted (contains invalid characters), or improperly formatted. When the Secure Element verifies this PUK against the registered credential, the verification fails due to format/content mismatch, triggering ErrorIncorrectPuk.</trigger>
+        </condition>
+    </triggerConditions>
+    <executionSequence>
+        <step number="1">User/application calls unblockPin function with PUK parameter</step>
+        <step number="2">Function validates input parameters including PUK format and length</step>
+        <step number="3">Function checks if PIN is currently blocked and unblock operation is permitted</step>
+        <step number="4">Function verifies PIN unblock is applicable and PUK-based unblock is supported</step>
+        <step number="5">Function initiates communication channel to Secure Element and prepares PIN unblock command with supplied PUK</step>
+        <step number="6">Function transmits unblock command to Secure Element with supplied PUK for verification</step>
+        <step number="6a">If supplied PUK does NOT match registered credential → Secure Element responds with failure, ErrorIncorrectPuk raised, function exits</step>
+        <step number="6b">If PUK verification confirms mismatch → Secure Element increments failed PUK verification counter and may apply security countermeasures</step>
+        <step number="7">If supplied PUK matches registered credential, function receives unblock success confirmation</step>
+        <step number="8">Function clears the PIN block flag and resets the PIN retry counter to allow new authentication attempts</step>
+        <step number="9">Function closes Secure Element communication channel</step>
+        <step number="10">Function returns to caller with PIN unblocked and ready for new authentication attempts</step>
+    </executionSequence>
+    <recovery>
+        <step>Verify PUK value accuracy - confirm the entered PUK is correct according to user's registered PIN Unblock Key</step>
+        <step>Check for common input errors - verify no keyboard layout issues, language issues, or accidental character transpositions in PUK entry</step>
+        <step>Confirm PIN is currently blocked - ensure PIN is actually blocked and unblock operation is necessary</step>
+        <step>Review failed PUK verification counter if available - check how many failed attempts have been made and how many remain before PUK blocking</step>
+        <step>Retry PIN unblock with verified correct PUK - re-attempt unblockPin with the correct PUK value</step>
+        <step>Verify PUK credential correctness - confirm the PUK being used is the currently registered PIN Unblock Key (not an outdated or incorrect credential)</step>
+        <step>Implement comprehensive error logging and rate limiting - log failed unblock attempts to detect brute force attacks and implement throttling</step>
+        <step>Monitor for PUK retry counter exhaustion - track whether repeated failures may trigger PUK blocking or permanent PIN lock</step>
+        <step>If repeated unblock failures occur, contact administrator for PUK verification - after excessive failed attempts or if PUK is unknown, administrator assistance may be required</step>
+        <step>If concerned about security breach, implement additional security measures - if unauthorized parties are attempting PIN unblock, consider security incident response</step>
+    </recovery>
+    <relatedExceptions>
+        <exception>ErrorPukBlocked</exception>
+        <exception>ErrorPinBlocked</exception>
+        <exception>ErrorUserNotAuthenticated</exception>
+        <exception>ErrorUnblockPinFailed</exception>
+        <exception>ErrorFunctionNotSupported</exception>
+    </relatedExceptions>
+    <postconditionality>
+        <state name="PIN Block Status">PIN remains blocked. The failed PUK verification does not unblock the PIN or reset the PIN block status. The device continues to prevent user authentication until the correct PUK is supplied in a subsequent unblock attempt.</state>
+        <state name="Failed PUK Verification Counter Update">The Secure Element's failed PUK verification counter is typically incremented to track the PUK verification failure. If implemented, this counter tracks repeated failed attempts and may trigger security countermeasures (PUK blocking) after excessive failures.</state>
+        <state name="PUK Blocking Preconditions">Repeated failed PUK verification attempts may eventually trigger PUK blocking or permanent PIN lock. If the failed attempt counter reaches the maximum threshold configured for PUK blocking, the next unblockPin call may raise ErrorPukBlocked instead of ErrorIncorrectPuk.</state>
+        <state name="No Credential Modification">The registered PIN unblock credential (PUK) remains unchanged. The incorrect PUK does not modify the registered credential or authentication configuration. Subsequent unblock attempts use the same registered PUK credential.</state>
+        <state name="Device Operational State">Device remains fully operational and unmodified. The failed unblock does not affect device state, configuration, or other operations. All device components remain in their pre-call state.</state>
+        <state name="Recovery Preconditions Met">The device state after exception is consistent and allows for recovery operations. User can immediately retry PIN unblock with the correct PUK. No special recovery procedures are required unless PUK blocking is triggered or administrative assistance is needed.</state>
+    </postconditionality>
+    <notes>
+        <note>ErrorIncorrectPuk is thrown ONLY by the unblockPin function - it is the specific exception for PUK verification failures during PIN unblock</note>
+        <note>This exception indicates the supplied PUK does not match the registered PIN Unblock Key - this is a security verification failure, not a system error</note>
+        <note>Critical distinction from ErrorUnblockPinFailed: ErrorIncorrectPuk specifically indicates PUK verification mismatch, while ErrorUnblockPinFailed may indicate broader unblock system issues</note>
+        <note>Exception is raised during the PUK verification phase (steps 6-7), after input validation and PIN block status checks have passed</note>
+        <note>After this exception, the PIN remains blocked and the registered PUK remains unchanged. The user can immediately retry PIN unblock with the correct PUK</note>
+        <note>This exception has High severity because it indicates either user credential mismatch or potential unauthorized access attempts (brute force PIN unblock)</note>
+        <note>PUK verification is a critical security operation - incorrect PUK detection is a fundamental PIN unblock security control</note>
+        <note>The Secure Element typically implements PUK retry counters and blocking mechanisms - repeated incorrect attempts may trigger PUK blocking</note>
+        <note>Multiple rapid ErrorIncorrectPuk exceptions indicate either repeated user errors or potential brute force PIN unblock attack - both scenarios require attention</note>
+        <note>If this exception occurs frequently with correct PUK entries, it indicates potential PUK credential synchronization issues or user confusion about the correct PUK</note>
+        <note>Each ErrorIncorrectPuk exception should be logged and monitored to detect brute force attacks or unusual PIN unblock patterns</note>
+        <note>PUK-based PIN unblock is a security-critical function - ErrorIncorrectPuk indicates a fundamental security control is functioning (rejecting incorrect PUKs)</note>
+        <note>Applications must implement appropriate user guidance when ErrorIncorrectPuk is raised - clear indication that the PUK is incorrect and user should retry or contact administrator</note>
+        <note>After repeated ErrorIncorrectPuk exceptions, PUK blocking may be triggered - users should be warned when approaching unblock attempt limits</note>
+        <note>PUK reset or recovery procedures may be required if PUK is forgotten after repeated failed unblock attempts - contact device administrator for assistance</note>
+    </notes>
+    <usage>
+        <scenario name="Scenario 1: PIN Unblock Recovery and Access Restoration">
+            <description>A user has a blocked PIN and needs to restore access by providing the PUK for PIN unblock. The system calls unblockPin with the user-supplied PUK. If ErrorIncorrectPuk is raised, the system informs the user that the PUK is incorrect and prompts for retry. Correct PUK entry unblocks the PIN and allows new authentication attempts.</description>
+            <relatedFunctions>unblockPin, authenticateUser</relatedFunctions>
+            <errorContext>Incorrect PUK supplied during PIN unblock recovery</errorContext>
+        </scenario>
+        <scenario name="Scenario 2: Multi-Attempt PIN Unblock with User Guidance">
+            <description>A user interface guides users through PUK entry and PIN unblock recovery. When unblockPin raises ErrorIncorrectPuk, the UI displays an error message and allows the user to retry. The UI tracks the number of failed attempts and warns users when approaching the PUK blocking threshold.</description>
+            <relatedFunctions>unblockPin, authenticateUser</relatedFunctions>
+            <errorContext>PUK verification failure with user retry capability</errorContext>
+        </scenario>
+        <scenario name="Scenario 3: PIN Unblock Security Monitoring and Brute Force Detection">
+            <description>A security monitoring system logs all PIN unblock attempts and detects potential brute force PIN unblock attacks. When ErrorIncorrectPuk is raised, the monitoring system logs the failure, tracks the source, and identifies suspicious patterns. If multiple failed unblock attempts occur from the same source in short time, the system triggers security alerts.</description>
+            <relatedFunctions>unblockPin</relatedFunctions>
+            <errorContext>PIN unblock failure monitoring and brute force attack detection</errorContext>
+        </scenario>
+        <scenario name="Scenario 4: Automated PIN Unblock with Administrative Override">
+            <description>An administrative system performs PIN unblock operations on behalf of users. When unblockPin raises ErrorIncorrectPuk, the system logs the failure, verifies the PUK in administrative records, and determines whether to retry or escalate to administrator. After excessive failures, the system requests administrator intervention for PUK verification.</description>
+            <relatedFunctions>unblockPin, authenticateUser</relatedFunctions>
+            <errorContext>Administrative PIN unblock with retry and escalation handling</errorContext>
+        </scenario>
+    </usage>
+    <implementationContext>
+        <note>The unblockPin function performs PUK-based PIN unblock to restore access when the user PIN has been blocked due to excessive failed authentication attempts</note>
+        <note>Incorrect PUK is fundamentally distinct from PIN unblock system errors - it represents failed credential verification for the unblock operation, not system failure</note>
+        <note>PUK verification is typically performed by the Secure Element's authentication subsystem with secure comparison to prevent timing attacks</note>
+        <note>Most Secure Elements implement PUK retry counters and blocking mechanisms after excessive failed attempts - PUK brute force protection is standard security practice</note>
+        <note>ErrorIncorrectPuk is a normal, expected exception during PIN unblock workflows - it is not exceptional in systems where users occasionally enter wrong credentials during recovery</note>
+        <note>Applications should implement user-friendly error messages and retry capability when ErrorIncorrectPuk is raised - PIN unblock recovery is expected to require multiple attempts in some cases</note>
+        <note>Failed PUK verification attempts should be logged for security auditing and brute force detection - PIN unblock is a critical security checkpoint</note>
+        <note>PUK blocking and retry counter management are typically handled transparently by the Secure Element - applications should be aware these mechanisms may trigger ErrorPukBlocked after repeated failures</note>
+    </implementationContext>
 </exception>

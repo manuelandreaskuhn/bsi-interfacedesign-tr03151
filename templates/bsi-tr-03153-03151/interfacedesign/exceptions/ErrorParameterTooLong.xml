@@ -1,16 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <exception id="ErrorParameterTooLong" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
     <name>ErrorParameterTooLong</name>
-    <description>This exception is thrown by any SE API method when at least one parameter passed to the method is too long.</description>
-    <category>Common Exception</category>
+    <description>This exception is thrown by SE API functions when one or more parameters exceed the maximum allowed length specified for that parameter. Different parameters have different length constraints to ensure efficient device operation, network transmission, and storage. ErrorParameterTooLong indicates that a parameter value (typically a string or data array) exceeds the device's maximum length limit for that parameter, preventing the function from processing the oversized parameter.</description>
+    <category>Input Validation - Parameter Length Constraints</category>
     <severity>Medium</severity>
     <javadoc>
-        <summary>This class defines the exception ErrorParameterTooLong that is thrown by any SE API method when at least one parameter passed to the method is too long.</summary>
+        <summary>This class defines the exception ErrorParameterTooLong that is thrown by any SE API method when at least one parameter exceeds maximum allowed length.</summary>
+        <description>This exception is thrown when any SE API function receives a parameter that exceeds the maximum length specified for that parameter. Different SE API functions have parameters with different length constraints. Common length-constrained parameters include: client IDs, descriptions, PIN/PUK values, transaction data, log filters, and other variable-length parameters. ErrorParameterTooLong is raised when parameter length validation occurs and a parameter is found to be longer than allowed. This is a common exception that can be raised by any SE API function that accepts length-constrained parameters. The maximum length limits are typically defined in the device specifications or BSI TR-03151-1. Recovery requires truncating, shortening, or splitting the parameter to fit within the maximum length constraint, or using alternative approaches that don't require oversized parameters.</description>
+        <constructors>
+            <constructor>
+                <signature>ErrorParameterTooLong()</signature>
+                <description>Constructs a new ErrorParameterTooLong exception with null as the value for its detail message</description>
+            </constructor>
+            <constructor>
+                <signature>ErrorParameterTooLong(String message)</signature>
+                <description>Constructs a new ErrorParameterTooLong exception whereby its detail message is initialized with the passed value</description>
+                <parameter name="message">value for the detail message of the exception, typically identifying which parameter exceeded the length limit</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorParameterTooLong(String message, Throwable cause)</signature>
+                <description>Constructs a new ErrorParameterTooLong exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorParameterTooLong(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+                <description>Constructs a new ErrorParameterTooLong exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+            </constructor>
+        </constructors>
     </javadoc>
     <specification>
         <source>BSI TR-03151-1</source>
-        <requirement>SHALL be raised when parameter exceeds maximum allowed length</requirement>
-        <applicability>Common exception - applicable to all API functions with length-constrained parameters</applicability>
+        <section>3.1 General Error Handling and Input Validation</section>
+        <requirement>All SE API functions SHALL validate input parameters for length compliance. Each parameter with a defined maximum length SHALL be checked against this limit. If any parameter is found to exceed the maximum length specified for that parameter, the function SHALL raise the exception ErrorParameterTooLong. The function SHALL NOT attempt to process or truncate oversized parameters. ErrorParameterTooLong is applicable to any SE API function that accepts length-constrained parameters.</requirement>
+        <applicability>Input validation - applicable to SE API functions with length-constrained parameters</applicability>
+        <reference>General Error Handling (3.1); Individual function parameter specifications</reference>
     </specification>
     <thrownBy>
         <function>authenticateUser</function>
@@ -23,4 +51,117 @@
         <function>updateTransaction</function>
         <function>finishTransaction</function>
     </thrownBy>
+    <triggerConditions>
+        <condition>
+            <scenario>Client ID parameter exceeds maximum length</scenario>
+            <description>A client ID string is longer than the device's maximum client ID length</description>
+            <trigger>A function registerClient is called with a client ID that is 200 characters long, but the device's maximum client ID length is 128 characters. The input validation detects the oversized parameter and raises ErrorParameterTooLong.</trigger>
+        </condition>
+        <condition>
+            <scenario>Description parameter exceeds maximum length</scenario>
+            <description>A description string is longer than the device's maximum description length</description>
+            <trigger>The setDescription function is called with a description that is 2000 characters long, but the device's maximum description length is 1024 characters. The validation detects the oversized description and raises ErrorParameterTooLong.</trigger>
+        </condition>
+        <condition>
+            <scenario>PIN/PUK parameter exceeds maximum length</scenario>
+            <description>A PIN or PUK parameter exceeds the maximum length for authentication values</description>
+            <trigger>The authenticateUser function is called with a PIN that is 20 digits long, but the device's maximum PIN length is 8 digits. The validation detects the oversized PIN and raises ErrorParameterTooLong.</trigger>
+        </condition>
+        <condition>
+            <scenario>Transaction data parameter exceeds maximum length</scenario>
+            <description>Transaction data or context data exceeds the maximum length for transaction parameters</description>
+            <trigger>The updateTransaction function is called with transaction data (e.g., description or context) that is 5MB in size, but the device's maximum transaction data length is 64KB. The validation detects the oversized transaction data and raises ErrorParameterTooLong.</trigger>
+        </condition>
+        <condition>
+            <scenario>Log filter or query parameter exceeds maximum length</scenario>
+            <description>A filter string or query parameter is longer than the device's maximum allowed length</description>
+            <trigger>The exportLogMessages function is called with a complex filter string that is 8KB in size, but the device's maximum filter parameter length is 4KB. The validation detects the oversized filter and raises ErrorParameterTooLong.</trigger>
+        </condition>
+    </triggerConditions>
+    <executionSequence>
+        <step number="1">User/application calls an SE API function with parameters</step>
+        <step number="2">Function receives the parameters</step>
+        <step number="3">Function performs length validation on each length-constrained parameter</step>
+        <step number="3a">If all parameters are within maximum length limits → proceed to step 4</step>
+        <step number="3b">If any parameter exceeds maximum length → ErrorParameterTooLong raised, function exits</step>
+        <step number="4">Function performs other parameter validation (type, syntax, format, etc.)</step>
+        <step number="5">Function proceeds with normal operation logic</step>
+    </executionSequence>
+    <recovery>
+        <step>Review error message - examine the error message to identify which parameter is too long</step>
+        <step>Check function documentation - consult the SE API documentation for the specific function's parameter length limits</step>
+        <step>Review parameter lengths - determine the actual length of the offending parameter</step>
+        <step>Identify maximum length - consult device specifications for the maximum allowed length for that parameter</step>
+        <step>Calculate shortfall - determine how many characters need to be removed</step>
+        <step>Truncate or shorten parameter - reduce the parameter length to fit within the maximum limit</step>
+        <step>Consider alternative approaches - if truncation is not acceptable, consider alternative approaches (e.g., shorter identifiers, split operations)</step>
+        <step>Implement length validation - add pre-call validation in client applications to catch oversized parameters early</step>
+        <step>Retry with corrected parameter - call the function again with the shortened parameter</step>
+        <step>Review BSI TR-03151-1 specification - consult the official specification for detailed parameter length requirements</step>
+    </recovery>
+    <relatedExceptions>
+        <exception>ErrorParameterSyntax</exception>
+        <exception>ErrorParameterMismatch</exception>
+        <exception>ErrorInvalidClientIdCharacter</exception>
+        <exception>ErrorFunctionFailed</exception>
+    </relatedExceptions>
+    <postconditionality>
+        <state name="Function Not Executed">The function does not execute its main operation logic. Length validation failure prevents operation execution.</state>
+        <state name="Device State Unchanged">The device's state remains completely unchanged. No device operations occur as a result of the parameter length error.</state>
+        <state name="No Side Effects">The exception does not cause any side effects or state changes on the device.</state>
+        <state name="Parameters Available for Inspection">The oversized parameters remain available for inspection to identify the specific length issue.</state>
+        <state name="Retry Possible with Shortened Parameters">The operation can be retried immediately after shortening the parameter to fit within the maximum length.</state>
+        <state name="No Data Loss">The exception does not result in data loss or corruption of any kind.</state>
+    </postconditionality>
+    <notes>
+        <note>ErrorParameterTooLong is a common exception applicable to any SE API function that accepts length-constrained parameters</note>
+        <note>This exception indicates a parameter length constraint violation - the function does not attempt to truncate oversized parameters</note>
+        <note>The exception has Medium severity because it indicates invalid input, not a system failure</note>
+        <note>Length validation occurs early in function execution, before any device communication</note>
+        <note>Each SE API function and each parameter has specific length requirements documented in device specifications</note>
+        <note>Applications should validate parameter lengths before calling SE API functions to prevent ErrorParameterTooLong exceptions</note>
+        <note>Common length-constrained parameters include: client IDs, descriptions, authentication values (PIN/PUK), transaction data</note>
+        <note>Error messages should identify which specific parameter is too long and what the maximum length is</note>
+        <note>Different functions may have different parameter length limits - always consult function-specific documentation</note>
+        <note>Some parameters may have variable maximum lengths depending on device configuration</note>
+        <note>Truncation should be used carefully - some parameters (IDs, PINs) may have specific length requirements for functionality</note>
+        <note>Character encoding (UTF-8 vs ASCII) may affect length calculations for string parameters</note>
+        <note>Binary data parameters should be validated for byte length, not character length</note>
+        <note>Input validation utilities in client applications can reduce ErrorParameterTooLong exceptions</note>
+        <note>Documentation should clearly specify maximum length for each parameter to guide client implementations</note>
+    </notes>
+    <usage>
+        <scenario name="Scenario 1: Client ID Registration with Length Validation">
+            <description>An application calls registerClient with a client ID. If the client ID is too long (exceeds the device's maximum length), the function raises ErrorParameterTooLong. The application catches the exception, shortens the client ID to fit within the maximum length, and retries the registration.</description>
+            <relatedFunctions>registerClient, deregisterClient</relatedFunctions>
+            <errorContext>Client ID parameter exceeds maximum allowed length</errorContext>
+        </scenario>
+        <scenario name="Scenario 2: Device Description Setting with Length Checking">
+            <description>An application calls setDescription to set device metadata. The application user provides a long description that exceeds the device's maximum description length. The function raises ErrorParameterTooLong. The application truncates the description and retries, or shows an error message to the user asking for a shorter description.</description>
+            <relatedFunctions>setDescription, initialize</relatedFunctions>
+            <errorContext>Description parameter exceeds maximum allowed length</errorContext>
+        </scenario>
+        <scenario name="Scenario 3: Parameter Length Validation Utility Implementation">
+            <description>An application implements a parameter validation utility that checks all parameters before calling SE API functions. The utility validates not only types and syntax but also lengths. By validating lengths early, the application prevents ErrorParameterTooLong exceptions from being raised by SE API functions.</description>
+            <relatedFunctions>registerClient, setDescription, authenticateUser</relatedFunctions>
+            <errorContext>Preventive parameter length validation prevents length constraint violations</errorContext>
+        </scenario>
+        <scenario name="Scenario 4: Transaction Data Size Constraint Management">
+            <description>An application calls updateTransaction with transaction data that includes contextual information. If the transaction data is too large (exceeds the device's maximum transaction data length), the function raises ErrorParameterTooLong. The application responds by splitting the transaction data or reducing the amount of contextual information included.</description>
+            <relatedFunctions>startTransaction, updateTransaction, finishTransaction</relatedFunctions>
+            <errorContext>Transaction data parameter exceeds maximum size limit</errorContext>
+        </scenario>
+    </usage>
+    <implementationContext>
+        <note>All SE API functions with length-constrained parameters must validate parameter lengths during input validation</note>
+        <note>Length validation should occur early in function execution, before any device communication</note>
+        <note>Maximum length limits should be clearly documented for each parameter in function documentation</note>
+        <note>Length validation should check actual parameter length against documented maximum length</note>
+        <note>Error messages should identify which specific parameter exceeded the length limit and what the maximum is</note>
+        <note>Different functions may have different maximum lengths for similar parameters - document each function's constraints</note>
+        <note>Character encoding considerations: UTF-8 multi-byte characters may affect length calculations</note>
+        <note>Binary data parameters should be validated using byte length, not character length</note>
+        <note>Some parameters may have variable maximum lengths based on device configuration - this should be documented</note>
+        <note>Client applications should implement parameter length validation utilities to reduce validation failures</note>
+    </implementationContext>
 </exception>

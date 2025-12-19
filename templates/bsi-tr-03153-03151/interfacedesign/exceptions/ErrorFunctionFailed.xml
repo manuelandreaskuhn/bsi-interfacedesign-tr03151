@@ -1,16 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <exception id="ErrorFunctionFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
     <name>ErrorFunctionFailed</name>
-    <description>This exception is thrown if the SE API encounters a critical error which is not covered by the other defined exceptions. A critical error prevents the function from executing the defined process and producing expected results.</description>
-    <category>Common Exception</category>
+    <description>This exception is thrown if the SE API encounters a critical error which is not covered by the other defined exceptions. ErrorFunctionFailed represents a universal catch-all exception for unexpected failures that do not fall into any other specific exception category. This exception indicates that a critical error prevented the function from executing its defined process and producing expected results. ErrorFunctionFailed is raised when any SE API function encounters a critical failure condition that is not explicitly addressed by the more specific exception types defined in the API specification. The exception serves as a safety mechanism to ensure that critical errors are communicated to the caller even when the specific failure cause does not match any predefined exception category. This exception is universal and can be raised by virtually any SE API function when an unspecified critical failure occurs.</description>
+    <category>Common Exception - Catch-All</category>
     <severity>Critical</severity>
     <javadoc>
         <summary>This class defines the exception ErrorFunctionFailed that is thrown if the SE API encounters a critical error which is not covered by the other defined exceptions.</summary>
+        <description>ErrorFunctionFailed is a universal exception that is raised when a critical error occurs during function execution and the error does not match any of the specific exception categories defined in the SE API specification. This exception serves as a catch-all mechanism to handle unexpected failure conditions that were not anticipated or specifically addressed by the API design. When this exception is raised, it indicates that the function could not complete its intended operation successfully, but the nature of the failure is not covered by more specific exceptions such as ErrorDeviceNotInitialized, ErrorSecureElementDisabled, ErrorSigningEventDataFailed, or other specialized exception types.</description>
+        <constructors>
+            <constructor>
+                <signature>ErrorFunctionFailed()</signature>
+                <description>Constructs a new ErrorFunctionFailed exception with null as the value for its detail message</description>
+            </constructor>
+            <constructor>
+                <signature>ErrorFunctionFailed(String message)</signature>
+                <description>Constructs a new ErrorFunctionFailed exception whereby its detail message is initialized with the passed value</description>
+                <parameter name="message">value for the detail message of the exception, typically describing the nature of the critical error encountered</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorFunctionFailed(String message, Throwable cause)</signature>
+                <description>Constructs a new ErrorFunctionFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception, representing the underlying error that triggered this critical failure</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorFunctionFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+                <description>Constructs a new ErrorFunctionFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+            </constructor>
+        </constructors>
     </javadoc>
     <specification>
-        <source>BSI TR-03151-1 Section 3.1.2.1</source>
-        <requirement>SHALL be raised whenever a critical error occurs during execution and the error is not covered by any other defined exception</requirement>
-        <applicability>Common exception - applicable to all API functions</applicability>
+        <source>BSI TR-03151-1</source>
+        <section>3.1.2.1 Exception Categories</section>
+        <requirement>ErrorFunctionFailed SHALL be raised whenever a critical error occurs during the execution of an API function and the error is not covered by any other defined exception in the SE API specification. This exception represents the catch-all category for unexpected or unspecified critical failures that prevent a function from completing its defined process and producing the expected results.</requirement>
+        <applicability>Universal exception - applicable to all API functions as a catch-all for unspecified critical errors</applicability>
+        <reference>SE API Common Exceptions (3.1.2.1)</reference>
     </specification>
     <thrownBy>
         <function>authenticateUser</function>
@@ -58,4 +86,117 @@
         <function>lockTransactionLogging</function>
         <function>unlockTransactionLogging</function>
     </thrownBy>
+    <triggerConditions>
+        <condition>
+            <scenario>Unspecified critical error during function execution</scenario>
+            <description>Any critical error occurs during the execution of an SE API function that is not explicitly covered by any other defined exception category. This represents the catch-all trigger for unexpected failures.</description>
+            <trigger>A critical failure condition is encountered that prevents the function from completing its defined operation and producing expected results. This failure does not correspond to any of the specific exception types (device initialization state, Secure Element state, authentication failures, resource availability, etc.). When no other exception is appropriate, ErrorFunctionFailed is raised to indicate a critical but unspecified failure.</trigger>
+        </condition>
+        <condition>
+            <scenario>Lower-level system error or hardware failure</scenario>
+            <description>A critical error occurs at the operating system level, hardware level, or system infrastructure level that is not covered by API-specific exception types.</description>
+            <trigger>System-level failures such as unexpected hardware errors, operating system exceptions, or infrastructure issues that prevent function execution</trigger>
+        </condition>
+        <condition>
+            <scenario>Resource exhaustion or unavailability</scenario>
+            <description>Critical resources (memory, processing capacity, communication) become unavailable or exhausted during function execution, causing the function to fail.</description>
+            <trigger>Resource exhaustion or allocation failure that prevents function execution and is not covered by a more specific exception type</trigger>
+        </condition>
+        <condition>
+            <scenario>Communication or connection failure</scenario>
+            <description>Critical failures in communication channels or connections prevent the function from accessing required components or communicating results.</description>
+            <trigger>Unrecoverable communication failures or connection timeouts that prevent function completion</trigger>
+        </condition>
+        <condition>
+            <scenario>Unexpected state or configuration error</scenario>
+            <description>The device, function, or system enters an unexpected state or configuration that prevents normal operation but does not match predefined exception conditions.</description>
+            <trigger>Unexpected state conditions or configuration errors that prevent function execution without matching a specific exception category</trigger>
+        </condition>
+    </triggerConditions>
+    <executionSequence>
+        <step number="1" name="Function Invocation">User or application calls any SE API function</step>
+        <step number="2" name="Function Execution Begins">The function begins execution of its defined process</step>
+        <step number="3" name="Critical Error Detection">During execution, a critical error occurs that prevents successful completion or normal operation</step>
+        <step number="4" name="Exception Category Evaluation">The error is checked against all specific exception conditions (device initialization state, Secure Element state, authentication failures, resource availability, communication status, etc.)</step>
+        <step number="5" name="Specific Exception Evaluation">If the error matches one of the specific exception types, that specific exception is raised and function execution branches to exception handling</step>
+        <step number="6" name="Unspecified Error Determination">If the error does not match any specific exception category, it is classified as an unspecified critical failure</step>
+        <step number="7" name="ErrorFunctionFailed Creation">ErrorFunctionFailed exception instance is created with error details, cause information, and diagnostic data</step>
+        <step number="8" name="Exception Context Preparation">Exception context is prepared including error message, stack trace, device state information, and timestamp</step>
+        <step number="9" name="Exception Propagation">Exception is raised and propagated up the call stack to the caller</step>
+        <step number="10" name="Function Exit">Function execution is terminated and control returns to caller's exception handler</step>
+    </executionSequence>
+    <recovery>
+        <step>Carefully review the exception message and complete stack trace to identify clues about the critical failure</step>
+        <step>Check system logs, device diagnostics, and error codes to identify any underlying hardware or software errors</step>
+        <step>Verify device connectivity, communication channels, and network status are functioning properly</step>
+        <step>Attempt to diagnose the specific cause of failure by examining device state, resource availability, and status information</step>
+        <step>If the error is transient (temporary communication failure or resource constraint), attempt to retry the operation after a brief delay with exponential backoff</step>
+        <step>Verify that the device is not in an error state, experiencing resource exhaustion (memory, processing), or communication failures</step>
+        <step>Check available firmware or software updates that may address the underlying critical error condition</step>
+        <step>If the error persists across multiple attempts, consult the device manufacturer's documentation, error code reference materials, and troubleshooting guides</step>
+        <step>Implement comprehensive logging of all ErrorFunctionFailed exceptions including timestamps, function names, device state, and context to identify patterns or recurring failure conditions</step>
+        <step>If standard troubleshooting does not resolve the issue, contact device support with detailed logs, reproduction steps, device configuration, and diagnostic information</step>
+    </recovery>
+    <relatedExceptions>
+        <exception>ErrorDeviceNotInitialized</exception>
+        <exception>ErrorSecureElementDisabled</exception>
+        <exception>ErrorSigningEventDataFailed</exception>
+        <exception>ErrorStoringLogMessageFailed</exception>
+        <exception>ErrorRetrieveLogMessageFailed</exception>
+        <exception>ErrorDisableSecureElementFailed</exception>
+        <exception>ErrorExportLoggingCertificateFailed</exception>
+        <exception>ErrorExportSerialNumbersFailed</exception>
+    </relatedExceptions>
+    <postconditionality>
+        <state name="Function Execution Status">Function execution is incomplete. The defined process was not completed successfully and no guaranteed results are available.</state>
+        <state name="Exception Return">Function returns with ErrorFunctionFailed exception to caller. The exception contains error information and may include cause details.</state>
+        <state name="Device State">Device state may be inconsistent or partially modified depending on when the critical error occurred during function execution. No postcondition guarantees exist.</state>
+        <state name="Data Integrity">No data guarantees exist. Any data produced before the critical error occurred may be incomplete, partial, or invalid.</state>
+        <state name="Error Specificity">The exception provides minimal information about the failure cause since it is a catch-all for unspecified failures. Additional diagnostics are required.</state>
+        <state name="Caller Responsibility">Caller must handle the exception appropriately and determine recovery strategy based on error message, cause, and context information.</state>
+    </postconditionality>
+    <notes>
+        <note>ErrorFunctionFailed is the ultimate catch-all exception and should only be raised when no other specific exception applies. Its presence indicates an unexpected failure condition not covered by explicit API specification.</note>
+        <note>This exception can be raised by virtually ANY function in the SE API (43+ different functions). It is the most generic and broadly applicable exception in the API specification.</note>
+        <note>The exception has Critical severity because it represents a failure that prevents the function from completing its intended operation, regardless of the specific cause.</note>
+        <note>When ErrorFunctionFailed is raised, the error details, message, and stack trace are critically important for diagnosing the underlying issue. Comprehensive logging and analysis are essential.</note>
+        <note>Unlike specific exceptions (ErrorDeviceNotInitialized, ErrorSecureElementDisabled, ErrorSigningEventDataFailed, etc.), ErrorFunctionFailed provides minimal information about the failure cause. Callers must rely on exception messages, causes, and logs for diagnosis.</note>
+        <note>ErrorFunctionFailed may wrap or indicate a lower-level system error, hardware failure, resource exhaustion, communication breakdown, or other unexpected condition not explicitly handled by the API.</note>
+        <note>The exception should be handled by applications as a critical failure requiring investigation, appropriate error recovery, system diagnostics, or user notification depending on the application context.</note>
+        <note>Implementations should ensure that all specific exception conditions are thoroughly checked before raising ErrorFunctionFailed, to preserve the semantic value and diagnostic utility of the more specific exceptions.</note>
+        <note>ErrorFunctionFailed is universal and implementation-independent. Each SE API implementation may encounter unique failure conditions that are caught by this catch-all exception.</note>
+        <note>When ErrorFunctionFailed occurs repeatedly for the same operation or function, it typically indicates a systemic problem requiring professional investigation, device repair, or replacement.</note>
+    </notes>
+    <usage>
+        <scenario name="Scenario 1: Unexpected Hardware Failure">
+            <description>An application calls a standard SE API function like getDeviceHealth to check device status. During execution, the function encounters an unexpected hardware failure at a low level that does not match any specific exception category. The error is not related to device initialization, Secure Element state, or known hardware limitations. ErrorFunctionFailed is raised with the underlying hardware error details.</description>
+            <relatedFunctions>getDeviceHealth, initialize, updateDevice, selfTest</relatedFunctions>
+            <errorContext>Unexpected hardware failure or system error preventing function execution</errorContext>
+        </scenario>
+        <scenario name="Scenario 2: Resource Exhaustion During Operation">
+            <description>A user calls a function like exportLogMessages to retrieve log data. During execution, the system encounters memory exhaustion or other resource constraints that are not covered by specific resource exception types. The function cannot allocate memory for the operation. ErrorFunctionFailed is raised to indicate the resource constraint.</description>
+            <relatedFunctions>exportLogMessages, exportSerialNumbers, exportLoggingCertificates</relatedFunctions>
+            <errorContext>Resource exhaustion or allocation failure during critical operation</errorContext>
+        </scenario>
+        <scenario name="Scenario 3: Communication Failure During Complex Operation">
+            <description>An application calls a multi-step function like finishTransaction that requires communication with multiple device components. During execution, an unexpected communication failure occurs that is not covered by specific communication exception types. The function cannot complete due to this unspecified communication error. ErrorFunctionFailed is raised.</description>
+            <relatedFunctions>finishTransaction, updateTransaction, startTransaction</relatedFunctions>
+            <errorContext>Unspecified communication or connectivity failure preventing function completion</errorContext>
+        </scenario>
+        <scenario name="Scenario 4: System Error with Retry Recovery">
+            <description>An application detects ErrorFunctionFailed during a critical operation like configureLogging. The application logs detailed error information and context. After brief analysis, the application recognizes this as a potentially transient error and retries the operation after a short delay. The retry succeeds, indicating the original error was temporary.</description>
+            <relatedFunctions>configureLogging, updateTime, authenticateUser</relatedFunctions>
+            <errorContext>Transient system error allowing retry with potential recovery</errorContext>
+        </scenario>
+    </usage>
+    <implementationContext>
+        <note>ErrorFunctionFailed is the ultimate catch-all exception in the SE API. It represents a critical failure that does not fit into any of the specific exception categories defined by the API specification.</note>
+        <note>This exception can be thrown by virtually any SE API function. Implementations should document what specific critical errors can trigger ErrorFunctionFailed in their particular context.</note>
+        <note>The exception's role is to ensure that critical errors are never silently ignored or left unhandled. If a critical error cannot be classified as a specific exception, ErrorFunctionFailed provides a mechanism to communicate the failure.</note>
+        <note>When ErrorFunctionFailed occurs, callers should examine the exception message and cause carefully. These contain important diagnostic information not available from the exception type alone.</note>
+        <note>Common sources of ErrorFunctionFailed include: unexpected hardware errors, system-level failures, resource exhaustion, communication breakdowns, and unspecified operational errors.</note>
+        <note>Applications should implement comprehensive exception handling for ErrorFunctionFailed, including logging with full context, user notification, retry strategies, and escalation procedures.</note>
+        <note>Recovery from ErrorFunctionFailed depends heavily on the underlying cause, which is not explicitly categorized. Applications must use error messages, logs, and diagnostics to determine appropriate recovery strategies.</note>
+        <note>When ErrorFunctionFailed occurs repeatedly, it typically indicates a systemic problem requiring investigation, device diagnostics, or professional support intervention.</note>
+    </implementationContext>
 </exception>

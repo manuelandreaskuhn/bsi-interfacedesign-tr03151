@@ -1,18 +1,158 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <exception id="ErrorExportSerialNumbersFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
     <name>ErrorExportSerialNumbersFailed</name>
-    <description>This exception is thrown if the collection of the serial number(s) failed.</description>
-    <category>Information Retrieval</category>
+    <description>This exception is thrown if the collection of the serial number(s) failed during execution of the exportSerialNumbers function. The exception represents a critical failure in the Secure Element's ability to retrieve and provide serial numbers required for exporting device identification data. ErrorExportSerialNumbersFailed is raised when the exportSerialNumbers function requests serial number retrieval from the Secure Element but the Secure Element cannot assemble or provide the required serial numbers due to a hardware error, firmware issue, serial number storage failure, or communication breakdown. This exception indicates that the Secure Element's serial number retrieval functionality did not complete successfully, preventing the assembly of valid export data containing authenticated device identification information. The exception is raised during the serial number collection phase before serial numbers are packaged into the export data structure, ensuring no partial or incomplete export data is returned.</description>
+    <category>Information Export Operations</category>
     <severity>High</severity>
     <javadoc>
         <summary>This class defines the exception ErrorExportSerialNumbersFailed that is thrown if the collection of the serial number(s) failed.</summary>
+        <description>The exportSerialNumbers function performs a multi-step process to export serial numbers from the Secure Element. This exception is raised when the Secure Element cannot provide the required serial numbers during the collection phase of the export operation. When this exception occurs, no export data is returned to the user, and the function exits without providing any partial serial number data. The failure indicates that the Secure Element's serial number retrieval functionality did not complete successfully.</description>
+        <constructors>
+            <constructor>
+                <signature>ErrorExportSerialNumbersFailed()</signature>
+                <description>Constructs a new ErrorExportSerialNumbersFailed exception with null as the value for its detail message</description>
+            </constructor>
+            <constructor>
+                <signature>ErrorExportSerialNumbersFailed(String message)</signature>
+                <description>Constructs a new ErrorExportSerialNumbersFailed exception whereby its detail message is initialized with the passed value</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorExportSerialNumbersFailed(String message, Throwable cause)</signature>
+                <description>Constructs a new ErrorExportSerialNumbersFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorExportSerialNumbersFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+                <description>Constructs a new ErrorExportSerialNumbersFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+            </constructor>
+        </constructors>
     </javadoc>
     <specification>
         <source>BSI TR-03151-1</source>
-        <requirement>SHALL be raised when serial number collection fails</requirement>
-        <applicability>Serial number export operations</applicability>
+        <section>3.3.12 Export Functionality - exportSerialNumbers</section>
+        <requirement>The function exportSerialNumbers SHALL request the Secure Element to retrieve the serial number(s) needed for export. If the Secure Element cannot provide or collect the required serial numbers, the function SHALL raise the exception ErrorExportSerialNumbersFailed and exit without returning any export data. The serial number collection failure indicates the Secure Element's serial number retrieval functionality could not complete successfully, preventing the assembly of valid export data.</requirement>
+        <applicability>Serial number export operations - Export functionality exportSerialNumbers only</applicability>
+        <reference>exportSerialNumbers – Function (3.3.12)</reference>
     </specification>
     <thrownBy>
         <function>exportSerialNumbers</function>
     </thrownBy>
+    <triggerConditions>
+        <condition>
+            <scenario>Secure Element serial number storage failure or corruption</scenario>
+            <description>The Secure Element attempts to retrieve serial numbers from its internal storage, but the serial numbers are corrupted, inaccessible, or damaged. Serial number retrieval fails due to storage errors or corruption.</description>
+            <trigger>Secure Element serial number storage failure or serial number data corruption preventing retrieval</trigger>
+        </condition>
+        <condition>
+            <scenario>Secure Element firmware error during serial number retrieval</scenario>
+            <description>The Secure Element's firmware encounters an error or exception while processing the serial number retrieval request. Firmware bugs, memory corruption, or firmware state inconsistency prevent successful serial number assembly.</description>
+            <trigger>Secure Element firmware error during serial number retrieval and assembly operation</trigger>
+        </condition>
+        <condition>
+            <scenario>Communication failure during serial number transfer</scenario>
+            <description>The Secure Element successfully retrieves serial numbers but the communication channel fails during transfer of serial number data from the Secure Element to the device. The device cannot receive the complete serial number data.</description>
+            <trigger>Communication failure during serial number data transfer from Secure Element</trigger>
+        </condition>
+        <condition>
+            <scenario>Serial number quota or resource exhaustion</scenario>
+            <description>The Secure Element has exhausted serial number storage capacity or resource limits that prevent retrieval of the complete set of required serial numbers. The export operation cannot proceed without all necessary serial numbers.</description>
+            <trigger>Secure Element serial number storage quota exceeded or resource limits preventing retrieval</trigger>
+        </condition>
+        <condition>
+            <scenario>Secure Element in restricted state preventing serial number access</scenario>
+            <description>The Secure Element has entered a protected, restricted, or locked state due to security policies or error conditions that prevents access to or retrieval of serial numbers. Serial number export is blocked by Secure Element security restrictions.</description>
+            <trigger>Secure Element in restricted state preventing serial number access or retrieval</trigger>
+        </condition>
+    </triggerConditions>
+    <executionSequence>
+        <step number="1" name="Function Invocation">User or application calls exportSerialNumbers function with no parameters required</step>
+        <step number="2" name="Authentication Check">The function checks authentication status if required by the implementation guideline to ensure the caller is authorized to export serial numbers</step>
+        <step number="3" name="Authorization Check">The function checks authorization to verify the caller has permission to export device identification data</step>
+        <step number="4" name="Device Initialization Verification">The function verifies that the device is in an initialized state and ready for export operations</step>
+        <step number="5" name="Time Synchronization Check">The function verifies that device time is synchronized if required for serial number export operations</step>
+        <step number="6" name="Secure Element Serial Number Request">The function sends a request to the Secure Element to retrieve and assemble the required device serial numbers</step>
+        <step number="6a" name="Serial Number Collection Success">If the Secure Element successfully retrieves and assembles all required serial numbers, execution continues to step 7 (not taken in this exception case)</step>
+        <step number="6b" name="Serial Number Collection Failure">If the Secure Element cannot retrieve, assemble, or provide the required serial numbers due to storage failure, firmware error, communication loss, quota exhaustion, or security restrictions, execution branches to exception handling at step 7b</step>
+        <step number="7a" name="Export Data Assembly">Upon successful serial number collection, the function packages the serial numbers into the export data structure for return (not taken in this exception case)</step>
+        <step number="7b" name="Exception Context Preparation">Upon serial number collection failure, exception context is prepared including the Secure Element error details, export operation context, and timestamp</step>
+        <step number="8" name="Exception Instance Creation">ErrorExportSerialNumbersFailed exception instance is created with appropriate error message indicating Secure Element serial number collection failure</step>
+        <step number="9" name="Exception Propagation">Exception is raised and propagated up the call stack without returning any export data to the caller</step>
+        <step number="10" name="Device State Verification">The Secure Element and serial number storage remain in their current state with no modifications or data extraction having occurred</step>
+    </executionSequence>
+    <recovery>
+        <step>Verify that the Secure Element is functioning properly and is not in a failed, error, or restricted state</step>
+        <step>Ensure the Secure Element contains valid serial numbers that can be exported by checking Secure Element status and serial number storage</step>
+        <step>Check the communication channel between the device and Secure Element for any errors, interference, or disconnection issues</step>
+        <step>Review Secure Element diagnostics to verify that serial number storage and retrieval functionality is operational and not experiencing errors</step>
+        <step>Verify that the device has not exceeded any serial number storage limits, quota restrictions, or resource limits that might prevent serial number retrieval</step>
+        <step>Check Secure Element logs or diagnostic information to identify the specific error that prevented serial number retrieval</step>
+        <step>Attempt the exportSerialNumbers function again after verifying Secure Element connectivity, status, and serial number availability</step>
+        <step>If serial number corruption is suspected, verify the integrity of serial number data using Secure Element diagnostics or manufacturer tools</step>
+        <step>If repeated attempts fail consistently, consult the device and Secure Element manufacturer's documentation for serial number management and export troubleshooting</step>
+        <step>Implement comprehensive logging of this failure for forensic analysis, audit trail preservation, and understanding when serial number export functionality became unavailable</step>
+    </recovery>
+    <relatedExceptions>
+        <exception>ErrorFunctionFailed</exception>
+        <exception>ErrorExportLoggingCertificateFailed</exception>
+        <exception>ErrorRetrieveLogMessageFailed</exception>
+        <exception>ErrorSigningEventDataFailed</exception>
+    </relatedExceptions>
+    <postconditionality>
+        <state name="Export Data State">No export data is returned to the caller. The serial number export operation has not completed and no data of any kind (not even partial data) is provided to the user.</state>
+        <state name="Device State">Device state remains completely unchanged. No modifications to internal state, configuration, or data structures have occurred as a result of the failed serial number export attempt.</state>
+        <state name="Secure Element State">Secure Element remains unchanged and all its serial numbers remain stored in protected Secure Element storage. No serial number data has been extracted or modified.</state>
+        <state name="Serial Number Storage">Serial number storage on device is unaffected. All serial numbers remain securely stored in the Secure Element. Serial number count and content are unchanged.</state>
+        <state name="State Consistency">No state inconsistency exists. The function exits at the serial number collection phase before any data assembly, packaging, or return operations.</state>
+        <state name="Device Availability">Device functions continue to execute normally. The device remains operational and all API functions remain accessible.</state>
+    </postconditionality>
+    <notes>
+        <note>ErrorExportSerialNumbersFailed is thrown ONLY by the exportSerialNumbers function - it is the most specific exception for serial number collection failures during serial number export operations.</note>
+        <note>This exception indicates a critical failure in the Secure Element's serial number retrieval functionality during the export process. The exception is raised during the serial number collection phase (step 6b), before serial numbers are packaged into export data.</note>
+        <note>Unlike successful exportSerialNumbers execution, when this exception is raised, no export data of any kind is returned to the user - not even partial or incomplete serial number data.</note>
+        <note>After this exception is raised, the Secure Element remains unchanged and all its serial numbers remain securely stored. The export operation can be retried once the underlying serial number retrieval issue is resolved.</note>
+        <note>This exception has High severity because it prevents users from exporting essential device serial numbers needed for device identification, asset tracking, forensic analysis, and regulatory compliance verification of device operations.</note>
+        <note>The exception is raised during the serial number collection phase, which is early in the export process before data assembly, packaging, and return. This ensures no partial or incomplete data reaches the caller.</note>
+        <note>Serial number export is a critical operation for asset management and forensic analysis. If this exception occurs repeatedly, it indicates a serious issue with Secure Element serial number management, storage, or retrieval functionality.</note>
+        <note>The exportSerialNumbers function is part of the Export functionality category and provides users the ability to retrieve device serial numbers for device identification, inventory management, and administrative purposes.</note>
+        <note>Serial number export failures may prevent proper device identification and tracking in multi-device environments. This may affect compliance with regulatory requirements for device auditing and asset management.</note>
+        <note>Unlike ErrorExportLoggingCertificateFailed (which affects certificate export), this exception specifically affects serial number export. The two export operations are independent and one can fail while the other succeeds.</note>
+    </notes>
+    <usage>
+        <scenario name="Scenario 1: Hardware Failure During Serial Number Collection">
+            <description>A user calls exportSerialNumbers to retrieve device serial numbers for asset management purposes. The Secure Element has been storing device identification data successfully. During the serial number retrieval phase, the Secure Element hardware encounters an internal error and fails to read the serial number storage area.</description>
+            <relatedFunctions>exportSerialNumbers, exportLoggingCertificates, retrieveLogMessage</relatedFunctions>
+            <errorContext>Secure Element hardware failure during serial number retrieval preventing export data assembly</errorContext>
+        </scenario>
+        <scenario name="Scenario 2: Communication Loss During Serial Number Export">
+            <description>A user initiates exportSerialNumbers through a remote management interface. The communication link between the application and Secure Element is disrupted during the serial number collection phase. The Secure Element serial number retrieval command times out and the device firmware reports a communication failure.</description>
+            <relatedFunctions>exportSerialNumbers, exportLoggingCertificates, retrieveLogMessage</relatedFunctions>
+            <errorContext>Communication failure between device and Secure Element during serial number transfer blocking export completion</errorContext>
+        </scenario>
+        <scenario name="Scenario 3: Serial Number Storage Corruption Detection">
+            <description>A device has been operating normally for several weeks. When exportSerialNumbers is called to retrieve serial numbers for compliance verification, the Secure Element detects that the serial number storage area contains corrupted data. The serial number data does not match expected checksums or formats.</description>
+            <relatedFunctions>exportSerialNumbers, exportLoggingCertificates, storeLogMessage</relatedFunctions>
+            <errorContext>Serial number storage corruption or data integrity failure requiring diagnostic investigation</errorContext>
+        </scenario>
+        <scenario name="Scenario 4: Persistent Failure Requiring Professional Service">
+            <description>A device operator attempts exportSerialNumbers multiple times over several hours to address an inventory audit request, but each attempt results in ErrorExportSerialNumbersFailed. Other operations like logging are working normally. This pattern indicates a persistent issue with the Secure Element's serial number management that cannot be resolved through standard troubleshooting.</description>
+            <relatedFunctions>exportSerialNumbers, exportLoggingCertificates, storeLogMessage, retrieveLogMessage</relatedFunctions>
+            <errorContext>Persistent Secure Element serial number management failure indicating underlying hardware or firmware issues</errorContext>
+        </scenario>
+    </usage>
+    <implementationContext>
+        <note>This exception is raised specifically when the Secure Element cannot provide serial numbers required for export. It is critical for export operations because serial numbers provide essential device identification for asset management and auditing.</note>
+        <note>The Secure Element serial number retrieval is a barrier operation that must succeed before export data can be assembled. Unlike other failures that might allow partial data return, serial number retrieval failure blocks the entire export operation.</note>
+        <note>Users should understand that ErrorExportSerialNumbersFailed means absolutely no export data is returned. There are no partial exports, no incomplete serial numbers, and no fallback data. The entire operation fails at the serial number collection phase.</note>
+        <note>This exception is distinct from ErrorExportLoggingCertificateFailed. The two export operations (serial number export and certificate export) are independent. One can fail while the other succeeds, and each has its own specific exception.</note>
+        <note>Serial number export is essential for users who need to identify devices in multi-device environments or provide evidence for regulatory compliance audits. A repeated occurrence of this exception should trigger investigation of Secure Element serial number management and storage systems.</note>
+        <note>The exportSerialNumbers function is the only source of this exception. It indicates that the underlying Secure Element identification infrastructure is experiencing difficulties. This is a High severity issue because it affects device identification and regulatory compliance.</note>
+        <note>Recovery from this exception typically requires either addressing the specific Secure Element issue (communication, storage, hardware) or restarting the device to reset state. If repeated failures occur, professional service is required.</note>
+        <note>Implementers should ensure comprehensive logging of serial number export failures because they may indicate serious issues with Secure Element functionality that require professional investigation and may affect device trustworthiness and auditability.</note>
+    </implementationContext>
 </exception>

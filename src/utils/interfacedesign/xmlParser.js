@@ -589,44 +589,89 @@ async function parseExceptionDetail(filePath) {
       : [exc.thrownBy.function];
   }
 
-  // Extract related exceptions
+  // Extract related exceptions (can be just names or objects with descriptions)
   let relatedExceptions = [];
   if (exc.relatedExceptions && exc.relatedExceptions.exception) {
-    relatedExceptions = Array.isArray(exc.relatedExceptions.exception)
+    const relExc = Array.isArray(exc.relatedExceptions.exception)
       ? exc.relatedExceptions.exception
       : [exc.relatedExceptions.exception];
+    relatedExceptions = relExc.map(e => {
+      if (typeof e === 'string') {
+        // Check if it contains a description after " - "
+        const parts = e.split(' - ');
+        return {
+          name: parts[0].trim(),
+          description: parts[1] ? parts[1].trim() : ''
+        };
+      }
+      return {
+        name: e.name || e.n || e,
+        description: e.description || ''
+      };
+    });
   }
 
-  // Extract trigger conditions
+  // Extract trigger conditions with all fields
   let triggerConditions = [];
   if (exc.triggerConditions && exc.triggerConditions.condition) {
     const conditions = Array.isArray(exc.triggerConditions.condition)
       ? exc.triggerConditions.condition
       : [exc.triggerConditions.condition];
     triggerConditions = conditions.map(c => ({
+      scenario: c.scenario || '',
       description: c.description || '',
       trigger: c.trigger || '',
       action: c.action || ''
     }));
   }
 
-  // Extract notes
+  // Extract notes (can be under exc.note or exc.notes.note)
   let notes = [];
   if (exc.note) {
     notes = Array.isArray(exc.note) ? exc.note : [exc.note];
+  } else if (exc.notes && exc.notes.note) {
+    notes = Array.isArray(exc.notes.note) ? exc.notes.note : [exc.notes.note];
   }
 
-  // Extract javadoc
+  // Extract javadoc with constructors
   let javadoc = null;
   if (exc.javadoc) {
     let throws = [];
     if (exc.javadoc.throws) {
       throws = Array.isArray(exc.javadoc.throws) ? exc.javadoc.throws : [exc.javadoc.throws];
     }
+    
+    // Extract constructors
+    let constructors = [];
+    if (exc.javadoc.constructors && exc.javadoc.constructors.constructor) {
+      const cons = Array.isArray(exc.javadoc.constructors.constructor)
+        ? exc.javadoc.constructors.constructor
+        : [exc.javadoc.constructors.constructor];
+      constructors = cons
+        .filter(c => c !== null && c !== undefined && c.signature)
+        .map(c => {
+          // Extract parameters
+          let params = [];
+          if (c.parameter) {
+            const pars = Array.isArray(c.parameter) ? c.parameter : [c.parameter];
+            params = pars.map(p => ({
+              name: (p.$ && p.$.name) || p.name || '',
+              description: p._ || p.description || (typeof p === 'string' ? p : '')
+            }));
+          }
+          return {
+            signature: c.signature || '',
+            description: c.description || '',
+            parameters: params
+          };
+        });
+    }
+    
     javadoc = {
       summary: exc.javadoc.summary || '',
       description: exc.javadoc.description || '',
       throws,
+      constructors,
       since: exc.javadoc.since || '',
       author: exc.javadoc.author || ''
     };
@@ -650,6 +695,78 @@ async function parseExceptionDetail(filePath) {
     };
   }
 
+  // Extract recovery (can be string, or object with description/action/alternativePath/step)
+  let recovery = null;
+  if (exc.recovery) {
+    if (typeof exc.recovery === 'string') {
+      recovery = { description: exc.recovery };
+    } else {
+      // Extract steps if present
+      let steps = [];
+      if (exc.recovery.step) {
+        steps = Array.isArray(exc.recovery.step) ? exc.recovery.step : [exc.recovery.step];
+      }
+      recovery = {
+        description: exc.recovery.description || '',
+        action: exc.recovery.action || '',
+        alternativePath: exc.recovery.alternativePath || '',
+        steps
+      };
+    }
+  }
+
+  // Extract execution sequence (steps with number attribute)
+  let executionSequence = [];
+  if (exc.executionSequence && exc.executionSequence.step) {
+    const steps = Array.isArray(exc.executionSequence.step) 
+      ? exc.executionSequence.step 
+      : [exc.executionSequence.step];
+    executionSequence = steps.map(s => ({
+      number: s.number || '',
+      description: s._ || (typeof s === 'string' ? s : '') || ''
+    }));
+  }
+
+  // Extract postconditionality (state elements - can be string or object with name)
+  let postconditionality = [];
+  if (exc.postconditionality && exc.postconditionality.state) {
+    const states = Array.isArray(exc.postconditionality.state)
+      ? exc.postconditionality.state
+      : [exc.postconditionality.state];
+    postconditionality = states.map(s => {
+      if (typeof s === 'string') {
+        return { name: '', description: s };
+      }
+      return {
+        name: s.name || '',
+        description: s._ || s.description || (typeof s === 'string' ? s : '') || ''
+      };
+    });
+  }
+
+  // Extract usage scenarios (with optional relatedFunctions and errorContext)
+  let usage = [];
+  if (exc.usage && exc.usage.scenario) {
+    const scenarios = Array.isArray(exc.usage.scenario)
+      ? exc.usage.scenario
+      : [exc.usage.scenario];
+    usage = scenarios.map(s => ({
+      name: s.name || '',
+      description: s.description || '',
+      example: s.example || '',
+      relatedFunctions: s.relatedFunctions || '',
+      errorContext: s.errorContext || ''
+    }));
+  }
+
+  // Extract implementation context notes (renamed from deviceVariability)
+  let implementationContext = [];
+  if (exc.implementationContext && exc.implementationContext.note) {
+    implementationContext = Array.isArray(exc.implementationContext.note)
+      ? exc.implementationContext.note
+      : [exc.implementationContext.note];
+  }
+
   return {
     id: exc.id || exc.n || path.basename(filePath, '.xml'),
     name: exc.n || exc.name || '',
@@ -662,7 +779,11 @@ async function parseExceptionDetail(filePath) {
     thrownByCount: thrownBy.length,
     relatedExceptions,
     triggerConditions,
-    recovery: exc.recovery || '',
+    executionSequence,
+    postconditionality,
+    recovery,
+    usage,
+    implementationContext,
     example: exc.example || '',
     notes,
     filePath

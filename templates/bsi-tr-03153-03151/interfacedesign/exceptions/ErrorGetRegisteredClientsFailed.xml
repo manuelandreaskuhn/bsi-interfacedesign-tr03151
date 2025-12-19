@@ -1,18 +1,163 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <exception id="ErrorGetRegisteredClientsFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
     <name>ErrorGetRegisteredClientsFailed</name>
-    <description>This exception is thrown if the determination of the currently registered clients failed.</description>
-    <category>Client Management</category>
-    <severity>Medium</severity>
+    <description>This exception is thrown if the SE API function getRegisteredClients fails to retrieve the list of currently registered clients on the Secure Element. The function attempts to obtain detailed information about all registered client applications, but the retrieval process fails before the client list can be determined and returned.</description>
+    <category>Client Management - Client Enumeration</category>
+    <severity>High</severity>
     <javadoc>
         <summary>This class defines the exception ErrorGetRegisteredClientsFailed that is thrown if the determination of the currently registered clients failed.</summary>
+        <description>This exception is thrown when the getRegisteredClients function cannot retrieve the list of registered clients from the Secure Element. Registered clients information provides detailed enumeration of all currently registered client applications, including client identifiers and status information. ErrorGetRegisteredClientsFailed indicates that the Secure Element cannot provide the client list due to hardware failure, storage corruption, internal client management system errors, communication failures, or Secure Element state restrictions. When this exception occurs, no client list is returned and applications cannot enumerate or inspect registered clients. Recovery typically involves device verification, client management subsystem diagnostics, and possible hardware diagnosis if the failure persists.</description>
+        <constructors>
+            <constructor>
+                <signature>ErrorGetRegisteredClientsFailed()</signature>
+                <description>Constructs a new ErrorGetRegisteredClientsFailed exception with null as the value for its detail message</description>
+            </constructor>
+            <constructor>
+                <signature>ErrorGetRegisteredClientsFailed(String message)</signature>
+                <description>Constructs a new ErrorGetRegisteredClientsFailed exception whereby its detail message is initialized with the passed value</description>
+                <parameter name="message">value for the detail message of the exception, typically describing the registered clients retrieval failure</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorGetRegisteredClientsFailed(String message, Throwable cause)</signature>
+                <description>Constructs a new ErrorGetRegisteredClientsFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorGetRegisteredClientsFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+                <description>Constructs a new ErrorGetRegisteredClientsFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+            </constructor>
+        </constructors>
     </javadoc>
     <specification>
         <source>BSI TR-03151-1</source>
-        <requirement>SHALL be raised when registered client list retrieval fails</requirement>
-        <applicability>Registered client query operations</applicability>
+        <section>3.2.4 Client Management - getRegisteredClients</section>
+        <requirement>The function getRegisteredClients SHALL query the Secure Element to determine the list of all currently registered clients. If the Secure Element cannot provide or return the required client list, the function SHALL raise the exception ErrorGetRegisteredClientsFailed and exit without returning any client data. The registered client retrieval failure indicates the Secure Element's client enumeration query functionality could not complete successfully.</requirement>
+        <applicability>Client management operations - getRegisteredClients function only</applicability>
+        <reference>getRegisteredClients – Function (3.2.4)</reference>
     </specification>
     <thrownBy>
         <function>getRegisteredClients</function>
     </thrownBy>
+    <triggerConditions>
+        <condition>
+            <scenario>Client registry hardware failure</scenario>
+            <description>The Secure Element's client registry hardware malfunctions or becomes inaccessible, preventing client list retrieval</description>
+            <trigger>The Secure Element's client registry storage hardware fails or experiences read errors. When getRegisteredClients is called, the client list query is sent to the Secure Element, but the hardware cannot provide valid client data. The function receives a failure status from the Secure Element, triggering ErrorGetRegisteredClientsFailed.</trigger>
+        </condition>
+        <condition>
+            <scenario>Client registry data corruption</scenario>
+            <description>The Secure Element's client registry or registered client tracking data becomes corrupted or is lost</description>
+            <trigger>The Secure Element's memory containing client registry, registered client tracking tables, or client metadata becomes corrupted, experiences data loss, or is marked as inaccessible due to storage errors. When getRegisteredClients attempts to read the client list, the data cannot be reliably retrieved, triggering ErrorGetRegisteredClientsFailed.</trigger>
+        </condition>
+        <condition>
+            <scenario>Client management subsystem internal error</scenario>
+            <description>The Secure Element's client management subsystem encounters critical errors that prevent client enumeration</description>
+            <trigger>The Secure Element's client management subsystem (responsible for managing client registrations and providing client state) encounters an internal error, deadlock, or exception. When getRegisteredClients is called, the client management system cannot process the enumeration query, triggering ErrorGetRegisteredClientsFailed.</trigger>
+        </condition>
+        <condition>
+            <scenario>Device-to-Secure Element communication failure during client query</scenario>
+            <description>The communication channel between device and Secure Element is disrupted during registered client list retrieval</description>
+            <trigger>A communication failure occurs while getRegisteredClients transmits the client query to the Secure Element or while receiving the client list response. The command may be corrupted, the response may be incomplete, or the communication link may be temporarily unavailable. The function receives a communication error status, triggering ErrorGetRegisteredClientsFailed.</trigger>
+        </condition>
+        <condition>
+            <scenario>Secure Element in restricted or error state prohibiting client access</scenario>
+            <description>The Secure Element is in a locked, restricted, or error state that prevents external queries for client information</description>
+            <trigger>The Secure Element enters a state where client queries or client enumeration is not permitted. When getRegisteredClients is called and the Secure Element's state prohibits client access, the function receives a state-related rejection, triggering ErrorGetRegisteredClientsFailed.</trigger>
+        </condition>
+    </triggerConditions>
+    <executionSequence>
+        <step number="1">User/application calls getRegisteredClients function on device</step>
+        <step number="2">Function validates input parameters and checks authentication status (if required by referencing guideline)</step>
+        <step number="3">Function checks authorization for client management information access (if required by referencing guideline)</step>
+        <step number="4">Function verifies device is properly initialized and client management is operational</step>
+        <step number="5">Function initiates communication channel to Secure Element and prepares client enumeration query command</step>
+        <step number="6">Function transmits client query command to Secure Element requesting list of all registered clients</step>
+        <step number="6a">If Secure Element responds with failure status (registry error, client enumeration error, management error) → ErrorGetRegisteredClientsFailed raised, function exits without client list</step>
+        <step number="6b">If communication failure occurs during query transmission or response reception → ErrorGetRegisteredClientsFailed raised, function exits</step>
+        <step number="7">If successful, function receives registered client list from Secure Element</step>
+        <step number="8">Function validates client list for correctness (format, client ID validity, state consistency)</step>
+        <step number="9">Function closes Secure Element communication channel</step>
+        <step number="10">Function returns valid registered client list to caller</step>
+    </executionSequence>
+    <recovery>
+        <step>Verify device operational status - confirm device is initialized, responding to other operations, and not in an error state</step>
+        <step>Verify Secure Element accessibility - confirm device can communicate with Secure Element through diagnostic commands</step>
+        <step>Check device initialization - ensure device has been properly initialized with initDevice before attempting getRegisteredClients</step>
+        <step>Retry getRegisteredClients operation - attempt the function call again as the failure may be transient</step>
+        <step>Review device diagnostics for client management system health - query device for diagnostic information about Secure Element client registry status</step>
+        <step>Verify client registry integrity through device manufacturer diagnostics - check if client registry is accessible and uncorrupted</step>
+        <step>Test other client queries - attempt retrieving current client count or maximum clients to verify general client management access capability</step>
+        <step>Implement comprehensive error logging and monitoring - log this failure consistently to identify patterns (transient vs. persistent, correlation with client registration/deregistration)</step>
+        <step>If failure is persistent, attempt device firmware update if available - may resolve client management subsystem errors</step>
+        <step>If failure persists and suspected hardware issue, contact device manufacturer or consider device replacement - repeated client enumeration failures indicate serious client management hardware problems</step>
+    </recovery>
+    <relatedExceptions>
+        <exception>ErrorFunctionFailed</exception>
+        <exception>ErrorDeviceNotInitialized</exception>
+        <exception>ErrorRegisterClientFailed</exception>
+        <exception>ErrorGetCurrentNumberOfClientsFailed</exception>
+        <exception>ErrorGetMaxNumberOfClientsFailed</exception>
+    </relatedExceptions>
+    <postconditionality>
+        <state name="Device Operational State">Device remains fully operational and unmodified. The failure to retrieve registered clients list does not affect device initialization state, client management operations, internal memory, stored data, or the ability to perform other operations. All device components remain in their pre-call state.</state>
+        <state name="Client List Return Status">No client list is returned to the caller. The function exits without providing any registered client information. Applications must not assume default client lists or cached information; they must handle the exception as indicating client enumeration is unavailable.</state>
+        <state name="Secure Element Client Management State">Secure Element client management subsystem remains unchanged by the failed query. No state modifications, client changes, or client management configuration changes occur. Client management operations continue normally regardless of the retrieval failure.</state>
+        <state name="Registered Client Continuity">Registered clients continue to be maintained internally in the Secure Element. The failure to retrieve the client list does not affect client registrations or client management operations. Client queries can be retried once the underlying issue is resolved.</state>
+        <state name="No Cascading State Effects">No cascading state inconsistencies or secondary failures occur as a result of the client query failure. Device internal consistency is maintained. Other SE API functions and client management operations continue normally without state corruption.</state>
+        <state name="Recovery Preconditions Met">The device state after exception is consistent and allows for recovery operations. The underlying issue (hardware error, communication error, management system error) remains present, but the device is stable enough to accept diagnostic queries or recovery attempts.</state>
+    </postconditionality>
+    <notes>
+        <note>ErrorGetRegisteredClientsFailed is thrown ONLY by the getRegisteredClients function - it is the most specific and precise exception for Secure Element registered client retrieval failures</note>
+        <note>This exception indicates a failure in the Secure Element's ability to enumerate its registered clients. It is a critical information retrieval failure for client management and monitoring</note>
+        <note>Critical distinction from ErrorFunctionFailed: ErrorGetRegisteredClientsFailed specifically indicates client enumeration is unavailable at the client management subsystem level, while ErrorFunctionFailed indicates broader unspecified critical failures</note>
+        <note>Exception is raised during the client enumeration phase (steps 6-7), after device initialization and authentication checks have passed</note>
+        <note>After this exception, the Secure Element remains unchanged and registered clients continue to be maintained internally. Client enumeration queries can be retried once the underlying issue is resolved</note>
+        <note>This exception has High severity because it prevents users from enumerating and inspecting registered clients (critical for client management monitoring and diagnostics)</note>
+        <note>Registered client list provides detailed information about all currently registered clients for inspection, monitoring, and diagnostic purposes</note>
+        <note>The exception indicates client enumeration cannot be reliably performed; applications must not implement workarounds using external client tracking without explicit validation</note>
+        <note>Failure scenarios range from transient (temporary communication issues, temporary state) to persistent (storage corruption, hardware failure, firmware error)</note>
+        <note>If this exception occurs frequently or persistently, it indicates serious issues with Secure Element client management hardware, firmware, or registry that require diagnostic investigation</note>
+        <note>Client enumeration is a read-only query; failure does not modify any client state, so recovery typically requires only retrying the query once underlying issue is resolved</note>
+        <note>Registered client list may be large if many clients are registered; applications should handle variable response sizes</note>
+        <note>Client enumeration is essential for client lifecycle monitoring, diagnostics, and management in multi-client environments</note>
+        <note>Applications must implement appropriate error handling for client enumeration failures, especially in managed client environments</note>
+        <note>Repeated client enumeration failures may indicate device needs firmware update, client management reset, or hardware service - manufacturer support should be engaged</note>
+    </notes>
+    <usage>
+        <scenario name="Scenario 1: Active Client Monitoring and Client Lifecycle Management">
+            <description>A client management system monitors registered clients to track client lifecycle and ensure proper client state. The system periodically calls getRegisteredClients to enumerate all registered clients and verify their status. If ErrorGetRegisteredClientsFailed is raised, the management system cannot assess client status and must alert administrators to the monitoring failure.</description>
+            <relatedFunctions>getRegisteredClients, getCurrentNumberOfClients, getMaxNumberOfClients</relatedFunctions>
+            <errorContext>Registered client list unavailable for client lifecycle monitoring and management</errorContext>
+        </scenario>
+        <scenario name="Scenario 2: Client Registration Verification and Audit Operations">
+            <description>An audit system verifies that expected clients are properly registered and identifies any unexpected or orphaned client registrations. The system calls getRegisteredClients to enumerate all registered clients and compares against expected client configurations. If ErrorGetRegisteredClientsFailed is raised, the audit cannot verify client registrations.</description>
+            <relatedFunctions>getRegisteredClients, getCurrentNumberOfClients, registerClient</relatedFunctions>
+            <errorContext>Registered client list unavailable for client registration audit and verification</errorContext>
+        </scenario>
+        <scenario name="Scenario 3: Device Health Assessment and Client State Validation">
+            <description>A comprehensive health assessment tool collects detailed device diagnostics including client state information. The tool calls getRegisteredClients to enumerate all registered clients as part of the health assessment. If ErrorGetRegisteredClientsFailed is raised, the tool cannot include client state information in the health report.</description>
+            <relatedFunctions>getRegisteredClients, getCurrentNumberOfClients, getDeviceHealth</relatedFunctions>
+            <errorContext>Registered client list unavailable for device health assessment and diagnostics</errorContext>
+        </scenario>
+        <scenario name="Scenario 4: Multi-Device Client State Synchronization and Configuration Management">
+            <description>An enterprise system managing clients across multiple devices synchronizes client state by querying getRegisteredClients on each device. This provides a complete view of all registered clients across the infrastructure. If ErrorGetRegisteredClientsFailed is raised on one device, the system cannot determine that device's client state.</description>
+            <relatedFunctions>getRegisteredClients, getCurrentNumberOfClients, registerClient</relatedFunctions>
+            <errorContext>Registered client list unavailable for multi-device client synchronization</errorContext>
+        </scenario>
+    </usage>
+    <implementationContext>
+        <note>The getRegisteredClients function retrieves a detailed list of all currently registered clients from the Secure Element's client management subsystem</note>
+        <note>Registered clients are those that have been successfully registered through registerClient and not yet deregistered</note>
+        <note>The registered client list includes client identifiers and metadata that allow detailed inspection and monitoring of client state</note>
+        <note>Different device models and configurations may report different client state information - consult device specifications for client metadata details</note>
+        <note>The registered client list is essential for client lifecycle monitoring, diagnostics, and management in multi-client environments</note>
+        <note>If registered client retrieval fails but client count queries succeed (current/max clients), the issue is specific to client enumeration, not to general client management access</note>
+        <note>Client registry corruption or enumeration errors represent critical issues in client management that should be investigated immediately</note>
+        <note>Client enumeration is a read-only query; ErrorGetRegisteredClientsFailed does not indicate client state corruption requiring state recovery - it indicates the client enumeration source is unavailable</note>
+    </implementationContext>
 </exception>

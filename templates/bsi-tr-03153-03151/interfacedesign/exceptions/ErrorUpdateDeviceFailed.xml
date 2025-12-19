@@ -1,18 +1,180 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <exception id="ErrorUpdateDeviceFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
     <name>ErrorUpdateDeviceFailed</name>
-    <description>This exception is thrown by the SE API function updateDevice when updating of the device failed.</description>
-    <category>Device Management</category>
+    <description>This exception is thrown by the updateDevice function when the device update operation fails. The updateDevice function performs firmware, configuration, or component updates to the Secure Element. Updates may include firmware patches, security updates, configuration changes, or other device modifications. ErrorUpdateDeviceFailed is raised when the update operation cannot be completed successfully, which may occur due to verification failures, hardware errors, corrupted update data, device state incompatibility, or other operational failures. ErrorUpdateDeviceFailed is a Critical severity exception because device updates are essential for security and functionality. A failed update leaves the device in potentially unstable state and requires investigation and recovery procedures.</description>
+    <category>Device Management - Update Operations</category>
     <severity>Critical</severity>
     <javadoc>
-        <summary>This class defines the exception ErrorUpdateDeviceFailed that is thrown by the SE API function updateDevice when updating of the device failed.</summary>
+        <summary>This class defines the exception ErrorUpdateDeviceFailed that is thrown by the updateDevice function when the device update operation fails.</summary>
+        <description>This exception is thrown when the updateDevice function fails to complete a device update operation. The updateDevice function performs firmware, configuration, or component updates to the Secure Element. Updates are essential for security patches, feature enhancements, and operational improvements. If update verification fails, data corruption is detected, hardware errors occur, or device issues prevent completion, ErrorUpdateDeviceFailed is raised. This indicates the update could not be successfully completed. The device state after update failure is undefined and requires investigation. ErrorUpdateDeviceFailed is a Critical severity exception because update failure affects device security and functionality. Recovery requires investigating the failure cause, potentially retrying the update, or restoring device state.</description>
+        <constructors>
+            <constructor>
+                <signature>ErrorUpdateDeviceFailed()</signature>
+                <description>Constructs a new ErrorUpdateDeviceFailed exception with null as the value for its detail message</description>
+            </constructor>
+            <constructor>
+                <signature>ErrorUpdateDeviceFailed(String message)</signature>
+                <description>Constructs a new ErrorUpdateDeviceFailed exception whereby its detail message is initialized with the passed value</description>
+                <parameter name="message">value for the detail message of the exception, typically describing reason for update failure</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorUpdateDeviceFailed(String message, Throwable cause)</signature>
+                <description>Constructs a new ErrorUpdateDeviceFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorUpdateDeviceFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+                <description>Constructs a new ErrorUpdateDeviceFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+            </constructor>
+        </constructors>
     </javadoc>
     <specification>
         <source>BSI TR-03151-1</source>
-        <requirement>SHALL be raised when device update operation fails</requirement>
-        <applicability>Device update operations</applicability>
+        <section>3.7.1 Device Management - Device Update Operations</section>
+        <requirement>The updateDevice function performs firmware, configuration, and component updates to the Secure Element. Updates are essential for security patches, feature enhancements, and operational improvements. The update process includes data verification, compatibility checking, and safe installation procedures. If update verification fails, data integrity issues are detected, hardware errors occur, device state is incompatible, or other operational issues prevent successful completion, the Secure Element SHALL raise ErrorUpdateDeviceFailed. This indicates the update could not be successfully completed. ErrorUpdateDeviceFailed is a Critical severity exception because device updates directly affect security and functionality. Device state after update failure requires investigation and potential recovery procedures.</requirement>
+        <applicability>Device update operations: updateDevice</applicability>
+        <reference>Device Management (3.7.1), Device Update Operations (3.7.1), updateDevice – Function (3.7.1)</reference>
     </specification>
     <thrownBy>
         <function>updateDevice</function>
     </thrownBy>
+    <triggerConditions>
+        <condition>
+            <scenario>Update data verification fails</scenario>
+            <description>Cryptographic or integrity verification of update package fails</description>
+            <trigger>updateDevice receives firmware package. Device performs signature verification. Signature invalid or package corrupted. ErrorUpdateDeviceFailed raised due to verification failure.</trigger>
+        </condition>
+        <condition>
+            <scenario>Update data integrity corruption detected</scenario>
+            <description>Update data corrupted or modified during transmission</description>
+            <trigger>Update package transmitted with checksum. Device calculates checksum during reception, finds mismatch. Data integrity compromised. ErrorUpdateDeviceFailed raised.</trigger>
+        </condition>
+        <condition>
+            <scenario>Hardware error during update installation</scenario>
+            <description>Hardware failure prevents proper update processing</description>
+            <trigger>updateDevice writes firmware to flash memory. Hardware error occurs mid-write. Update cannot complete. ErrorUpdateDeviceFailed raised.</trigger>
+        </condition>
+        <condition>
+            <scenario>Device state incompatible with update</scenario>
+            <description>Device is in state that prevents update (not initialized, operations in progress, etc.)</description>
+            <trigger>updateDevice called while transactions are executing. Device detects active transactions incompatible with update. ErrorUpdateDeviceFailed raised.</trigger>
+        </condition>
+        <condition>
+            <scenario>Update compatibility check fails</scenario>
+            <description>Update incompatible with current device configuration or version</description>
+            <trigger>Firmware update intended for device type A provided to device type B. Compatibility check fails. ErrorUpdateDeviceFailed raised.</trigger>
+        </condition>
+    </triggerConditions>
+    <executionSequence>
+        <step number="1">User/application calls updateDevice function with update data/package</step>
+        <step number="2">Function validates input parameters including update data format</step>
+        <step number="2a">If parameters invalid → may raise ErrorParameterSyntax or ErrorParameterMismatch</step>
+        <step number="2b">If parameters valid → proceed to step 3</step>
+        <step number="3">Function initiates communication with Secure Element</step>
+        <step number="4">Secure Element receives update request with update package</step>
+        <step number="5">Secure Element performs cryptographic verification of update package</step>
+        <step number="5a">If verification fails → ErrorUpdateDeviceFailed raised, operation aborted</step>
+        <step number="5b">If verification succeeds → proceed to step 6</step>
+        <step number="6">Secure Element checks update data integrity</step>
+        <step number="6a">If integrity check fails → ErrorUpdateDeviceFailed raised</step>
+        <step number="6b">If integrity valid → proceed to step 7</step>
+        <step number="7">Secure Element verifies compatibility with current device</step>
+        <step number="7a">If incompatibility detected → ErrorUpdateDeviceFailed raised</step>
+        <step number="7b">If compatible → proceed to step 8</step>
+        <step number="8">Secure Element validates device state for update</step>
+        <step number="8a">If device state incompatible → ErrorUpdateDeviceFailed raised</step>
+        <step number="8b">If state compatible → proceed to step 9</step>
+        <step number="9">Secure Element begins update installation</step>
+        <step number="9a">If hardware error during installation → ErrorUpdateDeviceFailed raised</step>
+        <step number="9b">If installation proceeds → step 10</step>
+        <step number="10">Secure Element completes update and verifies installation</step>
+        <step number="10a">If post-install verification fails → ErrorUpdateDeviceFailed raised</step>
+        <step number="10b">If verification succeeds → proceed to step 11</step>
+        <step number="11">Secure Element returns success to function</step>
+        <step number="12">Function returns to caller indicating device update completed</step>
+    </executionSequence>
+    <recovery>
+        <step>Review error message - understand reason for update failure</step>
+        <step>Check device state - verify device is in operational state after failed update</step>
+        <step>Verify update package - confirm update data is not corrupted</step>
+        <step>Validate update compatibility - verify update is compatible with device</step>
+        <step>Check device type - confirm update intended for this device model</step>
+        <step>Verify digital signature - confirm update package has valid signature</step>
+        <step>Check hardware - if hardware error indicated, verify device hardware</step>
+        <step>Retry update - attempt updateDevice again with verified package</step>
+        <step>Run diagnostics - execute device diagnostics to assess health after failure</step>
+        <step>Attempt rollback - if available, rollback to previous stable version</step>
+        <step>Contact support - if update fails repeatedly, contact device support</step>
+        <step>Document failure - record update failure for compliance and analysis</step>
+    </recovery>
+    <relatedExceptions>
+        <exception>ErrorDeviceInitializationFailed</exception>
+        <exception>ErrorParameterMismatch</exception>
+        <exception>ErrorFunctionFailed</exception>
+        <exception>ErrorDeviceNotInitialized</exception>
+    </relatedExceptions>
+    <postconditionality>
+        <state name="Update Not Completed">Device update operation does not complete successfully.</state>
+        <state name="Device State Undefined">Device state after failed update is potentially undefined.</state>
+        <state name="Firmware Not Updated">Firmware is not updated to new version.</state>
+        <state name="Configuration Not Applied">Configuration changes not applied to device.</state>
+        <state name="Critical Exception Returned">Function returns ErrorUpdateDeviceFailed Critical exception to caller.</state>
+        <state name="Device Requires Investigation">Device requires diagnostics and investigation after update failure.</state>
+    </postconditionality>
+    <notes>
+        <note>ErrorUpdateDeviceFailed is thrown by 1 function: updateDevice</note>
+        <note>This is a Critical severity exception affecting device security/functionality</note>
+        <note>Update failure may leave device in unstable or undefined state</note>
+        <note>Cryptographic verification is essential for update security</note>
+        <note>Data integrity checks prevent corrupted update installation</note>
+        <note>Compatibility verification ensures update is appropriate for device</note>
+        <note>Device state validation prevents update during incompatible operations</note>
+        <note>Multiple verification stages protect update process integrity</note>
+        <note>Hardware errors during update are critical and require investigation</note>
+        <note>Post-install verification confirms update completed successfully</note>
+        <note>Update packages should be signed and verified</note>
+        <note>Rollback capability may be available for failed updates</note>
+        <note>Device diagnostics recommended after update failure</note>
+        <note>Update history should track all update attempts</note>
+        <note>Security patches should be prioritized for update retries</note>
+    </notes>
+    <usage>
+        <scenario name="Scenario 1: Signature Verification Failure">
+            <description>Administrator attempts to apply security patch using updateDevice. Update package received. Device performs signature verification. Package signature is invalid (modified or corrupted). ErrorUpdateDeviceFailed raised. Administrator obtains valid signed package and retries update.</description>
+            <relatedFunctions>updateDevice, getDeviceInfo</relatedFunctions>
+            <errorContext>Update package verification failed - package may be corrupted or tampered</errorContext>
+        </scenario>
+        <scenario name="Scenario 2: Incompatible Update Package">
+            <description>Administrator applies firmware update from similar device type. Device compatibility check detects mismatch. ErrorUpdateDeviceFailed raised because update incompatible with current device. Administrator obtains correct update for actual device model.</description>
+            <relatedFunctions>updateDevice, getDeviceInfo</relatedFunctions>
+            <errorContext>Update incompatible with device type - use correct version</errorContext>
+        </scenario>
+        <scenario name="Scenario 3: Hardware Error During Installation">
+            <description>updateDevice begins firmware installation. Verification passed. During write to flash memory, hardware error occurs. Update cannot complete. ErrorUpdateDeviceFailed raised. Administrator checks device hardware and contacts support.</description>
+            <relatedFunctions>updateDevice</relatedFunctions>
+            <errorContext>Hardware failure during update - device service required</errorContext>
+        </scenario>
+        <scenario name="Scenario 4: Update Blocked by Active Operations">
+            <description>Administrator initiates updateDevice while transaction processing is active. Device detects incompatible state for update. ErrorUpdateDeviceFailed raised. Administrator waits for transactions to complete, retries update successfully.</description>
+            <relatedFunctions>updateDevice, finishTransaction</relatedFunctions>
+            <errorContext>Device operations incompatible with update - retry after operations complete</errorContext>
+        </scenario>
+    </usage>
+    <implementationContext>
+        <note>Update process must include cryptographic signature verification</note>
+        <note>Data integrity validation should verify checksums or hash values</note>
+        <note>Compatibility checking must verify device type and current version</note>
+        <note>Device state validation should ensure no incompatible operations</note>
+        <note>Hardware error detection should catch failures during installation</note>
+        <note>Post-install verification should confirm successful update application</note>
+        <note>Atomic operations should prevent partial update states</note>
+        <note>Rollback capability should preserve previous version if available</note>
+        <note>Update history should log all update attempts and results</note>
+        <note>Error messages should clearly indicate update failure reasons</note>
+    </implementationContext>
 </exception>

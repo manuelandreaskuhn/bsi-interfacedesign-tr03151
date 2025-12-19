@@ -1,16 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <exception id="ErrorStorageMediumDisconnected" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
     <name>ErrorStorageMediumDisconnected</name>
-    <description>This exception is thrown if the storage medium is disconnected / not available.</description>
-    <category>Storage</category>
+    <description>This exception is thrown if the storage medium is disconnected or not available to the Secure Element. The Secure Element uses storage for device data, transaction logs, configuration, and audit trail information. If the storage medium becomes disconnected or unavailable, the device cannot read from or write to storage, preventing critical operations. ErrorStorageMediumDisconnected indicates a hardware failure or connection issue affecting storage accessibility. Common causes include: physical connector disconnection, storage device failure, communication interface failure, power loss to storage, or storage medium removal. ErrorStorageMediumDisconnected is a Critical condition that affects all storage-dependent operations and requires immediate attention.</description>
+    <category>Storage - Storage Medium - Disconnection/Unavailable</category>
     <severity>Critical</severity>
     <javadoc>
-        <summary>This class defines the exception ErrorStorageMediumDisconnected that is thrown if the storage medium is disconnected / not available.</summary>
+        <summary>This class defines the exception ErrorStorageMediumDisconnected that is thrown if the storage medium is disconnected or unavailable.</summary>
+        <description>This exception is thrown when the Secure Element detects that its storage medium is disconnected or not available. The storage medium is critical for all device operations including storing transaction logs, configuration, user data, and audit trail information. ErrorStorageMediumDisconnected indicates that the device cannot access its storage, preventing read and write operations. Common causes include: physical connector disconnection, storage device hardware failure, storage interface malfunction, power loss to storage subsystem, or storage medium removal. ErrorStorageMediumDisconnected is a Critical severity exception because it blocks virtually all SE API operations that depend on storage access. The device is effectively unusable when storage is unavailable. Recovery requires addressing the hardware connectivity issue and restoring storage accessibility.</description>
+        <constructors>
+            <constructor>
+                <signature>ErrorStorageMediumDisconnected()</signature>
+                <description>Constructs a new ErrorStorageMediumDisconnected exception with null as the value for its detail message</description>
+            </constructor>
+            <constructor>
+                <signature>ErrorStorageMediumDisconnected(String message)</signature>
+                <description>Constructs a new ErrorStorageMediumDisconnected exception whereby its detail message is initialized with the passed value</description>
+                <parameter name="message">value for the detail message of the exception, typically describing which storage medium is disconnected</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorStorageMediumDisconnected(String message, Throwable cause)</signature>
+                <description>Constructs a new ErrorStorageMediumDisconnected exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorStorageMediumDisconnected(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+                <description>Constructs a new ErrorStorageMediumDisconnected exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+            </constructor>
+        </constructors>
     </javadoc>
     <specification>
         <source>BSI TR-03151-1</source>
-        <requirement>SHALL be raised when storage medium becomes unavailable</requirement>
-        <applicability>All operations requiring storage access</applicability>
+        <section>3.2 Secure Element Storage and 3.3 SE API Functions - Storage Access Requirements</section>
+        <requirement>The Secure Element uses storage medium for storing transaction logs, configuration, user data, and audit trail information. All operations requiring storage access (read or write) SHALL verify that the storage medium is connected and available before proceeding. If the storage medium is disconnected or not available, any operation requiring storage access SHALL raise ErrorStorageMediumDisconnected. The storage must be accessible for transaction processing, logging, data export, and configuration operations. Storage disconnection is a hardware failure that makes the device unusable for most operations.</requirement>
+        <applicability>All operations requiring storage access: setDescription, getDescription, getTotalMemory, getUsedMemory, getFreeMemory, exportLogMessages, deleteLogMessages, exportSerialNumbers, restoreLogsFromBackup, getLastLogMessage, startTransaction, updateTransaction, finishTransaction, exportFilteredTransactionLogs, getLastTransactionLogMessage</applicability>
+        <reference>Secure Element Storage (3.2), SE API Functions (3.3)</reference>
     </specification>
     <thrownBy>
         <function>setDescription</function>
@@ -29,4 +57,122 @@
         <function>exportFilteredTransactionLogs</function>
         <function>getLastTransactionLogMessage</function>
     </thrownBy>
+    <triggerConditions>
+        <condition>
+            <scenario>Physical connector disconnection</scenario>
+            <description>The physical connector between storage and device becomes disconnected</description>
+            <trigger>An SE API function attempts to access storage but the physical connector is disconnected. The device detects storage unavailability and raises ErrorStorageMediumDisconnected.</trigger>
+        </condition>
+        <condition>
+            <scenario>Storage device hardware failure</scenario>
+            <description>The storage device itself has failed or malfunctioned</description>
+            <trigger>A startTransaction call attempts to write transaction log but storage device is unresponsive (hardware failure). ErrorStorageMediumDisconnected is raised.</trigger>
+        </condition>
+        <condition>
+            <scenario>Storage interface communication failure</scenario>
+            <description>The communication interface between device and storage has failed</description>
+            <trigger>An exportLogMessages call attempts to read logs but the storage interface is unresponsive. The interface communication has failed and ErrorStorageMediumDisconnected is raised.</trigger>
+        </condition>
+        <condition>
+            <scenario>Storage medium physically removed</scenario>
+            <description>The storage medium is physically removed or ejected during operation</description>
+            <trigger>A finishTransaction call is processing when storage medium is physically removed. The device detects storage unavailability and raises ErrorStorageMediumDisconnected.</trigger>
+        </condition>
+        <condition>
+            <scenario>Power loss to storage subsystem</scenario>
+            <description>The storage subsystem loses power or experiences power failure</description>
+            <trigger>During getLastLogMessage processing, power to storage fails. Storage becomes unresponsive and ErrorStorageMediumDisconnected is raised.</trigger>
+        </condition>
+    </triggerConditions>
+    <executionSequence>
+        <step number="1">User/application calls an SE API function that requires storage access (e.g., startTransaction)</step>
+        <step number="2">Function validates input parameters</step>
+        <step number="3">Function initiates communication with Secure Element</step>
+        <step number="4">Secure Element receives request</step>
+        <step number="5">Secure Element checks storage medium availability and connectivity</step>
+        <step number="5a">If storage medium disconnected or unavailable → ErrorStorageMediumDisconnected raised, operation aborted</step>
+        <step number="5b">If storage medium available → proceed to step 6</step>
+        <step number="6">Secure Element performs requested storage operation (read or write)</step>
+        <step number="6a">If storage communication fails → ErrorStorageMediumDisconnected raised, operation aborted</step>
+        <step number="6b">If storage operation succeeds → proceed to step 7</step>
+        <step number="7">Secure Element returns result to function</step>
+        <step number="8">Function processes result and returns to caller</step>
+    </executionSequence>
+    <recovery>
+        <step>Stop all operations immediately - storage is not accessible and device is unusable</step>
+        <step>Review error message - understand which storage issue is indicated</step>
+        <step>Check physical connections - inspect all cables and connectors to storage</step>
+        <step>Check storage power supply - verify storage subsystem has stable power</step>
+        <step>Check storage presence - verify storage medium is physically present and properly seated</step>
+        <step>Check device status - query device to confirm storage disconnection is detected</step>
+        <step>Reseat connections - power cycle device and reseat all storage connections</step>
+        <step>Verify storage restoration - query device to confirm storage is now accessible</step>
+        <step>If still unavailable, check device logs - examine device logs for storage error details</step>
+        <step>If persistent, contact manufacturer - storage hardware may require repair or replacement</step>
+    </recovery>
+    <relatedExceptions>
+        <exception>ErrorDeviceInitializationFailed</exception>
+        <exception>ErrorFunctionFailed</exception>
+        <exception>ErrorSecureElementPartsDisconnected</exception>
+        <exception>ErrorNoDataAvailable</exception>
+    </relatedExceptions>
+    <postconditionality>
+        <state name="Storage Operation Not Executed">The requested storage operation is not executed.</state>
+        <state name="Storage Medium Inaccessible">The storage cannot be read from or written to.</state>
+        <state name="Data Not Retrieved">Any data retrieval operation cannot access storage data.</state>
+        <state name="Data Not Stored">Any data storage operation cannot write to storage.</state>
+        <state name="Device Functionally Unusable">Most device operations require storage access - device is effectively unusable.</state>
+        <state name="Hardware Intervention Required">Physical repair or reconnection of storage is necessary.</state>
+    </postconditionality>
+    <notes>
+        <note>ErrorStorageMediumDisconnected is thrown by 15 SE API functions that require storage access</note>
+        <note>This exception indicates hardware failure or disconnection, not software error</note>
+        <note>The exception has Critical severity because storage is essential for device operation</note>
+        <note>Storage disconnection makes the device effectively unusable for most operations</note>
+        <note>Physical connectivity must be verified to restore storage access</note>
+        <note>Storage is used for transaction logs, configuration, user data, and audit trail</note>
+        <note>Loss of storage access means loss of access to all stored data and logs</note>
+        <note>Error messages should identify which storage component or interface is affected</note>
+        <note>Device should not continue operation with disconnected storage</note>
+        <note>Storage reconnection should be verified before resuming operations</note>
+        <note>Critical data may be inaccessible if storage is disconnected</note>
+        <note>Business continuity plans must account for storage disconnection scenarios</note>
+        <note>Storage backup/redundancy can provide resilience against storage failures</note>
+        <note>Regular storage health monitoring can detect early signs of failure</note>
+        <note>Storage interface and medium should be protected from physical damage</note>
+    </notes>
+    <usage>
+        <scenario name="Scenario 1: Storage Disconnection During Transaction Processing">
+            <description>A finishTransaction call is processing when storage physically disconnects due to loose connector. The function detects storage unavailability and raises ErrorStorageMediumDisconnected. The transaction is rolled back and the user is informed.</description>
+            <relatedFunctions>startTransaction, finishTransaction, updateTransaction</relatedFunctions>
+            <errorContext>Transaction processing blocked by storage disconnection</errorContext>
+        </scenario>
+        <scenario name="Scenario 2: Storage Device Hardware Failure">
+            <description>An exportLogMessages call attempts to read transaction logs but the storage device has failed. ErrorStorageMediumDisconnected is raised. The device is marked as non-operational and IT initiates repair/replacement procedures.</description>
+            <relatedFunctions>exportLogMessages, getLastLogMessage</relatedFunctions>
+            <errorContext>Log export blocked by storage hardware failure</errorContext>
+        </scenario>
+        <scenario name="Scenario 3: Storage Connectivity Recovery">
+            <description>A getDescription call raises ErrorStorageMediumDisconnected. Operations are halted. Physical inspection finds loose storage connector which is reseated. Device is verified to have storage access again. Operations resume.</description>
+            <relatedFunctions>setDescription, getDescription</relatedFunctions>
+            <errorContext>Storage connectivity restored after physical inspection and connector reseating</errorContext>
+        </scenario>
+        <scenario name="Scenario 4: Redundant Storage Failover">
+            <description>A high-availability system uses redundant storage. When primary storage disconnects, getTotalMemory raises ErrorStorageMediumDisconnected on primary device. System automatically fails over to redundant device to maintain operations.</description>
+            <relatedFunctions>getTotalMemory, startTransaction, exportLogMessages</relatedFunctions>
+            <errorContext>Redundant storage failover triggered by primary storage disconnection</errorContext>
+        </scenario>
+    </usage>
+    <implementationContext>
+        <note>Storage connectivity must be verified before every storage access operation</note>
+        <note>Device should implement health monitoring for storage subsystem</note>
+        <note>Error detection and reporting must be immediate when storage becomes unavailable</note>
+        <note>Watchdog/heartbeat mechanisms should verify storage accessibility regularly</note>
+        <note>Device should not attempt to continue operation with disconnected storage</note>
+        <note>Error messages should clearly indicate storage is disconnected/unavailable</note>
+        <note>Storage interfaces should be designed for robustness and reliability</note>
+        <note>Physical connectors should be protected and secured against accidental disconnection</note>
+        <note>Redundant storage systems can provide resilience against single storage failures</note>
+        <note>Backup storage access procedures should be available for disaster recovery</note>
+    </implementationContext>
 </exception>

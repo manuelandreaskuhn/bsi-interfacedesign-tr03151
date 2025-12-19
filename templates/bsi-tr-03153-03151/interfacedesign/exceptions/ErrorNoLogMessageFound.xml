@@ -1,19 +1,165 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <exception id="ErrorNoLogMessageFound" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
     <name>ErrorNoLogMessageFound</name>
-    <description>This exception is thrown if no log message parts have been found in the Secure Element.</description>
-    <category>Logging</category>
+    <description>This exception is thrown if the SE API functions getLastLogMessage or exportLogMessages cannot find any log message parts in the Secure Element's logging storage. The functions attempt to retrieve or export log messages, but the logging storage either contains no messages at all or has been cleared. ErrorNoLogMessageFound indicates that the Secure Element's transaction logging system has no recorded log entries to return to the caller.</description>
+    <category>Event Logging - No Content</category>
     <severity>Medium</severity>
     <javadoc>
         <summary>This class defines the exception ErrorNoLogMessageFound that is thrown if no log message parts have been found in the Secure Element.</summary>
+        <description>This exception is thrown when log message retrieval or export functions attempt to access transaction log messages but find that no log messages exist in the Secure Element's storage. Functions such as getLastLogMessage and exportLogMessages are used to retrieve recorded log entries from the device's transaction logging subsystem. ErrorNoLogMessageFound is raised when these functions search the logging storage and find it empty - no log entries are available to retrieve or export. This is an expected condition when the logging storage has not yet accumulated entries or when log messages have been deleted. Recovery requires confirming that logging is enabled and functioning, or verifying that expected events have actually been logged on the device.</description>
+        <constructors>
+            <constructor>
+                <signature>ErrorNoLogMessageFound()</signature>
+                <description>Constructs a new ErrorNoLogMessageFound exception with null as the value for its detail message</description>
+            </constructor>
+            <constructor>
+                <signature>ErrorNoLogMessageFound(String message)</signature>
+                <description>Constructs a new ErrorNoLogMessageFound exception whereby its detail message is initialized with the passed value</description>
+                <parameter name="message">value for the detail message of the exception, typically describing that no log messages are available</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorNoLogMessageFound(String message, Throwable cause)</signature>
+                <description>Constructs a new ErrorNoLogMessageFound exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorNoLogMessageFound(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+                <description>Constructs a new ErrorNoLogMessageFound exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+            </constructor>
+        </constructors>
     </javadoc>
     <specification>
         <source>BSI TR-03151-1</source>
-        <requirement>SHALL be raised when no log messages exist in Secure Element</requirement>
-        <applicability>Log message retrieval operations</applicability>
+        <section>3.3.1 Event Logging and Log Message Retrieval - getLastLogMessage and exportLogMessages</section>
+        <requirement>The functions getLastLogMessage and exportLogMessages SHALL retrieve transaction log message entries from the Secure Element's logging storage. If the logging storage contains no log message entries (i.e., it is empty), these functions SHALL raise the exception ErrorNoLogMessageFound. This exception indicates that the requested log messages do not exist in the device's storage - it is an expected condition when no events have been logged or when previously logged messages have been deleted.</requirement>
+        <applicability>Log message retrieval operations - getLastLogMessage and exportLogMessages functions only, when logging storage is empty</applicability>
+        <reference>getLastLogMessage – Function (3.3.1); exportLogMessages – Function (3.3.1)</reference>
     </specification>
     <thrownBy>
         <function>getLastLogMessage</function>
         <function>exportLogMessages</function>
     </thrownBy>
+    <triggerConditions>
+        <condition>
+            <scenario>Logging storage is completely empty</scenario>
+            <description>The Secure Element has never recorded any log messages or all messages have been deleted</description>
+            <trigger>The device was just initialized, logging has never been enabled, or all log messages have been purged via deleteLogMessages. When getLastLogMessage is called to retrieve the most recent log message, the logging storage is empty and ErrorNoLogMessageFound is raised.</trigger>
+        </condition>
+        <condition>
+            <scenario>Logging disabled or not initialized</scenario>
+            <description>The device's transaction logging subsystem has not been initialized or enabled</description>
+            <trigger>The device was configured with transaction logging disabled or not initialized. When exportLogMessages is called to retrieve log entries, the logging subsystem contains no messages because logging has never been active. ErrorNoLogMessageFound is raised.</trigger>
+        </condition>
+        <condition>
+            <scenario>All log messages have been deleted</scenario>
+            <description>Log messages existed previously but have all been removed via log deletion operations</description>
+            <trigger>The application called deleteLogMessages to clear the logging storage or logs expired due to retention policies. A subsequent call to getLastLogMessage or exportLogMessages finds no messages in the now-empty storage. ErrorNoLogMessageFound is raised.</trigger>
+        </condition>
+        <condition>
+            <scenario>Log message storage not yet populated</scenario>
+            <description>The logging system is enabled but no events have occurred that would generate log entries</description>
+            <trigger>The device was initialized with transaction logging enabled, but the device has never executed transactions or operations that generate logged events. A call to getLastLogMessage to retrieve the most recent log message finds nothing. ErrorNoLogMessageFound is raised.</trigger>
+        </condition>
+        <condition>
+            <scenario>Logging subsystem reset or reinitialized</scenario>
+            <description>The transaction logging subsystem was reset or reinitialized, clearing all stored log messages</description>
+            <trigger>The Secure Element's logging subsystem was reset during a maintenance or diagnostic operation. This cleared all previously stored log messages. A subsequent call to exportLogMessages or getLastLogMessage finds no messages. ErrorNoLogMessageFound is raised.</trigger>
+        </condition>
+    </triggerConditions>
+    <executionSequence>
+        <step number="1">User/application calls getLastLogMessage or exportLogMessages function to retrieve log entries</step>
+        <step number="2">Function validates input parameters (for exportLogMessages, filter criteria if applicable)</step>
+        <step number="3">Function checks authorization and device state for log access operations</step>
+        <step number="4">Function initiates communication with Secure Element</step>
+        <step number="5">Function transmits log retrieval or export command to Secure Element</step>
+        <step number="6">Secure Element searches its logging storage for log messages</step>
+        <step number="6a">If log messages are found → proceed to step 7</step>
+        <step number="6b">If NO log messages are found (storage is empty) → ErrorNoLogMessageFound raised, function exits</step>
+        <step number="7">Function receives log messages from Secure Element</step>
+        <step number="8">Function processes and formats log messages for return to caller</step>
+        <step number="9">Function closes communication channel with Secure Element</step>
+        <step number="10">Function returns log messages to caller</step>
+    </executionSequence>
+    <recovery>
+        <step>Verify logging is enabled - call appropriate status functions to confirm transaction logging is enabled on the device</step>
+        <step>Check logging configuration - determine what events are configured to be logged and what events have actually occurred</step>
+        <step>Confirm device operation - verify that operations have been performed on the device that would generate logged events</step>
+        <step>Check for recent deletions - determine if deleteLogMessages or similar operations recently cleared the log storage</step>
+        <step>Verify logging initialization - ensure the transaction logging subsystem was properly initialized on device startup</step>
+        <step>Enable logging if disabled - if transaction logging is disabled, enable it to begin capturing events</step>
+        <step>Perform test operations - execute operations on the device (transactions, etc.) to generate new log messages</step>
+        <step>Check log storage capacity - verify that the logging storage has sufficient capacity to hold messages</step>
+        <step>Wait for events - if logging is enabled, wait for events to occur that would generate log messages</step>
+        <step>If persistent, review device logging setup - examine the device's logging configuration to understand why no messages are being generated</step>
+    </recovery>
+    <relatedExceptions>
+        <exception>ErrorDeleteLogMessagesFailed</exception>
+        <exception>ErrorExportLoggingCertificateFailed</exception>
+        <exception>ErrorNoDataAvailable</exception>
+        <exception>ErrorConfigureLoggingFailed</exception>
+        <exception>ErrorFunctionFailed</exception>
+    </relatedExceptions>
+    <postconditionality>
+        <state name="No Log Messages Retrieved">No log message data is returned to the caller. The retrieval or export operation produces no output because no log messages exist to return.</state>
+        <state name="Logging Storage Unchanged">The Secure Element's logging storage remains unchanged. The retrieval operation is read-only and does not modify any stored log messages.</state>
+        <state name="Device State Unmodified">The device's overall state remains unchanged by the exception. No cascading state modifications occur as a result of the missing log messages.</state>
+        <state name="Logging System Operational">The logging subsystem continues to operate normally. The absence of current log messages does not prevent future events from being logged.</state>
+        <state name="Future Logging Available">The logging system remains capable of recording new log entries as operations occur on the device.</state>
+        <state name="No Data Loss">The exception does not cause loss or corruption of any existing data. All previously stored messages, if any, remain intact.</state>
+    </postconditionality>
+    <notes>
+        <note>ErrorNoLogMessageFound is thrown by getLastLogMessage and exportLogMessages - both log message retrieval functions</note>
+        <note>This exception indicates the logging storage contains no messages - it is an expected condition, not a system error</note>
+        <note>The exception has Medium severity because it indicates empty storage, not a device failure</note>
+        <note>Log messages may be absent for legitimate reasons: logging disabled, no events logged yet, or recent message deletion</note>
+        <note>Applications should distinguish between "no messages available" (ErrorNoLogMessageFound) and log retrieval operation failures</note>
+        <note>Transaction logging must be enabled for the device to record log messages - disabled logging will result in empty storage</note>
+        <note>The type and amount of events that generate log messages depend on the device's logging configuration and event policies</note>
+        <note>Log messages may be removed by explicit deletion operations (deleteLogMessages) or automatic retention policies</note>
+        <note>The getLastLogMessage function retrieves the most recent log message - ErrorNoLogMessageFound means no messages exist at all</note>
+        <note>The exportLogMessages function exports all logged messages or filtered subsets - ErrorNoLogMessageFound means no messages match the criteria</note>
+        <note>Different device models may have different default logging settings and event logging policies</note>
+        <note>Applications should wait for operations to complete before retrieving logs - retrieving immediately after device initialization may yield empty logs</note>
+        <note>Log message retrieval is typically read-only - ErrorNoLogMessageFound has no side effects on device state</note>
+        <note>Comprehensive logging requires appropriate configuration of which events are logged and what information is captured</note>
+        <note>Monitor logging status and event logging capacity to understand when to expect populated versus empty log storage</note>
+    </notes>
+    <usage>
+        <scenario name="Scenario 1: Device Initialization Verification with Log Status Check">
+            <description>After initializing a new Secure Element, an application calls getLastLogMessage to verify that logging is working. When ErrorNoLogMessageFound is raised, it confirms that logging is enabled but no events have been logged yet. The application responds by performing test operations to generate log messages.</description>
+            <relatedFunctions>getLastLogMessage, exportLogMessages, configureLogging</relatedFunctions>
+            <errorContext>Empty logging storage indicates logging enabled but no events logged yet</errorContext>
+        </scenario>
+        <scenario name="Scenario 2: Log Cleanup and Verification After Deletion">
+            <description>An audit system deletes old log messages via deleteLogMessages and then attempts to verify that the deletion was complete by calling exportLogMessages. When ErrorNoLogMessageFound is raised, it confirms that all log messages have been successfully deleted from the device.</description>
+            <relatedFunctions>deleteLogMessages, exportLogMessages, getLastLogMessage</relatedFunctions>
+            <errorContext>Empty storage confirms successful log deletion</errorContext>
+        </scenario>
+        <scenario name="Scenario 3: Transaction Verification with Log Availability Check">
+            <description>An application performs transactions on a device and then calls getLastLogMessage to retrieve the log entry for the most recent transaction. When ErrorNoLogMessageFound is raised, the application investigates why the transaction was not logged (logging disabled, transaction logging not configured for that operation, etc.).</description>
+            <relatedFunctions>getLastLogMessage, startTransaction, exportLogMessages</relatedFunctions>
+            <errorContext>Missing log message indicates transaction was not logged</errorContext>
+        </scenario>
+        <scenario name="Scenario 4: System Monitoring with Event Logging Confirmation">
+            <description>A monitoring system periodically calls exportLogMessages to check for logged events. When ErrorNoLogMessageFound is raised on a new or recently reset device, it indicates the device is in a fresh state with no logged events yet. The system can use this to track device lifecycle and event history.</description>
+            <relatedFunctions>exportLogMessages, getLastLogMessage, configureLogging</relatedFunctions>
+            <errorContext>No messages on fresh device - normal initialization state</errorContext>
+        </scenario>
+    </usage>
+    <implementationContext>
+        <note>The getLastLogMessage and exportLogMessages functions must check logging storage and report empty storage as ErrorNoLogMessageFound</note>
+        <note>Transaction logging must be enabled on the device for log messages to be recorded - disabled logging results in empty storage</note>
+        <note>Log messages are generated by device operations - no operations means no messages (even with logging enabled)</note>
+        <note>Applications should verify logging is enabled and operational before expecting to retrieve log messages</note>
+        <note>Log storage capacity and retention policies determine the lifespan of messages - old messages may be automatically deleted</note>
+        <note>Explicit log deletion operations (deleteLogMessages) clear storage and will result in ErrorNoLogMessageFound until new messages are logged</note>
+        <note>Error handling should distinguish between empty storage (ErrorNoLogMessageFound) and actual retrieval failures (other exceptions)</note>
+        <note>Applications performing multi-phase operations should account for the time needed for operations to be logged before retrieving logs</note>
+        <note>Some devices may support log message filtering and queries - these may also return no results if no messages match filter criteria</note>
+    </implementationContext>
 </exception>

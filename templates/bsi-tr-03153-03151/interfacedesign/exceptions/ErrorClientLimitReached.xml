@@ -1,18 +1,139 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <exception id="ErrorClientLimitReached" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
     <name>ErrorClientLimitReached</name>
-    <description>This exception is thrown if the maximum number of clients has been reached.</description>
-    <category>Client Management</category>
+    <description>This exception is thrown if the maximum number of clients has been reached. The registerClient function attempts to register a new client but detects that the device has already registered the maximum number of simultaneous clients it can manage. No further client registrations are possible until existing clients are deregistered.</description>
+    <category>Client Management - Capacity</category>
     <severity>High</severity>
     <javadoc>
         <summary>This class defines the exception ErrorClientLimitReached that is thrown if the maximum number of clients has been reached.</summary>
+        <description>The ErrorClientLimitReached exception indicates that the device has reached its maximum capacity for managing simultaneous clients and cannot accept additional client registrations. This is a resource limitation exception that requires the application to deregister existing clients or implement alternative strategies to proceed. When this exception is raised, the registration operation fails immediately without modifying the client registry. The maximum number of simultaneous clients is a fixed device capability that can be queried using getMaxNumberOfClients.</description>
+        <constructors>
+            <constructor>
+                <signature>ErrorClientLimitReached()</signature>
+                <description>Constructs a new ErrorClientLimitReached exception with null as the value for its detail message</description>
+            </constructor>
+            <constructor>
+                <signature>ErrorClientLimitReached(String message)</signature>
+                <description>Constructs a new ErrorClientLimitReached exception whereby its detail message is initialized with the passed value</description>
+                <parameter name="message">value for the detail message of the exception, typically indicating the current number vs maximum number of clients</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorClientLimitReached(String message, Throwable cause)</signature>
+                <description>Constructs a new ErrorClientLimitReached exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorClientLimitReached(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+                <description>Constructs a new ErrorClientLimitReached exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+            </constructor>
+        </constructors>
     </javadoc>
     <specification>
         <source>BSI TR-03151-1</source>
-        <requirement>SHALL be raised when attempting to register a client after maximum capacity is reached</requirement>
-        <applicability>Client registration when at capacity limit</applicability>
+        <section>3.3.14 Client Management - registerClient Function (3.3.14.4)</section>
+        <requirement>The function registerClient SHALL check if the device's maximum number of clients has been reached. If the maximum number has been reached, the function SHALL raise the exception ErrorClientLimitReached and exit the function without registering the new client. This ensures that client registrations do not exceed device capacity limits.</requirement>
+        <applicability>Client registration operations - registerClient function when device client capacity is at maximum</applicability>
+        <reference>registerClient – Function (3.3.14) - Section 3.3.14.4 Exception Specification</reference>
     </specification>
     <thrownBy>
         <function>registerClient</function>
     </thrownBy>
+    <triggerConditions>
+        <condition>
+            <scenario>Client registration at device capacity</scenario>
+            <description>The registerClient function is invoked while the device has already registered the maximum number of simultaneous clients</description>
+            <trigger>The device checks its current client count and finds it equals the maximum allowed. ErrorClientLimitReached is raised to prevent exceeding device capacity.</trigger>
+        </condition>
+        <condition>
+            <scenario>Multiple concurrent registration attempts at limit</scenario>
+            <description>Multiple applications or threads attempt to register clients simultaneously when the device is at its maximum capacity</description>
+            <trigger>Each registration attempt is checked against the device's maximum client limit. Once the limit is reached, subsequent attempts raise ErrorClientLimitReached.</trigger>
+        </condition>
+        <condition>
+            <scenario>Resource exhaustion prevention</scenario>
+            <description>The device implements client capacity limits to prevent resource exhaustion and ensure stable operation</description>
+            <trigger>The device enforces its maximum client limit during registration to maintain system stability and performance.</trigger>
+        </condition>
+    </triggerConditions>
+    <executionSequence>
+        <step number="1">User/application calls registerClient function with a clientId</step>
+        <step number="2">Function checks authentication status (if required by referencing guideline)</step>
+        <step number="3">Function checks authorization (if required by referencing guideline)</step>
+        <step number="4">Function checks device initialization status</step>
+        <step number="5">Function checks if current number of registered clients equals maximum allowed</step>
+        <step number="5a">If current clients EQUALS maximum → ErrorClientLimitReached raised and function exits</step>
+        <step number="6">If below limit, function checks if clientId is already registered</step>
+        <step number="7">If clientId is not registered, function validates clientId format and characters</step>
+        <step number="8">Function adds clientId to device's client registry</step>
+        <step number="9">Function returns successfully to the user</step>
+    </executionSequence>
+    <recovery>
+        <step>Query getCurrentNumberOfClients to determine how many clients are currently registered</step>
+        <step>Query getMaxNumberOfClients to understand the device's client capacity limit</step>
+        <step>Review the list of currently registered clients using getRegisteredClients</step>
+        <step>Identify which clients are inactive or no longer needed</step>
+        <step>Deregister inactive clients using the deregisterClient function to free up capacity</step>
+        <step>Retry the registerClient call for the new client after freeing sufficient capacity</step>
+        <step>Implement client lifecycle management in the application to ensure proper deregistration</step>
+        <step>Consider whether the device's maximum client limit is appropriate for the application requirements</step>
+        <step>Implement application-level client pooling or session management to manage clients efficiently</step>
+        <step>Document the maximum client capacity in deployment documentation and ensure applications are aware of this limitation</step>
+    </recovery>
+    <relatedExceptions>
+        <exception>ErrorClientAlreadyRegistered</exception>
+        <exception>ErrorClientNotRegistered</exception>
+        <exception>ErrorFunctionFailed</exception>
+        <exception>ErrorDeviceNotInitialized</exception>
+    </relatedExceptions>
+    <postconditionality>
+        <state>Client registry unchanged - no client was registered</state>
+        <state>Current number of clients unchanged - failed registration does not affect client count</state>
+        <state>Device at maximum capacity - no additional clients can be registered until deregistration</state>
+        <state>Device state unchanged - no modifications made during failed registration attempt</state>
+        <state>Function exits without creating log message - registration did not succeed</state>
+        <state>Capacity constraint remains in effect - device continues to enforce client limit</state>
+    </postconditionality>
+    <notes>
+        <note>ErrorClientLimitReached is thrown ONLY by the registerClient function - it is specific to client registration operations at capacity</note>
+        <note>This exception enforces a hard device capacity limit - the maximum number of simultaneous clients is a fixed device characteristic</note>
+        <note>Unlike ErrorClientAlreadyRegistered (which indicates duplicate IDs), ErrorClientLimitReached indicates device capacity exhaustion</note>
+        <note>After this exception, the client registry remains unchanged and the failed client is not added</note>
+        <note>This exception has High severity because it prevents new client registrations and may require manual intervention (deregistration)</note>
+        <note>The capacity check is performed early in the registerClient function (step 5), before other validation steps, to fail fast on capacity issues</note>
+        <note>The maximum number of clients is typically fixed by hardware or firmware constraints and cannot be dynamically increased</note>
+        <note>Applications must implement robust deregistration procedures to ensure clients are properly released and capacity is freed</note>
+        <note>The device's maximum client capacity can be queried at runtime using getMaxNumberOfClients to allow dynamic adaptation</note>
+        <note>If ErrorClientLimitReached is raised frequently, it indicates the device's capacity is insufficient for the application's requirements</note>
+    </notes>
+    <usage>
+        <scenario name="Capacity Check Before Registration">
+            <description>Check device capacity before attempting to register a new client to predict and handle registration failures.</description>
+            <example>try { int current = device.getCurrentNumberOfClients(); int max = device.getMaxNumberOfClients(); if (current >= max) { deallocateInactiveClient(); } device.registerClient(newClientId); } catch (ErrorClientLimitReached e) { handleCapacityExhausted(); }</example>
+        </scenario>
+        <scenario name="Deregister and Retry">
+            <description>When capacity is exhausted, deregister an existing client and retry registration for the new client.</description>
+            <example>try { device.registerClient(newClientId); } catch (ErrorClientLimitReached e) { List<String> clients = device.getRegisteredClients(); if (!clients.isEmpty()) { device.deregisterClient(clients.get(0)); device.registerClient(newClientId); } }</example>
+        </scenario>
+        <scenario name="Client Queue Management">
+            <description>Implement a client registration queue that respects device capacity limits and manages registration attempts.</description>
+            <example>if (device.getCurrentNumberOfClients() < device.getMaxNumberOfClients()) { device.registerClient(clientId); } else { queueClientForLaterRegistration(clientId); }</example>
+        </scenario>
+        <scenario name="Capacity-Aware Load Balancing">
+            <description>Distribute client registrations across multiple devices based on capacity to avoid exhaustion on a single device.</description>
+            <example>for (Device device : availableDevices) { try { device.registerClient(clientId); break; } catch (ErrorClientLimitReached e) { continue; } }</example>
+        </scenario>
+    </usage>
+    <implementationContext>
+        <note>The registerClient function is part of the client management subsystem that tracks registered clients and enforces resource constraints</note>
+        <note>Each device has a maximum number of simultaneous clients it can manage, determined by hardware and firmware capabilities</note>
+        <note>The current client count plus the maximum client limit together define the registration capacity state</note>
+        <note>Client capacity is shared across all registration attempts - once reached, no new clients can be registered</note>
+        <note>Clients must be properly deregistered to free capacity slots for new registrations</note>
+        <note>The maximum number of clients is typically stated in device specifications and can be queried at runtime</note>
+    </implementationContext>
 </exception>

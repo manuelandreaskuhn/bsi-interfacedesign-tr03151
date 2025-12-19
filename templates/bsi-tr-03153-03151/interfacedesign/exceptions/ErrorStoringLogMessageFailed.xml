@@ -1,20 +1,172 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <exception id="ErrorStoringLogMessageFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
     <name>ErrorStoringLogMessageFailed</name>
-    <description>This exception is thrown if storing of the log message in the storage failed.</description>
-    <category>Logging</category>
+    <description>This exception is thrown if the storage of a log message in the device storage fails. Transaction operations (startTransaction, updateTransaction, finishTransaction) create digitally signed log messages that record transaction events in the audit trail. If the log message cannot be stored to device storage, ErrorStoringLogMessageFailed indicates the transaction was not properly recorded in the audit trail. Common causes include: device storage write errors, insufficient storage capacity, storage medium issues, or communication failures. ErrorStoringLogMessageFailed is a Critical condition because it means the transaction is not protected by a tamper-proof audit trail record. The transaction may have been partially processed but is not reliably recorded.</description>
+    <category>Logging - Log Message Storage - Storage Failure</category>
     <severity>Critical</severity>
     <javadoc>
-        <summary>This class defines the exception ErrorStoringLogMessageFailed that is thrown if storing of the log message in the storage failed.</summary>
+        <summary>This class defines the exception ErrorStoringLogMessageFailed that is thrown if log message storage fails.</summary>
+        <description>This exception is thrown when the Secure Element fails to store a digitally signed log message to device storage during transaction processing. Transaction operations create log messages that establish an audit trail of all transactions with cryptographic proof of integrity and authenticity. ErrorStoringLogMessageFailed indicates the log message could not be successfully written to storage, meaning the transaction is not properly recorded in the audit trail. Common causes include: device storage write errors, insufficient storage capacity, storage medium disconnection or failure, or communication failures. ErrorStoringLogMessageFailed is a Critical severity exception because it indicates the transaction lacks a tamper-proof audit trail record. Without successful log storage, the transaction integrity cannot be verified. Recovery requires addressing the storage issue and potentially retrying the transaction.</description>
+        <constructors>
+            <constructor>
+                <signature>ErrorStoringLogMessageFailed()</signature>
+                <description>Constructs a new ErrorStoringLogMessageFailed exception with null as the value for its detail message</description>
+            </constructor>
+            <constructor>
+                <signature>ErrorStoringLogMessageFailed(String message)</signature>
+                <description>Constructs a new ErrorStoringLogMessageFailed exception whereby its detail message is initialized with the passed value</description>
+                <parameter name="message">value for the detail message of the exception, typically describing the log message storage failure reason</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorStoringLogMessageFailed(String message, Throwable cause)</signature>
+                <description>Constructs a new ErrorStoringLogMessageFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorStoringLogMessageFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+                <description>Constructs a new ErrorStoringLogMessageFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+            </constructor>
+        </constructors>
     </javadoc>
     <specification>
         <source>BSI TR-03151-1</source>
-        <requirement>SHALL be raised when log message storage operation fails</requirement>
-        <applicability>All transaction operations that create log messages</applicability>
+        <section>3.3.2 Transaction Operations and 3.3.3 Logging Operations - Transaction Log Storage</section>
+        <requirement>During transaction processing (startTransaction, updateTransaction, finishTransaction), the Secure Element creates digitally signed log messages and stores them in device audit trail storage. The log message contains transaction context, timestamp, signature, and status information. If the log message storage operation fails to successfully write the message to storage, the function SHALL raise ErrorStoringLogMessageFailed. The transaction may be partially processed but is not properly recorded in the audit trail. Log message storage is essential for audit trail integrity and must not be bypassed. Failed log storage indicates the transaction is not protected by tamper-proof recording.</requirement>
+        <applicability>Transaction operations creating log messages: startTransaction, updateTransaction, finishTransaction</applicability>
+        <reference>Transaction Operations (3.3.2), Logging Operations (3.3.3), Audit Trail Management</reference>
     </specification>
     <thrownBy>
         <function>startTransaction</function>
         <function>updateTransaction</function>
         <function>finishTransaction</function>
     </thrownBy>
+    <triggerConditions>
+        <condition>
+            <scenario>Device storage write error during log storage</scenario>
+            <description>The device storage system fails to write the log message</description>
+            <trigger>A finishTransaction call creates log message and attempts to store it but the storage write operation fails (I/O error, hardware failure). ErrorStoringLogMessageFailed is raised.</trigger>
+        </condition>
+        <condition>
+            <scenario>Insufficient storage capacity for log message</scenario>
+            <description>Storage capacity is full or insufficient for the log message</description>
+            <trigger>A startTransaction call creates log message but storage is full. The message cannot be stored and ErrorStoringLogMessageFailed is raised.</trigger>
+        </condition>
+        <condition>
+            <scenario>Storage medium disconnected or unavailable</scenario>
+            <description>The storage medium becomes disconnected or unavailable during write</description>
+            <trigger>An updateTransaction call attempts to store log message but storage becomes unreachable. ErrorStoringLogMessageFailed is raised.</trigger>
+        </condition>
+        <condition>
+            <scenario>Communication failure during log storage</scenario>
+            <description>Communication with storage fails during the write operation</description>
+            <trigger>A finishTransaction call transmits log message to storage but communication is interrupted before write completes. ErrorStoringLogMessageFailed is raised.</trigger>
+        </condition>
+        <condition>
+            <scenario>Storage corruption or write verification failure</scenario>
+            <description>Storage corruption is detected or write verification fails</description>
+            <trigger>An updateTransaction call writes log message but post-write verification fails or corruption is detected. ErrorStoringLogMessageFailed is raised.</trigger>
+        </condition>
+    </triggerConditions>
+    <executionSequence>
+        <step number="1">User/application calls a transaction operation that creates log messages (e.g., finishTransaction)</step>
+        <step number="2">Function validates input parameters and transaction context</step>
+        <step number="3">Function initiates communication with Secure Element</step>
+        <step number="4">Secure Element receives transaction request</step>
+        <step number="5">Secure Element processes transaction operation</step>
+        <step number="6">Secure Element creates digitally signed log message</step>
+        <step number="7">Secure Element checks storage capacity for log message</step>
+        <step number="7a">If storage full → ErrorStorageMemoryFull raised (or ErrorStoringLogMessageFailed)</step>
+        <step number="7b">If storage available → proceed to step 8</step>
+        <step number="8">Secure Element attempts to write log message to storage</step>
+        <step number="8a">If storage write fails → ErrorStoringLogMessageFailed raised, operation aborted</step>
+        <step number="8b">If storage write succeeds → proceed to step 9</step>
+        <step number="9">Secure Element verifies log message storage and integrity</step>
+        <step number="9a">If verification fails → ErrorStoringLogMessageFailed raised</step>
+        <step number="9b">If verification succeeds → proceed to step 10</step>
+        <step number="10">Secure Element confirms transaction completion and log storage</step>
+        <step number="11">Secure Element returns result to function</step>
+        <step number="12">Function returns successfully</step>
+    </executionSequence>
+    <recovery>
+        <step>Review error message - examine the error message to understand the log storage failure reason</step>
+        <step>Assess transaction state - determine what state the transaction was in when storage failed</step>
+        <step>Check device storage status - query device storage for capacity and health</step>
+        <step>Check device connectivity - verify reliable communication with device storage</step>
+        <step>Verify storage availability - ensure storage medium is connected and accessible</step>
+        <step>Check storage capacity - determine if storage is full and needs cleanup</step>
+        <step>Free storage space if needed - export and delete old logs to free capacity</step>
+        <step>Retry the transaction - attempt the transaction operation again after addressing storage issue</step>
+        <step>Check device logs - examine device logs for additional storage error information</step>
+        <step>If persistent, contact manufacturer - device may have storage hardware issues</step>
+    </recovery>
+    <relatedExceptions>
+        <exception>ErrorStorageMemoryFull</exception>
+        <exception>ErrorStorageMediumDisconnected</exception>
+        <exception>ErrorSigningEventDataFailed</exception>
+        <exception>ErrorFunctionFailed</exception>
+    </relatedExceptions>
+    <postconditionality>
+        <state name="Log Message Not Stored">The log message is not stored in device audit trail storage.</state>
+        <state name="Transaction Not Recorded">The transaction is not properly recorded in the audit trail.</state>
+        <state name="Transaction Audit Protection Lost">The transaction lacks a tamper-proof audit trail record.</state>
+        <state name="Transaction State Uncertain">The transaction may be partially processed but recording failed.</state>
+        <state name="Audit Trail Incomplete">The audit trail has a gap where the transaction should be recorded.</state>
+        <state name="Transaction Integrity Unverified">The transaction integrity cannot be verified without audit trail record.</state>
+    </postconditionality>
+    <notes>
+        <note>ErrorStoringLogMessageFailed is thrown by 3 transaction functions that create log messages</note>
+        <note>This exception indicates critical audit trail failure</note>
+        <note>The exception has Critical severity because transaction recording is essential</note>
+        <note>Log messages provide tamper-proof audit trail for all transactions</note>
+        <note>Storage failure means transaction is not reliably recorded</note>
+        <note>Digital signatures on log messages provide integrity and authenticity proof</note>
+        <note>Storage capacity must be adequate for transaction volume</note>
+        <note>Regular log export and deletion maintains available storage space</note>
+        <note>Communication reliability is critical for log storage operations</note>
+        <note>Error messages should indicate whether issue is capacity, connectivity, or storage hardware</note>
+        <note>Device should not proceed with transaction if log storage fails</note>
+        <note>Log storage integrity should be verified before confirming transaction completion</note>
+        <note>Audit trail completeness is essential for compliance and legal proceedings</note>
+        <note>Failed log storage may require transaction rollback or manual review</note>
+        <note>Business continuity plans must account for log storage failures</note>
+    </notes>
+    <usage>
+        <scenario name="Scenario 1: Transaction Log Storage Failure During Processing">
+            <description>A finishTransaction call processes successfully but fails to store the transaction log message. ErrorStoringLogMessageFailed is raised. The transaction is rolled back and user is informed that the transaction could not be properly recorded.</description>
+            <relatedFunctions>finishTransaction, startTransaction, updateTransaction</relatedFunctions>
+            <errorContext>Transaction processing blocked by log message storage failure</errorContext>
+        </scenario>
+        <scenario name="Scenario 2: Audit Trail Gap Detection">
+            <description>An audit review detects a gap in the transaction log where a transaction should have been recorded but is missing. Investigation reveals ErrorStoringLogMessageFailed occurred during that transaction, preventing audit trail recording.</description>
+            <relatedFunctions>startTransaction, exportLogMessages</relatedFunctions>
+            <errorContext>Audit trail gap detected due to failed log storage</errorContext>
+        </scenario>
+        <scenario name="Scenario 3: Storage Full Prevents Log Recording">
+            <description>High-volume transaction system reaches storage full. A startTransaction call fails with ErrorStoringLogMessageFailed because storage is full and log message cannot be recorded. System exports old logs to free space, then resumes transactions.</description>
+            <relatedFunctions>startTransaction, exportLogMessages, deleteLogMessages</relatedFunctions>
+            <errorContext>Log storage failure due to full storage - resolved by freeing space</errorContext>
+        </scenario>
+        <scenario name="Scenario 4: Compliance Requirement for Audit Trail Continuity">
+            <description>Compliance audit requires continuous audit trail with no gaps. When ErrorStoringLogMessageFailed is detected, compliance officers are notified and device is inspected for storage issues. Missing transaction is manually investigated.</description>
+            <relatedFunctions>startTransaction, finishTransaction, exportLogMessages</relatedFunctions>
+            <errorContext>Compliance audit identifies missing transaction due to log storage failure</errorContext>
+        </scenario>
+    </usage>
+    <implementationContext>
+        <note>Log message storage must be atomic - either fully store or fail cleanly</note>
+        <note>Storage capacity must be checked before attempting log message write</note>
+        <note>Log message storage should be verified and integrity checked after write</note>
+        <note>Communication reliability is critical for log storage operations</note>
+        <note>Error messages should distinguish between capacity, connectivity, and hardware issues</note>
+        <note>Device should not silently drop transaction logs if storage fails</note>
+        <note>Device should not continue transaction if log storage fails</note>
+        <note>Storage health monitoring should provide early warning of capacity issues</note>
+        <note>Archive and retention procedures should maintain available storage space</note>
+        <note>Audit trail continuity is essential for compliance and legal requirements</note>
+    </implementationContext>
 </exception>

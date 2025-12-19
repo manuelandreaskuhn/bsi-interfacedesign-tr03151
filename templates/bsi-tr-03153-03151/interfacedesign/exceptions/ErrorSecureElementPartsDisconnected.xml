@@ -1,16 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <exception id="ErrorSecureElementPartsDisconnected" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
     <name>ErrorSecureElementPartsDisconnected</name>
-    <description>This exception is thrown if logical or physical parts of the Secure Element are not connected anymore.</description>
-    <category>Secure Element</category>
+    <description>This exception is thrown if logical or physical components of the Secure Element become disconnected during operation. The Secure Element may consist of multiple physical components or logical subsystems (cryptographic module, storage subsystem, communication interface, security processor) that must remain connected and communicating. If any critical component becomes disconnected or unreachable, the Secure Element cannot operate safely. ErrorSecureElementPartsDisconnected indicates that the Secure Element integrity has been compromised due to component disconnection. This is a hardware or communication failure requiring immediate attention. Common causes include: physical connector failure, communication channel loss, hardware malfunction, or component removal during operation.</description>
+    <category>Secure Element Hardware - Component Disconnection</category>
     <severity>Critical</severity>
     <javadoc>
-        <summary>This class defines the exception ErrorSecureElementPartsDisconnected that is thrown if logical or physical parts of the Secure Element are not connected anymore.</summary>
+        <summary>This class defines the exception ErrorSecureElementPartsDisconnected that is thrown if components of the Secure Element become disconnected.</summary>
+        <description>This exception is thrown when logical or physical parts of the Secure Element lose connectivity during operation. A modern Secure Element may consist of multiple hardware components (cryptographic processor, storage, interfaces) that must communicate and coordinate. ErrorSecureElementPartsDisconnected indicates that component connectivity has been lost or degraded, preventing safe operation. Common causes include: physical connector disconnection, communication interface failure, hardware component malfunction, or component removal during operation. ErrorSecureElementPartsDisconnected is a Critical severity exception because it indicates hardware failure and device is no longer trustworthy. Operations cannot safely continue when component connectivity is lost. Recovery requires hardware inspection, diagnosis, or component replacement. The device should not be trusted for security-sensitive operations until component connectivity is restored and verified.</description>
+        <constructors>
+            <constructor>
+                <signature>ErrorSecureElementPartsDisconnected()</signature>
+                <description>Constructs a new ErrorSecureElementPartsDisconnected exception with null as the value for its detail message</description>
+            </constructor>
+            <constructor>
+                <signature>ErrorSecureElementPartsDisconnected(String message)</signature>
+                <description>Constructs a new ErrorSecureElementPartsDisconnected exception whereby its detail message is initialized with the passed value</description>
+                <parameter name="message">value for the detail message of the exception, typically identifying which component is disconnected</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorSecureElementPartsDisconnected(String message, Throwable cause)</signature>
+                <description>Constructs a new ErrorSecureElementPartsDisconnected exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorSecureElementPartsDisconnected(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+                <description>Constructs a new ErrorSecureElementPartsDisconnected exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+            </constructor>
+        </constructors>
     </javadoc>
     <specification>
         <source>BSI TR-03151-1</source>
-        <requirement>SHALL be raised when Secure Element components become disconnected</requirement>
-        <applicability>All Secure Element operations when component connectivity lost</applicability>
+        <section>3.2 Secure Element Architecture and Component Connectivity</section>
+        <requirement>The Secure Element may consist of multiple physical or logical components that must remain connected and communicating. If any critical component becomes disconnected, the Secure Element cannot operate safely and SHALL raise ErrorSecureElementPartsDisconnected. This includes failures of cryptographic processors, storage subsystems, communication interfaces, or security logic components. Component disconnection is a hardware failure that indicates the device integrity may be compromised. SE API operations SHALL not proceed when component connectivity is lost.</requirement>
+        <applicability>All SE API operations that depend on complete Secure Element component connectivity: authenticateUser, logOut, unblockPin, initialize, selfTest, updateDevice, disableSecureElement, updateTime, getCurrentSeTime, startTransaction, updateTransaction, finishTransaction</applicability>
+        <reference>Secure Element Architecture (3.2)</reference>
     </specification>
     <thrownBy>
         <function>authenticateUser</function>
@@ -26,4 +54,123 @@
         <function>updateTransaction</function>
         <function>finishTransaction</function>
     </thrownBy>
+    <triggerConditions>
+        <condition>
+            <scenario>Physical connector disconnection</scenario>
+            <description>A physical connector or interface between Secure Element components becomes disconnected</description>
+            <trigger>An SE API function is executing when a physical connector between components fails or is disconnected. The device detects the connection loss and raises ErrorSecureElementPartsDisconnected.</trigger>
+        </condition>
+        <condition>
+            <scenario>Communication channel failure between components</scenario>
+            <description>The communication link between Secure Element components fails or becomes unreliable</description>
+            <trigger>An SE API operation requires communication between components but the channel fails. The operation cannot complete and ErrorSecureElementPartsDisconnected is raised.</trigger>
+        </condition>
+        <condition>
+            <scenario>Component hardware malfunction or failure</scenario>
+            <description>A critical component of the Secure Element malfunctions or fails</description>
+            <trigger>An SE API function is executing and a component hardware failure is detected (processor failure, memory failure, interface failure). The device raises ErrorSecureElementPartsDisconnected.</trigger>
+        </condition>
+        <condition>
+            <scenario>Component removal during operation</scenario>
+            <description>A component is physically removed or disabled while the Secure Element is operating</description>
+            <trigger>During SE API operation, a component is physically removed or its power supply is cut. The device detects the loss and raises ErrorSecureElementPartsDisconnected.</trigger>
+        </condition>
+        <condition>
+            <scenario>Cryptographic subsystem disconnection</scenario>
+            <description>The cryptographic processing component becomes unreachable</description>
+            <trigger>An SE API function requiring cryptographic operations is called. The device attempts to access the crypto subsystem but communication fails. ErrorSecureElementPartsDisconnected is raised.</trigger>
+        </condition>
+    </triggerConditions>
+    <executionSequence>
+        <step number="1">User/application calls an SE API function that requires component connectivity (e.g., authenticateUser)</step>
+        <step number="2">Function validates input parameters</step>
+        <step number="3">Function initiates communication with Secure Element</step>
+        <step number="4">Secure Element receives request and verifies internal component connectivity</step>
+        <step number="4a">If component disconnection detected → ErrorSecureElementPartsDisconnected raised, operation aborted</step>
+        <step number="4b">If all components connected → proceed to step 5</step>
+        <step number="5">Secure Element processes operation request</step>
+        <step number="6">Operation may require communication between multiple internal components</step>
+        <step number="6a">If inter-component communication fails → ErrorSecureElementPartsDisconnected raised, operation aborted</step>
+        <step number="6b">If inter-component communication succeeds → proceed to step 7</step>
+        <step number="7">Secure Element completes operation execution</step>
+        <step number="8">Secure Element returns result to function</step>
+        <step number="9">Function processes result and returns to caller</step>
+    </executionSequence>
+    <recovery>
+        <step>Stop all Secure Element operations immediately - component disconnection indicates hardware failure</step>
+        <step>Review error message - identify which component or subsystem is disconnected</step>
+        <step>Check physical connections - inspect all cables, connectors, and physical interfaces</step>
+        <step>Check component power supplies - verify all components have stable power</step>
+        <step>Attempt device restart - power cycle the Secure Element to reset connections</step>
+        <step>Verify device status - query device to confirm component connectivity restored</step>
+        <step>If still disconnected, check device logs - examine device logs for additional failure information</step>
+        <step>Perform self-test - call selfTest function to verify component connectivity (if available)</step>
+        <step>If persistent, contact manufacturer - component failure may require hardware repair or replacement</step>
+        <step>Do not use device for security operations until connectivity is verified - device integrity may be compromised</step>
+    </recovery>
+    <relatedExceptions>
+        <exception>ErrorDeviceInitializationFailed</exception>
+        <exception>ErrorFunctionFailed</exception>
+        <exception>ErrorSecureElementNotInitialized</exception>
+        <exception>ErrorDeviceNotInitialized</exception>
+    </relatedExceptions>
+    <postconditionality>
+        <state name="Operation Aborted">The requested operation is not completed due to component disconnection.</state>
+        <state name="Device State Uncertain">The device state after component disconnection is uncertain and should not be trusted.</state>
+        <state name="Component Communication Lost">Communication between Secure Element components cannot be established.</state>
+        <state name="Data Integrity Unknown">The integrity of data and operations cannot be verified when components are disconnected.</state>
+        <state name="Device No Longer Trustworthy">The device should not be used for security operations until component connectivity is restored and verified.</state>
+        <state name="Hardware Intervention Required">Hardware inspection and repair may be required to restore component connectivity.</state>
+    </postconditionality>
+    <notes>
+        <note>ErrorSecureElementPartsDisconnected is thrown by 12 SE API functions requiring component connectivity</note>
+        <note>This exception indicates hardware failure not software error</note>
+        <note>The exception has Critical severity because component disconnection compromises device security</note>
+        <note>Component connectivity must be verified during Secure Element initialization</note>
+        <note>Component disconnection may be permanent (hardware failure) or temporary (loose connection)</note>
+        <note>Secure Element components must communicate reliably for all operations to succeed</note>
+        <note>Physical security modules typically have redundant connectivity checks</note>
+        <note>Error messages should identify the specific component or subsystem that is disconnected</note>
+        <note>Device should not be used for security operations after component disconnection detected</note>
+        <note>Component connectivity failures may cascade - one failure may cause others</note>
+        <note>Manufacturer documentation should detail component architecture and connectivity requirements</note>
+        <note>Hardware health monitoring can detect component issues before failures occur</note>
+        <note>Device repair or replacement may be required for persistent component disconnection</note>
+        <note>Data on the device should not be considered secure if components have disconnected</note>
+        <note>Business continuity plans should account for device failure due to component disconnection</note>
+    </notes>
+    <usage>
+        <scenario name="Scenario 1: Component Disconnection Detection During Authentication">
+            <description>An application attempts to authenticate a user by calling authenticateUser. During authentication, the Secure Element detects that a component has disconnected (e.g., cryptographic processor becomes unreachable). ErrorSecureElementPartsDisconnected is raised. The application halts operations and alerts administrator.</description>
+            <relatedFunctions>authenticateUser, initialize, selfTest</relatedFunctions>
+            <errorContext>Authentication fails due to detected component disconnection - hardware failure</errorContext>
+        </scenario>
+        <scenario name="Scenario 2: Component Failure Detection During Transaction">
+            <description>Transaction processing is in progress when a component communication failure occurs. The finishTransaction operation detects component disconnection and raises ErrorSecureElementPartsDisconnected. The transaction state is uncertain. Hardware is inspected and repaired before processing resumes.</description>
+            <relatedFunctions>startTransaction, updateTransaction, finishTransaction</relatedFunctions>
+            <errorContext>Transaction processing blocked by component hardware failure</errorContext>
+        </scenario>
+        <scenario name="Scenario 3: Self-Test Reveals Component Disconnection">
+            <description>A system administrator runs a selfTest operation to verify device health. The test detects a component communication failure and ErrorSecureElementPartsDisconnected is raised. The administrator schedules device maintenance or replacement.</description>
+            <relatedFunctions>selfTest, initialize</relatedFunctions>
+            <errorContext>Self-test reveals component connectivity issue</errorContext>
+        </scenario>
+        <scenario name="Scenario 4: Physical Connector Loosening Detected">
+            <description>A device is in production when a physical connector begins to loosen due to vibration. Operations intermittently fail with ErrorSecureElementPartsDisconnected as connector connectivity becomes intermittent. Physical inspection identifies the loose connector which is re-seated.</description>
+            <relatedFunctions>any SE API function may raise exception</relatedFunctions>
+            <errorContext>Intermittent component disconnection due to loose physical connector</errorContext>
+        </scenario>
+    </usage>
+    <implementationContext>
+        <note>Secure Element must perform component connectivity verification on every operation entry</note>
+        <note>Multiple communication paths between components can provide redundancy and reliability</note>
+        <note>Component connectivity should be verified during device initialization</note>
+        <note>Watchdog/heartbeat mechanisms can detect component communication failures</note>
+        <note>Hardware health monitoring should track component connectivity statistics</note>
+        <note>Error messages should clearly identify which component or subsystem is affected</note>
+        <note>Device should not attempt to continue operation after component disconnection detected</note>
+        <note>Component reconnection should be verified before resuming operations</note>
+        <note>Physical design should minimize connector stress and vibration-related failures</note>
+        <note>Manufacturer should provide guidance on device maintenance and component replacement</note>
+    </implementationContext>
 </exception>

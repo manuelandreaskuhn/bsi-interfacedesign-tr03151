@@ -1,18 +1,163 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <exception id="ErrorGetSupportedUpdateVariantsFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
     <name>ErrorGetSupportedUpdateVariantsFailed</name>
-    <description>This exception is thrown if the identification of the supported variant(s) for updating transactions failed.</description>
-    <category>Transaction</category>
-    <severity>Medium</severity>
+    <description>This exception is thrown if the SE API function getSupportedUpdateVariants fails to retrieve the list of supported firmware update variants. The function attempts to determine which update mechanisms and variant configurations the Secure Element supports, but the retrieval process fails before the supported update variants can be determined and returned.</description>
+    <category>Device Update - Update Variants Query</category>
+    <severity>High</severity>
     <javadoc>
-        <summary>This class defines the exception ErrorGetSupportedUpdateVariantsFailed that is thrown if the identification of the supported variant(s) for updating transactions failed.</summary>
+        <summary>This class defines the exception ErrorGetSupportedUpdateVariantsFailed that is thrown if the determination of the supported update variants failed.</summary>
+        <description>This exception is thrown when the getSupportedUpdateVariants function cannot retrieve the list of supported firmware update variants from the Secure Element. Supported update variants information describes which update mechanisms (delta, full image, modular, etc.) and configuration variants the Secure Element supports for firmware updates. ErrorGetSupportedUpdateVariantsFailed indicates that the Secure Element cannot provide the supported variants list due to hardware failure, firmware information storage corruption, internal device information system errors, communication failures, or Secure Element state restrictions. When this exception occurs, no supported variants list is returned and applications cannot determine which update strategies are available for this device. Recovery typically involves device verification, device information subsystem diagnostics, and firmware inspection if the failure persists.</description>
+        <constructors>
+            <constructor>
+                <signature>ErrorGetSupportedUpdateVariantsFailed()</signature>
+                <description>Constructs a new ErrorGetSupportedUpdateVariantsFailed exception with null as the value for its detail message</description>
+            </constructor>
+            <constructor>
+                <signature>ErrorGetSupportedUpdateVariantsFailed(String message)</signature>
+                <description>Constructs a new ErrorGetSupportedUpdateVariantsFailed exception whereby its detail message is initialized with the passed value</description>
+                <parameter name="message">value for the detail message of the exception, typically describing the supported update variants retrieval failure</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorGetSupportedUpdateVariantsFailed(String message, Throwable cause)</signature>
+                <description>Constructs a new ErrorGetSupportedUpdateVariantsFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorGetSupportedUpdateVariantsFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+                <description>Constructs a new ErrorGetSupportedUpdateVariantsFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+            </constructor>
+        </constructors>
     </javadoc>
     <specification>
         <source>BSI TR-03151-1</source>
-        <requirement>SHALL be raised when supported update variant query fails</requirement>
-        <applicability>Transaction update variant query operations</applicability>
+        <section>3.3.2 Device Update - getSupportedUpdateVariants</section>
+        <requirement>The function getSupportedUpdateVariants SHALL query the Secure Element to determine the list of all supported firmware update variants. If the Secure Element cannot provide or return the required supported variants information, the function SHALL raise the exception ErrorGetSupportedUpdateVariantsFailed and exit without returning any update variant data. The supported update variants retrieval failure indicates the Secure Element's device information query functionality could not complete successfully.</requirement>
+        <applicability>Device update operations - getSupportedUpdateVariants function only</applicability>
+        <reference>getSupportedUpdateVariants – Function (3.3.2)</reference>
     </specification>
     <thrownBy>
-        <function>getSupportedTransactionUpdateVariants</function>
+        <function>getSupportedUpdateVariants</function>
     </thrownBy>
+    <triggerConditions>
+        <condition>
+            <scenario>Device information hardware failure</scenario>
+            <description>The Secure Element's device information storage hardware malfunctions or becomes inaccessible, preventing supported update variants retrieval</description>
+            <trigger>The Secure Element's firmware information or device capabilities hardware malfunctions or experiences read errors. When getSupportedUpdateVariants is called, the supported variants query is sent to the Secure Element, but the hardware cannot provide valid capabilities data. The function receives a failure status from the Secure Element, triggering ErrorGetSupportedUpdateVariantsFailed.</trigger>
+        </condition>
+        <condition>
+            <scenario>Firmware information metadata corruption</scenario>
+            <description>The Secure Element's firmware information or supported update variants metadata becomes corrupted or is lost</description>
+            <trigger>The Secure Element's memory containing firmware capabilities, supported update variants configuration, or update mechanism information becomes corrupted, experiences data loss, or is marked as inaccessible due to storage errors. When getSupportedUpdateVariants attempts to read the supported variants, the data cannot be reliably retrieved, triggering ErrorGetSupportedUpdateVariantsFailed.</trigger>
+        </condition>
+        <condition>
+            <scenario>Device information subsystem internal error</scenario>
+            <description>The Secure Element's device information or capabilities subsystem encounters critical errors that prevent supported variants enumeration</description>
+            <trigger>The Secure Element's device information subsystem (responsible for maintaining and providing device capabilities and firmware information) encounters an internal error, deadlock, or exception. When getSupportedUpdateVariants is called, the information system cannot process the query, triggering ErrorGetSupportedUpdateVariantsFailed.</trigger>
+        </condition>
+        <condition>
+            <scenario>Device-to-Secure Element communication failure during capabilities query</scenario>
+            <description>The communication channel between device and Secure Element is disrupted during supported update variants retrieval</description>
+            <trigger>A communication failure occurs while getSupportedUpdateVariants transmits the capabilities query to the Secure Element or while receiving the supported variants response. The command may be corrupted, the response may be incomplete, or the communication link may be temporarily unavailable. The function receives a communication error status, triggering ErrorGetSupportedUpdateVariantsFailed.</trigger>
+        </condition>
+        <condition>
+            <scenario>Secure Element in restricted or error state prohibiting capabilities access</scenario>
+            <description>The Secure Element is in a locked, restricted, or error state that prevents external queries for update capabilities information</description>
+            <trigger>The Secure Element enters a state where capability queries or device information access is not permitted. When getSupportedUpdateVariants is called and the Secure Element's state prohibits capabilities access, the function receives a state-related rejection, triggering ErrorGetSupportedUpdateVariantsFailed.</trigger>
+        </condition>
+    </triggerConditions>
+    <executionSequence>
+        <step number="1">User/application calls getSupportedUpdateVariants function on device</step>
+        <step number="2">Function validates input parameters and checks authentication status (if required by referencing guideline)</step>
+        <step number="3">Function checks authorization for device capabilities information access (if required by referencing guideline)</step>
+        <step number="4">Function verifies device is properly initialized and device information is operational</step>
+        <step number="5">Function initiates communication channel to Secure Element and prepares device capabilities query command</step>
+        <step number="6">Function transmits capabilities query command to Secure Element requesting list of all supported update variants</step>
+        <step number="6a">If Secure Element responds with failure status (information error, capabilities error, metadata error) → ErrorGetSupportedUpdateVariantsFailed raised, function exits without variants list</step>
+        <step number="6b">If communication failure occurs during query transmission or response reception → ErrorGetSupportedUpdateVariantsFailed raised, function exits</step>
+        <step number="7">If successful, function receives supported update variants list from Secure Element</step>
+        <step number="8">Function validates supported variants list for correctness (format, variant identifier validity, configuration consistency)</step>
+        <step number="9">Function closes Secure Element communication channel</step>
+        <step number="10">Function returns valid supported update variants list to caller</step>
+    </executionSequence>
+    <recovery>
+        <step>Verify device operational status - confirm device is initialized, responding to other operations, and not in an error state</step>
+        <step>Verify Secure Element accessibility - confirm device can communicate with Secure Element through diagnostic commands</step>
+        <step>Check device initialization - ensure device has been properly initialized with initDevice before attempting getSupportedUpdateVariants</step>
+        <step>Retry getSupportedUpdateVariants operation - attempt the function call again as the failure may be transient</step>
+        <step>Review device diagnostics for device information system health - query device for diagnostic information about Secure Element device information subsystem status</step>
+        <step>Verify firmware information integrity through device manufacturer diagnostics - check if firmware metadata is accessible and uncorrupted</step>
+        <step>Test other device queries - attempt retrieving device description or component versions to verify general device information access capability</step>
+        <step>Implement comprehensive error logging and monitoring - log this failure consistently to identify patterns (transient vs. persistent, correlation with update operations)</step>
+        <step>If failure is persistent, attempt device firmware update if available - may resolve device information subsystem errors or update supported variant information</step>
+        <step>If failure persists and suspected hardware issue, contact device manufacturer or consider device replacement - repeated device information retrieval failures indicate serious hardware problems</step>
+    </recovery>
+    <relatedExceptions>
+        <exception>ErrorFunctionFailed</exception>
+        <exception>ErrorDeviceNotInitialized</exception>
+        <exception>ErrorUpdateFailed</exception>
+        <exception>ErrorGetComponentVersionsFailed</exception>
+        <exception>ErrorGetDescriptionFailed</exception>
+    </relatedExceptions>
+    <postconditionality>
+        <state name="Device Operational State">Device remains fully operational and unmodified. The failure to retrieve supported update variants does not affect device initialization state, update capabilities, internal memory, stored data, or the ability to perform other operations. All device components remain in their pre-call state.</state>
+        <state name="Supported Variants Return Status">No supported update variants list is returned to the caller. The function exits without providing any update variant information. Applications must not assume default update variants or cached information; they must handle the exception as indicating update capabilities enumeration is unavailable.</state>
+        <state name="Secure Element Device Information State">Secure Element device information subsystem remains unchanged by the failed query. No state modifications, capability changes, or device configuration changes occur. Device information operations continue normally regardless of the retrieval failure.</state>
+        <state name="Firmware Update Capability Continuity">Firmware update capabilities continue to be maintained internally in the Secure Element. The failure to retrieve the supported variants list does not affect device update capabilities or update operations. Variant queries can be retried once the underlying issue is resolved.</state>
+        <state name="No Cascading State Effects">No cascading state inconsistencies or secondary failures occur as a result of the capabilities query failure. Device internal consistency is maintained. Other SE API functions and device operations continue normally without state corruption.</state>
+        <state name="Recovery Preconditions Met">The device state after exception is consistent and allows for recovery operations. The underlying issue (hardware error, communication error, information system error) remains present, but the device is stable enough to accept diagnostic queries or recovery attempts.</state>
+    </postconditionality>
+    <notes>
+        <note>ErrorGetSupportedUpdateVariantsFailed is thrown ONLY by the getSupportedUpdateVariants function - it is the most specific and precise exception for Secure Element device capabilities update variants retrieval failures</note>
+        <note>This exception indicates a failure in the Secure Element's ability to enumerate its supported firmware update variants and mechanisms</note>
+        <note>Critical distinction from ErrorFunctionFailed: ErrorGetSupportedUpdateVariantsFailed specifically indicates device capabilities enumeration is unavailable at the device information subsystem level, while ErrorFunctionFailed indicates broader unspecified critical failures</note>
+        <note>Exception is raised during the capabilities enumeration phase (steps 6-7), after device initialization and authentication checks have passed</note>
+        <note>After this exception, the Secure Element remains unchanged and firmware update capabilities continue to be maintained internally. Variant queries can be retried once the underlying issue is resolved</note>
+        <note>This exception has High severity because it prevents users from determining which firmware update strategies are available (critical for update planning and compatibility verification)</note>
+        <note>Supported update variants describe which update mechanisms and configuration variants the Secure Element supports for firmware update operations</note>
+        <note>The exception indicates device capabilities cannot be reliably enumerated; applications must not implement workarounds using external capability tracking without explicit validation</note>
+        <note>Failure scenarios range from transient (temporary communication issues, temporary state) to persistent (firmware metadata corruption, hardware failure, firmware error)</note>
+        <note>If this exception occurs frequently or persistently, it indicates serious issues with Secure Element device information hardware, firmware, or capabilities metadata that require diagnostic investigation</note>
+        <note>Device capabilities enumeration is a read-only query; failure does not modify any device state, so recovery typically requires only retrying the query once underlying issue is resolved</note>
+        <note>Supported update variants information is essential for update planning and ensuring compatibility of firmware update packages with device capabilities</note>
+        <note>Applications must implement appropriate error handling for update capabilities enumeration failures when planning firmware update operations</note>
+        <note>Repeated device capabilities retrieval failures may indicate device needs firmware update, device information reset, or hardware service - manufacturer support should be engaged</note>
+        <note>Different device models and firmware versions may support different update variants - consult device specifications for supported update mechanism details</note>
+    </notes>
+    <usage>
+        <scenario name="Scenario 1: Firmware Update Planning and Compatibility Assessment">
+            <description>A firmware update manager determines which update variants are available before planning firmware updates. The manager calls getSupportedUpdateVariants to enumerate all supported update mechanisms and strategies. Based on this information, the manager selects the optimal update strategy for each device. If ErrorGetSupportedUpdateVariantsFailed is raised, the manager cannot assess device compatibility.</description>
+            <relatedFunctions>getSupportedUpdateVariants, updateDevice</relatedFunctions>
+            <errorContext>Supported update variants unavailable for firmware update planning and compatibility assessment</errorContext>
+        </scenario>
+        <scenario name="Scenario 2: Device Capabilities Discovery and Configuration Management">
+            <description>A device management system discovers and catalogs device capabilities across an infrastructure. The system calls getSupportedUpdateVariants as part of comprehensive device capability discovery. This information is used for capacity planning, compatibility reporting, and update strategy selection. If ErrorGetSupportedUpdateVariantsFailed is raised, the capability discovery cannot include update variant information.</description>
+            <relatedFunctions>getSupportedUpdateVariants, getDescription, getComponentVersions</relatedFunctions>
+            <errorContext>Supported update variants unavailable for device capabilities discovery</errorContext>
+        </scenario>
+        <scenario name="Scenario 3: Firmware Update Package Verification and Pre-Update Validation">
+            <description>An update validation system verifies that firmware update packages are compatible with target devices before initiating updates. The system calls getSupportedUpdateVariants to confirm the target device supports the update variant specified in the update package. If ErrorGetSupportedUpdateVariantsFailed is raised, the system cannot verify variant compatibility.</description>
+            <relatedFunctions>getSupportedUpdateVariants, updateDevice</relatedFunctions>
+            <errorContext>Supported update variants unavailable for firmware package compatibility verification</errorContext>
+        </scenario>
+        <scenario name="Scenario 4: Multi-Device Firmware Update Orchestration and Batch Processing">
+            <description>An enterprise update orchestration system manages coordinated firmware updates across many devices. The system calls getSupportedUpdateVariants on each device to determine which update variants each device supports. This enables the orchestrator to select appropriate update strategies for each device or device group. If ErrorGetSupportedUpdateVariantsFailed is raised on any device, the orchestrator cannot determine that device's update strategy options.</description>
+            <relatedFunctions>getSupportedUpdateVariants, updateDevice</relatedFunctions>
+            <errorContext>Supported update variants unavailable for multi-device update orchestration</errorContext>
+        </scenario>
+    </usage>
+    <implementationContext>
+        <note>The getSupportedUpdateVariants function retrieves a list of all firmware update variants and mechanisms that the Secure Element supports</note>
+        <note>Supported update variants describe which update mechanisms (delta updates, full image updates, modular updates, staged updates, etc.) are available on this device</note>
+        <note>Update variant information includes configuration options and constraints specific to each supported update approach</note>
+        <note>Different device models, firmware versions, and configurations may support different sets of update variants - consult device specifications for supported variants details</note>
+        <note>Supported update variants information is essential for update planning, compatibility verification, and selecting optimal update strategies for each device</note>
+        <note>If supported variants retrieval fails but other device information queries succeed (description, component versions), the issue is specific to update capabilities information, not to general device information access</note>
+        <note>Device capabilities corruption or enumeration errors represent critical issues in device information subsystem that should be investigated immediately</note>
+        <note>Update variants enumeration is a read-only query; ErrorGetSupportedUpdateVariantsFailed does not indicate update capabilities corruption requiring state recovery - it indicates the capabilities information source is unavailable</note>
+    </implementationContext>
 </exception>

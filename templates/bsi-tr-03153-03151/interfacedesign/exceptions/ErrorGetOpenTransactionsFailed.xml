@@ -1,18 +1,163 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <exception id="ErrorGetOpenTransactionsFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
     <name>ErrorGetOpenTransactionsFailed</name>
-    <description>This exception is thrown if the determination of open transactions that are currently managed by the device failed.</description>
-    <category>Transaction</category>
-    <severity>Medium</severity>
+    <description>This exception is thrown if the SE API function getOpenTransactions fails to retrieve the list of currently open transactions being managed by the Secure Element. The function attempts to obtain detailed information about all active transactions in progress, but the retrieval process fails before the transaction list can be determined and returned.</description>
+    <category>Transaction Management - Active Transaction Enumeration</category>
+    <severity>High</severity>
     <javadoc>
         <summary>This class defines the exception ErrorGetOpenTransactionsFailed that is thrown if the determination of open transactions that are currently managed by the device failed.</summary>
+        <description>This exception is thrown when the getOpenTransactions function cannot retrieve the list of open transactions from the Secure Element. Open transactions information provides detailed enumeration of all currently active transactions in progress, including transaction IDs and status information. ErrorGetOpenTransactionsFailed indicates that the Secure Element cannot provide the transaction list due to hardware failure, storage corruption, internal transaction management system errors, communication failures, or Secure Element state restrictions. When this exception occurs, no transaction list is returned and applications cannot enumerate or inspect active transactions. Recovery typically involves device verification, transaction management subsystem diagnostics, and possible hardware diagnosis if the failure persists.</description>
+        <constructors>
+            <constructor>
+                <signature>ErrorGetOpenTransactionsFailed()</signature>
+                <description>Constructs a new ErrorGetOpenTransactionsFailed exception with null as the value for its detail message</description>
+            </constructor>
+            <constructor>
+                <signature>ErrorGetOpenTransactionsFailed(String message)</signature>
+                <description>Constructs a new ErrorGetOpenTransactionsFailed exception whereby its detail message is initialized with the passed value</description>
+                <parameter name="message">value for the detail message of the exception, typically describing the open transactions retrieval failure</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorGetOpenTransactionsFailed(String message, Throwable cause)</signature>
+                <description>Constructs a new ErrorGetOpenTransactionsFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorGetOpenTransactionsFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+                <description>Constructs a new ErrorGetOpenTransactionsFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+            </constructor>
+        </constructors>
     </javadoc>
     <specification>
         <source>BSI TR-03151-1</source>
-        <requirement>SHALL be raised when open transaction list retrieval fails</requirement>
-        <applicability>Open transaction query operations</applicability>
+        <section>3.4.6 Transaction Management - getOpenTransactions</section>
+        <requirement>The function getOpenTransactions SHALL query the Secure Element to determine the list of all currently open transactions being managed. If the Secure Element cannot provide or return the required transaction list, the function SHALL raise the exception ErrorGetOpenTransactionsFailed and exit without returning any transaction data. The open transaction retrieval failure indicates the Secure Element's transaction enumeration query functionality could not complete successfully.</requirement>
+        <applicability>Transaction management operations - getOpenTransactions function only</applicability>
+        <reference>getOpenTransactions – Function (3.4.6)</reference>
     </specification>
     <thrownBy>
         <function>getOpenTransactions</function>
     </thrownBy>
+    <triggerConditions>
+        <condition>
+            <scenario>Transaction registry hardware failure</scenario>
+            <description>The Secure Element's transaction registry hardware malfunctions or becomes inaccessible, preventing transaction list retrieval</description>
+            <trigger>The Secure Element's transaction registry storage hardware fails or experiences read errors. When getOpenTransactions is called, the transaction list query is sent to the Secure Element, but the hardware cannot provide valid transaction data. The function receives a failure status from the Secure Element, triggering ErrorGetOpenTransactionsFailed.</trigger>
+        </condition>
+        <condition>
+            <scenario>Transaction registry data corruption</scenario>
+            <description>The Secure Element's transaction registry or active transaction tracking data becomes corrupted or is lost</description>
+            <trigger>The Secure Element's memory containing transaction registry, active transaction tracking tables, or transaction metadata becomes corrupted, experiences data loss, or is marked as inaccessible due to storage errors. When getOpenTransactions attempts to read the transaction list, the data cannot be reliably retrieved, triggering ErrorGetOpenTransactionsFailed.</trigger>
+        </condition>
+        <condition>
+            <scenario>Transaction management subsystem internal error</scenario>
+            <description>The Secure Element's transaction management subsystem encounters critical errors that prevent transaction enumeration</description>
+            <trigger>The Secure Element's transaction management subsystem (responsible for managing transactions and providing transaction state) encounters an internal error, deadlock, or exception. When getOpenTransactions is called, the transaction management system cannot process the enumeration query, triggering ErrorGetOpenTransactionsFailed.</trigger>
+        </condition>
+        <condition>
+            <scenario>Device-to-Secure Element communication failure during transaction query</scenario>
+            <description>The communication channel between device and Secure Element is disrupted during open transaction list retrieval</description>
+            <trigger>A communication failure occurs while getOpenTransactions transmits the transaction query to the Secure Element or while receiving the transaction list response. The command may be corrupted, the response may be incomplete, or the communication link may be temporarily unavailable. The function receives a communication error status, triggering ErrorGetOpenTransactionsFailed.</trigger>
+        </condition>
+        <condition>
+            <scenario>Secure Element in restricted or error state prohibiting transaction access</scenario>
+            <description>The Secure Element is in a locked, restricted, or error state that prevents external queries for transaction information</description>
+            <trigger>The Secure Element enters a state where transaction queries or transaction enumeration is not permitted. When getOpenTransactions is called and the Secure Element's state prohibits transaction access, the function receives a state-related rejection, triggering ErrorGetOpenTransactionsFailed.</trigger>
+        </condition>
+    </triggerConditions>
+    <executionSequence>
+        <step number="1">User/application calls getOpenTransactions function on device</step>
+        <step number="2">Function validates input parameters and checks authentication status (if required by referencing guideline)</step>
+        <step number="3">Function checks authorization for transaction information access (if required by referencing guideline)</step>
+        <step number="4">Function verifies device is properly initialized and transaction management is operational</step>
+        <step number="5">Function initiates communication channel to Secure Element and prepares transaction enumeration query command</step>
+        <step number="6">Function transmits transaction query command to Secure Element requesting list of all open transactions</step>
+        <step number="6a">If Secure Element responds with failure status (registry error, transaction enumeration error, management error) → ErrorGetOpenTransactionsFailed raised, function exits without transaction list</step>
+        <step number="6b">If communication failure occurs during query transmission or response reception → ErrorGetOpenTransactionsFailed raised, function exits</step>
+        <step number="7">If successful, function receives open transaction list from Secure Element</step>
+        <step number="8">Function validates transaction list for correctness (format, transaction ID validity, state consistency)</step>
+        <step number="9">Function closes Secure Element communication channel</step>
+        <step number="10">Function returns valid open transaction list to caller</step>
+    </executionSequence>
+    <recovery>
+        <step>Verify device operational status - confirm device is initialized, responding to other operations, and not in an error state</step>
+        <step>Verify Secure Element accessibility - confirm device can communicate with Secure Element through diagnostic commands</step>
+        <step>Check device initialization - ensure device has been properly initialized with initDevice before attempting getOpenTransactions</step>
+        <step>Retry getOpenTransactions operation - attempt the function call again as the failure may be transient</step>
+        <step>Review device diagnostics for transaction management system health - query device for diagnostic information about Secure Element transaction registry status</step>
+        <step>Verify transaction registry integrity through device manufacturer diagnostics - check if transaction registry is accessible and uncorrupted</step>
+        <step>Test other transaction queries - attempt retrieving transaction count or maximum transactions to verify general transaction access capability</step>
+        <step>Implement comprehensive error logging and monitoring - log this failure consistently to identify patterns (transient vs. persistent, correlation with transaction start/finish operations)</step>
+        <step>If failure is persistent, attempt device firmware update if available - may resolve transaction management subsystem errors</step>
+        <step>If failure persists and suspected hardware issue, contact device manufacturer or consider device replacement - repeated transaction enumeration failures indicate serious transaction management hardware problems</step>
+    </recovery>
+    <relatedExceptions>
+        <exception>ErrorFunctionFailed</exception>
+        <exception>ErrorDeviceNotInitialized</exception>
+        <exception>ErrorStartTransactionFailed</exception>
+        <exception>ErrorGetCurrentNumberOfTransactionsFailed</exception>
+        <exception>ErrorGetMaxNumberTransactionsFailed</exception>
+    </relatedExceptions>
+    <postconditionality>
+        <state name="Device Operational State">Device remains fully operational and unmodified. The failure to retrieve open transactions list does not affect device initialization state, transaction operations, internal memory, stored data, or the ability to perform other operations. All device components remain in their pre-call state.</state>
+        <state name="Transaction List Return Status">No transaction list is returned to the caller. The function exits without providing any open transaction information. Applications must not assume default transaction lists or cached information; they must handle the exception as indicating transaction enumeration is unavailable.</state>
+        <state name="Secure Element Transaction Management State">Secure Element transaction management subsystem remains unchanged by the failed query. No state modifications, transaction changes, or transaction management configuration changes occur. Transaction management operations continue normally regardless of the retrieval failure.</state>
+        <state name="Active Transaction Continuity">Active transactions continue to progress and be managed internally in the Secure Element. The failure to retrieve the transaction list does not affect ongoing transaction operations or state. Transaction queries can be retried once the underlying issue is resolved.</state>
+        <state name="No Cascading State Effects">No cascading state inconsistencies or secondary failures occur as a result of the transaction query failure. Device internal consistency is maintained. Other SE API functions and transaction operations continue normally without state corruption.</state>
+        <state name="Recovery Preconditions Met">The device state after exception is consistent and allows for recovery operations. The underlying issue (hardware error, communication error, management system error) remains present, but the device is stable enough to accept diagnostic queries or recovery attempts.</state>
+    </postconditionality>
+    <notes>
+        <note>ErrorGetOpenTransactionsFailed is thrown ONLY by the getOpenTransactions function - it is the most specific and precise exception for Secure Element open transaction retrieval failures</note>
+        <note>This exception indicates a failure in the Secure Element's ability to enumerate its active transactions. It is a critical information retrieval failure for transaction management and monitoring</note>
+        <note>Critical distinction from ErrorFunctionFailed: ErrorGetOpenTransactionsFailed specifically indicates transaction enumeration is unavailable at the transaction management subsystem level, while ErrorFunctionFailed indicates broader unspecified critical failures</note>
+        <note>Exception is raised during the transaction enumeration phase (steps 6-7), after device initialization and authentication checks have passed</note>
+        <note>After this exception, the Secure Element remains unchanged and active transactions continue to be managed internally. Transaction enumeration queries can be retried once the underlying issue is resolved</note>
+        <note>This exception has High severity because it prevents users from enumerating and inspecting active transactions (critical for transaction monitoring and diagnostics)</note>
+        <note>Open transaction list provides detailed information about all currently active transactions for inspection, monitoring, and diagnostic purposes</note>
+        <note>The exception indicates transaction enumeration cannot be reliably performed; applications must not implement workarounds using external transaction tracking without explicit validation</note>
+        <note>Failure scenarios range from transient (temporary communication issues, temporary state) to persistent (storage corruption, hardware failure, firmware error)</note>
+        <note>If this exception occurs frequently or persistently, it indicates serious issues with Secure Element transaction management hardware, firmware, or registry that require diagnostic investigation</note>
+        <note>Transaction enumeration is a read-only query; failure does not modify any transaction state, so recovery typically requires only retrying the query once underlying issue is resolved</note>
+        <note>Open transaction list may be large if many transactions are simultaneously active; applications should handle variable response sizes</note>
+        <note>Transaction enumeration is essential for transaction lifecycle monitoring, diagnostics, and troubleshooting stuck or orphaned transactions</note>
+        <note>Applications must implement appropriate error handling for transaction enumeration failures, especially in transaction-heavy or monitored deployments</note>
+        <note>Repeated transaction enumeration failures may indicate device needs firmware update, transaction management reset, or hardware service - manufacturer support should be engaged</note>
+    </notes>
+    <usage>
+        <scenario name="Scenario 1: Active Transaction Monitoring and Diagnostics">
+            <description>A monitoring system tracks active transactions to ensure healthy transaction processing and identify stuck or orphaned transactions. The system periodically calls getOpenTransactions to enumerate all currently active transactions and verify their state. If ErrorGetOpenTransactionsFailed is raised, the monitoring system cannot assess transaction status and must alert operators to the monitoring failure.</description>
+            <relatedFunctions>getOpenTransactions, getCurrentNumberOfTransactions, getMaxNumberOfTransactions</relatedFunctions>
+            <errorContext>Open transaction list unavailable for transaction monitoring and diagnostics</errorContext>
+        </scenario>
+        <scenario name="Scenario 2: Transaction Recovery and Cleanup Operations">
+            <description>An administrative tool performs device recovery and cleanup operations, including identifying and cleaning up stuck or orphaned transactions. The tool calls getOpenTransactions to enumerate all active transactions and determine which ones need recovery. If ErrorGetOpenTransactionsFailed is raised, the tool cannot identify stuck transactions and must defer recovery operations.</description>
+            <relatedFunctions>getOpenTransactions, getCurrentNumberOfTransactions, updateTransaction</relatedFunctions>
+            <errorContext>Open transaction list unavailable for transaction recovery identification</errorContext>
+        </scenario>
+        <scenario name="Scenario 3: Device Health Assessment and Transaction State Validation">
+            <description>A comprehensive health assessment tool collects detailed device diagnostics including transaction state information. The tool calls getOpenTransactions to enumerate all active transactions as part of the health assessment. If ErrorGetOpenTransactionsFailed is raised, the tool cannot include transaction state information in the health report.</description>
+            <relatedFunctions>getOpenTransactions, getCurrentNumberOfTransactions, getDeviceHealth</relatedFunctions>
+            <errorContext>Open transaction list unavailable for device health assessment</errorContext>
+        </scenario>
+        <scenario name="Scenario 4: Multi-Device Transaction State Synchronization">
+            <description>An enterprise system managing transactions across multiple devices synchronizes transaction state by querying getOpenTransactions on each device. This provides a complete view of all active transactions across the infrastructure. If ErrorGetOpenTransactionsFailed is raised on one device, the system cannot determine that device's transaction state.</description>
+            <relatedFunctions>getOpenTransactions, getCurrentNumberOfTransactions, startTransaction</relatedFunctions>
+            <errorContext>Open transaction list unavailable for multi-device transaction synchronization</errorContext>
+        </scenario>
+    </usage>
+    <implementationContext>
+        <note>The getOpenTransactions function retrieves a detailed list of all currently open transactions from the Secure Element's transaction management subsystem</note>
+        <note>Open transactions are those that have been started but not yet finished, including transactions in various states of progress or awaiting completion</note>
+        <note>The open transaction list includes transaction identifiers and metadata that allow detailed inspection and monitoring of transaction state</note>
+        <note>Different device models and configurations may report different transaction state information - consult device specifications for transaction metadata details</note>
+        <note>The open transaction list is essential for transaction lifecycle monitoring, diagnostics, and recovery operations in production deployments</note>
+        <note>If open transaction retrieval fails but transaction count queries succeed (current/max transactions), the issue is specific to transaction enumeration, not to general transaction management access</note>
+        <note>Transaction registry corruption or enumeration errors represent critical issues in transaction management that should be investigated immediately</note>
+        <note>Transaction enumeration is a read-only query; ErrorGetOpenTransactionsFailed does not indicate transaction state corruption requiring state recovery - it indicates the transaction enumeration source is unavailable</note>
+    </implementationContext>
 </exception>

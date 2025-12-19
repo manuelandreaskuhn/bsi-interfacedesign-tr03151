@@ -1,20 +1,170 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <exception id="ErrorTransactionCounterOverflow" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
     <name>ErrorTransactionCounterOverflow</name>
-    <description>This exception is thrown if the transaction counter reached its logical maximum.</description>
-    <category>Transaction</category>
+    <description>This exception is thrown if the transaction counter has reached its logical maximum value and cannot be incremented further. The transaction counter maintains a numeric record of executed transactions with a defined maximum value (typically a large 64-bit or 128-bit integer). After many transactions, the counter value approaches or reaches this logical maximum. Once at maximum, the counter cannot increment further without overflow. ErrorTransactionCounterOverflow is a Critical severity exception because it indicates the counter is exhausted and all transaction functionality must stop. The counter has reached the end of its lifecycle. Device replacement or counter reset procedure is required to restore transaction functionality, though resetting the counter may compromise transaction authenticity and audit trail integrity.</description>
+    <category>Transaction Management - Counter Overflow</category>
     <severity>Critical</severity>
     <javadoc>
-        <summary>This class defines the exception ErrorTransactionCounterOverflow that is thrown if the transaction counter reached its logical maximum.</summary>
+        <summary>This class defines the exception ErrorTransactionCounterOverflow that is thrown if the transaction counter has reached its logical maximum value.</summary>
+        <description>This exception is thrown when the transaction counter reaches its logical maximum value and cannot be incremented further. The transaction counter maintains a numeric record of executed transactions with a defined maximum representable value. This maximum is a logical limit based on counter data type size (typically 64-bit or 128-bit integer). After many transactions over extended operational lifetime, the counter approaches and eventually reaches this logical maximum. Once at maximum, the counter cannot increment without overflow. ErrorTransactionCounterOverflow is a Critical severity exception because transaction functionality is completely blocked. The counter has reached the end of its lifecycle. All transaction operations (startTransaction, updateTransaction, finishTransaction) cannot proceed. Device replacement or counter reset is required, though reset compromises transaction authenticity. ErrorTransactionCounterOverflow indicates a device reaching end-of-life operational capacity.</description>
+        <constructors>
+            <constructor>
+                <signature>ErrorTransactionCounterOverflow()</signature>
+                <description>Constructs a new ErrorTransactionCounterOverflow exception with null as the value for its detail message</description>
+            </constructor>
+            <constructor>
+                <signature>ErrorTransactionCounterOverflow(String message)</signature>
+                <description>Constructs a new ErrorTransactionCounterOverflow exception whereby its detail message is initialized with the passed value</description>
+                <parameter name="message">value for the detail message of the exception, typically describing counter maximum value reached</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorTransactionCounterOverflow(String message, Throwable cause)</signature>
+                <description>Constructs a new ErrorTransactionCounterOverflow exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorTransactionCounterOverflow(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+                <description>Constructs a new ErrorTransactionCounterOverflow exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+            </constructor>
+        </constructors>
     </javadoc>
     <specification>
         <source>BSI TR-03151-1</source>
-        <requirement>SHALL be raised when transaction counter reaches maximum value</requirement>
-        <applicability>All transaction operations when counter at maximum</applicability>
+        <section>3.2.2 Transaction Management - Transaction Counter Lifecycle</section>
+        <requirement>The transaction counter maintains a numeric record of executed transactions with a defined logical maximum value based on counter data type. When the counter reaches this logical maximum and cannot increment further without overflow, the Secure Element SHALL raise ErrorTransactionCounterOverflow and block all transaction operations. This Critical severity exception indicates the counter has reached the end of its operational lifecycle. Device replacement or counter reset procedure is required to restore transaction functionality. However, counter reset compromises transaction authenticity and audit trail continuity. ErrorTransactionCounterOverflow represents device end-of-life operational capacity.</requirement>
+        <applicability>All transaction operations when counter at logical maximum: startTransaction, updateTransaction, finishTransaction</applicability>
+        <reference>Transaction Management (3.2.2), Transaction Counter Lifecycle (3.2.2), startTransaction – Function (3.2.2), updateTransaction – Function (3.2.2), finishTransaction – Function (3.2.2)</reference>
     </specification>
     <thrownBy>
         <function>startTransaction</function>
         <function>updateTransaction</function>
         <function>finishTransaction</function>
     </thrownBy>
+    <triggerConditions>
+        <condition>
+            <scenario>Counter reaches logical maximum value after many transactions</scenario>
+            <description>Counter value increments to maximum representable value (e.g., 2^64-1 or 2^128-1)</description>
+            <trigger>After billions or trillions of transactions over decades of operation, counter reaches maximum value. Next startTransaction call detects counter at maximum and raises ErrorTransactionCounterOverflow.</trigger>
+        </condition>
+        <condition>
+            <scenario>Overflow detection during counter increment operation</scenario>
+            <description>Counter increment operation would cause overflow</description>
+            <trigger>updateTransaction attempts to increment counter from maximum value. Device detects overflow condition and raises ErrorTransactionCounterOverflow instead of wrapping or corrupting counter.</trigger>
+        </condition>
+        <condition>
+            <scenario>Counter overflow check during transaction initiation</scenario>
+            <description>Transaction initialization includes overflow validation</description>
+            <trigger>finishTransaction checks counter state before recording final transaction entry. Counter is at maximum. Device raises ErrorTransactionCounterOverflow to prevent overflow.</trigger>
+        </condition>
+        <condition>
+            <scenario>Device diagnostics reveal counter at maximum</scenario>
+            <description>Diagnostics testing detects counter at logical maximum</description>
+            <trigger>Administrator runs device status check or diagnostics. Results show counter at maximum value. Subsequent transaction operations raise ErrorTransactionCounterOverflow.</trigger>
+        </condition>
+        <condition>
+            <scenario>Counter saturation after extended operational lifetime</scenario>
+            <description>Counter value saturates after years or decades of device operation</description>
+            <trigger>Device in production for extended period reaches counter maximum. Repeated transactions eventually saturate counter. ErrorTransactionCounterOverflow raised to indicate end-of-life.</trigger>
+        </condition>
+    </triggerConditions>
+    <executionSequence>
+        <step number="1">User/application calls transaction operation (e.g., startTransaction, updateTransaction, finishTransaction)</step>
+        <step number="2">Function validates input parameters and operations prerequisites</step>
+        <step number="3">Function initiates communication with Secure Element</step>
+        <step number="4">Secure Element receives transaction operation request</step>
+        <step number="5">Secure Element checks transaction counter current value</step>
+        <step number="5a">If counter at maximum value → ErrorTransactionCounterOverflow raised, operation aborted</step>
+        <step number="5b">If counter below maximum → proceed to step 6</step>
+        <step number="6">Secure Element prepares transaction record for counter</step>
+        <step number="7">Secure Element validates counter can be incremented</step>
+        <step number="7a">If increment would cause overflow → ErrorTransactionCounterOverflow raised</step>
+        <step number="7b">If increment safe → proceed to step 8</step>
+        <step number="8">Secure Element increments counter value</step>
+        <step number="9">Secure Element writes updated counter and transaction record</step>
+        <step number="10">Secure Element returns success to function</step>
+        <step number="11">Function returns to caller indicating transaction recorded with updated counter</step>
+    </executionSequence>
+    <recovery>
+        <step>Review error message - understand counter has reached maximum value</step>
+        <step>Check counter value - confirm counter at logical maximum through diagnostics</step>
+        <step>Run diagnostics - execute complete device diagnostics to assess counter state</step>
+        <step>Review transaction history - document total transactions executed</step>
+        <step>Document counter state - preserve counter value and transaction history</step>
+        <step>Determine lifecycle status - recognize device has reached end-of-life operational capacity</step>
+        <step>Plan device replacement - schedule device replacement if counter reset not acceptable</step>
+        <step>Consider reset - evaluate risks and benefits of counter reset procedure</step>
+        <step>Backup audit trail - preserve transaction audit trail before reset or replacement</step>
+        <step>Execute procedure - implement device replacement or counter reset as determined</step>
+        <step>Verify recovery - confirm counter functionality after procedure completes</step>
+    </recovery>
+    <relatedExceptions>
+        <exception>ErrorTransactionCounterExhausted</exception>
+        <exception>ErrorSignatureCounterOverflow</exception>
+        <exception>ErrorFunctionFailed</exception>
+        <exception>ErrorDeviceNotInitialized</exception>
+    </relatedExceptions>
+    <postconditionality>
+        <state name="Transaction Operations Blocked">All transaction operations cannot proceed (startTransaction, updateTransaction, finishTransaction).</state>
+        <state name="Counter Not Incremented">Counter value remains at maximum without incrementing.</state>
+        <state name="Transaction Not Recorded">Transaction record is not written due to counter overflow protection.</state>
+        <state name="Device End-of-Life Reached">Device has reached end of operational lifecycle for transaction functionality.</state>
+        <state name="Critical Exception Returned">Function returns ErrorTransactionCounterOverflow Critical exception to caller.</state>
+        <state name="Replacement or Reset Required">Device replacement or counter reset procedure is required to restore functionality.</state>
+    </postconditionality>
+    <notes>
+        <note>ErrorTransactionCounterOverflow is thrown by 3 core transaction functions</note>
+        <note>This is a Critical severity exception blocking all transaction functionality</note>
+        <note>Counter has a logical maximum based on counter data type representation</note>
+        <note>Overflow represents counter end-of-life after many transactions</note>
+        <note>Counter typically uses 64-bit or 128-bit integer representation</note>
+        <note>Maximum value is extraordinarily large (billions or trillions for 64-bit)</note>
+        <note>Extended device operation will eventually lead to counter overflow</note>
+        <note>Device lifetime is often measured by counter capacity rather than time</note>
+        <note>Transaction authenticity depends on continuous counter incrementing</note>
+        <note>Counter reset compromises audit trail integrity and transaction authenticity</note>
+        <note>Device replacement is preferred over counter reset for security</note>
+        <note>Counter overflow is a device lifecycle event, not a failure</note>
+        <note>Reaching counter maximum indicates successful extended operation</note>
+        <note>Monitoring counter value enables predictive end-of-life planning</note>
+        <note>Counter value can be tracked for estimating remaining device lifetime</note>
+    </notes>
+    <usage>
+        <scenario name="Scenario 1: Counter Reaches Maximum After Extended Operation">
+            <description>A device has executed trillions of transactions over many years of continuous operation. Transaction counter value reaches its logical maximum (e.g., 2^64-1). Operator attempts new transaction via startTransaction. Device detects counter at maximum and raises ErrorTransactionCounterOverflow. Operator recognizes device has reached end-of-life and schedules replacement.</description>
+            <relatedFunctions>startTransaction, updateTransaction, finishTransaction</relatedFunctions>
+            <errorContext>Counter overflow after extended operational lifetime - device end-of-life</errorContext>
+        </scenario>
+        <scenario name="Scenario 2: Overflow Detection During Counter Increment">
+            <description>Transaction counter is near maximum value. updateTransaction increments counter to maximum. Next finishTransaction checks counter before recording transaction. Overflow detection identifies counter cannot be incremented further. ErrorTransactionCounterOverflow is raised to prevent undefined behavior from wrap-around.</description>
+            <relatedFunctions>updateTransaction, finishTransaction</relatedFunctions>
+            <errorContext>Overflow prevention protects counter integrity during normal operation</errorContext>
+        </scenario>
+        <scenario name="Scenario 3: Device Monitoring Predicts Overflow">
+            <description>Device administration tools regularly monitor counter value and calculate remaining transaction capacity. When counter reaches 99% of maximum (e.g., 0.99 * 2^64), alert is generated. Administrator receives notification of imminent overflow and plans device replacement before ErrorTransactionCounterOverflow occurs.</description>
+            <relatedFunctions>startTransaction, updateTransaction, finishTransaction</relatedFunctions>
+            <errorContext>Proactive monitoring enables planned device replacement before overflow</errorContext>
+        </scenario>
+        <scenario name="Scenario 4: Diagnostics Reveal Counter at Maximum">
+            <description>Administrator runs comprehensive device diagnostics as part of maintenance audit. Diagnostics report shows counter value is at logical maximum. While device currently operational, any new transaction will raise ErrorTransactionCounterOverflow. Administrator immediately initiates device replacement to prevent service interruption.</description>
+            <relatedFunctions>startTransaction, updateTransaction, finishTransaction</relatedFunctions>
+            <errorContext>Diagnostics discovery of counter maximum triggers preventive replacement</errorContext>
+        </scenario>
+    </usage>
+    <implementationContext>
+        <note>Counter overflow check must be performed before each transaction operation</note>
+        <note>Counter value comparison against maximum should be efficient integer operation</note>
+        <note>Overflow detection prevents counter wrap-around that would compromise authenticity</note>
+        <note>Counter increment must be validated to prevent undefined overflow behavior</note>
+        <note>Device must refuse all transaction operations once counter at maximum</note>
+        <note>Error messages should indicate counter maximum value and current value</note>
+        <note>Device diagnostics should include counter value reporting for end-of-life prediction</note>
+        <note>Counter reset procedures should be carefully documented and require authorization</note>
+        <note>Counter reset compromises transaction authenticity and audit trail continuity</note>
+        <note>Device replacement is strongly preferred over counter reset for security integrity</note>
+    </implementationContext>
 </exception>

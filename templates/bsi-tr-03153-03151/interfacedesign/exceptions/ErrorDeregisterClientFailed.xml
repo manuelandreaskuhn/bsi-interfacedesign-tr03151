@@ -1,18 +1,160 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <exception id="ErrorDeregisterClientFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
     <name>ErrorDeregisterClientFailed</name>
-    <description>This exception is thrown if the SE API function deregisterClient fails to disable the invocation of startTransaction, updateTransaction and finishTransaction for the specified clientId.</description>
+    <description>This exception is thrown if the SE API function deregisterClient fails to disable the invocation of startTransaction, updateTransaction, and finishTransaction for the specified clientId. The exception represents a critical failure in the device's client lifecycle management system during the deregistration phase. ErrorDeregisterClientFailed is raised when the device attempts to remove a registered client from its active client registry and disable all transaction operations for that client, but encounters an internal error that prevents the state transition from completing successfully. This exception indicates that the device's client management subsystem has encountered a persistence failure, state inconsistency, or system-level error that prevents the client from being properly deregistered. The exception is raised after the deregistration request has been validated and the deregistration log entry has been created, but before the client's active status has been successfully removed from the internal registry.</description>
     <category>Client Management</category>
     <severity>High</severity>
     <javadoc>
         <summary>This class defines the exception ErrorDeregisterClientFailed that is thrown if the SE API function deregisterClient fails to disable the invocation of startTransaction, updateTransaction and finishTransaction for the specified clientId.</summary>
+        <description>The deregistration operation of a client application from the device encountered a failure condition. This exception indicates that the deregisterClient function was unable to successfully disable the ability for the specified client to invoke transaction functions. This failure may occur due to internal state management issues, persistence failures, or system-level errors during the deregistration process.</description>
+        <constructors>
+            <constructor>
+                <signature>ErrorDeregisterClientFailed()</signature>
+                <description>Constructs a new ErrorDeregisterClientFailed exception with null as the value for its detail message</description>
+            </constructor>
+            <constructor>
+                <signature>ErrorDeregisterClientFailed(String message)</signature>
+                <description>Constructs a new ErrorDeregisterClientFailed exception whereby its detail message is initialized with the passed value</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorDeregisterClientFailed(String message, Throwable cause)</signature>
+                <description>Constructs a new ErrorDeregisterClientFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorDeregisterClientFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+                <description>Constructs a new ErrorDeregisterClientFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+            </constructor>
+        </constructors>
     </javadoc>
     <specification>
         <source>BSI TR-03151-1</source>
-        <requirement>SHALL be raised when client deregistration operation fails</requirement>
-        <applicability>Client deregistration operations</applicability>
+        <section>3.7.4.4</section>
+        <requirement>SHALL be raised when the deregistration of the client fails. If the disabling of the function invocation using the clientId fails, the function SHALL raise the exception ErrorDeregisterClientFailed and exit the function.</requirement>
+        <applicability>Client deregistration operations when disabling client access fails</applicability>
+        <reference>deregisterClient – Exceptions (3.7.4.4)</reference>
     </specification>
     <thrownBy>
         <function>deregisterClient</function>
     </thrownBy>
+    <triggerConditions>
+        <condition>
+            <scenario>Client registry update failure during deregistration</scenario>
+            <description>The device accepts the deregistration request for a valid registered clientId, creates a deregistration log entry successfully, but encounters an error when attempting to update the internal client registry to remove the client from active status.</description>
+            <trigger>Internal client registry persistence failure preventing removal of clientId from active list</trigger>
+        </condition>
+        <condition>
+            <scenario>State management inconsistency in client subsystem</scenario>
+            <description>The device's client management subsystem has entered an inconsistent state where client registry and client state tracking are out of synchronization. Deregistration fails because the subsystem cannot reliably update its state.</description>
+            <trigger>Client management subsystem state inconsistency preventing status transition</trigger>
+        </condition>
+        <condition>
+            <scenario>Open transaction blocking deregistration</scenario>
+            <description>The client being deregistered has one or more open or incomplete transactions. The device prevents deregistration to avoid orphaned transactions, raising this exception to indicate that transactions must be closed before deregistration can proceed.</description>
+            <trigger>Active transactions prevent client deregistration</trigger>
+        </condition>
+        <condition>
+            <scenario>Device storage or persistence failure</scenario>
+            <description>The device's storage system fails to persist the client state change (removal of client from active registry). This can occur due to storage errors, permission issues, or corruption in the client registry storage.</description>
+            <trigger>Storage or persistence failure when updating client registry</trigger>
+        </condition>
+        <condition>
+            <scenario>Client management subsystem malfunction</scenario>
+            <description>The client management subsystem has encountered a runtime error, exception, or malfunction that prevents it from processing the deregistration operation. The error may originate from firmware issues or internal subsystem failures.</description>
+            <trigger>Client management subsystem runtime error or malfunction</trigger>
+        </condition>
+    </triggerConditions>
+    <recovery>
+        <step>Verify that the device is in a consistent and operable state using device health queries or diagnostic functions</step>
+        <step>Check that the specified clientId is currently registered in the device by querying getCurrentNumberOfClients or getRegisteredClients</step>
+        <step>Verify that no open transactions are associated with the client being deregistered by checking transaction state and closing any incomplete transactions</step>
+        <step>Ensure that the device storage and internal state management systems are functioning properly by running storage diagnostics or health checks</step>
+        <step>Query device logs or audit information to identify the specific point at which deregistration failed and any underlying system errors</step>
+        <step>If blocking transactions exist, close all transactions initiated by the client using finishTransaction before reattempting deregistration</step>
+        <step>Retry the deregisterClient operation with the same clientId after a brief delay (typically 100-500ms) to allow the client management subsystem to recover</step>
+        <step>If retry fails with the same clientId, attempt to deregister alternative clients to verify that the client management system is functional</step>
+        <step>If deregistration fails consistently for a specific client while other clients deregister successfully, the client's internal state may be corrupted and client-side cleanup may be necessary</step>
+        <step>If repeated failures occur across all clients, reinitialize the device or client management subsystem to restore consistency of the client registry</step>
+    </recovery>
+    <relatedExceptions>
+        <exception>ErrorClientNotRegistered</exception>
+        <exception>ErrorRegisterClientFailed</exception>
+        <exception>ErrorClientAlreadyRegistered</exception>
+        <exception>ErrorClientLimitReached</exception>
+    </relatedExceptions>
+    <notes>
+        <note>This exception indicates a failure in the internal client management system during the deregistration phase of client lifecycle management. It represents a critical issue preventing proper cleanup of client resources.</note>
+        <note>The exception is raised after the deregistration log message has been successfully created and stored in the audit trail, indicating the failure occurs during the actual state transition to disable the client in the active registry.</note>
+        <note>Once this exception is raised, the client state may be partially updated: the deregistration log entry exists, but the client may still be present in the active registry. The application should verify the client's actual status and may need to retry or handle the inconsistent state appropriately.</note>
+        <note>The deregistration process includes disabling the ability to invoke startTransaction, updateTransaction, and finishTransaction for the specified clientId; failure in this step triggers the exception.</note>
+        <note>Unlike ErrorRegisterClientFailed (which fails at registration time), ErrorDeregisterClientFailed fails at deregistration time, preventing client cleanup and potentially leaving the client registry in an inconsistent state.</note>
+        <note>The existence of a deregistration log entry does not guarantee that the client has been successfully deregistered. Applications must verify deregistration completion by attempting to use the client for transactions or by querying the client registry.</note>
+        <note>In multi-threaded environments, race conditions may occur where a client is deregistered while another thread is initiating a transaction with that client. Error handling must account for both ErrorClientNotRegistered and ErrorDeregisterClientFailed.</note>
+        <note>Some implementations may support partial deregistration where the client is removed from some internal data structures but not others. Applications should verify complete deregistration by checking transaction restrictions.</note>
+        <note>If open transactions are blocking deregistration, the client lifecycle is extended until transactions are explicitly closed. Applications must manage transaction completion as part of client cleanup procedures.</note>
+        <note>The exception does not indicate whether the client registry is corrupted or simply inconsistent. Device reinitalization may be necessary if deregistration failures persist across multiple clients.</note>
+    </notes>
+    <executionSequence>
+        <step number="1" name="Function Invocation">Function entry point is reached with clientId parameter specifying the client to be deregistered</step>
+        <step number="2" name="Parameter Validation">The Secure Element validates that clientId is non-null and properly formatted for internal client registry lookups</step>
+        <step number="3" name="Client Existence Check">The device verifies that the specified clientId is currently registered in the active client registry</step>
+        <step number="4" name="Transaction Completion Check">The device checks whether any open or incomplete transactions are associated with the client. If found, execution branches to step 5b; if none found, execution continues to step 6</step>
+        <step number="5a" name="No Blocking Transactions">No open transactions exist for the client, and deregistration may proceed</step>
+        <step number="5b" name="Blocking Transactions Exist">Open transactions exist; depending on implementation, deregistration may be blocked or transactions may need to be force-closed</step>
+        <step number="6" name="Deregistration Log Entry Creation">A deregistration event is created and stored in the device's audit trail and logging subsystem to record the deregistration attempt</step>
+        <step number="7" name="Client Registry Update Attempt">The device attempts to remove the clientId from the active client registry and update all state data structures to reflect the client's inactive status</step>
+        <step number="8a" name="Registry Update Success">If registry update completes successfully, execution continues to function completion (not taken in this exception case)</step>
+        <step number="8b" name="Registry Update Failure">If the registry update fails due to persistence error, state inconsistency, or subsystem malfunction, execution branches to step 9</step>
+        <step number="9" name="Exception Context Preparation">Exception context is prepared including clientId, deregistration log entry that was created, current client registry state, and error details from the client management subsystem</step>
+        <step number="10" name="Exception Instance Creation">ErrorDeregisterClientFailed exception instance is created with appropriate error message indicating the client deregistration failure</step>
+        <step number="11" name="Exception Propagation">Exception is raised and propagated up the call stack to the calling application, leaving the client in a potentially inconsistent state</step>
+    </executionSequence>
+    <postconditionality>
+        <state name="Exception State">An ErrorDeregisterClientFailed exception has been created and raised, containing clientId, deregistration log information, and client management subsystem error details</state>
+        <state name="Deregistration Log State">A deregistration event has been successfully recorded in the device's audit trail and logging subsystem. This log entry documents the deregistration attempt even though it failed to complete.</state>
+        <state name="Client Registry State">The client remains in an inconsistent state. The deregistration log entry exists, but the client may still be present in the active registry or in a partially deregistered state. The client's transaction access may or may not be disabled.</state>
+        <state name="Transaction Capability State">The ability to invoke startTransaction, updateTransaction, and finishTransaction with this clientId remains unchanged or is in an indeterminate state. Applications cannot rely on the client being disabled.</state>
+        <state name="Device State">The device remains operational, but the client management subsystem has encountered an error condition. Subsequent client registration and deregistration operations may also fail or may succeed depending on whether the underlying issue is transient.</state>
+        <state name="Function Exit">The function exits abnormally via exception propagation without completing the client deregistration operation</state>
+    </postconditionality>
+    <usage>
+        <scenario name="Scenario 1: Client Cleanup with Blocking Transactions">
+            <description>An application attempts to deregister a client at shutdown time, but the client has one or more open transactions that prevent deregistration. The application must close all transactions before deregistration can succeed.</description>
+            <relatedFunctions>deregisterClient, finishTransaction, getCurrentNumberOfClients</relatedFunctions>
+            <errorContext>Client lifecycle management where incomplete transactions block deregistration</errorContext>
+        </scenario>
+        <scenario name="Scenario 2: Client Registry Corruption During Deregistration">
+            <description>A device has been operating normally, but after repeated deregistration operations, the client management subsystem enters a corrupted state. New deregistration attempts fail with this exception.</description>
+            <relatedFunctions>deregisterClient, getDeviceHealth, initializeDevice</relatedFunctions>
+            <errorContext>Progressive corruption of client management subsystem manifesting as deregistration failures</errorContext>
+        </scenario>
+        <scenario name="Scenario 3: Retry-Based Deregistration with State Verification">
+            <description>An application receives this exception during deregistration and implements a recovery strategy: verify current client state, close any remaining transactions, and retry deregistration after subsystem stabilization.</description>
+            <relatedFunctions>deregisterClient, getRegisteredClients, finishTransaction</relatedFunctions>
+            <errorContext>Resilient client lifecycle management with state verification and retry logic</errorContext>
+        </scenario>
+        <scenario name="Scenario 4: Device-Level Client Cleanup">
+            <description>Multiple clients fail to deregister with this exception. The application recognizes that the client management subsystem is fundamentally broken and initiates device reinitialization to restore the system to a clean state.</description>
+            <relatedFunctions>deregisterClient, initializeDevice, getDeviceHealth</relatedFunctions>
+            <errorContext>System-level recovery where device reinitialization is required to fix corrupted client management</errorContext>
+        </scenario>
+    </usage>
+    <implementationContext>
+        <note>The ErrorDeregisterClientFailed exception represents a failure in the client lifecycle management system at the deregistration phase, distinct from failures at registration time (ErrorRegisterClientFailed).</note>
+        <note>The fact that a deregistration log entry has been successfully created and stored indicates that the failure occurs after audit logging but before state registry updates. The device's audit trail may show the deregistration attempt even though it did not complete.</note>
+        <note>Client state may be partially updated after this exception. Depending on implementation, the client may be removed from some internal structures but remain in others, creating an inconsistent state.</note>
+        <note>Unlike ErrorClientNotRegistered (which is raised when a client cannot be found), ErrorDeregisterClientFailed indicates that the client was found and identified but could not be successfully deregistered.</note>
+        <note>The client's transaction access status is indeterminate after this exception. Applications should not assume that subsequent transaction attempts will fail (ErrorClientNotRegistered); they may still succeed if the client remains in the active registry.</note>
+        <note>Some implementations may support forced deregistration that bypasses blocking transaction checks. Others may strictly enforce transaction completion as a prerequisite to deregistration.</note>
+        <note>In multi-client scenarios, a deregistration failure for one client may not indicate problems with other clients. However, if multiple clients fail to deregister, the client management subsystem may be fundamentally corrupted.</note>
+        <note>The exception may indicate transient failures (recoverable through retry) or permanent failures (requiring device reinitialization). Applications should implement retry logic with appropriate backoff and eventual escalation to device recovery.</note>
+        <note>Deregistration may be critical for resource cleanup, capacity management, and security isolation. Failure to complete deregistration can leave clients with residual access or prevent new client registrations if capacity management is affected.</note>
+        <note>In distributed or replicated client management systems, deregistration failure on one replica may not indicate failure on other replicas. Applications should verify deregistration across the full infrastructure.</note>
+    </implementationContext>
 </exception>

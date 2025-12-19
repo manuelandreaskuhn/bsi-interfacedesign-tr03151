@@ -1,18 +1,177 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <exception id="ErrorUpdateTimeFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
     <name>ErrorUpdateTimeFailed</name>
-    <description>This exception is thrown if the execution of the Secure Element functionality for setting the time failed.</description>
-    <category>Time Synchronization</category>
+    <description>This exception is thrown if the execution of the Secure Element functionality for setting or synchronizing the device time fails. The updateTime function synchronizes device time with provided time data using the specified variant method. Time synchronization is essential for transaction timestamps, audit trails, and security operations. ErrorUpdateTimeFailed is raised when the Secure Element's time update functionality encounters failures during execution, which may occur due to invalid time data, hardware errors, device state issues, verification failures, or other operational problems. ErrorUpdateTimeFailed is a High severity exception because proper time management is critical to device security and transaction integrity.</description>
+    <category>Time Management - Time Update Failure</category>
     <severity>High</severity>
     <javadoc>
-        <summary>This class defines the exception ErrorUpdateTimeFailed that is thrown if the execution of the Secure Element functionality for setting the time failed.</summary>
+        <summary>This class defines the exception ErrorUpdateTimeFailed that is thrown if the Secure Element time update functionality fails during execution.</summary>
+        <description>This exception is thrown when the updateTime function fails to successfully update device time in the Secure Element. Time synchronization is essential for transaction timestamps, audit trails, and cryptographic operations. The updateTime function sets device time using provided data and the specified variant method. If the Secure Element time update functionality encounters errors during execution, verification fails, hardware issues prevent completion, or device state issues block the operation, ErrorUpdateTimeFailed is raised. This indicates the time update could not be successfully completed in the Secure Element. Device time may remain unchanged or in inconsistent state. ErrorUpdateTimeFailed is a High severity exception because time accuracy is critical to security. Recovery requires investigating the failure cause and retrying time synchronization.</description>
+        <constructors>
+            <constructor>
+                <signature>ErrorUpdateTimeFailed()</signature>
+                <description>Constructs a new ErrorUpdateTimeFailed exception with null as the value for its detail message</description>
+            </constructor>
+            <constructor>
+                <signature>ErrorUpdateTimeFailed(String message)</signature>
+                <description>Constructs a new ErrorUpdateTimeFailed exception whereby its detail message is initialized with the passed value</description>
+                <parameter name="message">value for the detail message of the exception, typically describing reason for time update failure</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorUpdateTimeFailed(String message, Throwable cause)</signature>
+                <description>Constructs a new ErrorUpdateTimeFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorUpdateTimeFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+                <description>Constructs a new ErrorUpdateTimeFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+            </constructor>
+        </constructors>
     </javadoc>
     <specification>
         <source>BSI TR-03151-1</source>
-        <requirement>SHALL be raised when time update operation in Secure Element fails</requirement>
-        <applicability>Time synchronization operations</applicability>
+        <section>3.6.2 Time Management - Time Synchronization Operations</section>
+        <requirement>The updateTime function synchronizes device time by sending time data to the Secure Element using the specified variant method. The Secure Element's time update functionality receives the time data, validates format and range, and updates device clock. Time synchronization is essential for transaction timestamps, audit trail integrity, and security operations. If the Secure Element time update functionality encounters failures during execution (validation errors, hardware issues, device state incompatibility, verification failures), the Secure Element SHALL raise ErrorUpdateTimeFailed. This indicates time update could not be successfully completed. Device time may remain unchanged or inconsistent. ErrorUpdateTimeFailed is a High severity exception because time accuracy is critical to security and transaction integrity. Recovery requires investigating the failure and retrying time synchronization.</requirement>
+        <applicability>Time synchronization operations: updateTime</applicability>
+        <reference>Time Management (3.6.2), Time Synchronization (3.6.2), updateTime – Function (3.6.2)</reference>
     </specification>
     <thrownBy>
         <function>updateTime</function>
     </thrownBy>
+    <triggerConditions>
+        <condition>
+            <scenario>Time data validation fails in Secure Element</scenario>
+            <description>Provided time data fails format or range validation</description>
+            <trigger>updateTime sends time data to Secure Element. Secure Element validates time format and range. Time value outside acceptable range. ErrorUpdateTimeFailed raised.</trigger>
+        </condition>
+        <condition>
+            <scenario>Hardware error during time update in Secure Element</scenario>
+            <description>Hardware failure prevents proper time register update</description>
+            <trigger>Secure Element receives valid time data. During clock update, hardware error occurs. Secure Element cannot complete update. ErrorUpdateTimeFailed raised.</trigger>
+        </condition>
+        <condition>
+            <scenario>Device state incompatible with time update</scenario>
+            <description>Device is in state that prevents time update (not initialized, etc.)</description>
+            <trigger>updateTime called during device initialization. Secure Element not fully initialized. Time update blocked. ErrorUpdateTimeFailed raised.</trigger>
+        </condition>
+        <condition>
+            <scenario>Time synchronization verification fails</scenario>
+            <description>Updated time cannot be verified or confirmed</description>
+            <trigger>Secure Element updates time. Verification read finds time doesn't match. Update unsuccessful. ErrorUpdateTimeFailed raised.</trigger>
+        </condition>
+        <condition>
+            <scenario>Secure element internal processing error</scenario>
+            <description>Secure Element encounters internal error during time update</description>
+            <trigger>updateTime sends valid data. Secure Element encounters internal processing error. Operation cannot complete. ErrorUpdateTimeFailed raised.</trigger>
+        </condition>
+    </triggerConditions>
+    <executionSequence>
+        <step number="1">User/application calls updateTime function with time data and variant parameter</step>
+        <step number="2">Function validates input parameters including time data format</step>
+        <step number="2a">If parameters invalid → may raise ErrorParameterSyntax or ErrorParameterMismatch</step>
+        <step number="2b">If parameters valid → proceed to step 3</step>
+        <step number="3">Function validates variant is supported</step>
+        <step number="3a">If variant unsupported → may raise ErrorUnsupportedTimeSyncVariant</step>
+        <step number="3b">If variant supported → proceed to step 4</step>
+        <step number="4">Function initiates communication with Secure Element</step>
+        <step number="5">Secure Element receives time update request</step>
+        <step number="6">Secure Element validates time data format and range</step>
+        <step number="6a">If time data invalid → ErrorUpdateTimeFailed raised, operation aborted</step>
+        <step number="6b">If time data valid → proceed to step 7</step>
+        <step number="7">Secure Element validates device state is compatible</step>
+        <step number="7a">If device state incompatible → ErrorUpdateTimeFailed raised</step>
+        <step number="7b">If state compatible → proceed to step 8</step>
+        <step number="8">Secure Element updates device clock with provided time</step>
+        <step number="8a">If hardware error during update → ErrorUpdateTimeFailed raised</step>
+        <step number="8b">If update proceeds → proceed to step 9</step>
+        <step number="9">Secure Element verifies time update completion</step>
+        <step number="9a">If verification fails → ErrorUpdateTimeFailed raised</step>
+        <step number="9b">If verification succeeds → proceed to step 10</step>
+        <step number="10">Secure Element logs time update event for audit trail</step>
+        <step number="11">Secure Element returns success to function</step>
+        <step number="12">Function returns to caller indicating time successfully updated</step>
+    </executionSequence>
+    <recovery>
+        <step>Review error message - understand reason for time update failure</step>
+        <step>Verify time data - confirm provided time data is valid</step>
+        <step>Check time format - verify time format matches variant requirements</step>
+        <step>Check time range - verify time value is within acceptable range</step>
+        <step>Check device state - verify device is initialized and operational</step>
+        <step>Check Secure Element - verify Secure Element is accessible</step>
+        <step>Retry time sync - attempt updateTime again with verified time data</step>
+        <step>Check hardware - if repeated failures, verify device hardware</step>
+        <step>Run diagnostics - execute device diagnostics to assess time functionality</step>
+        <step>Contact support - if time update fails persistently, contact device support</step>
+        <step>Document failure - record time update failure for compliance</step>
+    </recovery>
+    <relatedExceptions>
+        <exception>ErrorTimeNotSet</exception>
+        <exception>ErrorParameterMismatch</exception>
+        <exception>ErrorUnsupportedTimeSyncVariant</exception>
+        <exception>ErrorFunctionFailed</exception>
+    </relatedExceptions>
+    <postconditionality>
+        <state name="Time Update Not Completed">Time update operation does not complete successfully.</state>
+        <state name="Device Time Unchanged">Device time is not updated - remains at previous value.</state>
+        <state name="Device Time May Be Inconsistent">Device time state may be undefined after failed update.</state>
+        <state name="Secure Element Time Not Synchronized">Secure Element time remains unsynchronized.</state>
+        <state name="High Exception Returned">Function returns ErrorUpdateTimeFailed High exception to caller.</state>
+        <state name="Transaction Timestamps Unreliable">Transaction timestamps may be inaccurate until time is properly synchronized.</state>
+    </postconditionality>
+    <notes>
+        <note>ErrorUpdateTimeFailed is thrown by 1 function: updateTime</note>
+        <note>This is a High severity exception affecting time-dependent operations</note>
+        <note>Time accuracy is critical to transaction integrity and security</note>
+        <note>Time data validation occurs in Secure Element</note>
+        <note>Time values must be within acceptable range</note>
+        <note>Time format depends on selected synchronization variant</note>
+        <note>Hardware errors during clock update are critical</note>
+        <note>Device state validation prevents time update during incompatible operations</note>
+        <note>Post-update verification confirms time was properly set</note>
+        <note>Time update failures should be logged for audit trail</note>
+        <note>Multiple retries may help transient failures</note>
+        <note>Device diagnostics can identify persistent time issues</note>
+        <note>Time synchronization should be performed regularly</note>
+        <note>Failed time updates may indicate device issues requiring service</note>
+        <note>Transaction timestamps depend on accurate device time</note>
+    </notes>
+    <usage>
+        <scenario name="Scenario 1: Time Data Validation Failure">
+            <description>Application calls updateTime with absolute time variant and timestamp. Secure Element receives data and validates format. Timestamp value is outside acceptable range. ErrorUpdateTimeFailed raised. Application verifies current time and retries with valid timestamp.</description>
+            <relatedFunctions>updateTime</relatedFunctions>
+            <errorContext>Time data validation failed - verify time value is in valid range</errorContext>
+        </scenario>
+        <scenario name="Scenario 2: Hardware Error During Clock Update">
+            <description>updateTime sends valid time data to Secure Element. Secure Element begins clock update. Hardware error occurs accessing time register. Secure Element cannot complete update. ErrorUpdateTimeFailed raised. Administrator checks device hardware and may require service.</description>
+            <relatedFunctions>updateTime</relatedFunctions>
+            <errorContext>Hardware failure during time update - device service may be required</errorContext>
+        </scenario>
+        <scenario name="Scenario 3: Time Update During Device Initialization">
+            <description>Device startup procedure calls updateTime before full initialization. Secure Element not completely ready. ErrorUpdateTimeFailed raised. Startup procedure waits for full initialization, retries time update successfully.</description>
+            <relatedFunctions>updateTime</relatedFunctions>
+            <errorContext>Device state incompatible with update - retry after initialization</errorContext>
+        </scenario>
+        <scenario name="Scenario 4: Time Update Verification Failure">
+            <description>updateTime sends valid time to Secure Element with valid format. Secure Element attempts to update clock. Post-update verification reads clock and finds time doesn't match. ErrorUpdateTimeFailed raised. Application retries time synchronization.</description>
+            <relatedFunctions>updateTime</relatedFunctions>
+            <errorContext>Time update verification failed - retry synchronization</errorContext>
+        </scenario>
+    </usage>
+    <implementationContext>
+        <note>Time data validation must verify format and range before update</note>
+        <note>Time values must be within acceptable operational range</note>
+        <note>Hardware access to clock/time register must include error detection</note>
+        <note>Device state validation should ensure time update is compatible</note>
+        <note>Post-update verification should confirm time was properly set</note>
+        <note>Time update operations should be atomic to prevent partial state</note>
+        <note>Time update failures should be logged with timestamp for audit</note>
+        <note>Device diagnostics should include time functionality tests</note>
+        <note>Recovery procedures should support time resynchronization</note>
+        <note>Error messages should indicate specific validation failures</note>
+    </implementationContext>
 </exception>

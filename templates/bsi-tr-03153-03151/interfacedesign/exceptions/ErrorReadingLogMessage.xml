@@ -1,19 +1,169 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <exception id="ErrorReadingLogMessage" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
     <name>ErrorReadingLogMessage</name>
-    <description>This exception is thrown if the retrieving of the log message parts that have been created from Secure Element most recently failed.</description>
-    <category>Logging</category>
+    <description>This exception is thrown if the SE API functions getLastLogMessage or exportLogMessages encounter a failure while reading or retrieving log message data from the Secure Element's logging storage. The functions successfully locate log messages but encounter an error when attempting to read, extract, or retrieve the message data from device storage. ErrorReadingLogMessage indicates that a device-level I/O or storage access error occurred during the log message retrieval operation, preventing successful reading of the located messages.</description>
+    <category>Event Logging - Storage Access Failure</category>
     <severity>High</severity>
     <javadoc>
-        <summary>This class defines the exception ErrorReadingLogMessage that is thrown if the retrieving of the log message parts that have been created from Secure Element most recently failed.</summary>
+        <summary>This class defines the exception ErrorReadingLogMessage that is thrown if reading log message data from the Secure Element fails.</summary>
+        <description>This exception is thrown when the getLastLogMessage or exportLogMessages functions successfully locate log messages in the Secure Element's storage but encounter a failure when attempting to read or retrieve the message data. Different from ErrorNoLogMessageFound (which indicates no messages exist), ErrorReadingLogMessage indicates that messages exist but cannot be accessed due to a device-level storage or I/O error. Common causes include: device storage corruption, device communication failure during data retrieval, device internal error during read operation, or insufficient device resources to complete the read operation. ErrorReadingLogMessage is a High severity exception that indicates a device malfunction or serious storage issue. Recovery requires investigating the device error condition and potentially retrying the operation or performing device maintenance.</description>
+        <constructors>
+            <constructor>
+                <signature>ErrorReadingLogMessage()</signature>
+                <description>Constructs a new ErrorReadingLogMessage exception with null as the value for its detail message</description>
+            </constructor>
+            <constructor>
+                <signature>ErrorReadingLogMessage(String message)</signature>
+                <description>Constructs a new ErrorReadingLogMessage exception whereby its detail message is initialized with the passed value</description>
+                <parameter name="message">value for the detail message of the exception, typically describing the log message read failure details</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorReadingLogMessage(String message, Throwable cause)</signature>
+                <description>Constructs a new ErrorReadingLogMessage exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorReadingLogMessage(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+                <description>Constructs a new ErrorReadingLogMessage exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+            </constructor>
+        </constructors>
     </javadoc>
     <specification>
         <source>BSI TR-03151-1</source>
-        <requirement>SHALL be raised when reading log message from storage fails</requirement>
-        <applicability>Log message retrieval operations</applicability>
+        <section>3.3.1 Event Logging and Log Message Retrieval - getLastLogMessage and exportLogMessages</section>
+        <requirement>The functions getLastLogMessage and exportLogMessages SHALL retrieve transaction log message entries from the Secure Element's logging storage. If log messages are found but a device-level error occurs during the reading or extraction of message data from storage, these functions SHALL raise the exception ErrorReadingLogMessage. This exception indicates that the requested log messages exist but cannot be accessed due to a device storage error, I/O failure, communication error during retrieval, or device internal error. ErrorReadingLogMessage is distinct from ErrorNoLogMessageFound - it indicates messages exist but cannot be read.</requirement>
+        <applicability>Log message retrieval operations - getLastLogMessage and exportLogMessages functions only, when device read error occurs</applicability>
+        <reference>getLastLogMessage – Function (3.3.1); exportLogMessages – Function (3.3.1)</reference>
     </specification>
     <thrownBy>
         <function>getLastLogMessage</function>
         <function>exportLogMessages</function>
     </thrownBy>
+    <triggerConditions>
+        <condition>
+            <scenario>Device storage corruption detected during read</scenario>
+            <description>Log messages exist but device detects storage corruption while reading the data</description>
+            <trigger>The getLastLogMessage function locates the most recent log message in storage, but when attempting to read the message data, the device detects corruption (e.g., checksum failure, invalid structure). The device reports a storage error and ErrorReadingLogMessage is raised.</trigger>
+        </condition>
+        <condition>
+            <scenario>Device communication failure during data retrieval</scenario>
+            <description>Communication with Secure Element is lost while transmitting log message data</description>
+            <trigger>The exportLogMessages function successfully queries the device for matching log messages, but the communication channel is lost when the device begins transmitting the message data back to the caller. The partial data cannot be reassembled and ErrorReadingLogMessage is raised.</trigger>
+        </condition>
+        <condition>
+            <scenario>Device internal error during read operation</scenario>
+            <description>Secure Element reports an internal error while accessing logging storage</description>
+            <trigger>The getLastLogMessage function requests the most recent log message. The Secure Element attempts to read the data from its internal logging storage but encounters an internal error (hardware fault, resource exhaustion, etc.). The device reports the error and ErrorReadingLogMessage is raised.</trigger>
+        </condition>
+        <condition>
+            <scenario>Insufficient device resources for read operation</scenario>
+            <description>Device lacks resources required to complete the read operation</description>
+            <trigger>The exportLogMessages function attempts to export a large set of log messages but the device runs out of memory or processing capacity during the read operation. The device cannot complete the read and ErrorReadingLogMessage is raised.</trigger>
+        </condition>
+        <condition>
+            <scenario>Storage access permission or access violation</scenario>
+            <description>Device detects access violation or permission issue during storage read</description>
+            <trigger>The exportLogMessages function attempts to read log messages from protected storage areas. The device detects an access violation or permission issue and refuses to provide the data. ErrorReadingLogMessage is raised.</trigger>
+        </condition>
+    </triggerConditions>
+    <executionSequence>
+        <step number="1">User/application calls getLastLogMessage or exportLogMessages function</step>
+        <step number="2">Function validates input parameters</step>
+        <step number="3">Function initiates communication with Secure Element</step>
+        <step number="4">Function transmits log retrieval query to Secure Element</step>
+        <step number="5">Secure Element searches logging storage for matching log messages</step>
+        <step number="6">Secure Element identifies matching log messages or the most recent message</step>
+        <step number="7">Secure Element begins reading log message data from storage</step>
+        <step number="7a">If storage read succeeds → proceed to step 8</step>
+        <step number="7b">If storage read fails (corruption, I/O error, etc.) → ErrorReadingLogMessage raised, function exits</step>
+        <step number="8">Secure Element transmits log message data to caller</step>
+        <step number="8a">If transmission completes successfully → proceed to step 9</step>
+        <step number="8b">If transmission fails or is interrupted → ErrorReadingLogMessage raised, function exits</step>
+        <step number="9">Function receives and processes log message data</step>
+        <step number="10">Function closes communication channel with Secure Element</step>
+        <step number="11">Function returns log messages to caller</step>
+    </executionSequence>
+    <recovery>
+        <step>Verify device connectivity - check that the Secure Element is accessible and responding to commands</step>
+        <step>Check device status - query device for error codes or status information indicating the nature of the read failure</step>
+        <step>Examine device logs - if available, review device diagnostic or error logs to understand the storage failure</step>
+        <step>Retry the operation - attempt to call getLastLogMessage or exportLogMessages again after a brief delay</step>
+        <step>Try with different parameters - if using exportLogMessages with filters, try with simpler or different filter criteria</step>
+        <step>Test device storage - perform device storage diagnostics or self-test operations to check storage integrity</step>
+        <step>Check device resources - verify the device has sufficient memory and processing capacity for the operation</step>
+        <step>Review device health - check for other symptoms of device malfunction or degradation</step>
+        <step>Contact device manufacturer - if repeated failures occur, contact manufacturer support for device diagnostics or repair</step>
+        <step>If critical, consider device replacement - persistent storage read failures may indicate device failure requiring replacement</step>
+    </recovery>
+    <relatedExceptions>
+        <exception>ErrorNoLogMessageFound</exception>
+        <exception>ErrorExportLoggingCertificateFailed</exception>
+        <exception>ErrorDeleteLogMessagesFailed</exception>
+        <exception>ErrorConfigureLoggingFailed</exception>
+        <exception>ErrorFunctionFailed</exception>
+    </relatedExceptions>
+    <postconditionality>
+        <state name="No Log Data Retrieved">No log message data is returned to the caller. The retrieval operation fails before message data can be provided.</state>
+        <state name="Partial Data May Be Recovered">In some cases, partial message data may have been read before the error occurred, but it is likely incomplete or invalid.</state>
+        <state name="Storage Data Unchanged">The device's logging storage remains unchanged. The read operation is read-only and does not modify any stored log messages.</state>
+        <state name="Device State Potentially Degraded">The read failure may indicate underlying device issues - the device state may be degraded or unstable.</state>
+        <state name="Error Information Available">Device error codes or diagnostic information about the read failure may be available for investigation.</state>
+        <state name="Retry Potentially Possible">The operation may be retryable depending on whether the error is transient or persistent.</state>
+    </postconditionality>
+    <notes>
+        <note>ErrorReadingLogMessage is thrown by getLastLogMessage and exportLogMessages - both log retrieval functions</note>
+        <note>This exception indicates a device-level read failure - messages exist but cannot be accessed</note>
+        <note>The exception has High severity because it indicates a device malfunction or serious storage issue</note>
+        <note>This is distinct from ErrorNoLogMessageFound - this exception means messages exist but cannot be read</note>
+        <note>Read failures may indicate device storage corruption, hardware issues, or internal device errors</note>
+        <note>Applications should distinguish between "no messages" (ErrorNoLogMessageFound) and "read failure" (ErrorReadingLogMessage)</note>
+        <note>Read failures should trigger device diagnostics and potentially manufacturer support contact</note>
+        <note>Device health monitoring should track ErrorReadingLogMessage occurrences as a sign of device degradation</note>
+        <note>Communication failures during data transmission can cause this exception - check network/transport</note>
+        <note>Device resource exhaustion can prevent successful read operations - monitor device resource usage</note>
+        <note>Storage corruption or access violations may require device maintenance or recovery procedures</note>
+        <note>Retry strategies should be implemented carefully - persistent failures indicate serious issues</note>
+        <note>Error messages should include device error codes to guide troubleshooting</note>
+        <note>Log message backup or redundancy strategies may help mitigate impact of read failures</note>
+        <note>Device manufacturers should document recovery procedures for storage read failures</note>
+    </notes>
+    <usage>
+        <scenario name="Scenario 1: Log Retrieval with Error Detection and Retry">
+            <description>An application calls getLastLogMessage to retrieve the most recent log entry. The function raises ErrorReadingLogMessage, indicating a device storage read error. The application logs the error, queries device status to understand the failure, and retries the operation after a brief delay.</description>
+            <relatedFunctions>getLastLogMessage, exportLogMessages</relatedFunctions>
+            <errorContext>Device storage read failure prevents log message retrieval</errorContext>
+        </scenario>
+        <scenario name="Scenario 2: Bulk Export with Error Handling">
+            <description>An application calls exportLogMessages to retrieve a large set of log messages. The function successfully locates the messages but raises ErrorReadingLogMessage when reading the data due to communication failure or device error. The application catches the error and uses a retry strategy or fallback mechanism.</description>
+            <relatedFunctions>exportLogMessages, getLastLogMessage</relatedFunctions>
+            <errorContext>Device communication or storage error during bulk log export</errorContext>
+        </scenario>
+        <scenario name="Scenario 3: Device Health Monitoring with Failure Tracking">
+            <description>A system monitoring application periodically calls exportLogMessages to verify logging is functioning. When ErrorReadingLogMessage is raised, the monitoring system detects a device issue and triggers diagnostics. Repeated occurrences trigger device replacement requests.</description>
+            <relatedFunctions>getLastLogMessage, exportLogMessages</relatedFunctions>
+            <errorContext>Device health monitoring using log retrieval as indicator</errorContext>
+        </scenario>
+        <scenario name="Scenario 4: Storage Integrity Verification">
+            <description>A device diagnostic utility attempts to read all log messages via exportLogMessages to verify storage integrity. If ErrorReadingLogMessage is raised, it indicates storage corruption. The diagnostic system performs device self-tests and reports the corruption to the user.</description>
+            <relatedFunctions>exportLogMessages, getLastLogMessage</relatedFunctions>
+            <errorContext>Storage integrity verification and corruption detection</errorContext>
+        </scenario>
+    </usage>
+    <implementationContext>
+        <note>The getLastLogMessage and exportLogMessages functions must detect and report read errors from device storage</note>
+        <note>Read errors can occur at different points: storage access, data transmission, data parsing</note>
+        <note>Device error codes or diagnostic information should be included in error reporting to aid troubleshooting</note>
+        <note>Communication failures during message transmission should be distinguished from storage failures if possible</note>
+        <note>Resource constraints during large export operations should be handled gracefully</note>
+        <note>Retry logic should implement appropriate backoff to avoid overwhelming the device during recovery</note>
+        <note>Device health monitoring should track read failure frequency as an indicator of device degradation</note>
+        <note>Log message backup or redundancy strategies may help mitigate single points of failure</note>
+        <note>Error messages should provide actionable information to guide user troubleshooting and recovery</note>
+        <note>Device manufacturers should document known storage failure modes and recovery procedures</note>
+    </implementationContext>
 </exception>

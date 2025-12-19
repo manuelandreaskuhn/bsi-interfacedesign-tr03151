@@ -1,22 +1,146 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <exception id="ErrorCertificateExpired" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
     <name>ErrorCertificateExpired</name>
-    <description>This exception is thrown if a SE API function is invoked and the certificate with the public key for the verification of the appropriate type of log messages is expired. Even if a certificate expired, the log message parts are created by the Secure Element and stored by the SE API. In this case, the exception ErrorCertificateExpired is raised only after the data of the log message has been stored.</description>
-    <category>Logging</category>
+    <description>This exception is thrown if a SE API function is invoked and the certificate corresponding to a private key used to create log messages is expired. Even if a certificate is expired, the log message SHALL be created by the Secure Element and stored by the device. In this case, the exception ErrorCertificateExpired SHALL be raised only after the data of the log message has been stored. This is a warning exception that indicates the operation succeeded but with a certificate validity concern.</description>
+    <category>Certificate Management - Logging Operations</category>
     <severity>Medium</severity>
     <javadoc>
         <summary>This class defines the exception ErrorCertificateExpired that is thrown if a SE API function is invoked and the certificate with the public key for the verification of the appropriate type of log messages is expired.</summary>
+        <description>The ErrorCertificateExpired exception indicates that a function has successfully completed its primary operation (creating and storing a log message), but the certificate used for signing the log message has expired. Unlike typical exception scenarios where the operation fails, this exception is raised AFTER the log message has already been created and stored by the Secure Element. This design ensures that log messages are persisted even when the signing certificate is no longer valid, maintaining logging continuity. Applications should treat this as a warning condition indicating that certificate renewal or replacement may be necessary, while acknowledging that the log message operation succeeded. The expired certificate does not prevent logging but does indicate a potential security or compliance issue that requires attention.</description>
+        <constructors>
+            <constructor>
+                <signature>ErrorCertificateExpired()</signature>
+                <description>Constructs a new ErrorCertificateExpired exception with null as the value for its detail message</description>
+            </constructor>
+            <constructor>
+                <signature>ErrorCertificateExpired(String message)</signature>
+                <description>Constructs a new ErrorCertificateExpired exception whereby its detail message is initialized with the passed value</description>
+                <parameter name="message">value for the detail message of the exception, typically identifying which certificate is expired</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorCertificateExpired(String message, Throwable cause)</signature>
+                <description>Constructs a new ErrorCertificateExpired exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorCertificateExpired(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+                <description>Constructs a new ErrorCertificateExpired exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+            </constructor>
+        </constructors>
     </javadoc>
     <specification>
         <source>BSI TR-03151-1</source>
-        <requirement>Raised after log message data has been stored when certificate is expired</requirement>
-        <applicability>Logging functions that verify certificates</applicability>
+        <section>3.1.2.4 Exception Categories - Certificate Validity</section>
+        <requirement>The exception SHALL be raised if a function is invoked and the certificate corresponding to a private key used to create log messages is expired. Even if a certificate is expired, the log message SHALL be created by the Secure Element and stored by the device. In this case, the exception ErrorCertificateExpired SHALL be raised only after the data of the log message has been stored. This ensures that logging continues despite certificate expiration, but the application is notified of the certificate validity issue.</requirement>
+        <applicability>Functions that create log messages or perform logging operations when the signing certificate is no longer valid</applicability>
+        <reference>BSI TR-03151-1 Section 3.1.2.4 - Exception Categories</reference>
     </specification>
     <thrownBy>
+        <function>initialize</function>
+        <function>setDescription</function>
+        <function>selfTest</function>
+        <function>updateDevice</function>
+        <function>updateTime</function>
+        <function>configureLogging</function>
+        <function>registerClient</function>
+        <function>deregisterClient</function>
         <function>startTransaction</function>
         <function>updateTransaction</function>
         <function>finishTransaction</function>
-        <function>exportLogMessages</function>
-        <function>exportFilteredTransactionLogs</function>
+        <function>lockTransactionLogging</function>
+        <function>unlockTransactionLogging</function>
     </thrownBy>
+    <triggerConditions>
+        <condition>
+            <scenario>Log message creation with expired certificate</scenario>
+            <description>Function performs logging operation while the certificate used for log message signing is expired (notAfter date has passed)</description>
+            <trigger>During execution of a logging function, the Secure Element checks certificate validity. The certificate's expiration date (notAfter) is in the past. The Secure Element creates and signs the log message anyway, stores it successfully, and then signals this condition by allowing ErrorCertificateExpired to be raised.</trigger>
+        </condition>
+        <condition>
+            <scenario>Multiple functions accessing expired certificate simultaneously</scenario>
+            <description>Multiple logging functions may raise this exception if they all use the same expired certificate for log message signing</description>
+            <trigger>Different logging functions (initialize, updateTime, startTransaction, etc.) all invoke log message creation while sharing an expired certificate. Each successful operation raises ErrorCertificateExpired.</trigger>
+        </condition>
+    </triggerConditions>
+    <executionSequence>
+        <step number="1">User/application calls a logging function (e.g., initialize, updateTime, finishTransaction, etc.)</step>
+        <step number="2">Function performs its primary operation</step>
+        <step number="3">Function requests log message creation from Secure Element</step>
+        <step number="4">Secure Element checks certificate validity for log message signing</step>
+        <step number="4a">If certificate is NOT expired → log message created and stored normally, no exception raised</step>
+        <step number="4b">If certificate IS expired → continue anyway to ensure logging continuity</step>
+        <step number="5">Secure Element creates and signs log message using expired certificate</step>
+        <step number="6">Device stores the log message data successfully</step>
+        <step number="7">Function raises ErrorCertificateExpired AFTER storage succeeds</step>
+        <step number="8">Function returns to caller with exception and successful operation result</step>
+    </executionSequence>
+    <recovery>
+        <step>Verify that the log message was successfully created and stored despite the exception (the primary operation succeeded)</step>
+        <step>Identify which certificate is expired by examining the exception message or log details</step>
+        <step>Check the certificate expiration date (notAfter field) to understand the validity window</step>
+        <step>Determine if a new certificate needs to be installed or if the existing certificate can be renewed</step>
+        <step>Plan certificate replacement or update process to ensure future logging uses valid certificates</step>
+        <step>Review logged messages to confirm they were signed with the expired certificate and stored correctly</step>
+        <step>Implement monitoring to detect future certificate expiration before it occurs</step>
+        <step>Update certificate management procedures to allow certificate rotation without interrupting logging operations</step>
+        <step>Document the expired certificate scenario and any special handling required by the application</step>
+        <step>If operating in a compliance-sensitive environment, notify security or audit personnel of the certificate expiration condition</step>
+    </recovery>
+    <relatedExceptions>
+        <exception>ErrorFunctionFailed</exception>
+        <exception>ErrorSigningEventDataFailed</exception>
+        <exception>ErrorStoringLogMessageFailed</exception>
+        <exception>ErrorSecureElementDisabled</exception>
+    </relatedExceptions>
+    <postconditionality>
+        <state>Log message successfully created and stored - operation completed despite certificate expiration</state>
+        <state>Exception raised AFTER storage succeeds - ensures log message persistence</state>
+        <state>Certificate remains expired - no automatic renewal occurs</state>
+        <state>Device state changed - log message now persisted in storage</state>
+        <state>Signing certificate validity concern noted - application should plan for certificate management</state>
+        <state>Function returns successfully to caller despite raising exception - log operation did not fail</state>
+    </postconditionality>
+    <notes>
+        <note>ErrorCertificateExpired is unique among exceptions because it is raised AFTER the primary operation succeeds, not instead of it succeeding</note>
+        <note>This exception indicates a warning condition, not a failure condition - the log message was created and stored successfully</note>
+        <note>Unlike ErrorSigningEventDataFailed (which indicates signing failure preventing log creation), ErrorCertificateExpired indicates successful creation with an expired certificate</note>
+        <note>After this exception, the log message is already persisted in device storage and cannot be undone</note>
+        <note>This exception has Medium severity because it indicates a certificate validity issue but does not prevent logging operations from succeeding</note>
+        <note>Applications must handle this exception by recognizing the operation succeeded while noting the certificate validity concern</note>
+        <note>The exception is raised after the log message has been stored (step 7), ensuring logging continuity even when certificates expire</note>
+        <note>Multiple logging functions may raise this exception if they all use the same expired certificate, indicating a device-wide certificate issue</note>
+        <note>Certificate expiration does not prevent log message creation - it only signals a maintenance/renewal requirement to the application</note>
+        <note>This exception may be optionally implemented by certain functions - not all implementations may raise it</note>
+    </notes>
+    <usage>
+        <scenario name="Certificate Expiration Detection">
+            <description>Catch ErrorCertificateExpired to detect when the logging certificate has expired and plan for renewal.</description>
+            <example>try { device.updateTime(newTime); } catch (ErrorCertificateExpired e) { logger.warn("Logging certificate expired, schedule renewal: " + e.getMessage()); }</example>
+        </scenario>
+        <scenario name="Graceful Degradation">
+            <description>Continue operation on ErrorCertificateExpired since the log message was stored successfully, but track the certificate issue.</description>
+            <example>try { device.finishTransaction(txId); } catch (ErrorCertificateExpired e) { recordCertificateExpiration(e); continueProcessing(); }</example>
+        </scenario>
+        <scenario name="Certificate Management">
+            <description>Use ErrorCertificateExpired as a trigger for certificate management procedures.</description>
+            <example>catch (ErrorCertificateExpired e) { if (shouldRenewCertificate()) { device.updateCertificate(newCert); } }</example>
+        </scenario>
+        <scenario name="Audit Trail">
+            <description>Log ErrorCertificateExpired occurrences for compliance and audit purposes.</description>
+            <example>catch (ErrorCertificateExpired e) { auditLog.record("Certificate expired during logging: " + e.getMessage(), System.currentTimeMillis()); }</example>
+        </scenario>
+    </usage>
+    <implementationContext>
+        <note>ErrorCertificateExpired is raised for logging operations that use certificates for signing log messages</note>
+        <note>The exception is only raised if certificate expiration is detected AND the log message is successfully stored</note>
+        <note>Different logging functions may use different certificates (e.g., initialization certificates vs. transaction certificates)</note>
+        <note>Certificate expiration is determined by comparing current time with the certificate's notAfter validity period</note>
+        <note>The Secure Element maintains and validates certificates for cryptographic operations related to logging</note>
+        <note>Applications should implement certificate renewal procedures to prevent persistent ErrorCertificateExpired exceptions</note>
+    </implementationContext>
 </exception>

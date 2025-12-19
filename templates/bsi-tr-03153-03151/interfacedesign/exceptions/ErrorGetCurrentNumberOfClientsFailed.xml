@@ -1,18 +1,158 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <exception id="ErrorGetCurrentNumberOfClientsFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
     <name>ErrorGetCurrentNumberOfClientsFailed</name>
-    <description>This exception is thrown if the determination of the current number of clients using the SE API failed.</description>
-    <category>Client Management</category>
+    <description>This exception is thrown if the determination of the current number of clients using the SE API failed. ErrorGetCurrentNumberOfClientsFailed represents a failure in the device's ability to retrieve and report the count of currently registered clients. This exception indicates that the getCurrentNumberOfClients function requested client count information from the device but the device cannot determine or provide the required count due to a hardware error, firmware issue, client registry failure, or communication breakdown. The exception is raised when the device's client management tracking functionality did not complete successfully, preventing applications from monitoring client registrations and device utilization. The exception is raised during the client count retrieval phase before the count is packaged into the return structure, ensuring no partial or incomplete count data is returned.</description>
+    <category>Client Management - Information Retrieval</category>
     <severity>Medium</severity>
     <javadoc>
         <summary>This class defines the exception ErrorGetCurrentNumberOfClientsFailed that is thrown if the determination of the current number of clients using the SE API failed.</summary>
+        <description>The getCurrentNumberOfClients function performs a multi-step process to determine how many clients are currently registered with the SE API. This exception is raised when the device cannot provide the required client count information during the retrieval phase. When this exception occurs, no client count data is returned to the user, and the function exits without providing any count information. The failure indicates that the device's client count tracking or reporting functionality did not complete successfully, preventing applications from monitoring client registrations.</description>
+        <constructors>
+            <constructor>
+                <signature>ErrorGetCurrentNumberOfClientsFailed()</signature>
+                <description>Constructs a new ErrorGetCurrentNumberOfClientsFailed exception with null as the value for its detail message</description>
+            </constructor>
+            <constructor>
+                <signature>ErrorGetCurrentNumberOfClientsFailed(String message)</signature>
+                <description>Constructs a new ErrorGetCurrentNumberOfClientsFailed exception whereby its detail message is initialized with the passed value</description>
+                <parameter name="message">value for the detail message of the exception, typically describing the client count retrieval failure</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorGetCurrentNumberOfClientsFailed(String message, Throwable cause)</signature>
+                <description>Constructs a new ErrorGetCurrentNumberOfClientsFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorGetCurrentNumberOfClientsFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+                <description>Constructs a new ErrorGetCurrentNumberOfClientsFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+            </constructor>
+        </constructors>
     </javadoc>
     <specification>
         <source>BSI TR-03151-1</source>
-        <requirement>SHALL be raised when current client count retrieval fails</requirement>
-        <applicability>Client count query operations</applicability>
+        <section>3.3.15 Client Management - getCurrentNumberOfClients</section>
+        <requirement>The function getCurrentNumberOfClients SHALL query the device to determine how many clients are currently registered with the SE API. If the device cannot provide or determine the required client count information, the function SHALL raise the exception ErrorGetCurrentNumberOfClientsFailed and exit without returning any count data. The client count determination failure indicates the device's client management tracking functionality could not complete successfully.</requirement>
+        <applicability>Client management operations - getCurrentNumberOfClients function only</applicability>
+        <reference>getCurrentNumberOfClients – Function (3.3.15)</reference>
     </specification>
     <thrownBy>
         <function>getCurrentNumberOfClients</function>
     </thrownBy>
+    <triggerConditions>
+        <condition>
+            <scenario>Device client registry query failure</scenario>
+            <description>The device attempts to query the client registry to determine the current count of registered clients, but the registry is inaccessible or the query fails. Client count retrieval fails due to registry errors.</description>
+            <trigger>Device client registry query failure or inaccessibility preventing client count determination</trigger>
+        </condition>
+        <condition>
+            <scenario>Client registry storage failure or corruption</scenario>
+            <description>The device's client registry storage is corrupted, inaccessible, or in an inconsistent state preventing accurate client count determination.</description>
+            <trigger>Client registry storage failure or client registry data corruption preventing retrieval</trigger>
+        </condition>
+        <condition>
+            <scenario>Device client management system error</scenario>
+            <description>The device's client management system encounters an internal error or exception while processing the client count request. Firmware bugs, memory corruption, or state inconsistency prevent successful client count determination.</description>
+            <trigger>Device client management system error during client count retrieval and determination operation</trigger>
+        </condition>
+        <condition>
+            <scenario>Communication failure during client count transfer</scenario>
+            <description>The device successfully determines the client count but the communication channel fails during transfer of count data from device to caller. The application cannot receive the complete count information.</description>
+            <trigger>Communication failure during client count data transfer from device</trigger>
+        </condition>
+        <condition>
+            <scenario>Device in restricted state preventing client tracking access</scenario>
+            <description>The device has entered a protected, restricted, or locked state that prevents access to or retrieval of client tracking information. Client count query is blocked by device security restrictions.</description>
+            <trigger>Device in restricted state preventing client management information access or retrieval</trigger>
+        </condition>
+    </triggerConditions>
+    <executionSequence>
+        <step number="1" name="Function Invocation">User or application calls getCurrentNumberOfClients function</step>
+        <step number="2" name="Authentication Check">The function checks authentication status if required by the implementation guideline</step>
+        <step number="3" name="Authorization Check">The function checks authorization to verify the caller has permission to query client management information</step>
+        <step number="4" name="Device Initialization Verification">The function verifies that the device is in an initialized state and ready for client information queries</step>
+        <step number="5" name="Client Registry Query">The function sends a request to the device to query the client registry and determine the current number of registered clients</step>
+        <step number="5a" name="Client Count Retrieval Success">If the device successfully queries the client registry and determines the current client count, execution continues to step 6 (not taken in this exception case)</step>
+        <step number="5b" name="Client Count Retrieval Failure">If the device cannot query the registry, determine the count, or provide the required client count information due to storage failure, firmware error, communication loss, or security restrictions, execution branches to exception handling at step 6b</step>
+        <step number="6a" name="Count Validation and Return">Upon successful client count retrieval, the function validates the count and prepares the return value (not taken in this exception case)</step>
+        <step number="6b" name="Exception Context Preparation">Upon client count retrieval failure, exception context is prepared including device error details, client management context, and timestamp</step>
+        <step number="7" name="Exception Instance Creation">ErrorGetCurrentNumberOfClientsFailed exception instance is created with error message indicating device client count determination failure</step>
+        <step number="8" name="Exception Propagation">Exception is raised and propagated up the call stack without returning any client count data to the caller</step>
+        <step number="9" name="Device State Verification">The device and client registry remain in their current state with no modifications or data extraction having occurred</step>
+    </executionSequence>
+    <recovery>
+        <step>Verify that the device is functioning properly and is not in a failed, error, or restricted state</step>
+        <step>Ensure the device is properly initialized before attempting to retrieve current client count</step>
+        <step>Verify the device's client registry is not corrupted or inaccessible using device diagnostics</step>
+        <step>Check the communication channel between the application and device for any errors, interference, or disconnection issues</step>
+        <step>Review device diagnostics to verify that client management and registry functionality is operational</step>
+        <step>Verify that currently registered clients can still communicate with the device by testing with existing client operations</step>
+        <step>Attempt to register or deregister a test client to verify that client management operations still function correctly</step>
+        <step>Check if client registry consistency can be verified through alternative queries (getMaxNumberOfClients, getRegisteredClients)</step>
+        <step>Attempt the getCurrentNumberOfClients function again after verifying device status to determine if the failure was transient</step>
+        <step>Implement comprehensive logging of this failure to understand if client counting is consistently unavailable or experiencing intermittent issues</step>
+    </recovery>
+    <relatedExceptions>
+        <exception>ErrorFunctionFailed</exception>
+        <exception>ErrorDeviceNotInitialized</exception>
+        <exception>ErrorClientNotRegistered</exception>
+        <exception>ErrorGetMaxNumberOfClientsFailed</exception>
+        <exception>ErrorGetRegisteredClientsFailed</exception>
+    </relatedExceptions>
+    <postconditionality>
+        <state name="Client Count State">No client count data is returned to the caller. The client count retrieval has not completed and no information is provided to the user.</state>
+        <state name="Device State">Device state remains completely unchanged. No modifications to internal state, configuration, or data structures have occurred during the client count retrieval attempt.</state>
+        <state name="Client Registry State">Client registry remains unchanged and all registered clients remain registered. No clients have been registered or deregistered as a result of this operation.</state>
+        <state name="Client Functionality">All currently registered clients continue to function normally. The count retrieval failure does not affect existing client operations.</state>
+        <state name="State Consistency">No state inconsistency exists. The function exits at the client count retrieval phase before any data assembly or return operations.</state>
+        <state name="Device Functionality">Device functions continue to execute normally. The device remains fully operational and all API functions remain accessible.</state>
+    </postconditionality>
+    <notes>
+        <note>ErrorGetCurrentNumberOfClientsFailed is thrown ONLY by the getCurrentNumberOfClients function - it is the most specific exception for client count retrieval failures.</note>
+        <note>This exception indicates a failure in the device's ability to report the current number of registered clients during the retrieval phase (step 5b), before count validation and return.</note>
+        <note>Unlike ErrorFunctionFailed (which indicates unexpected critical errors), ErrorGetCurrentNumberOfClientsFailed specifically indicates client count information is unavailable or cannot be determined.</note>
+        <note>After this exception is raised, the device remains unchanged and client registrations remain intact. All existing clients continue to function normally. The client count query can be retried once the underlying issue is resolved.</note>
+        <note>This exception has Medium severity because it prevents users from monitoring client registrations and device utilization, but does not prevent device operation or existing client functionality.</note>
+        <note>Client count information is essential for monitoring client registration status, capacity planning, understanding device utilization in multi-user environments, and preventing client overflow.</note>
+        <note>The getCurrentNumberOfClients function returns only the COUNT of registered clients, not their identities or details. Use getRegisteredClients for detailed client information.</note>
+        <note>The client count must always be between 0 and the maximum number of clients supported by the device. Failures in tracking may indicate client registry corruption or client management issues.</note>
+        <note>Applications should implement appropriate error handling for client count retrieval failures and not assume current client information is always available or consistent across multiple queries.</note>
+        <note>If this exception occurs repeatedly, it indicates a serious issue with client management tracking or client registry integrity that may require professional investigation or device repair.</note>
+    </notes>
+    <usage>
+        <scenario name="Scenario 1: Client Capacity Monitoring During Registration">
+            <description>An application monitors client registrations and ensures that the device does not exceed capacity. Before registering a new client, the application calls getCurrentNumberOfClients to check available capacity. If ErrorGetCurrentNumberOfClientsFailed is raised, the application conservatively refuses to register new clients to avoid potential capacity violations.</description>
+            <relatedFunctions>getCurrentNumberOfClients, getMaxNumberOfClients, registerClient</relatedFunctions>
+            <errorContext>Client count unavailable preventing capacity verification for new client registration</errorContext>
+        </scenario>
+        <scenario name="Scenario 2: System Health Monitoring and Diagnostics">
+            <description>An application collects comprehensive device diagnostic information for monitoring and support purposes. As part of this process, it queries getCurrentNumberOfClients to track device utilization. If ErrorGetCurrentNumberOfClientsFailed is raised, the application logs this as a diagnostic indicator of potential client management issues.</description>
+            <relatedFunctions>getCurrentNumberOfClients, getMaxNumberOfClients, getRegisteredClients, getDeviceHealth</relatedFunctions>
+            <errorContext>Client count information unavailable during system health monitoring</errorContext>
+        </scenario>
+        <scenario name="Scenario 3: Cross-Validation of Client Management Data">
+            <description>An application verifies consistency in client management by cross-checking getCurrentNumberOfClients against getMaxNumberOfClients and attempting to list registered clients. If ErrorGetCurrentNumberOfClientsFailed is raised but other queries succeed, it indicates a specific client counting issue versus general client management failure.</description>
+            <relatedFunctions>getCurrentNumberOfClients, getMaxNumberOfClients, getRegisteredClients</relatedFunctions>
+            <errorContext>Client count retrieval failure for consistency verification</errorContext>
+        </scenario>
+        <scenario name="Scenario 4: Multi-Device Client Load Balancing">
+            <description>An enterprise application manages client connections across multiple devices and attempts to balance client load. The application queries getCurrentNumberOfClients on each device to determine utilization. If ErrorGetCurrentNumberOfClientsFailed is raised on one device, the application marks that device as having unknown capacity and routes new clients away from it until the issue is resolved.</description>
+            <relatedFunctions>getCurrentNumberOfClients, getMaxNumberOfClients, registerClient</relatedFunctions>
+            <errorContext>Client count unavailable for load balancing decisions in multi-device environment</errorContext>
+        </scenario>
+    </usage>
+    <implementationContext>
+        <note>The getCurrentNumberOfClients function is part of the client management subsystem that tracks registered clients and their access to SE API functions.</note>
+        <note>A client is registered using the registerClient function and deregistered using the deregisterClient function. The count reflects the current registration state.</note>
+        <note>The current number of clients must always be between 0 and the maximum number of clients supported by the device as returned by getMaxNumberOfClients.</note>
+        <note>Client count information is essential for understanding device utilization, capacity planning, and multi-user environment management in enterprise deployments.</note>
+        <note>If client count retrieval fails but clients continue to operate normally and other client management functions work correctly, the issue is with the counting/tracking mechanism, not the underlying client management itself.</note>
+        <note>Client count changes occur only when registerClient or deregisterClient functions are called. Between those operations, the count should remain stable.</note>
+        <note>Different device models and configurations may support different maximum numbers of clients, making the relationship between current and maximum counts important for capacity planning.</note>
+        <note>Client count retrieval is a read-only query that should not modify device state or affect existing client registrations, so recovery typically only requires retrying the query.</note>
+    </implementationContext>
 </exception>

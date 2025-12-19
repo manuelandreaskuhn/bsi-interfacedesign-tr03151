@@ -1,18 +1,163 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <exception id="ErrorGetUsedMemoryFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
     <name>ErrorGetUsedMemoryFailed</name>
-    <description>This exception is thrown if the SE API function getUsedMemory fails to determine the amount of memory currently used.</description>
-    <category>Storage</category>
-    <severity>Medium</severity>
+    <description>This exception is thrown if the SE API function getUsedMemory fails to retrieve the amount of storage currently consumed on the Secure Element. The function attempts to determine how much of the total storage capacity is currently in use, but the retrieval process fails before the used memory information can be determined and returned.</description>
+    <category>Resource Management - Memory Utilization Query</category>
+    <severity>High</severity>
     <javadoc>
-        <summary>This class defines the exception ErrorGetUsedMemoryFailed that is thrown if the SE API function getUsedMemory fails to determine the amount of memory currently used.</summary>
+        <summary>This class defines the exception ErrorGetUsedMemoryFailed that is thrown if the determination of the used storage amount failed.</summary>
+        <description>This exception is thrown when the getUsedMemory function cannot retrieve the current memory utilization from the Secure Element. Used memory information describes the amount of storage currently consumed by data, transactions, logging, and other internal structures on the Secure Element. ErrorGetUsedMemoryFailed indicates that the Secure Element cannot provide the used memory information due to hardware failure, memory accounting corruption, internal resource management system errors, communication failures, or Secure Element state restrictions. When this exception occurs, no used memory value is returned and applications cannot determine the current storage utilization. Recovery typically involves device verification, resource management subsystem diagnostics, and accounting verification if the failure persists.</description>
+        <constructors>
+            <constructor>
+                <signature>ErrorGetUsedMemoryFailed()</signature>
+                <description>Constructs a new ErrorGetUsedMemoryFailed exception with null as the value for its detail message</description>
+            </constructor>
+            <constructor>
+                <signature>ErrorGetUsedMemoryFailed(String message)</signature>
+                <description>Constructs a new ErrorGetUsedMemoryFailed exception whereby its detail message is initialized with the passed value</description>
+                <parameter name="message">value for the detail message of the exception, typically describing the used memory retrieval failure</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorGetUsedMemoryFailed(String message, Throwable cause)</signature>
+                <description>Constructs a new ErrorGetUsedMemoryFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorGetUsedMemoryFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+                <description>Constructs a new ErrorGetUsedMemoryFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+            </constructor>
+        </constructors>
     </javadoc>
     <specification>
         <source>BSI TR-03151-1</source>
-        <requirement>SHALL be raised when used memory query fails</requirement>
-        <applicability>Memory information query operations</applicability>
+        <section>3.4.2 Resource Management - getUsedMemory</section>
+        <requirement>The function getUsedMemory SHALL query the Secure Element to determine the amount of storage currently in use. If the Secure Element cannot provide or return the required used memory information, the function SHALL raise the exception ErrorGetUsedMemoryFailed and exit without returning any memory utilization data. The used memory retrieval failure indicates the Secure Element's resource management query functionality could not complete successfully.</requirement>
+        <applicability>Resource management operations - getUsedMemory function only</applicability>
+        <reference>getUsedMemory – Function (3.4.2)</reference>
     </specification>
     <thrownBy>
         <function>getUsedMemory</function>
     </thrownBy>
+    <triggerConditions>
+        <condition>
+            <scenario>Memory accounting hardware failure</scenario>
+            <description>The Secure Element's memory accounting hardware malfunctions or becomes inaccessible, preventing used memory retrieval</description>
+            <trigger>The Secure Element's memory accounting or resource tracking hardware malfunctions or experiences read errors. When getUsedMemory is called, the memory utilization query is sent to the Secure Element, but the hardware cannot provide valid accounting data. The function receives a failure status from the Secure Element, triggering ErrorGetUsedMemoryFailed.</trigger>
+        </condition>
+        <condition>
+            <scenario>Memory accounting metadata corruption</scenario>
+            <description>The Secure Element's memory accounting or resource utilization tracking data becomes corrupted or is lost</description>
+            <trigger>The Secure Element's memory containing memory accounting information, resource utilization records, or accounting metadata becomes corrupted, experiences data loss, or is marked as inaccessible due to storage errors. When getUsedMemory attempts to read the used memory value, the data cannot be reliably retrieved, triggering ErrorGetUsedMemoryFailed.</trigger>
+        </condition>
+        <condition>
+            <scenario>Resource management subsystem internal error</scenario>
+            <description>The Secure Element's resource management or accounting subsystem encounters critical errors that prevent memory utilization queries</description>
+            <trigger>The Secure Element's resource management subsystem (responsible for tracking and providing memory accounting and resource utilization information) encounters an internal error, deadlock, or exception. When getUsedMemory is called, the resource management system cannot process the query, triggering ErrorGetUsedMemoryFailed.</trigger>
+        </condition>
+        <condition>
+            <scenario>Device-to-Secure Element communication failure during utilization query</scenario>
+            <description>The communication channel between device and Secure Element is disrupted during used memory retrieval</description>
+            <trigger>A communication failure occurs while getUsedMemory transmits the utilization query to the Secure Element or while receiving the used memory response. The command may be corrupted, the response may be incomplete, or the communication link may be temporarily unavailable. The function receives a communication error status, triggering ErrorGetUsedMemoryFailed.</trigger>
+        </condition>
+        <condition>
+            <scenario>Secure Element in restricted or error state prohibiting resource access</scenario>
+            <description>The Secure Element is in a locked, restricted, or error state that prevents external queries for resource accounting information</description>
+            <trigger>The Secure Element enters a state where resource queries or resource accounting access is not permitted. When getUsedMemory is called and the Secure Element's state prohibits resource access, the function receives a state-related rejection, triggering ErrorGetUsedMemoryFailed.</trigger>
+        </condition>
+    </triggerConditions>
+    <executionSequence>
+        <step number="1">User/application calls getUsedMemory function on device</step>
+        <step number="2">Function validates input parameters and checks authentication status (if required by referencing guideline)</step>
+        <step number="3">Function checks authorization for resource information access (if required by referencing guideline)</step>
+        <step number="4">Function verifies device is properly initialized and resource management is operational</step>
+        <step number="5">Function initiates communication channel to Secure Element and prepares memory utilization query command</step>
+        <step number="6">Function transmits utilization query command to Secure Element requesting the amount of storage currently in use</step>
+        <step number="6a">If Secure Element responds with failure status (resource error, accounting error, utilization error) → ErrorGetUsedMemoryFailed raised, function exits without utilization value</step>
+        <step number="6b">If communication failure occurs during query transmission or response reception → ErrorGetUsedMemoryFailed raised, function exits</step>
+        <step number="7">If successful, function receives used memory value from Secure Element</step>
+        <step number="8">Function validates used memory value for correctness (format, value range, consistency with total and free memory values)</step>
+        <step number="9">Function closes Secure Element communication channel</step>
+        <step number="10">Function returns valid used memory value to caller</step>
+    </executionSequence>
+    <recovery>
+        <step>Verify device operational status - confirm device is initialized, responding to other operations, and not in an error state</step>
+        <step>Verify Secure Element accessibility - confirm device can communicate with Secure Element through diagnostic commands</step>
+        <step>Check device initialization - ensure device has been properly initialized with initDevice before attempting getUsedMemory</step>
+        <step>Retry getUsedMemory operation - attempt the function call again as the failure may be transient</step>
+        <step>Review device diagnostics for resource management system health - query device for diagnostic information about Secure Element resource management subsystem status</step>
+        <step>Verify memory accounting integrity through device manufacturer diagnostics - check if memory accounting metadata is accessible and uncorrupted</step>
+        <step>Test other resource queries - attempt retrieving total memory or free memory to verify general resource management access capability</step>
+        <step>Implement comprehensive error logging and monitoring - log this failure consistently to identify patterns (transient vs. persistent, correlation with memory operations)</step>
+        <step>If failure is persistent, attempt device firmware update if available - may resolve resource management subsystem errors or accounting issues</step>
+        <step>If failure persists and suspected accounting corruption, contact device manufacturer or consider device reset - repeated memory utilization retrieval failures indicate serious accounting problems</step>
+    </recovery>
+    <relatedExceptions>
+        <exception>ErrorFunctionFailed</exception>
+        <exception>ErrorDeviceNotInitialized</exception>
+        <exception>ErrorGetFreeMemoryFailed</exception>
+        <exception>ErrorGetTotalMemoryFailed</exception>
+        <exception>ErrorGetMaxNumberOfClientsFailed</exception>
+    </relatedExceptions>
+    <postconditionality>
+        <state name="Device Operational State">Device remains fully operational and unmodified. The failure to retrieve used memory does not affect device initialization state, memory utilization, internal memory, stored data, or the ability to perform other operations. All device components remain in their pre-call state.</state>
+        <state name="Used Memory Return Status">No used memory value is returned to the caller. The function exits without providing storage utilization information. Applications must not assume default memory utilization or cached information; they must handle the exception as indicating current memory accounting is unavailable.</state>
+        <state name="Secure Element Resource State">Secure Element resource management subsystem remains unchanged by the failed query. No state modifications, accounting changes, or resource utilization changes occur. Resource management operations continue normally regardless of the retrieval failure.</state>
+        <state name="Memory Utilization Continuity">Memory utilization continues to be accurately tracked internally in the Secure Element. The failure to retrieve the used memory value does not affect actual memory utilization or resource tracking. Utilization queries can be retried once the underlying issue is resolved.</state>
+        <state name="No Cascading State Effects">No cascading state inconsistencies or secondary failures occur as a result of the utilization query failure. Device internal consistency is maintained. Other SE API functions and resource management operations continue normally without state corruption.</state>
+        <state name="Recovery Preconditions Met">The device state after exception is consistent and allows for recovery operations. The underlying issue (hardware error, communication error, resource management error) remains present, but the device is stable enough to accept diagnostic queries or recovery attempts.</state>
+    </postconditionality>
+    <notes>
+        <note>ErrorGetUsedMemoryFailed is thrown ONLY by the getUsedMemory function - it is the most specific and precise exception for Secure Element used memory retrieval failures</note>
+        <note>This exception indicates a failure in the Secure Element's ability to report its current memory utilization</note>
+        <note>Critical distinction from ErrorFunctionFailed: ErrorGetUsedMemoryFailed specifically indicates memory accounting enumeration is unavailable at the resource management subsystem level, while ErrorFunctionFailed indicates broader unspecified critical failures</note>
+        <note>Exception is raised during the utilization query phase (steps 6-7), after device initialization and authentication checks have passed</note>
+        <note>After this exception, the Secure Element remains unchanged and actual memory utilization continues to be tracked internally. Utilization queries can be retried once the underlying issue is resolved</note>
+        <note>This exception has High severity because it prevents users from determining current storage utilization (critical for resource monitoring and capacity management)</note>
+        <note>Used memory represents the amount of storage currently consumed by all data, structures, and operations on the Secure Element</note>
+        <note>The exception indicates storage accounting cannot be reliably determined; applications must not implement workarounds using external memory estimates without explicit validation</note>
+        <note>Failure scenarios range from transient (temporary communication issues, temporary state) to persistent (accounting metadata corruption, hardware failure, firmware error)</note>
+        <note>If this exception occurs frequently or persistently, it indicates serious issues with Secure Element memory accounting hardware, firmware, or resource tracking that require diagnostic investigation</note>
+        <note>Memory utilization accounting is a read-only query; failure does not modify any storage state, so recovery typically requires only retrying the query once underlying issue is resolved</note>
+        <note>Used memory information is essential for monitoring actual resource consumption and understanding available capacity</note>
+        <note>Applications must implement appropriate error handling for memory utilization retrieval failures when monitoring device resources</note>
+        <note>Repeated memory utilization retrieval failures may indicate device needs firmware update, accounting reset, or hardware service - manufacturer support should be engaged</note>
+        <note>Different device models and configurations may have different memory consumption patterns - consult device specifications for resource details</note>
+    </notes>
+    <usage>
+        <scenario name="Scenario 1: Real-Time Memory Utilization Monitoring and Resource Tracking">
+            <description>A resource monitoring system continuously tracks memory utilization to ensure healthy resource consumption. The system periodically calls getUsedMemory to obtain current memory utilization values. Based on this information, the system can identify memory leaks or abnormal consumption patterns. If ErrorGetUsedMemoryFailed is raised, the monitoring system cannot assess current utilization.</description>
+            <relatedFunctions>getUsedMemory, getFreeMemory, getTotalMemory</relatedFunctions>
+            <errorContext>Used memory unavailable for real-time resource utilization monitoring</errorContext>
+        </scenario>
+        <scenario name="Scenario 2: Memory Health Assessment and Available Capacity Determination">
+            <description>A health assessment system evaluates device resource health by comparing used memory, free memory, and total memory values. The system calls getUsedMemory to determine how much storage is consumed. This enables assessment of memory pressure and available capacity for future operations. If ErrorGetUsedMemoryFailed is raised, the health assessment cannot evaluate utilization health.</description>
+            <relatedFunctions>getUsedMemory, getFreeMemory, getTotalMemory</relatedFunctions>
+            <errorContext>Used memory unavailable for memory health assessment</errorContext>
+        </scenario>
+        <scenario name="Scenario 3: Resource Accounting Verification and Consistency Check">
+            <description>An accounting verification system validates that resource accounting is consistent by verifying that used + free memory equals total memory. The system calls getUsedMemory, getFreeMemory, and getTotalMemory to perform this consistency check. If ErrorGetUsedMemoryFailed is raised, the consistency check cannot be completed.</description>
+            <relatedFunctions>getUsedMemory, getFreeMemory, getTotalMemory</relatedFunctions>
+            <errorContext>Used memory unavailable for resource accounting consistency verification</errorContext>
+        </scenario>
+        <scenario name="Scenario 4: Multi-Device Resource Capacity Planning and Infrastructure Reporting">
+            <description>An enterprise resource planning system assesses resource consumption across multiple devices to plan capacity expansion and identify over-utilized devices. The system calls getUsedMemory on each device to collect utilization data. If ErrorGetUsedMemoryFailed is raised on any device, that device's utilization cannot be included in the infrastructure report.</description>
+            <relatedFunctions>getUsedMemory, getFreeMemory, getTotalMemory</relatedFunctions>
+            <errorContext>Used memory unavailable for multi-device resource capacity planning</errorContext>
+        </scenario>
+    </usage>
+    <implementationContext>
+        <note>The getUsedMemory function retrieves the current amount of storage consumed on the Secure Element</note>
+        <note>Used memory represents the amount of storage currently occupied by data, transactions, logging, and other internal structures</note>
+        <note>Used memory is typically expressed in bytes or other standard storage units</note>
+        <note>Different device models, configurations, and operational states may have different memory consumption patterns - consult device specifications for resource details</note>
+        <note>Used memory information is essential for monitoring actual resource consumption and determining available capacity</note>
+        <note>If used memory retrieval fails but total and free memory queries succeed, the issue is specific to utilization accounting, not to general resource management access</note>
+        <note>Memory accounting errors or retrieval failures represent critical issues in resource management subsystem that should be investigated immediately</note>
+        <note>Used memory accounting is a read-only query; ErrorGetUsedMemoryFailed does not indicate storage corruption requiring state recovery - it indicates the accounting information source is unavailable</note>
+    </implementationContext>
 </exception>

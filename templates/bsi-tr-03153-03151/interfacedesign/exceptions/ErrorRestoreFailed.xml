@@ -1,18 +1,176 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <exception id="ErrorRestoreFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
     <name>ErrorRestoreFailed</name>
-    <description>This exception is thrown if the restore process in the context of a restoring from a backup in form of exported data failed.</description>
-    <category>Data Management</category>
+    <description>This exception is thrown if the SE API function restoreLogsFromBackup fails to restore transaction log messages from a backup into the Secure Element. The function attempts to restore previously exported log data back into the device's logging storage, but the restore operation fails due to device error, incompatible backup data, device storage issues, or other failure conditions. ErrorRestoreFailed indicates that the backup data could not be successfully restored and the device's log storage remains in its state prior to the restore attempt.</description>
+    <category>Data Management - Backup Restore Failure</category>
     <severity>Critical</severity>
     <javadoc>
-        <summary>This class defines the exception ErrorRestoreFailed that is thrown if the restore process in the context of a restoring from a backup in form of exported data failed.</summary>
+        <summary>This class defines the exception ErrorRestoreFailed that is thrown if the backup restore operation fails.</summary>
+        <description>This exception is thrown when the restoreLogsFromBackup function attempts to restore transaction log messages from a backup but encounters a failure. Backup restore is a critical operation used to recover previously logged data or migrate logs between devices. ErrorRestoreFailed indicates that the restore operation could not be completed successfully. Common causes include: incompatible backup data format, corrupted backup data, device storage issues, insufficient device storage capacity, device communication failures, or device internal errors. ErrorRestoreFailed is a Critical severity exception because it indicates data recovery has failed and audit trail information may be lost. Recovery requires investigating the backup data integrity, device state, and resolving the underlying issue before attempting restore again.</description>
+        <constructors>
+            <constructor>
+                <signature>ErrorRestoreFailed()</signature>
+                <description>Constructs a new ErrorRestoreFailed exception with null as the value for its detail message</description>
+            </constructor>
+            <constructor>
+                <signature>ErrorRestoreFailed(String message)</signature>
+                <description>Constructs a new ErrorRestoreFailed exception whereby its detail message is initialized with the passed value</description>
+                <parameter name="message">value for the detail message of the exception, typically describing the backup restore failure reason</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorRestoreFailed(String message, Throwable cause)</signature>
+                <description>Constructs a new ErrorRestoreFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorRestoreFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+                <description>Constructs a new ErrorRestoreFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+            </constructor>
+        </constructors>
     </javadoc>
     <specification>
         <source>BSI TR-03151-1</source>
-        <requirement>SHALL be raised when backup restore operation fails</requirement>
-        <applicability>Backup restore operations</applicability>
+        <section>3.3.4 Backup and Restore Operations - restoreLogsFromBackup</section>
+        <requirement>The function restoreLogsFromBackup SHALL restore transaction log messages from a backup (previously exported log data) into the Secure Element's logging storage. If the restore operation cannot be completed successfully due to incompatible backup data, corrupted backup, device storage issues, insufficient capacity, communication failure, or other device-level error, the function SHALL raise the exception ErrorRestoreFailed. The backup data must be in the correct format and structure for the device and backup period to restore successfully. If the restore fails, the device's log storage remains unchanged - partial restores are not committed to the device.</requirement>
+        <applicability>Backup restore operations - restoreLogsFromBackup function only</applicability>
+        <reference>restoreLogsFromBackup – Function (3.3.4)</reference>
     </specification>
     <thrownBy>
         <function>restoreLogsFromBackup</function>
     </thrownBy>
+    <triggerConditions>
+        <condition>
+            <scenario>Backup data format incompatible with device</scenario>
+            <description>The backup data format is not compatible with the device or device version</description>
+            <trigger>A restoreLogsFromBackup call is made with backup data from a different device model or SE API version. The device detects the format incompatibility and raises ErrorRestoreFailed.</trigger>
+        </condition>
+        <condition>
+            <scenario>Corrupted or damaged backup data</scenario>
+            <description>The backup data is corrupted or damaged and cannot be parsed or validated</description>
+            <trigger>A restoreLogsFromBackup call is made with backup data that was corrupted during transmission or storage. The device detects corruption (checksum failure, invalid structure) and raises ErrorRestoreFailed.</trigger>
+        </condition>
+        <condition>
+            <scenario>Insufficient device storage for restore</scenario>
+            <description>The device storage does not have sufficient capacity to accommodate the backup data</description>
+            <trigger>A restoreLogsFromBackup call is made to restore a large backup. The device determines that storage capacity is insufficient and raises ErrorRestoreFailed.</trigger>
+        </condition>
+        <condition>
+            <scenario>Device storage error during restore operation</scenario>
+            <description>Device encounters storage write or access errors during the restore operation</description>
+            <trigger>A restoreLogsFromBackup call begins but the device encounters storage errors (I/O failure, hardware issue) while writing restored data. The restore is aborted and ErrorRestoreFailed is raised.</trigger>
+        </condition>
+        <condition>
+            <scenario>Device communication failure during restore</scenario>
+            <description>Communication with the Secure Element is lost during the restore data transmission</description>
+            <trigger>A restoreLogsFromBackup call transmits backup data to the device but communication is interrupted before all data is received. The restore cannot be completed and ErrorRestoreFailed is raised.</trigger>
+        </condition>
+    </triggerConditions>
+    <executionSequence>
+        <step number="1">User/application calls restoreLogsFromBackup function with backup data and parameters</step>
+        <step number="2">Function validates input parameters and backup data format</step>
+        <step number="3">Function checks device compatibility with backup data format and version</step>
+        <step number="3a">If backup format incompatible with device → ErrorRestoreFailed raised, function exits</step>
+        <step number="3b">If backup format compatible → proceed to step 4</step>
+        <step number="4">Function validates backup data integrity (checksums, structure validation)</step>
+        <step number="4a">If backup data corrupted or invalid → ErrorRestoreFailed raised, function exits</step>
+        <step number="4b">If backup data valid → proceed to step 5</step>
+        <step number="5">Function checks device storage capacity for restore</step>
+        <step number="5a">If insufficient storage → ErrorRestoreFailed raised, function exits</step>
+        <step number="5b">If sufficient storage → proceed to step 6</step>
+        <step number="6">Function initiates communication with Secure Element</step>
+        <step number="7">Function transmits restore command with backup data to Secure Element</step>
+        <step number="7a">If communication fails → ErrorRestoreFailed raised, function exits</step>
+        <step number="7b">If communication succeeds → proceed to step 8</step>
+        <step number="8">Secure Element receives and processes backup data</step>
+        <step number="9">Secure Element validates backup data format and content</step>
+        <step number="10">Secure Element writes restored log data to storage</step>
+        <step number="10a">If storage write fails → ErrorRestoreFailed raised, function exits</step>
+        <step number="10b">If storage write succeeds → proceed to step 11</step>
+        <step number="11">Function receives acknowledgment from Secure Element</step>
+        <step number="12">Function closes communication channel with Secure Element</step>
+        <step number="13">Function returns successfully with logs restored</step>
+    </executionSequence>
+    <recovery>
+        <step>Review error message - examine the error message to understand the restore failure reason</step>
+        <step>Verify backup data integrity - check that backup data is not corrupted and has valid checksums</step>
+        <step>Verify backup data format - ensure backup data is in correct format for the device and version</step>
+        <step>Check device compatibility - verify the device is compatible with the backup data format</step>
+        <step>Check device storage - verify the device has sufficient storage capacity for the restore</step>
+        <step>Check device state - query device to verify it is operational and not in error state</step>
+        <step>Verify device connectivity - ensure Secure Element is accessible and responsive</step>
+        <step>Clean device storage if needed - delete unnecessary logs or data to free storage capacity</step>
+        <step>Retry the restore - attempt restoreLogsFromBackup again with valid backup data</step>
+        <step>If persistent, contact manufacturer - repeated restore failures may indicate device or backup compatibility issue</step>
+    </recovery>
+    <relatedExceptions>
+        <exception>ErrorExportLoggingCertificateFailed</exception>
+        <exception>ErrorDeleteLogMessagesFailed</exception>
+        <exception>ErrorConfigureLoggingFailed</exception>
+        <exception>ErrorReadingLogMessage</exception>
+        <exception>ErrorFunctionFailed</exception>
+    </relatedExceptions>
+    <postconditionality>
+        <state name="Backup Not Restored">The backup data is not restored into the device. The restore operation fails before any data is committed.</state>
+        <state name="Device Log Storage Unchanged">The device's log storage remains in its state prior to the restore attempt. No partial restores are committed.</state>
+        <state name="Backup Data Preserved">The backup data remains unchanged and available for retry or alternative actions.</state>
+        <state name="Device State Unmodified">The device's overall state remains unchanged. The failed restore does not affect normal device operation.</state>
+        <state name="No Data Loss">No existing log data on the device is lost by the failed restore attempt - the restore is read-only from device perspective.</state>
+        <state name="Retry Possible">The restore operation can be retried after addressing the underlying cause of the failure.</state>
+    </postconditionality>
+    <notes>
+        <note>ErrorRestoreFailed is thrown ONLY by the restoreLogsFromBackup function - specific to backup restore operations</note>
+        <note>This exception indicates a backup restore operation failure - the backup data could not be imported into the device</note>
+        <note>The exception has Critical severity because backup restore is a critical data recovery operation</note>
+        <note>Restore failure means audit trail recovery may not be possible - this is a serious situation</note>
+        <note>Backup data format compatibility is essential - only backups compatible with the device can be restored</note>
+        <note>Backup data integrity must be verified before restore attempts</note>
+        <note>Device storage capacity must be verified to be sufficient for the restore</note>
+        <note>Device communication must be reliable during restore - data transmission is critical</note>
+        <note>Backup data should be preserved after failed restore - retry may be possible</note>
+        <note>Multiple backups or backup redundancy strategies can provide recovery alternatives if restore fails</note>
+        <note>Device manufacturers should document backup format specifications and version compatibility</note>
+        <note>Restore operations should be atomic - either fully commit or fully rollback, no partial restores</note>
+        <note>Error messages should include detailed information about the restore failure (format issue, corruption, capacity, etc.)</note>
+        <note>Monitoring and alerting on restore failures is important for disaster recovery planning</note>
+        <note>Regular backup testing (restore drills) can help identify compatibility or corruption issues before they are critical</note>
+    </notes>
+    <usage>
+        <scenario name="Scenario 1: Backup Restore with Failure Detection and Verification">
+            <description>An application calls restoreLogsFromBackup to restore a previously exported backup of log messages. When ErrorRestoreFailed is raised, the application verifies the backup data integrity, checks device storage capacity, and retries the restore operation.</description>
+            <relatedFunctions>restoreLogsFromBackup, exportLogMessages</relatedFunctions>
+            <errorContext>Backup restore fails - requires verification and retry</errorContext>
+        </scenario>
+        <scenario name="Scenario 2: Disaster Recovery with Backup Restoration">
+            <description>A device has been reset or had its logs cleared. The recovery process calls restoreLogsFromBackup to restore the audit trail from a backup. If ErrorRestoreFailed is raised, recovery procedures are triggered to investigate why the backup cannot be restored.</description>
+            <relatedFunctions>restoreLogsFromBackup, deleteLogMessages</relatedFunctions>
+            <errorContext>Disaster recovery blocked by failed backup restore</errorContext>
+        </scenario>
+        <scenario name="Scenario 3: Multi-Device Log Migration with Compatibility Check">
+            <description>An enterprise system attempts to migrate logs from one device to another by exporting from the source device and restoring to the target device. When ErrorRestoreFailed is raised, it indicates compatibility issues between the devices. The system verifies device versions and backup formats.</description>
+            <relatedFunctions>restoreLogsFromBackup, exportLogMessages</relatedFunctions>
+            <errorContext>Log migration fails due to device/backup format incompatibility</errorContext>
+        </scenario>
+        <scenario name="Scenario 4: Backup Testing and Validation">
+            <description>A compliance system performs regular backup testing by exporting logs and restoring them from backup. When ErrorRestoreFailed is raised during testing, it triggers an alert - the backup is unusable and may not protect against data loss. The backup system is reviewed and corrected.</description>
+            <relatedFunctions>restoreLogsFromBackup, exportLogMessages</relatedFunctions>
+            <errorContext>Backup testing identifies restore failure - backup unusable</errorContext>
+        </scenario>
+    </usage>
+    <implementationContext>
+        <note>The restoreLogsFromBackup function must validate backup data format and structure before attempting restore</note>
+        <note>The function must verify device compatibility with the backup data version and format</note>
+        <note>Device storage capacity must be checked before attempting to restore large backups</note>
+        <note>Backup data integrity must be validated (checksums, signatures, structure validation)</note>
+        <note>The restore operation should be atomic - either fully succeed or fully fail with no partial state</note>
+        <note>Corruption or format incompatibility should be detected early and reported clearly</note>
+        <note>Communication during restore should be reliable and error-checked</note>
+        <note>Error messages should provide specific information about restore failure (format, corruption, capacity, etc.)</note>
+        <note>Device manufacturers should document backup format and version compatibility requirements</note>
+        <note>Backup testing procedures should be part of system validation to ensure restore capability</note>
+    </implementationContext>
 </exception>

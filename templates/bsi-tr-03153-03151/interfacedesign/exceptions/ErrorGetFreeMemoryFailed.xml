@@ -1,18 +1,163 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <exception id="ErrorGetFreeMemoryFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
     <name>ErrorGetFreeMemoryFailed</name>
-    <description>This exception is thrown if the SE API function getFreeMemory fails to determine the amount of currently free memory.</description>
-    <category>Storage</category>
+    <description>This exception is thrown if the SE API function getFreeMemory fails to retrieve the amount of currently free memory available in the Secure Element. The function attempts to obtain the current available memory capacity for storing data and processing operations, but the retrieval process fails before the memory value can be determined and returned.</description>
+    <category>Resource Management - Memory Status</category>
     <severity>Medium</severity>
     <javadoc>
-        <summary>This class defines the exception ErrorGetFreeMemoryFailed that is thrown if the SE API function getFreeMemory fails to determine the amount of currently free memory.</summary>
+        <summary>This class defines the exception ErrorGetFreeMemoryFailed that is thrown if the SE API function getFreeMemory fails to determine the amount of currently free memory in the device.</summary>
+        <description>This exception is thrown when the getFreeMemory function cannot retrieve the current available memory from the Secure Element. Free memory information indicates the amount of memory capacity that is currently available for storing data and processing operations. ErrorGetFreeMemoryFailed indicates that the Secure Element cannot provide the memory status information due to hardware failure, memory management system errors, storage corruption, communication failures, or Secure Element state restrictions. When this exception occurs, no memory data is returned and applications cannot determine available memory capacity or assess resource availability. Recovery typically involves device verification, memory management subsystem diagnostics, and possible hardware diagnosis if the failure persists.</description>
+        <constructors>
+            <constructor>
+                <signature>ErrorGetFreeMemoryFailed()</signature>
+                <description>Constructs a new ErrorGetFreeMemoryFailed exception with null as the value for its detail message</description>
+            </constructor>
+            <constructor>
+                <signature>ErrorGetFreeMemoryFailed(String message)</signature>
+                <description>Constructs a new ErrorGetFreeMemoryFailed exception whereby its detail message is initialized with the passed value</description>
+                <parameter name="message">value for the detail message of the exception, typically describing the free memory retrieval failure</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorGetFreeMemoryFailed(String message, Throwable cause)</signature>
+                <description>Constructs a new ErrorGetFreeMemoryFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorGetFreeMemoryFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+                <description>Constructs a new ErrorGetFreeMemoryFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+            </constructor>
+        </constructors>
     </javadoc>
     <specification>
         <source>BSI TR-03151-1</source>
-        <requirement>SHALL be raised when free memory query fails</requirement>
-        <applicability>Memory information query operations</applicability>
+        <section>3.5.1 Resource Management - getFreeMemory</section>
+        <requirement>The function getFreeMemory SHALL retrieve the amount of currently free memory available in the Secure Element for data storage and processing operations. If the Secure Element cannot provide or return the required memory information, the function SHALL raise the exception ErrorGetFreeMemoryFailed and exit without returning any memory data. The free memory retrieval failure indicates the Secure Element's memory status query functionality could not complete successfully.</requirement>
+        <applicability>Resource management operations - getFreeMemory function only</applicability>
+        <reference>getFreeMemory – Function (3.5.1)</reference>
     </specification>
     <thrownBy>
         <function>getFreeMemory</function>
     </thrownBy>
+    <triggerConditions>
+        <condition>
+            <scenario>Memory management hardware failure</scenario>
+            <description>The Secure Element's memory management hardware or monitoring circuits malfunction or become inaccessible, preventing memory status retrieval</description>
+            <trigger>The Secure Element's memory management hardware fails or memory status monitoring circuits cannot be read. When getFreeMemory is called, the memory query is sent to the Secure Element, but the hardware cannot provide valid memory status. The function receives a failure status from the Secure Element, triggering ErrorGetFreeMemoryFailed.</trigger>
+        </condition>
+        <condition>
+            <scenario>Memory management system data corruption</scenario>
+            <description>The Secure Element's memory management subsystem data or memory allocation tables become corrupted or are lost</description>
+            <trigger>The Secure Element's memory management data structures (allocation tables, free block tracking, usage statistics) become corrupted, experience data loss, or are marked as inaccessible due to storage errors. When getFreeMemory attempts to calculate free memory from management tables, the data cannot be reliably used, triggering ErrorGetFreeMemoryFailed.</trigger>
+        </condition>
+        <condition>
+            <scenario>Memory management subsystem internal error</scenario>
+            <description>The Secure Element's memory management subsystem encounters critical errors that prevent free memory calculation or retrieval</description>
+            <trigger>The Secure Element's memory management subsystem (responsible for allocating memory, tracking usage, and providing memory status) encounters an internal error, deadlock, or exception. When getFreeMemory is called, the memory management system cannot process the query, triggering ErrorGetFreeMemoryFailed.</trigger>
+        </condition>
+        <condition>
+            <scenario>Device-to-Secure Element communication failure during memory query</scenario>
+            <description>The communication channel between device and Secure Element is disrupted during memory status retrieval</description>
+            <trigger>A communication failure occurs while getFreeMemory transmits the memory query to the Secure Element or while receiving the memory status response. The command may be corrupted, the response may be incomplete, or the communication link may be temporarily unavailable. The function receives a communication error status, triggering ErrorGetFreeMemoryFailed.</trigger>
+        </condition>
+        <condition>
+            <scenario>Secure Element in restricted or error state prohibiting memory access</scenario>
+            <description>The Secure Element is in a locked, restricted, or error state that prevents external queries for memory status information</description>
+            <trigger>The Secure Element enters a state where resource queries or memory status access is not permitted. When getFreeMemory is called and the Secure Element's state prohibits memory access, the function receives a state-related rejection, triggering ErrorGetFreeMemoryFailed.</trigger>
+        </condition>
+    </triggerConditions>
+    <executionSequence>
+        <step number="1">User/application calls getFreeMemory function on device</step>
+        <step number="2">Function validates input parameters and checks authentication status (if required by referencing guideline)</step>
+        <step number="3">Function checks authorization for resource information access (if required by referencing guideline)</step>
+        <step number="4">Function verifies device is properly initialized and memory management is operational</step>
+        <step number="5">Function initiates communication channel to Secure Element and prepares memory status query command</step>
+        <step number="6">Function transmits memory query command to Secure Element requesting current free memory amount</step>
+        <step number="6a">If Secure Element responds with failure status (hardware error, management error, memory retrieval error) → ErrorGetFreeMemoryFailed raised, function exits without memory data</step>
+        <step number="6b">If communication failure occurs during query transmission or response reception → ErrorGetFreeMemoryFailed raised, function exits</step>
+        <step number="7">If successful, function receives free memory amount from Secure Element</step>
+        <step number="8">Function validates memory value for correctness (format, numeric range, logical consistency with total memory)</step>
+        <step number="9">Function closes Secure Element communication channel</step>
+        <step number="10">Function returns valid free memory value to caller</step>
+    </executionSequence>
+    <recovery>
+        <step>Verify device operational status - confirm device is initialized, responding to other operations, and not in an error state</step>
+        <step>Verify Secure Element accessibility - confirm device can communicate with Secure Element through diagnostic commands</step>
+        <step>Check device initialization - ensure device has been properly initialized with initDevice before attempting getFreeMemory</step>
+        <step>Retry getFreeMemory operation - attempt the function call again as the failure may be transient</step>
+        <step>Review device diagnostics for memory management system health - query device for diagnostic information about Secure Element memory status</step>
+        <step>Verify memory management system integrity through device manufacturer diagnostics - check if memory allocation tables are accessible and uncorrupted</step>
+        <step>Test other resource queries - attempt retrieving other resource information to verify general resource access capability</step>
+        <step>Implement comprehensive error logging and monitoring - log this failure consistently to identify patterns (transient vs. persistent, correlation with memory allocation or deallocation operations)</step>
+        <step>If failure is persistent, attempt device firmware update if available - may resolve memory management subsystem errors</step>
+        <step>If failure persists and suspected hardware issue, contact device manufacturer or consider device replacement - repeated memory query failures indicate serious memory hardware problems</step>
+    </recovery>
+    <relatedExceptions>
+        <exception>ErrorFunctionFailed</exception>
+        <exception>ErrorDeviceNotInitialized</exception>
+        <exception>ErrorGetTotalMemoryFailed</exception>
+        <exception>ErrorInsufficientMemory</exception>
+        <exception>ErrorMemoryAllocationFailed</exception>
+    </relatedExceptions>
+    <postconditionality>
+        <state name="Device Operational State">Device remains fully operational and unmodified. The failure to retrieve free memory information does not affect device initialization state, internal memory contents, memory allocation, or the ability to perform other operations. All device components remain in their pre-call state.</state>
+        <state name="Memory Data Return Status">No memory value is returned to the caller. The function exits without providing any available memory information. Applications must not assume default memory values or cached information; they must handle the exception as indicating memory status is unavailable.</state>
+        <state name="Secure Element Memory State">Secure Element memory remains unchanged by the failed memory query. No memory deallocation, allocation changes, or memory management modifications occur. Memory contents and allocation state continue unchanged regardless of the retrieval failure.</state>
+        <state name="Memory Availability Continuity">The Secure Element continues to maintain accurate memory tracking and allocation internally. The failure to retrieve free memory status does not affect the actual available memory or memory management operations. Memory queries can be retried once the underlying issue is resolved.</state>
+        <state name="No Cascading State Effects">No cascading state inconsistencies or secondary failures occur as a result of the memory query failure. Device internal consistency is maintained. Other SE API functions and memory operations continue normally without state corruption.</state>
+        <state name="Recovery Preconditions Met">The device state after exception is consistent and allows for recovery operations. The underlying issue (hardware error, communication error, management system error) remains present, but the device is stable enough to accept diagnostic queries or recovery attempts.</state>
+    </postconditionality>
+    <notes>
+        <note>ErrorGetFreeMemoryFailed is thrown ONLY by the getFreeMemory function - it is the most specific and precise exception for Secure Element free memory retrieval failures</note>
+        <note>This exception indicates a failure in the Secure Element's ability to report current free memory. It is an informational failure, not a critical operational failure, though it prevents memory capacity assessment</note>
+        <note>Critical distinction from ErrorFunctionFailed: ErrorGetFreeMemoryFailed specifically indicates memory status information is unavailable at the memory management subsystem level, while ErrorFunctionFailed indicates broader unspecified critical failures</note>
+        <note>Exception is raised during the memory status retrieval phase (steps 6-7), after device initialization and authentication checks have passed</note>
+        <note>After this exception, the Secure Element remains unchanged and continues to maintain accurate memory tracking internally. Memory queries can be retried once the underlying issue is resolved</note>
+        <note>This exception has Medium severity because it prevents users from assessing device memory capacity, but does not immediately prevent device operation or other SE API functions</note>
+        <note>Free memory is critical for determining whether sufficient storage is available for operations like transaction processing, logging, or data persistence</note>
+        <note>The exception indicates memory status cannot be reliably obtained; applications must not implement workarounds using estimated memory without explicit validation</note>
+        <note>Failure scenarios range from transient (temporary communication issues, temporary memory management state) to persistent (hardware failure, memory management corruption, firmware error)</note>
+        <note>If this exception occurs frequently or persistently, it indicates serious issues with Secure Element memory management hardware, firmware, or allocation tables that require diagnostic investigation</note>
+        <note>Memory query is a read-only operation; failure does not modify any Secure Element memory state, so recovery typically requires only retrying the query once underlying issue is resolved</note>
+        <note>Free memory values represent available storage for new allocations and should be less than or equal to total memory in the device</note>
+        <note>Memory availability changes dynamically as operations allocate and deallocate memory, so free memory may vary between queries</note>
+        <note>Applications must implement appropriate error handling for memory status retrieval failures, especially in resource-constrained deployments</note>
+        <note>Repeated memory query failures may indicate device needs firmware update, memory management reset, or hardware service - manufacturer support should be engaged</note>
+    </notes>
+    <usage>
+        <scenario name="Scenario 1: Pre-Operation Memory Capacity Verification">
+            <description>Before performing memory-intensive operations (transaction processing, logging, data storage), an application checks available free memory to ensure sufficient capacity exists. The application retrieves free memory using getFreeMemory and compares it against operation requirements. If ErrorGetFreeMemoryFailed is raised, the application cannot verify capacity and must conservatively defer memory-intensive operations.</description>
+            <relatedFunctions>getFreeMemory, getTotalMemory, startTransaction</relatedFunctions>
+            <errorContext>Free memory status unavailable for pre-operation capacity verification</errorContext>
+        </scenario>
+        <scenario name="Scenario 2: Resource Monitoring and Device Capacity Assessment">
+            <description>A monitoring system periodically assesses device resource utilization by querying memory status. The system uses free memory information to understand device capacity utilization and predict resource exhaustion. If ErrorGetFreeMemoryFailed is raised, the system cannot determine memory status for monitoring and must alert operators to monitoring failure.</description>
+            <relatedFunctions>getFreeMemory, getTotalMemory, getDeviceHealth</relatedFunctions>
+            <errorContext>Free memory information unavailable for resource monitoring and capacity assessment</errorContext>
+        </scenario>
+        <scenario name="Scenario 3: Memory-Aware Load Distribution Across Devices">
+            <description>An enterprise application distributes workload across multiple devices, considering memory availability to avoid devices with insufficient resources. The application queries getFreeMemory on each device to assess available capacity. If ErrorGetFreeMemoryFailed is raised on one device, the application cannot determine that device's memory capacity and conservatively excludes it from new work distribution.</description>
+            <relatedFunctions>getFreeMemory, getTotalMemory, startTransaction</relatedFunctions>
+            <errorContext>Free memory status unavailable for memory-aware load distribution</errorContext>
+        </scenario>
+        <scenario name="Scenario 4: Device Diagnostics and Resource Availability Reporting">
+            <description>A diagnostics tool collects comprehensive device resource information for analysis and support purposes. As part of resource diagnostics, the tool retrieves current free memory to document memory availability and utilization. If ErrorGetFreeMemoryFailed is raised, the tool cannot include memory information in the diagnostic report.</description>
+            <relatedFunctions>getFreeMemory, getTotalMemory, getDeviceHealth</relatedFunctions>
+            <errorContext>Free memory information unavailable for device diagnostics and resource reporting</errorContext>
+        </scenario>
+    </usage>
+    <implementationContext>
+        <note>The getFreeMemory function retrieves the current amount of free memory maintained by the Secure Element's memory management subsystem</note>
+        <note>Free memory represents the amount of memory available for new allocations and data storage operations in the Secure Element</note>
+        <note>Different device models and configurations may have different total memory sizes and fragmentation characteristics - consult device specifications</note>
+        <note>Free memory changes dynamically as operations allocate and deallocate memory, so values may vary between queries</note>
+        <note>Memory availability is critical for determining whether devices can accept new transactions, logging operations, or other memory-intensive functions</note>
+        <note>If free memory retrieval fails but other memory queries succeed (total memory), the issue is specific to memory status calculation, not to general memory access</note>
+        <note>Memory management system corruption or calculation errors represent potential integrity issues in resource management that should be investigated</note>
+        <note>Memory query is a read-only operation; ErrorGetFreeMemoryFailed does not indicate memory corruption requiring recovery - it indicates the memory status information source is unavailable</note>
+    </implementationContext>
 </exception>

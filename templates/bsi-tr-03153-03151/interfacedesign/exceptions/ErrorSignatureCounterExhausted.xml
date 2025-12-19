@@ -1,16 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <exception id="ErrorSignatureCounterExhausted" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
     <name>ErrorSignatureCounterExhausted</name>
-    <description>This exception is thrown if the physical memory of the signature counter can no longer guarantee error-free operation of the signature counter.</description>
-    <category>Logging</category>
+    <description>This exception is thrown if the physical memory of the signature counter can no longer guarantee error-free operation. The signature counter is a critical component that maintains a monotonically increasing counter value for digital signatures on transactions, providing audit trail integrity and replay attack protection. The physical storage backing the signature counter has limited write cycles. When the physical memory approaches or exceeds its safe operational limits, the device can no longer guarantee the integrity of the signature counter. ErrorSignatureCounterExhausted indicates the signature counter storage is exhausted and the device cannot safely continue operations that require signature counter increments. This is a Critical condition requiring immediate administrative attention and device maintenance or replacement.</description>
+    <category>Logging - Signature Counter - Memory Exhaustion</category>
     <severity>Critical</severity>
     <javadoc>
-        <summary>This class defines the exception ErrorSignatureCounterExhausted that is thrown if the physical memory of the signature counter can no longer guarantee error-free operation of the signature counter.</summary>
+        <summary>This class defines the exception ErrorSignatureCounterExhausted that is thrown if signature counter physical memory is exhausted.</summary>
+        <description>This exception is thrown when the physical memory backing the signature counter has reached exhaustion or a state where it can no longer guarantee error-free operation. The signature counter is a critical component that maintains a monotonically increasing counter for transaction signatures, providing audit trail integrity and replay attack protection. The physical storage has limited write cycles (typically Flash or EEPROM memory). ErrorSignatureCounterExhausted indicates that the memory has been written so many times that future writes cannot be guaranteed to succeed reliably. Common causes include: excessive transaction volume over device lifetime, signature counter write-through on every transaction, exceeding expected device lifecycle, or device reaching end-of-life. ErrorSignatureCounterExhausted is a Critical severity exception because it prevents further transaction processing and indicates device requires maintenance or replacement. The device cannot safely accept new transactions if the signature counter cannot reliably record them.</description>
+        <constructors>
+            <constructor>
+                <signature>ErrorSignatureCounterExhausted()</signature>
+                <description>Constructs a new ErrorSignatureCounterExhausted exception with null as the value for its detail message</description>
+            </constructor>
+            <constructor>
+                <signature>ErrorSignatureCounterExhausted(String message)</signature>
+                <description>Constructs a new ErrorSignatureCounterExhausted exception whereby its detail message is initialized with the passed value</description>
+                <parameter name="message">value for the detail message of the exception, typically describing the signature counter exhaustion status</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorSignatureCounterExhausted(String message, Throwable cause)</signature>
+                <description>Constructs a new ErrorSignatureCounterExhausted exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorSignatureCounterExhausted(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+                <description>Constructs a new ErrorSignatureCounterExhausted exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+            </constructor>
+        </constructors>
     </javadoc>
     <specification>
         <source>BSI TR-03151-1</source>
-        <requirement>SHALL be raised when signature counter physical memory is exhausted</requirement>
-        <applicability>All logging operations when signature counter exhausted</applicability>
+        <section>3.3.2 Transaction Operations and 3.3.3 Logging Operations - Signature Counter Management</section>
+        <requirement>The Secure Element maintains a signature counter that is incremented for each transaction, providing audit trail integrity and replay attack protection. The signature counter is backed by physical memory with limited write endurance (typically 100,000 to 1,000,000 write cycles for Flash/EEPROM). When the physical memory backing the signature counter approaches or exceeds its safe operational limits, the device SHALL raise ErrorSignatureCounterExhausted on any operation requiring signature counter increment (startTransaction, updateTransaction, finishTransaction, configureLogging). The device must not accept new transactions when signature counter memory is exhausted, as this compromises audit trail integrity.</requirement>
+        <applicability>Transaction operations requiring signature counter increment: startTransaction, updateTransaction, finishTransaction, configureLogging</applicability>
+        <reference>Transaction Operations (3.3.2), Logging Operations (3.3.3), Signature Counter Management</reference>
     </specification>
     <thrownBy>
         <function>startTransaction</function>
@@ -18,4 +46,127 @@
         <function>finishTransaction</function>
         <function>configureLogging</function>
     </thrownBy>
+    <triggerConditions>
+        <condition>
+            <scenario>Signature counter memory write endurance limit reached</scenario>
+            <description>The physical memory backing signature counter has exceeded safe write endurance limits</description>
+            <trigger>A startTransaction call is made but the device detects the signature counter memory has exceeded its safe operational write limit. ErrorSignatureCounterExhausted is raised to prevent unsafe counter operations.</trigger>
+        </condition>
+        <condition>
+            <scenario>Signature counter storage approaching exhaustion</scenario>
+            <description>The device detects signature counter memory is approaching exhaustion</description>
+            <trigger>An updateTransaction call is made but the device monitors that signature counter memory is critically low. The device raises ErrorSignatureCounterExhausted as a preventive measure before complete exhaustion.</trigger>
+        </condition>
+        <condition>
+            <scenario>Excessive transaction volume over device lifetime</scenario>
+            <description>The device has processed so many transactions that the signature counter memory is exhausted</description>
+            <trigger>A finishTransaction call is made after the device has processed many millions of transactions. The signature counter memory is exhausted and cannot reliably record additional transactions. ErrorSignatureCounterExhausted is raised.</trigger>
+        </condition>
+        <condition>
+            <scenario>Device reaching end-of-life due to signature counter exhaustion</scenario>
+            <description>The device lifecycle is ending because the signature counter storage has reached exhaustion</description>
+            <trigger>Any operation requiring signature counter increment detects the memory is exhausted. The device is at end-of-life and must be decommissioned or replaced.</trigger>
+        </condition>
+        <condition>
+            <scenario>Signature counter configuration error causing premature exhaustion</scenario>
+            <description>Device configuration causes signature counter to be written excessively, exhausting memory prematurely</description>
+            <trigger>A configureLogging call attempts to enable excessive signature counter writes. The device detects memory exhaustion and raises ErrorSignatureCounterExhausted.</trigger>
+        </condition>
+    </triggerConditions>
+    <executionSequence>
+        <step number="1">User/application calls transaction operation that requires signature counter increment (e.g., startTransaction)</step>
+        <step number="2">Function validates input parameters</step>
+        <step number="3">Function initiates communication with Secure Element</step>
+        <step number="4">Secure Element receives transaction request</step>
+        <step number="5">Secure Element checks signature counter memory status</step>
+        <step number="5a">If signature counter memory exhausted → ErrorSignatureCounterExhausted raised, operation aborted</step>
+        <step number="5b">If signature counter memory available → proceed to step 6</step>
+        <step number="6">Secure Element processes transaction operation</step>
+        <step number="7">Secure Element increments signature counter</step>
+        <step number="7a">If counter increment fails due to memory → ErrorSignatureCounterExhausted raised, operation aborted</step>
+        <step number="7b">If counter increment succeeds → proceed to step 8</step>
+        <step number="8">Secure Element writes updated counter value to storage</step>
+        <step number="8a">If storage write fails due to exhausted memory → ErrorSignatureCounterExhausted raised, operation aborted</step>
+        <step number="8b">If storage write succeeds → proceed to step 9</step>
+        <step number="9">Secure Element completes transaction operation</step>
+        <step number="10">Secure Element returns result to function</step>
+        <step number="11">Function returns successfully</step>
+    </executionSequence>
+    <recovery>
+        <step>Stop accepting new transactions immediately - signature counter memory is exhausted</step>
+        <step>Review error message - understand the signature counter exhaustion status</step>
+        <step>Query device state - determine current signature counter value and memory status</step>
+        <step>Export existing logs - export all transaction logs while device is still operational</step>
+        <step>Archive transaction history - backup all transaction records for audit purposes</step>
+        <step>Notify administrators - escalate the critical device issue to operations team</step>
+        <step>Plan device replacement - schedule replacement of the device</step>
+        <step>Prepare replacement device - provision new device with same configuration</step>
+        <step>Migrate transactions - transfer any in-flight transactions to replacement device if needed</step>
+        <step>Decommission device - safely decommission the exhausted device according to policy</step>
+    </recovery>
+    <relatedExceptions>
+        <exception>ErrorFunctionFailed</exception>
+        <exception>ErrorNoDataAvailable</exception>
+        <exception>ErrorLimitOfSimultaneousOpenTransactionsReached</exception>
+        <exception>ErrorOpenTransactionFound</exception>
+    </relatedExceptions>
+    <postconditionality>
+        <state name="Transaction Not Created">The requested transaction is not created due to signature counter exhaustion.</state>
+        <state name="Signature Counter Not Incremented">The signature counter is not incremented because the memory is exhausted.</state>
+        <state name="Device Cannot Process Transactions">The device cannot reliably process new transactions with a reliable signature counter.</state>
+        <state name="Audit Trail Integrity Compromised">The device can no longer provide reliable audit trail protection when signature counter cannot be maintained.</state>
+        <state name="Device Operational But Unusable for Transactions">The device is technically operational but unusable for its primary transaction function.</state>
+        <state name="Device Requires Replacement">The device has reached end-of-life and requires replacement or maintenance.</state>
+    </postconditionality>
+    <notes>
+        <note>ErrorSignatureCounterExhausted is thrown by 4 functions: startTransaction, updateTransaction, finishTransaction, configureLogging</note>
+        <note>This exception indicates device physical memory exhaustion, not software error</note>
+        <note>The exception has Critical severity because it prevents transaction processing</note>
+        <note>Signature counter is critical for audit trail integrity and replay attack protection</note>
+        <note>Physical memory backing signature counter has limited write endurance (100K to 1M cycles typically)</note>
+        <note>Signature counter memory exhaustion indicates device is reaching end-of-life</note>
+        <note>Device manufacturers should design counters to minimize write frequency</note>
+        <note>Wear-leveling techniques can extend signature counter memory life</note>
+        <note>Error messages should indicate the approximate remaining signature counter capacity</note>
+        <note>Device monitoring should alert on signature counter memory approaching exhaustion</note>
+        <note>Business continuity plans should account for device failure due to signature counter exhaustion</note>
+        <note>Device replacement should be proactive before signature counter is completely exhausted</note>
+        <note>Transaction logs should be exported before device reaches end-of-life</note>
+        <note>Signature counter value should be recorded during device decommissioning for audit purposes</note>
+        <note>New device should be provisioned with fresh signature counter initialized to zero or appropriate value</note>
+    </notes>
+    <usage>
+        <scenario name="Scenario 1: Production Device Reaching End-of-Life">
+            <description>A production device has been in operation for several years and processed millions of transactions. A startTransaction call receives ErrorSignatureCounterExhausted. The device is at end-of-life. All transaction logs are exported, and a replacement device is provisioned.</description>
+            <relatedFunctions>startTransaction, exportLogMessages, getDescription</relatedFunctions>
+            <errorContext>Device end-of-life detected due to signature counter exhaustion</errorContext>
+        </scenario>
+        <scenario name="Scenario 2: Early Warning of Counter Exhaustion">
+            <description>A monitoring system regularly queries device status and detects signature counter memory is approaching exhaustion. Before ErrorSignatureCounterExhausted occurs, the system alerts administrators to plan device replacement proactively.</description>
+            <relatedFunctions>getDescription, getDeviceInfo</relatedFunctions>
+            <errorContext>Proactive monitoring detects imminent signature counter exhaustion</errorContext>
+        </scenario>
+        <scenario name="Scenario 3: Signature Counter Exhaustion During Peak Transaction Load">
+            <description>During peak business hours, a finishTransaction call receives ErrorSignatureCounterExhausted. The system immediately alerts operations that the production device cannot accept new transactions. A pre-staged replacement device is activated.</description>
+            <relatedFunctions>finishTransaction, startTransaction</relatedFunctions>
+            <errorContext>Production service disrupted by signature counter exhaustion during peak load</errorContext>
+        </scenario>
+        <scenario name="Scenario 4: Device Lifecycle Planning Based on Counter Status">
+            <description>Capacity planning tools monitor signature counter usage trends across a fleet of devices. They predict which devices will exhaust their signature counters in the coming months and schedule replacement accordingly.</description>
+            <relatedFunctions>getDescription, startTransaction</relatedFunctions>
+            <errorContext>Fleet-wide device lifecycle planning based on signature counter exhaustion predictions</errorContext>
+        </scenario>
+    </usage>
+    <implementationContext>
+        <note>The device must monitor signature counter memory status and predict exhaustion</note>
+        <note>Signature counter memory should be checked before every operation requiring counter increment</note>
+        <note>The device should raise ErrorSignatureCounterExhausted before memory is completely exhausted</note>
+        <note>Wear-leveling techniques should be employed to extend physical memory life</note>
+        <note>Error messages should indicate current counter value and estimated remaining capacity</note>
+        <note>Signature counter implementation should minimize write frequency through batching or caching where possible</note>
+        <note>Device firmware should provide status API to query signature counter memory status</note>
+        <note>Monitoring and alerting should provide early warning before counter exhaustion</note>
+        <note>Device decommissioning procedures should verify signature counter exhaustion status</note>
+        <note>Replacement devices should be procured with sufficient lifecycle for business needs</note>
+    </implementationContext>
 </exception>

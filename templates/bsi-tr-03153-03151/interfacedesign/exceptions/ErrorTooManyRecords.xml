@@ -1,19 +1,166 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <exception id="ErrorTooManyRecords" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
     <name>ErrorTooManyRecords</name>
-    <description>This exception is thrown if the amount of requested records exceeds the passed value for the maximum number of records in the context of the export of stored data.</description>
-    <category>Data Export</category>
+    <description>This exception is thrown if a data export query would return more records than the maximum specified by the caller. Export operations (exportLogMessages, exportFilteredTransactionLogs) allow callers to specify a maximum number of records to retrieve in a single operation to manage memory usage and response size. If the query matches more records than this maximum, ErrorTooManyRecords is raised to indicate the result set is too large. The caller must refine the query parameters or request records in smaller batches to retrieve all matching data. This prevents memory exhaustion and excessive response sizes from large result sets.</description>
+    <category>Data Export - Record Limit Exceeded</category>
     <severity>Medium</severity>
     <javadoc>
-        <summary>This class defines the exception ErrorTooManyRecords that is thrown if the amount of requested records exceeds the passed value for the maximum number of records in the context of the export of stored data.</summary>
+        <summary>This class defines the exception ErrorTooManyRecords that is thrown if export query results exceed the specified maximum record count.</summary>
+        <description>This exception is thrown when a data export operation would return more records than the maximum number specified by the caller. Export operations (exportLogMessages, exportFilteredTransactionLogs) allow specifying a maximum record count parameter to control result set size and memory usage. ErrorTooManyRecords indicates that the number of matching records exceeds this maximum. The exception helps prevent memory exhaustion and excessive response sizes from returning too many records at once. Common causes include: query parameters too broad, maximum record count too low, or large number of matching records in database. ErrorTooManyRecords is a Medium severity exception because the query is valid but the result set is too large. Recovery requires refining query parameters to be more specific or requesting records in smaller batches using pagination.</description>
+        <constructors>
+            <constructor>
+                <signature>ErrorTooManyRecords()</signature>
+                <description>Constructs a new ErrorTooManyRecords exception with null as the value for its detail message</description>
+            </constructor>
+            <constructor>
+                <signature>ErrorTooManyRecords(String message)</signature>
+                <description>Constructs a new ErrorTooManyRecords exception whereby its detail message is initialized with the passed value</description>
+                <parameter name="message">value for the detail message of the exception, typically describing how many records matched vs maximum allowed</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorTooManyRecords(String message, Throwable cause)</signature>
+                <description>Constructs a new ErrorTooManyRecords exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorTooManyRecords(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+                <description>Constructs a new ErrorTooManyRecords exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+            </constructor>
+        </constructors>
     </javadoc>
     <specification>
         <source>BSI TR-03151-1</source>
-        <requirement>SHALL be raised when query results exceed specified maximum record count</requirement>
-        <applicability>Data export operations with record limits</applicability>
+        <section>3.3.3 Logging Operations - exportLogMessages and exportFilteredTransactionLogs</section>
+        <requirement>The export functions (exportLogMessages, exportFilteredTransactionLogs) allow callers to specify a maximum number of records to return in a single export operation. This parameter limits result set size for memory management and response size control. If the query matches more records than the specified maximum, the function SHALL raise ErrorTooManyRecords instead of exceeding the maximum. The caller must either refine query parameters to reduce the result set size or implement pagination by requesting records in smaller batches. The maximum record count parameter is essential for protecting against large result set exhaustion.</requirement>
+        <applicability>Export operations with record limits: exportLogMessages, exportFilteredTransactionLogs</applicability>
+        <reference>Logging Operations (3.3.3), exportLogMessages – Function (3.3.3), exportFilteredTransactionLogs – Function (3.3.3)</reference>
     </specification>
     <thrownBy>
         <function>exportLogMessages</function>
         <function>exportFilteredTransactionLogs</function>
     </thrownBy>
+    <triggerConditions>
+        <condition>
+            <scenario>Export query matches more records than maximum specified</scenario>
+            <description>Query parameters result in more matching records than the maximum allowed</description>
+            <trigger>An exportLogMessages call specifies maxRecords=100 but the query matches 500 records. The device detects result set exceeds maximum and raises ErrorTooManyRecords.</trigger>
+        </condition>
+        <condition>
+            <scenario>Maximum record count too low for query scope</scenario>
+            <description>The maximum record limit is too restrictive for the specified query</description>
+            <trigger>An exportFilteredTransactionLogs call with broad date range matches 10,000 records but maxRecords=50. Result exceeds maximum and ErrorTooManyRecords is raised.</trigger>
+        </condition>
+        <condition>
+            <scenario>Query parameters too broad or unspecific</scenario>
+            <description>Query parameters don't narrow results sufficiently</description>
+            <trigger>An exportLogMessages call without date filters matches thousands of records exceeding the specified maximum. ErrorTooManyRecords is raised indicating query is too broad.</trigger>
+        </condition>
+        <condition>
+            <scenario>Large database exceeds expected record count</scenario>
+            <description>The database contains more records than anticipated</description>
+            <trigger>An exportFilteredTransactionLogs call designed for small result set matches more records than expected. The maximum is exceeded and ErrorTooManyRecords is raised.</trigger>
+        </condition>
+        <condition>
+            <scenario>Pagination not implemented for large result sets</scenario>
+            <description>Caller attempts to retrieve entire result set in single request without pagination</description>
+            <trigger>An exportLogMessages call without pagination attempts to retrieve all records at once. Result exceeds maximum and ErrorTooManyRecords is raised to prevent memory exhaustion.</trigger>
+        </condition>
+    </triggerConditions>
+    <executionSequence>
+        <step number="1">User/application calls export operation with query and maxRecords parameter (e.g., exportLogMessages)</step>
+        <step number="2">Function validates input parameters including maxRecords limit</step>
+        <step number="2a">If maxRecords invalid (too low or negative) → may raise ErrorParameterSyntax</step>
+        <step number="2b">If maxRecords valid → proceed to step 3</step>
+        <step number="3">Function initiates communication with Secure Element</step>
+        <step number="4">Secure Element receives export request with query and maxRecords</step>
+        <step number="5">Secure Element evaluates query against stored records</step>
+        <step number="6">Secure Element counts matching records</step>
+        <step number="6a">If matching records <= maxRecords → proceed to step 7</step>
+        <step number="6b">If matching records > maxRecords → ErrorTooManyRecords raised, operation aborted</step>
+        <step number="7">Secure Element retrieves matching records up to maxRecords limit</step>
+        <step number="8">Secure Element formats and returns selected records to function</step>
+        <step number="9">Function returns records to caller</step>
+    </executionSequence>
+    <recovery>
+        <step>Review error message - understand that result set exceeds maximum record count</step>
+        <step>Check actual record count - determine how many records match the query</step>
+        <step>Refine query parameters - add more specific filters to reduce result set</step>
+        <step>Add date range filter - narrow query by date range to limit results</step>
+        <step>Add status filter - filter by transaction status or other criteria to reduce results</step>
+        <step>Increase maxRecords - if appropriate, increase the maximum record count parameter</step>
+        <step>Implement pagination - split query into multiple requests with smaller limits</step>
+        <step>Retry with refined query - attempt export again with more specific parameters</step>
+        <step>Process in batches - implement batch processing to retrieve records in chunks</step>
+        <step>Review export strategy - plan export procedures to handle large result sets efficiently</step>
+    </recovery>
+    <relatedExceptions>
+        <exception>ErrorNoDataAvailable</exception>
+        <exception>ErrorParameterMismatch</exception>
+        <exception>ErrorParameterSyntax</exception>
+        <exception>ErrorFunctionFailed</exception>
+    </relatedExceptions>
+    <postconditionality>
+        <state name="Records Not Exported">The export operation is not completed.</state>
+        <state name="Result Set Not Returned">No records are returned to the caller.</state>
+        <state name="Query Not Executed">The query is evaluated but results are not returned due to exceeding maximum.</state>
+        <state name="Caller Receives Exception">The function returns ErrorTooManyRecords exception instead of record data.</state>
+        <state name="Caller Must Refine Query">The caller must adjust parameters to reduce result set size.</state>
+        <state name="Pagination Required">The caller must implement pagination to retrieve results in batches.</state>
+    </postconditionality>
+    <notes>
+        <note>ErrorTooManyRecords is thrown by 2 export functions: exportLogMessages, exportFilteredTransactionLogs</note>
+        <note>This exception indicates the result set exceeds the specified maximum, not a failure</note>
+        <note>The exception has Medium severity because it's a query limitation, not a critical error</note>
+        <note>maxRecords parameter protects against memory exhaustion from large result sets</note>
+        <note>Query parameters should be refined to narrow results for better performance</note>
+        <note>Pagination allows retrieving large result sets in manageable chunks</note>
+        <note>Error messages should indicate how many records matched vs maximum allowed</note>
+        <note>Date range filters effectively narrow large result sets</note>
+        <note>Status or type filters can reduce result set size significantly</note>
+        <note>Batch processing is essential for exporting large volumes of data</note>
+        <note>Export procedures should account for large result sets in design</note>
+        <note>Memory management requires limiting result set size per request</note>
+        <note>Network bandwidth should be considered when sizing maximum record counts</note>
+        <note>Pagination implementation should be transparent to business logic</note>
+        <note>Export performance can be optimized by refining query specificity</note>
+    </notes>
+    <usage>
+        <scenario name="Scenario 1: Export with Result Set Exceeding Maximum">
+            <description>An administrator calls exportLogMessages to export all transaction logs without specifying date range. The query matches 50,000 records but maxRecords=1000. ErrorTooManyRecords is raised. Administrator refines query with date range to narrow results.</description>
+            <relatedFunctions>exportLogMessages, deleteLogMessages</relatedFunctions>
+            <errorContext>Broad export query returns too many records - requires refinement</errorContext>
+        </scenario>
+        <scenario name="Scenario 2: Pagination Implementation for Large Exports">
+            <description>Export procedure implements pagination by making multiple exportFilteredTransactionLogs calls with date range offsets. When first call returns ErrorTooManyRecords, procedure adjusts date range and retries smaller batches.</description>
+            <relatedFunctions>exportFilteredTransactionLogs</relatedFunctions>
+            <errorContext>Pagination used to handle large result sets in manageable batches</errorContext>
+        </scenario>
+        <scenario name="Scenario 3: Query Refinement to Reduce Result Set">
+            <description>An analysis tool calls exportLogMessages but receives ErrorTooManyRecords. Tool refines query by adding date range and status filters. Retry with refined parameters succeeds with manageable result set.</description>
+            <relatedFunctions>exportLogMessages</relatedFunctions>
+            <errorContext>Query refinement reduces result set to within limits</errorContext>
+        </scenario>
+        <scenario name="Scenario 4: Archive Export with Batch Processing">
+            <description>Archive procedure exports logs in batches. First exportLogMessages call for month 1 succeeds. For month 2 with more activity, call returns ErrorTooManyRecords. Procedure splits month into weeks and retries in smaller batches.</description>
+            <relatedFunctions>exportLogMessages</relatedFunctions>
+            <errorContext>Archive procedure adapts to varying record counts using batch processing</errorContext>
+        </scenario>
+    </usage>
+    <implementationContext>
+        <note>Export functions must evaluate query and count matching records before retrieval</note>
+        <note>maxRecords parameter must be validated and enforced on result set size</note>
+        <note>Query evaluation should be efficient to avoid unnecessary processing</note>
+        <note>Error messages should indicate actual record count and maximum limit</note>
+        <note>Pagination support should be considered in export function design</note>
+        <note>Query refinement options should be documented for users</note>
+        <note>Date range filtering should be supported to effectively narrow large result sets</note>
+        <note>Status or type filtering can provide alternative query refinement mechanisms</note>
+        <note>Memory management should limit maximum records retrieved per operation</note>
+        <note>Network bandwidth should be considered when sizing result sets</note>
+    </implementationContext>
 </exception>

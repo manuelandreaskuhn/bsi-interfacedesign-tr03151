@@ -1,18 +1,163 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <exception id="ErrorGetTotalMemoryFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
     <name>ErrorGetTotalMemoryFailed</name>
-    <description>This exception is thrown if the SE API function getTotalMemory fails to determine the capacity of the storage medium.</description>
-    <category>Storage</category>
-    <severity>Medium</severity>
+    <description>This exception is thrown if the SE API function getTotalMemory fails to retrieve the total storage capacity of the Secure Element. The function attempts to determine the complete storage capacity available on the device, but the retrieval process fails before the total memory information can be determined and returned.</description>
+    <category>Resource Management - Memory Capacity Query</category>
+    <severity>High</severity>
     <javadoc>
-        <summary>This class defines the exception ErrorGetTotalMemoryFailed that is thrown if the SE API function getTotalMemory fails to determine the capacity of the storage medium.</summary>
+        <summary>This class defines the exception ErrorGetTotalMemoryFailed that is thrown if the determination of the total storage capacity failed.</summary>
+        <description>This exception is thrown when the getTotalMemory function cannot retrieve the total storage capacity from the Secure Element. Total memory information describes the complete storage capacity available on the Secure Element. ErrorGetTotalMemoryFailed indicates that the Secure Element cannot provide the total memory information due to hardware failure, memory information storage corruption, internal resource management system errors, communication failures, or Secure Element state restrictions. When this exception occurs, no total memory value is returned and applications cannot determine the complete storage capacity of the device. Recovery typically involves device verification, resource management subsystem diagnostics, and hardware inspection if the failure persists.</description>
+        <constructors>
+            <constructor>
+                <signature>ErrorGetTotalMemoryFailed()</signature>
+                <description>Constructs a new ErrorGetTotalMemoryFailed exception with null as the value for its detail message</description>
+            </constructor>
+            <constructor>
+                <signature>ErrorGetTotalMemoryFailed(String message)</signature>
+                <description>Constructs a new ErrorGetTotalMemoryFailed exception whereby its detail message is initialized with the passed value</description>
+                <parameter name="message">value for the detail message of the exception, typically describing the total memory retrieval failure</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorGetTotalMemoryFailed(String message, Throwable cause)</signature>
+                <description>Constructs a new ErrorGetTotalMemoryFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorGetTotalMemoryFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+                <description>Constructs a new ErrorGetTotalMemoryFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+            </constructor>
+        </constructors>
     </javadoc>
     <specification>
         <source>BSI TR-03151-1</source>
-        <requirement>SHALL be raised when total memory query fails</requirement>
-        <applicability>Memory information query operations</applicability>
+        <section>3.4.3 Resource Management - getTotalMemory</section>
+        <requirement>The function getTotalMemory SHALL query the Secure Element to determine the total storage capacity. If the Secure Element cannot provide or return the required total memory information, the function SHALL raise the exception ErrorGetTotalMemoryFailed and exit without returning any memory capacity data. The total memory retrieval failure indicates the Secure Element's resource management query functionality could not complete successfully.</requirement>
+        <applicability>Resource management operations - getTotalMemory function only</applicability>
+        <reference>getTotalMemory – Function (3.4.3)</reference>
     </specification>
     <thrownBy>
         <function>getTotalMemory</function>
     </thrownBy>
+    <triggerConditions>
+        <condition>
+            <scenario>Memory hardware failure</scenario>
+            <description>The Secure Element's memory hardware malfunctions or becomes inaccessible, preventing total memory retrieval</description>
+            <trigger>The Secure Element's storage hardware or memory management hardware malfunctions or experiences read errors. When getTotalMemory is called, the memory capacity query is sent to the Secure Element, but the hardware cannot provide valid capacity information. The function receives a failure status from the Secure Element, triggering ErrorGetTotalMemoryFailed.</trigger>
+        </condition>
+        <condition>
+            <scenario>Memory information metadata corruption</scenario>
+            <description>The Secure Element's memory information or capacity metadata becomes corrupted or is lost</description>
+            <trigger>The Secure Element's memory containing memory capacity information, storage metadata, or resource accounting information becomes corrupted, experiences data loss, or is marked as inaccessible due to storage errors. When getTotalMemory attempts to read the total capacity, the data cannot be reliably retrieved, triggering ErrorGetTotalMemoryFailed.</trigger>
+        </condition>
+        <condition>
+            <scenario>Resource management subsystem internal error</scenario>
+            <description>The Secure Element's resource management or memory management subsystem encounters critical errors that prevent capacity enumeration</description>
+            <trigger>The Secure Element's resource management subsystem (responsible for tracking and providing memory and storage information) encounters an internal error, deadlock, or exception. When getTotalMemory is called, the resource management system cannot process the query, triggering ErrorGetTotalMemoryFailed.</trigger>
+        </condition>
+        <condition>
+            <scenario>Device-to-Secure Element communication failure during capacity query</scenario>
+            <description>The communication channel between device and Secure Element is disrupted during total memory retrieval</description>
+            <trigger>A communication failure occurs while getTotalMemory transmits the capacity query to the Secure Element or while receiving the memory capacity response. The command may be corrupted, the response may be incomplete, or the communication link may be temporarily unavailable. The function receives a communication error status, triggering ErrorGetTotalMemoryFailed.</trigger>
+        </condition>
+        <condition>
+            <scenario>Secure Element in restricted or error state prohibiting resource access</scenario>
+            <description>The Secure Element is in a locked, restricted, or error state that prevents external queries for resource information</description>
+            <trigger>The Secure Element enters a state where resource queries or resource information access is not permitted. When getTotalMemory is called and the Secure Element's state prohibits resource access, the function receives a state-related rejection, triggering ErrorGetTotalMemoryFailed.</trigger>
+        </condition>
+    </triggerConditions>
+    <executionSequence>
+        <step number="1">User/application calls getTotalMemory function on device</step>
+        <step number="2">Function validates input parameters and checks authentication status (if required by referencing guideline)</step>
+        <step number="3">Function checks authorization for resource information access (if required by referencing guideline)</step>
+        <step number="4">Function verifies device is properly initialized and resource management is operational</step>
+        <step number="5">Function initiates communication channel to Secure Element and prepares memory capacity query command</step>
+        <step number="6">Function transmits memory capacity query command to Secure Element requesting the total storage capacity</step>
+        <step number="6a">If Secure Element responds with failure status (resource error, memory error, capacity error) → ErrorGetTotalMemoryFailed raised, function exits without capacity value</step>
+        <step number="6b">If communication failure occurs during query transmission or response reception → ErrorGetTotalMemoryFailed raised, function exits</step>
+        <step number="7">If successful, function receives total memory capacity value from Secure Element</step>
+        <step number="8">Function validates total memory value for correctness (format, value range, consistency with device specifications)</step>
+        <step number="9">Function closes Secure Element communication channel</step>
+        <step number="10">Function returns valid total memory capacity value to caller</step>
+    </executionSequence>
+    <recovery>
+        <step>Verify device operational status - confirm device is initialized, responding to other operations, and not in an error state</step>
+        <step>Verify Secure Element accessibility - confirm device can communicate with Secure Element through diagnostic commands</step>
+        <step>Check device initialization - ensure device has been properly initialized with initDevice before attempting getTotalMemory</step>
+        <step>Retry getTotalMemory operation - attempt the function call again as the failure may be transient</step>
+        <step>Review device diagnostics for resource management system health - query device for diagnostic information about Secure Element resource management subsystem status</step>
+        <step>Verify memory information integrity through device manufacturer diagnostics - check if memory capacity metadata is accessible and uncorrupted</step>
+        <step>Test other resource queries - attempt retrieving free memory to verify general resource management access capability</step>
+        <step>Implement comprehensive error logging and monitoring - log this failure consistently to identify patterns (transient vs. persistent, correlation with memory operations)</step>
+        <step>If failure is persistent, attempt device firmware update if available - may resolve resource management subsystem errors or update capacity information</step>
+        <step>If failure persists and suspected hardware issue, contact device manufacturer or consider device replacement - repeated memory capacity retrieval failures indicate serious hardware problems</step>
+    </recovery>
+    <relatedExceptions>
+        <exception>ErrorFunctionFailed</exception>
+        <exception>ErrorDeviceNotInitialized</exception>
+        <exception>ErrorGetFreeMemoryFailed</exception>
+        <exception>ErrorGetMaxNumberOfClientsFailed</exception>
+        <exception>ErrorGetMaxNumberTransactionsFailed</exception>
+    </relatedExceptions>
+    <postconditionality>
+        <state name="Device Operational State">Device remains fully operational and unmodified. The failure to retrieve total memory does not affect device initialization state, storage capacity, internal memory, stored data, or the ability to perform other operations. All device components remain in their pre-call state.</state>
+        <state name="Total Memory Return Status">No total memory value is returned to the caller. The function exits without providing storage capacity information. Applications must not assume default memory sizes or cached information; they must handle the exception as indicating memory capacity information is unavailable.</state>
+        <state name="Secure Element Resource State">Secure Element resource management subsystem remains unchanged by the failed query. No state modifications, capacity changes, or resource accounting changes occur. Resource management operations continue normally regardless of the retrieval failure.</state>
+        <state name="Storage Capacity Continuity">Total storage capacity continues to be maintained internally in the Secure Element. The failure to retrieve the total memory value does not affect storage capacity or resource availability. Capacity queries can be retried once the underlying issue is resolved.</state>
+        <state name="No Cascading State Effects">No cascading state inconsistencies or secondary failures occur as a result of the capacity query failure. Device internal consistency is maintained. Other SE API functions and resource management operations continue normally without state corruption.</state>
+        <state name="Recovery Preconditions Met">The device state after exception is consistent and allows for recovery operations. The underlying issue (hardware error, communication error, resource management error) remains present, but the device is stable enough to accept diagnostic queries or recovery attempts.</state>
+    </postconditionality>
+    <notes>
+        <note>ErrorGetTotalMemoryFailed is thrown ONLY by the getTotalMemory function - it is the most specific and precise exception for Secure Element total memory capacity retrieval failures</note>
+        <note>This exception indicates a failure in the Secure Element's ability to report its total storage capacity</note>
+        <note>Critical distinction from ErrorFunctionFailed: ErrorGetTotalMemoryFailed specifically indicates memory capacity enumeration is unavailable at the resource management subsystem level, while ErrorFunctionFailed indicates broader unspecified critical failures</note>
+        <note>Exception is raised during the capacity enumeration phase (steps 6-7), after device initialization and authentication checks have passed</note>
+        <note>After this exception, the Secure Element remains unchanged and total storage capacity continues to be maintained internally. Capacity queries can be retried once the underlying issue is resolved</note>
+        <note>This exception has High severity because it prevents users from determining total storage resources (critical for resource planning and capacity management)</note>
+        <note>Total memory represents the complete storage capacity available on the Secure Element for all data and operations</note>
+        <note>The exception indicates storage capacity cannot be reliably determined; applications must not implement workarounds using external capacity estimates without explicit validation</note>
+        <note>Failure scenarios range from transient (temporary communication issues, temporary state) to persistent (memory metadata corruption, hardware failure, firmware error)</note>
+        <note>If this exception occurs frequently or persistently, it indicates serious issues with Secure Element memory or resource management hardware, firmware, or metadata that require diagnostic investigation</note>
+        <note>Memory capacity enumeration is a read-only query; failure does not modify any storage state, so recovery typically requires only retrying the query once underlying issue is resolved</note>
+        <note>Total memory information is essential for resource planning, capacity management, and understanding device storage capabilities</note>
+        <note>Applications must implement appropriate error handling for memory capacity retrieval failures when assessing device resources</note>
+        <note>Repeated memory capacity retrieval failures may indicate device needs firmware update, memory management reset, or hardware service - manufacturer support should be engaged</note>
+        <note>Different device models and configurations may have different total memory capacities - consult device specifications for storage capacity details</note>
+    </notes>
+    <usage>
+        <scenario name="Scenario 1: Device Resource Assessment and Capacity Planning">
+            <description>A resource assessment system determines device capacity by querying memory information. The system calls getTotalMemory to determine the complete storage capacity available. Based on this information, the system performs capacity planning and resource allocation decisions. If ErrorGetTotalMemoryFailed is raised, the system cannot assess total storage resources.</description>
+            <relatedFunctions>getTotalMemory, getFreeMemory</relatedFunctions>
+            <errorContext>Total storage capacity unavailable for resource assessment and capacity planning</errorContext>
+        </scenario>
+        <scenario name="Scenario 2: Infrastructure Storage Capacity Inventory and Reporting">
+            <description>An infrastructure inventory system catalogs storage capacity across many devices. The system calls getTotalMemory on each device to collect total capacity information. This enables capacity reporting and infrastructure-wide storage analysis. If ErrorGetTotalMemoryFailed is raised on any device, that device's capacity cannot be included in the inventory.</description>
+            <relatedFunctions>getTotalMemory, getFreeMemory</relatedFunctions>
+            <errorContext>Total storage capacity unavailable for infrastructure capacity inventory</errorContext>
+        </scenario>
+        <scenario name="Scenario 3: Memory Health Check and Resource Monitoring">
+            <description>A health monitoring system regularly checks device resource health by comparing total memory and free memory values. The system calls getTotalMemory to establish the baseline total capacity. If ErrorGetTotalMemoryFailed is raised, the system cannot perform memory health assessment.</description>
+            <relatedFunctions>getTotalMemory, getFreeMemory</relatedFunctions>
+            <errorContext>Total storage capacity unavailable for memory health monitoring</errorContext>
+        </scenario>
+        <scenario name="Scenario 4: Multi-Device Resource Orchestration and Load Balancing">
+            <description>An enterprise resource orchestration system manages data distribution across multiple devices. The system calls getTotalMemory on each device to determine available storage for load balancing decisions. This enables the orchestrator to distribute workload appropriately. If ErrorGetTotalMemoryFailed is raised on any device, capacity-aware load balancing cannot include that device.</description>
+            <relatedFunctions>getTotalMemory, getFreeMemory</relatedFunctions>
+            <errorContext>Total storage capacity unavailable for multi-device resource orchestration</errorContext>
+        </scenario>
+    </usage>
+    <implementationContext>
+        <note>The getTotalMemory function retrieves the total storage capacity of the Secure Element's storage medium</note>
+        <note>Total memory represents the complete amount of storage available on the device for all purposes (data, firmware, system structures, etc.)</note>
+        <note>Total memory capacity is typically expressed in bytes or other standard storage units</note>
+        <note>Different device models and storage configurations may have different total memory capacities - consult device specifications for storage capacity details</note>
+        <note>Total memory information is essential for resource planning, capacity analysis, and understanding device storage limitations</note>
+        <note>If total memory retrieval fails but free memory queries succeed, the issue is specific to total capacity information, not to general resource management access</note>
+        <note>Memory capacity errors or enumeration failures represent critical issues in resource management subsystem that should be investigated immediately</note>
+        <note>Total memory enumeration is a read-only query; ErrorGetTotalMemoryFailed does not indicate storage corruption requiring state recovery - it indicates the capacity information source is unavailable</note>
+    </implementationContext>
 </exception>

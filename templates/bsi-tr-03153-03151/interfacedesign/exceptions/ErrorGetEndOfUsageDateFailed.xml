@@ -1,18 +1,163 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <exception id="ErrorGetEndOfUsageDateFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
     <name>ErrorGetEndOfUsageDateFailed</name>
-    <description>This exception is thrown if the SE API function getEndOfUsageDate fails to determine the date.</description>
-    <category>Information Retrieval</category>
+    <description>This exception is thrown if the SE API function getEndOfUsageDate fails to retrieve the end of usage date of the Secure Element device. The function attempts to obtain the date after which the Secure Element can no longer be used for cryptographic operations, but the retrieval process fails before the date value can be determined and returned.</description>
+    <category>Device Lifecycle - Usage Period Management</category>
     <severity>Medium</severity>
     <javadoc>
-        <summary>This class defines the exception ErrorGetEndOfUsageDateFailed that is thrown if the SE API function getEndOfUsageDate fails to determine the date.</summary>
+        <summary>This class defines the exception ErrorGetEndOfUsageDateFailed that is thrown if the SE API function getEndOfUsageDate fails to determine the end of usage date of the device.</summary>
+        <description>This exception is thrown when the getEndOfUsageDate function cannot retrieve the end of usage date from the Secure Element. The end of usage date represents the deadline after which the Secure Element must no longer be used for cryptographic or operational purposes, typically determined by device lifecycle policies, certification validity periods, or security requirements. ErrorGetEndOfUsageDateFailed indicates that the Secure Element cannot provide the usage period information due to hardware failure, storage corruption, internal lifecycle management errors, communication failures, or Secure Element state restrictions. When this exception occurs, no date data is returned and applications cannot determine the device's remaining operational validity period. Recovery typically involves device verification, lifecycle management subsystem diagnostics, and possible hardware diagnosis if the failure persists.</description>
+        <constructors>
+            <constructor>
+                <signature>ErrorGetEndOfUsageDateFailed()</signature>
+                <description>Constructs a new ErrorGetEndOfUsageDateFailed exception with null as the value for its detail message</description>
+            </constructor>
+            <constructor>
+                <signature>ErrorGetEndOfUsageDateFailed(String message)</signature>
+                <description>Constructs a new ErrorGetEndOfUsageDateFailed exception whereby its detail message is initialized with the passed value</description>
+                <parameter name="message">value for the detail message of the exception, typically describing the end of usage date retrieval failure</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorGetEndOfUsageDateFailed(String message, Throwable cause)</signature>
+                <description>Constructs a new ErrorGetEndOfUsageDateFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorGetEndOfUsageDateFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+                <description>Constructs a new ErrorGetEndOfUsageDateFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+            </constructor>
+        </constructors>
     </javadoc>
     <specification>
         <source>BSI TR-03151-1</source>
-        <requirement>SHALL be raised when end of usage date retrieval fails</requirement>
-        <applicability>End of usage date query operations</applicability>
+        <section>3.1.2 Device Lifecycle - getEndOfUsageDate</section>
+        <requirement>The function getEndOfUsageDate SHALL retrieve the end of usage date from the Secure Element, representing the deadline after which the device can no longer be used for cryptographic operations. If the Secure Element cannot provide or return the required date information, the function SHALL raise the exception ErrorGetEndOfUsageDateFailed and exit without returning any date data. The end of usage date retrieval failure indicates the Secure Element's lifecycle information query functionality could not complete successfully.</requirement>
+        <applicability>Device lifecycle management operations - getEndOfUsageDate function only</applicability>
+        <reference>getEndOfUsageDate – Function (3.1.2)</reference>
     </specification>
     <thrownBy>
         <function>getEndOfUsageDate</function>
     </thrownBy>
+    <triggerConditions>
+        <condition>
+            <scenario>End of usage date storage hardware failure</scenario>
+            <description>The Secure Element's lifecycle date storage hardware malfunctions or becomes inaccessible, preventing date value retrieval</description>
+            <trigger>The Secure Element's date storage hardware fails or experiences read errors. When getEndOfUsageDate is called, the date retrieval query is sent to the Secure Element, but the hardware cannot provide valid date data. The function receives a failure status from the Secure Element, triggering ErrorGetEndOfUsageDateFailed.</trigger>
+        </condition>
+        <condition>
+            <scenario>Device lifecycle information storage corruption</scenario>
+            <description>The Secure Element's lifecycle information storage becomes corrupted or date data is lost</description>
+            <trigger>The Secure Element's memory containing end of usage date or device lifecycle tables becomes corrupted, experiences data loss, or is marked as inaccessible due to storage errors. When getEndOfUsageDate attempts to read the date from storage, the data cannot be reliably retrieved, triggering ErrorGetEndOfUsageDateFailed.</trigger>
+        </condition>
+        <condition>
+            <scenario>Lifecycle management subsystem internal error</scenario>
+            <description>The Secure Element's lifecycle management subsystem encounters critical errors that prevent date value retrieval</description>
+            <trigger>The Secure Element's device lifecycle management subsystem (responsible for maintaining and providing device lifecycle information) encounters an internal error, deadlock, or exception. When getEndOfUsageDate is called, the lifecycle management system cannot process the date query, triggering ErrorGetEndOfUsageDateFailed.</trigger>
+        </condition>
+        <condition>
+            <scenario>Device-to-Secure Element communication failure during date query</scenario>
+            <description>The communication channel between device and Secure Element is disrupted during end of usage date retrieval</description>
+            <trigger>A communication failure occurs while getEndOfUsageDate transmits the date query to the Secure Element or while receiving the date response. The command may be corrupted, the response may be incomplete, or the communication link may be temporarily unavailable. The function receives a communication error status, triggering ErrorGetEndOfUsageDateFailed.</trigger>
+        </condition>
+        <condition>
+            <scenario>Secure Element in restricted or error state prohibiting lifecycle access</scenario>
+            <description>The Secure Element is in a locked, restricted, or error state that prevents external queries for lifecycle information</description>
+            <trigger>The Secure Element enters a state where lifecycle information queries are not permitted. When getEndOfUsageDate is called and the Secure Element's state prohibits lifecycle access, the function receives a state-related rejection, triggering ErrorGetEndOfUsageDateFailed.</trigger>
+        </condition>
+    </triggerConditions>
+    <executionSequence>
+        <step number="1">User/application calls getEndOfUsageDate function on device</step>
+        <step number="2">Function validates input parameters and checks authentication status (if required by referencing guideline)</step>
+        <step number="3">Function checks authorization for lifecycle information access (if required by referencing guideline)</step>
+        <step number="4">Function verifies device is properly initialized and accessible</step>
+        <step number="5">Function initiates communication channel to Secure Element and prepares date query command</step>
+        <step number="6">Function transmits date query command to Secure Element requesting end of usage date</step>
+        <step number="6a">If Secure Element responds with failure status (storage error, lifecycle retrieval error, subsystem error) → ErrorGetEndOfUsageDateFailed raised, function exits without date data</step>
+        <step number="6b">If communication failure occurs during query transmission or response reception → ErrorGetEndOfUsageDateFailed raised, function exits</step>
+        <step number="7">If successful, function receives end of usage date from Secure Element</step>
+        <step number="8">Function validates date value for correctness (format, date range validity, logical consistency with current time)</step>
+        <step number="9">Function closes Secure Element communication channel</step>
+        <step number="10">Function returns valid end of usage date to caller</step>
+    </executionSequence>
+    <recovery>
+        <step>Verify device operational status - confirm device is initialized, responding to other operations, and not in an error state</step>
+        <step>Verify Secure Element accessibility - confirm device can communicate with Secure Element through diagnostic commands</step>
+        <step>Check device initialization - ensure device has been properly initialized with initDevice before attempting getEndOfUsageDate</step>
+        <step>Retry getEndOfUsageDate operation - attempt the function call again as the failure may be transient</step>
+        <step>Review device diagnostics for lifecycle management system health - query device for diagnostic information about Secure Element lifecycle status</step>
+        <step>Verify lifecycle date storage integrity through device manufacturer diagnostics - check if date storage is accessible and uncorrupted</step>
+        <step>Test other lifecycle or information queries - attempt retrieving other device information to verify general information access capability</step>
+        <step>Implement comprehensive error logging and monitoring - log this failure consistently to identify patterns (transient vs. persistent, correlation with device lifecycle operations)</step>
+        <step>If failure is persistent, attempt device firmware update if available - may resolve lifecycle management subsystem errors</step>
+        <step>If failure persists and suspected hardware issue, contact device manufacturer or consider device replacement - repeated date retrieval failures indicate serious device lifecycle hardware problems</step>
+    </recovery>
+    <relatedExceptions>
+        <exception>ErrorFunctionFailed</exception>
+        <exception>ErrorDeviceNotInitialized</exception>
+        <exception>ErrorGetBeginOfUsageDateFailed</exception>
+        <exception>ErrorGetVersionFailed</exception>
+        <exception>ErrorGetSerialNumberFailed</exception>
+    </relatedExceptions>
+    <postconditionality>
+        <state name="Device Operational State">Device remains fully operational and unmodified. The failure to retrieve the end of usage date does not affect device initialization state, internal memory, stored data, or the ability to perform other operations. All device components remain in their pre-call state.</state>
+        <state name="Date Data Return Status">No end of usage date is returned to the caller. The function exits without providing any date information. Applications must not assume default dates or cached date values; they must handle the exception as indicating date information is unavailable.</state>
+        <state name="Secure Element State">Secure Element remains unchanged by the failed date query. No state modifications, lifecycle updates, or device configuration changes occur. Device lifecycle information continues to be maintained internally in the Secure Element regardless of the retrieval failure.</state>
+        <state name="Device Lifecycle Continuity">The Secure Element continues to maintain its lifecycle information internally. The failure to retrieve the end of usage date does not affect the underlying device lifecycle state or validity period. The date can be queried again once the underlying issue is resolved.</state>
+        <state name="No Cascading State Effects">No cascading state inconsistencies or secondary failures occur as a result of the date retrieval failure. Device internal consistency is maintained. Other SE API functions and lifecycle operations continue normally without state corruption.</state>
+        <state name="Recovery Preconditions Met">The device state after exception is consistent and allows for recovery operations. The underlying issue (storage error, communication error, lifecycle system error) remains present, but the device is stable enough to accept diagnostic queries or recovery attempts.</state>
+    </postconditionality>
+    <notes>
+        <note>ErrorGetEndOfUsageDateFailed is thrown ONLY by the getEndOfUsageDate function - it is the most specific and precise exception for Secure Element end of usage date retrieval failures</note>
+        <note>This exception indicates a failure in the Secure Element's ability to report its end of usage date. It is an informational failure, not a critical operational failure, though it prevents lifecycle validation</note>
+        <note>Critical distinction from ErrorFunctionFailed: ErrorGetEndOfUsageDateFailed specifically indicates lifecycle date information is unavailable at the lifecycle management subsystem level, while ErrorFunctionFailed indicates broader unspecified critical failures</note>
+        <note>Exception is raised during the date retrieval phase (steps 6-7), after device initialization and authentication checks have passed</note>
+        <note>After this exception, the Secure Element remains unchanged and continues to maintain its lifecycle information internally. Date queries can be retried once the underlying issue is resolved</note>
+        <note>This exception has Medium severity because it prevents users from determining device lifecycle validity, but does not immediately prevent device operation or other SE API functions</note>
+        <note>The end of usage date is critical for device lifecycle management and determining when a device must be decommissioned or retired from service</note>
+        <note>The exception indicates lifecycle date cannot be reliably obtained; applications must not implement workarounds using external dates without explicit validation against device policy</note>
+        <note>Failure scenarios range from transient (temporary communication issues, temporary state) to persistent (storage corruption, hardware failure, firmware error)</note>
+        <note>If this exception occurs frequently or persistently, it indicates serious issues with Secure Element lifecycle management hardware, firmware, or date storage that require diagnostic investigation</note>
+        <note>Date retrieval is a read-only query; failure does not modify any Secure Element state, so recovery typically requires only retrying the query once underlying issue is resolved</note>
+        <note>End of usage date format and representation may vary by device manufacturer and firmware version - consult device specifications for expected date format</note>
+        <note>The end of usage date works with the begin of usage date to define the complete valid operational period for the device</note>
+        <note>Applications must implement appropriate error handling for end of usage date retrieval failures, especially in device lifecycle management and compliance verification</note>
+        <note>Repeated date retrieval failures may indicate device needs firmware update, lifecycle management subsystem reset, or hardware service - manufacturer support should be engaged</note>
+    </notes>
+    <usage>
+        <scenario name="Scenario 1: Device Lifecycle Validity Verification Before Critical Operations">
+            <description>An application must verify that the device is within its valid operational usage period before performing critical cryptographic or security operations. The application retrieves both begin of usage date and end of usage date, then compares the current date against these boundaries. If ErrorGetEndOfUsageDateFailed is raised, the application cannot determine device lifecycle validity and must conservatively reject operations.</description>
+            <relatedFunctions>getEndOfUsageDate, getBeginOfUsageDate, getVersion</relatedFunctions>
+            <errorContext>Device end of usage date unavailable for lifecycle validity verification</errorContext>
+        </scenario>
+        <scenario name="Scenario 2: Device Decommissioning and Lifecycle Compliance Monitoring">
+            <description>A device fleet management system monitors device lifecycles and identifies devices that are approaching or have exceeded their end of usage dates. The system periodically queries getEndOfUsageDate for each device to track lifecycle status and alert administrators when devices need to be decommissioned. If ErrorGetEndOfUsageDateFailed is raised on a device, the system cannot determine its lifecycle status.</description>
+            <relatedFunctions>getEndOfUsageDate, getBeginOfUsageDate, getSerialNumber</relatedFunctions>
+            <errorContext>Device end of usage date unavailable for lifecycle compliance monitoring</errorContext>
+        </scenario>
+        <scenario name="Scenario 3: Compliance Reporting and Device Lifecycle Documentation">
+            <description>A compliance reporting system generates documentation showing device lifecycle information for audit and certification purposes. The report includes device serial numbers, operational periods (begin and end of usage dates), and usage duration. If ErrorGetEndOfUsageDateFailed is raised on a device, the report cannot include complete lifecycle information for that device.</description>
+            <relatedFunctions>getEndOfUsageDate, getBeginOfUsageDate, getSerialNumber, getVersion</relatedFunctions>
+            <errorContext>Device lifecycle dates unavailable for compliance reporting</errorContext>
+        </scenario>
+        <scenario name="Scenario 4: Multi-Device Lifecycle Synchronization and Fleet Health Assessment">
+            <description>An enterprise asset management system maintains a comprehensive view of device lifecycle across all deployed devices. The system queries getEndOfUsageDate on each device to create a synchronized view of device validity periods and identify end-of-life risks. If ErrorGetEndOfUsageDateFailed is raised on one device, the system cannot determine that device's lifecycle status and must flag it for investigation.</description>
+            <relatedFunctions>getEndOfUsageDate, getBeginOfUsageDate, getSerialNumber</relatedFunctions>
+            <errorContext>Device end of usage date unavailable for fleet lifecycle synchronization</errorContext>
+        </scenario>
+    </usage>
+    <implementationContext>
+        <note>The getEndOfUsageDate function retrieves the end of usage date maintained by the Secure Element's lifecycle management subsystem</note>
+        <note>End of usage date represents the deadline after which the device must no longer be used for cryptographic or operational purposes, determined by device lifecycle policies</note>
+        <note>The end of usage date works together with the begin of usage date (from getBeginOfUsageDate) to define the complete valid operational period for the device</note>
+        <note>Date format and representation may vary by device manufacturer and firmware version - typically ISO 8601 date format or Unix timestamp</note>
+        <note>Device lifecycle management is critical for ensuring compliance with security policies, certification requirements, and operational standards</note>
+        <note>If end of usage date retrieval fails but other device information queries succeed (version, serial number), the issue is specific to lifecycle date storage, not to general device information access</note>
+        <note>End of usage date storage corruption or retrieval errors represent potential integrity issues in the device lifecycle management subsystem that should be investigated</note>
+        <note>Date retrieval is a read-only query; ErrorGetEndOfUsageDateFailed does not indicate state corruption requiring state recovery - it indicates the lifecycle date information source is temporarily unavailable</note>
+    </implementationContext>
 </exception>

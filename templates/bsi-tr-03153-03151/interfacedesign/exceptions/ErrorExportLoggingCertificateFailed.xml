@@ -1,18 +1,158 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <exception id="ErrorExportLoggingCertificateFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
     <name>ErrorExportLoggingCertificateFailed</name>
-    <description>This exception is thrown if the collection of the certificates for the export failed.</description>
-    <category>Logging</category>
+    <description>This exception is thrown if the collection of the certificates for the export failed during execution of the exportLoggingCertificates function. The exception represents a critical failure in the Secure Element's ability to retrieve and provide certificates required for exporting logging data. ErrorExportLoggingCertificateFailed is raised when the exportLoggingCertificates function requests certificate retrieval from the Secure Element but the Secure Element cannot assemble or provide the required certificates due to a hardware error, firmware issue, certificate storage failure, or communication breakdown. This exception indicates that the Secure Element's certificate retrieval functionality did not complete successfully, preventing the assembly of valid export data containing authenticated certificate information. The exception is raised during the certificate collection phase before certificates are packaged into the export data structure, ensuring no partial or incomplete export data is returned.</description>
+    <category>Logging Export Operations</category>
     <severity>High</severity>
     <javadoc>
         <summary>The exception ErrorExportLoggingCertificateFailed is thrown if the collection of the certificates for the export failed.</summary>
+        <description>The exportLoggingCertificates function performs a multi-step process to export logging certificates from the Secure Element. This exception is raised when the Secure Element cannot provide the required certificates during the collection phase of the export operation. When this exception occurs, no export data is returned to the user, and the function exits without providing any partial certificate data. The failure indicates that the Secure Element's certificate retrieval functionality did not complete successfully.</description>
+        <constructors>
+            <constructor>
+                <signature>ErrorExportLoggingCertificateFailed()</signature>
+                <description>Constructs a new ErrorExportLoggingCertificateFailed exception with null as the value for its detail message</description>
+            </constructor>
+            <constructor>
+                <signature>ErrorExportLoggingCertificateFailed(String message)</signature>
+                <description>Constructs a new ErrorExportLoggingCertificateFailed exception whereby its detail message is initialized with the passed value</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorExportLoggingCertificateFailed(String message, Throwable cause)</signature>
+                <description>Constructs a new ErrorExportLoggingCertificateFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorExportLoggingCertificateFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+                <description>Constructs a new ErrorExportLoggingCertificateFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+            </constructor>
+        </constructors>
     </javadoc>
     <specification>
         <source>BSI TR-03151-1</source>
-        <requirement>SHALL be raised when certificate export collection fails</requirement>
-        <applicability>Logging certificate export operations</applicability>
+        <section>3.3.13 Export Functionality - exportLoggingCertificates</section>
+        <requirement>The function exportLoggingCertificates SHALL request the Secure Element to retrieve the certificates needed for export. If the Secure Element cannot provide or collect the required certificates, the function SHALL raise the exception ErrorExportLoggingCertificateFailed and exit without returning any export data. The certificate collection failure indicates the Secure Element's certificate retrieval functionality could not complete successfully, preventing the assembly of valid export data.</requirement>
+        <applicability>Logging certificate export operations - Export functionality exportLoggingCertificates only</applicability>
+        <reference>exportLoggingCertificates – Function (3.3.13)</reference>
     </specification>
     <thrownBy>
         <function>exportLoggingCertificates</function>
     </thrownBy>
+    <triggerConditions>
+        <condition>
+            <scenario>Secure Element certificate storage failure or corruption</scenario>
+            <description>The Secure Element attempts to retrieve logging certificates from its internal storage, but the certificates are corrupted, inaccessible, or damaged. Certificate retrieval fails due to storage errors or corruption.</description>
+            <trigger>Secure Element certificate storage failure or certificate data corruption preventing retrieval</trigger>
+        </condition>
+        <condition>
+            <scenario>Secure Element firmware error during certificate retrieval</scenario>
+            <description>The Secure Element's firmware encounters an error or exception while processing the certificate retrieval request. Firmware bugs, memory corruption, or firmware state inconsistency prevent successful certificate assembly.</description>
+            <trigger>Secure Element firmware error during certificate retrieval and assembly operation</trigger>
+        </condition>
+        <condition>
+            <scenario>Communication failure during certificate transfer</scenario>
+            <description>The Secure Element successfully retrieves certificates but the communication channel fails during transfer of certificate data from the Secure Element to the device. The device cannot receive the complete certificate data.</description>
+            <trigger>Communication failure during certificate data transfer from Secure Element</trigger>
+        </condition>
+        <condition>
+            <scenario>Certificate quota or resource exhaustion</scenario>
+            <description>The Secure Element has exhausted certificate storage capacity or resource limits that prevent retrieval of the complete set of required certificates. The export operation cannot proceed without all necessary certificates.</description>
+            <trigger>Secure Element certificate storage quota exceeded or resource limits preventing retrieval</trigger>
+        </condition>
+        <condition>
+            <scenario>Secure Element in restricted state preventing certificate access</scenario>
+            <description>The Secure Element has entered a protected, restricted, or locked state due to security policies or error conditions that prevents access to or retrieval of certificates. Certificate export is blocked by Secure Element security restrictions.</description>
+            <trigger>Secure Element in restricted state preventing certificate access or retrieval</trigger>
+        </condition>
+    </triggerConditions>
+    <executionSequence>
+        <step number="1" name="Function Invocation">User or application calls exportLoggingCertificates function with no parameters required</step>
+        <step number="2" name="Authentication Check">The function checks authentication status if required by the implementation guideline to ensure the caller is authorized to export certificates</step>
+        <step number="3" name="Authorization Check">The function checks authorization to verify the caller has permission to export logging certificates</step>
+        <step number="4" name="Device Initialization Verification">The function verifies that the device is in an initialized state and ready for export operations</step>
+        <step number="5" name="Time Synchronization Check">The function verifies that device time is synchronized if required for certificate export operations</step>
+        <step number="6" name="Secure Element Certificate Request">The function sends a request to the Secure Element to retrieve and assemble the required logging certificates</step>
+        <step number="6a" name="Certificate Collection Success">If the Secure Element successfully retrieves and assembles all required certificates, execution continues to step 7 (not taken in this exception case)</step>
+        <step number="6b" name="Certificate Collection Failure">If the Secure Element cannot retrieve, assemble, or provide the required certificates due to storage failure, firmware error, communication loss, quota exhaustion, or security restrictions, execution branches to exception handling at step 7b</step>
+        <step number="7a" name="Export Data Assembly">Upon successful certificate collection, the function packages the certificates into the export data structure for return (not taken in this exception case)</step>
+        <step number="7b" name="Exception Context Preparation">Upon certificate collection failure, exception context is prepared including the Secure Element error details, export operation context, and timestamp</step>
+        <step number="8" name="Exception Instance Creation">ErrorExportLoggingCertificateFailed exception instance is created with appropriate error message indicating Secure Element certificate collection failure</step>
+        <step number="9" name="Exception Propagation">Exception is raised and propagated up the call stack without returning any export data to the caller</step>
+        <step number="10" name="Device State Verification">The Secure Element and certificate storage remain in their current state with no modifications or data extraction having occurred</step>
+    </executionSequence>
+    <recovery>
+        <step>Verify that the Secure Element is functioning properly and is not in a failed, error, or restricted state</step>
+        <step>Ensure the Secure Element contains valid logging certificates that can be exported by checking Secure Element status and certificate storage</step>
+        <step>Check the communication channel between the device and Secure Element for any errors, interference, or disconnection issues</step>
+        <step>Review Secure Element diagnostics to verify that certificate storage and retrieval functionality is operational and not experiencing errors</step>
+        <step>Verify that the device has not exceeded any certificate storage limits, quota restrictions, or resource limits that might prevent certificate retrieval</step>
+        <step>Check Secure Element logs or diagnostic information to identify the specific error that prevented certificate retrieval</step>
+        <step>Attempt the exportLoggingCertificates function again after verifying Secure Element connectivity, status, and certificate availability</step>
+        <step>If certificate corruption is suspected, verify the integrity of certificate data using Secure Element diagnostics or manufacturer tools</step>
+        <step>If repeated attempts fail consistently, consult the device and Secure Element manufacturer's documentation for certificate management and export troubleshooting</step>
+        <step>Implement comprehensive logging of this failure for forensic analysis, audit trail preservation, and understanding when certificate export functionality became unavailable</step>
+    </recovery>
+    <relatedExceptions>
+        <exception>ErrorFunctionFailed</exception>
+        <exception>ErrorRetrieveLogMessageFailed</exception>
+        <exception>ErrorExportSerialNumbersFailed</exception>
+        <exception>ErrorSigningEventDataFailed</exception>
+    </relatedExceptions>
+    <postconditionality>
+        <state name="Export Data State">No export data is returned to the caller. The certificate export operation has not completed and no data of any kind (not even partial data) is provided to the user.</state>
+        <state name="Device State">Device state remains completely unchanged. No modifications to internal state, configuration, or data structures have occurred as a result of the failed certificate export attempt.</state>
+        <state name="Secure Element State">Secure Element remains unchanged and all its certificates remain stored in protected Secure Element storage. No certificate data has been extracted or modified.</state>
+        <state name="Certificate Storage">Certificate storage on device is unaffected. All certificates remain securely stored in the Secure Element. Certificate count and content are unchanged.</state>
+        <state name="State Consistency">No state inconsistency exists. The function exits at the certificate collection phase before any data assembly, packaging, or return operations.</state>
+        <state name="Device Availability">Device functions continue to execute normally. The device remains operational and all API functions remain accessible.</state>
+    </postconditionality>
+    <notes>
+        <note>ErrorExportLoggingCertificateFailed is thrown ONLY by the exportLoggingCertificates function - it is the most specific exception for certificate collection failures during certificate export operations.</note>
+        <note>This exception indicates a critical failure in the Secure Element's certificate retrieval functionality during the export process. The exception is raised during the certificate collection phase (step 6b), before certificates are packaged into export data.</note>
+        <note>Unlike successful exportLoggingCertificates execution, when this exception is raised, no export data of any kind is returned to the user - not even partial or incomplete certificate data.</note>
+        <note>After this exception is raised, the Secure Element remains unchanged and all its certificates remain securely stored. The export operation can be retried once the underlying certificate retrieval issue is resolved.</note>
+        <note>This exception has High severity because it prevents users from exporting essential logging certificates needed for audit trail validation, forensic analysis, and regulatory compliance verification of device operations.</note>
+        <note>The exception is raised during the certificate collection phase, which is early in the export process before data assembly, packaging, and return. This ensures no partial or incomplete data reaches the caller.</note>
+        <note>Certificate export is a critical operation for audit trails and regulatory compliance. If this exception occurs repeatedly, it indicates a serious issue with Secure Element certificate management, storage, or retrieval functionality.</note>
+        <note>The exportLoggingCertificates function is part of the Export functionality category and provides users the ability to retrieve certificates for validating log message authenticity, integrity, and non-repudiation.</note>
+        <note>Certificate export failures may indicate that log messages cannot be independently verified outside the device. This may affect compliance with regulatory requirements for evidence preservation and audit trails.</note>
+        <note>Unlike ErrorExportSerialNumbersFailed (which affects serial number export), this exception specifically affects certificate export. The two export operations are independent and one can fail while the other succeeds.</note>
+    </notes>
+    <usage>
+        <scenario name="Scenario 1: Hardware Failure During Certificate Collection">
+            <description>A user calls exportLoggingCertificates to retrieve logging certificates from the device for external audit trail verification. The Secure Element has been storing log messages and contains multiple logging certificates. During the certificate retrieval phase, the Secure Element hardware encounters an internal error and fails to read the certificate storage area.</description>
+            <relatedFunctions>exportLoggingCertificates, exportSerialNumbers, retrieveLogMessage</relatedFunctions>
+            <errorContext>Secure Element hardware failure during certificate retrieval preventing export data assembly</errorContext>
+        </scenario>
+        <scenario name="Scenario 2: Communication Loss During Certificate Export">
+            <description>A user initiates exportLoggingCertificates through a remote management interface. The communication link between the application and Secure Element is disrupted during the certificate collection phase. The Secure Element certificate retrieval command times out and the device firmware reports a communication failure.</description>
+            <relatedFunctions>exportLoggingCertificates, exportSerialNumbers, retrieveLogMessage</relatedFunctions>
+            <errorContext>Communication failure between device and Secure Element during certificate transfer blocking export completion</errorContext>
+        </scenario>
+        <scenario name="Scenario 3: Certificate Storage Corruption Detection">
+            <description>A device has been operating normally for several weeks logging messages. When exportLoggingCertificates is called to retrieve certificates for compliance verification, the Secure Element detects that the certificate storage area contains corrupted data. The certificate data does not match expected checksums or formats.</description>
+            <relatedFunctions>exportLoggingCertificates, exportSerialNumbers, storeLogMessage</relatedFunctions>
+            <errorContext>Certificate storage corruption or data integrity failure requiring diagnostic investigation</errorContext>
+        </scenario>
+        <scenario name="Scenario 4: Persistent Failure Requiring Professional Service">
+            <description>A device operator attempts exportLoggingCertificates multiple times over several hours to address an audit request, but each attempt results in ErrorExportLoggingCertificateFailed. Other operations like logging are working normally. This pattern indicates a persistent issue with the Secure Element's certificate management that cannot be resolved through standard troubleshooting.</description>
+            <relatedFunctions>exportLoggingCertificates, exportSerialNumbers, storeLogMessage, retrieveLogMessage</relatedFunctions>
+            <errorContext>Persistent Secure Element certificate management failure indicating underlying hardware or firmware issues</errorContext>
+        </scenario>
+    </usage>
+    <implementationContext>
+        <note>This exception is raised specifically when the Secure Element cannot provide certificates required for export. It is critical for export operations because certificates validate the authenticity and integrity of exported log data.</note>
+        <note>The Secure Element certificate retrieval is a barrier operation that must succeed before export data can be assembled. Unlike other failures that might allow partial data return, certificate retrieval failure blocks the entire export operation.</note>
+        <note>Users should understand that ErrorExportLoggingCertificateFailed means absolutely no export data is returned. There are no partial exports, no incomplete certificates, and no fallback data. The entire operation fails at the certificate collection phase.</note>
+        <note>This exception is distinct from ErrorExportSerialNumbersFailed. The two export operations (certificate export and serial number export) are independent. One can fail while the other succeeds, and each has its own specific exception.</note>
+        <note>Certificate export is essential for users who need to validate log messages outside the device or provide evidence for regulatory compliance. A repeated occurrence of this exception should trigger investigation of Secure Element certificate management and storage systems.</note>
+        <note>The exportLoggingCertificates function is the only source of this exception. It indicates that the underlying Secure Element certification infrastructure is experiencing difficulties. This is a High severity issue because it affects audit trail exportability and regulatory compliance.</note>
+        <note>Recovery from this exception typically requires either addressing the specific Secure Element issue (communication, storage, hardware) or restarting the device to reset state. If repeated failures occur, professional service is required.</note>
+        <note>Implementers should ensure comprehensive logging of certificate export failures because they may indicate serious issues with Secure Element functionality that require professional investigation and may affect device trustworthiness.</note>
+    </implementationContext>
 </exception>

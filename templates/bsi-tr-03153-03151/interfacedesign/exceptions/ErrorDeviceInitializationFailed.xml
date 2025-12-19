@@ -1,18 +1,161 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <exception id="ErrorDeviceInitializationFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
     <name>ErrorDeviceInitializationFailed</name>
-    <description>This exception is thrown if any necessary action to initialize the device fails.</description>
+    <description>This exception is thrown if any necessary action to initialize the device fails during execution of the initialize function. The exception represents a critical failure in the device's startup sequence that prevents the device from entering an operational state. ErrorDeviceInitializationFailed is raised when the device attempts to perform one or more essential initialization actions (such as Secure Element activation, internal state setup, client registry creation, logging system initialization, or cryptographic key loading), but encounters a hardware error, firmware issue, state management failure, or system-level error that prevents successful completion. This exception indicates that the device initialization process has partially failed at some critical checkpoint, leaving the device in an uninitialized and unusable state. The exception is raised after the device has attempted initialization but before all necessary initialization steps have been completed and verified.</description>
     <category>Initialization</category>
     <severity>Critical</severity>
     <javadoc>
         <summary>This class defines the exception ErrorDeviceInitializationFailed that is thrown if any necessary action to initialize the device fails.</summary>
+        <description>The device initialization process encountered a failure condition during execution of the initialize function. This exception indicates that one or more necessary actions required to properly initialize the device could not be completed successfully. This failure may occur due to hardware issues, state management problems, internal system errors, or failures in device component initialization.</description>
+        <constructors>
+            <constructor>
+                <signature>ErrorDeviceInitializationFailed()</signature>
+                <description>Constructs a new ErrorDeviceInitializationFailed exception with null as the value for its detail message</description>
+            </constructor>
+            <constructor>
+                <signature>ErrorDeviceInitializationFailed(String message)</signature>
+                <description>Constructs a new ErrorDeviceInitializationFailed exception whereby its detail message is initialized with the passed value</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorDeviceInitializationFailed(String message, Throwable cause)</signature>
+                <description>Constructs a new ErrorDeviceInitializationFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+            </constructor>
+            <constructor>
+                <signature>ErrorDeviceInitializationFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+                <description>Constructs a new ErrorDeviceInitializationFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+                <parameter name="message">value for the detail message of the exception</parameter>
+                <parameter name="cause">value for the cause of the exception</parameter>
+                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+            </constructor>
+        </constructors>
     </javadoc>
     <specification>
         <source>BSI TR-03151-1</source>
-        <requirement>SHALL be raised when device initialization process fails</requirement>
-        <applicability>Device initialization operations</applicability>
+        <section>3.3.1.5</section>
+        <requirement>SHALL be raised if any necessary action to initialize the device fails. The function SHALL perform all necessary actions to initialize the device. If the initialization fails, the function SHALL raise the exception ErrorDeviceInitializationFailed and exit the function.</requirement>
+        <applicability>Device initialization operations when initialization process fails</applicability>
+        <reference>initialize – Exceptions (3.3.1.4)</reference>
     </specification>
     <thrownBy>
         <function>initialize</function>
     </thrownBy>
+    <triggerConditions>
+        <condition>
+            <scenario>Secure Element activation or communication failure</scenario>
+            <description>The device attempts to activate or establish communication with the Secure Element during initialization, but encounters a hardware error, firmware issue, or communication failure that prevents successful activation or prevents the Secure Element from becoming accessible.</description>
+            <trigger>Secure Element hardware failure, firmware error, or communication failure during initialization</trigger>
+        </condition>
+        <condition>
+            <scenario>Internal device state management initialization failure</scenario>
+            <description>The device initializes internal state management structures (client registry, transaction tracking, logging configuration, resource management), but encounters errors in setting up these critical subsystems. Memory allocation failures, storage access issues, or state inconsistencies prevent state initialization.</description>
+            <trigger>Internal state management subsystem initialization failure</trigger>
+        </condition>
+        <condition>
+            <scenario>Device component hardware failure</scenario>
+            <description>One or more hardware components required for device operation are detected to be non-functional during initialization diagnostics. This may include storage media, cryptographic processors, communication interfaces, or sensor components.</description>
+            <trigger>Hardware component failure detected during initialization self-test</trigger>
+        </condition>
+        <condition>
+            <scenario>Cryptographic key or certificate initialization failure</scenario>
+            <description>The device must load, verify, or generate cryptographic keys and certificates during initialization. Failure to load keys from storage, verification failures, or key generation errors prevent successful initialization.</description>
+            <trigger>Cryptographic key or certificate initialization failure</trigger>
+        </condition>
+        <condition>
+            <scenario>Device firmware or boot sequence failure</scenario>
+            <description>The device firmware or boot sequence encounters errors that prevent successful completion. Firmware corruption, boot block damage, or firmware update incomplete scenarios prevent the device from transitioning to an operational state.</description>
+            <trigger>Firmware or boot sequence failure during device initialization</trigger>
+        </condition>
+    </triggerConditions>
+    <recovery>
+        <step>Verify that the device hardware is in a functional and accessible state through physical inspection and connection verification</step>
+        <step>Check that all device components (Secure Element, storage, cryptographic processor, communication interfaces) are properly connected, powered, and responsive</step>
+        <step>Verify that the device has not already been initialized by checking for ErrorDeviceIsInitialized or attempting to call a device function that requires initialization</step>
+        <step>Review device firmware version and check for available firmware updates that may address initialization issues</step>
+        <step>Run device self-test or diagnostic functions if available to identify which specific initialization component or step failed</step>
+        <step>Verify that the Secure Element is accessible, responsive, and in a proper firmware state suitable for initialization and operation</step>
+        <step>Check that internal device storage is accessible and not corrupted. Run storage diagnostics if the device supports them.</step>
+        <step>Ensure that cryptographic key files are present, accessible, and not corrupted. Verify key store integrity if available through device API.</step>
+        <step>Retry the initialize operation after a brief delay (typically 500-2000ms) to allow hardware stabilization and recovery from transient failures</step>
+        <step>If repeated failures occur on the same device instance, perform a device factory reset or power cycle to clear transient state and retry initialization</step>
+    </recovery>
+    <relatedExceptions>
+        <exception>ErrorDeviceIsInitialized</exception>
+        <exception>ErrorFunctionFailed</exception>
+        <exception>ErrorSigningEventDataFailed</exception>
+        <exception>ErrorSecureElementDisabled</exception>
+    </relatedExceptions>
+    <notes>
+        <note>This exception indicates a critical failure in the device initialization process that prevents the device from reaching an initialized state suitable for API operations. The device is unusable until initialization succeeds.</note>
+        <note>The exception is raised when one or more necessary actions to initialize the device fail, which may include Secure Element initialization, internal state setup, client registry creation, logging system initialization, or cryptographic key loading.</note>
+        <note>The initialize function MUST be invoked before any other API functions can be used; if this function fails, the device remains in an uninitialized state and cannot be used for any SE API operations.</note>
+        <note>This exception has Critical severity as it represents a fundamental failure that prevents proper device operation and may indicate hardware damage, firmware corruption, or a failed manufacturing/shipping state.</note>
+        <note>Unlike ErrorDeviceIsInitialized (which indicates the device is already initialized), ErrorDeviceInitializationFailed indicates that the current initialization attempt has failed, potentially leaving the device in a partially initialized or inconsistent state.</note>
+        <note>Repeated initialization failures may indicate persistent hardware issues, firmware corruption, or internal state corruption that cannot be resolved through retry alone. Device replacement or factory reset may be necessary.</note>
+        <note>Some device variants may perform extensive self-testing during initialization that can take significant time. Initialization failures may indicate that self-tests have detected hardware issues rather than initialization logic failures.</note>
+        <note>The device state after this exception is indeterminate. Some internal state may have been initialized successfully while other critical components failed. The device should be considered non-operational until successful initialization is achieved.</note>
+        <note>In systems with redundant or backup devices, initialization failure on one device should trigger failover to alternative devices. The failed device should be removed from service for diagnostics and repair.</note>
+        <note>The exception does not indicate whether the failure is transient (recoverable through retry) or permanent (requiring hardware replacement). Applications should implement retry logic with appropriate backoff and eventual escalation to hardware diagnostics and replacement.</note>
+    </notes>
+    <executionSequence>
+        <step number="1" name="Function Invocation">Function entry point is reached for initialize with no parameters required</step>
+        <step number="2" name="Current State Check">The device checks its current state to verify it is not already initialized. If already initialized, ErrorDeviceIsInitialized is raised instead (not taken in this exception case)</step>
+        <step number="3" name="Secure Element Communication Initialization">The device establishes communication with the Secure Element hardware and verifies that it is responsive and accessible</step>
+        <step number="4" name="Internal State Structure Creation">The device creates and initializes internal state management structures including client registry, transaction tracking, and resource management tables</step>
+        <step number="5" name="Storage System Verification">The device verifies that all storage media are accessible, functional, and properly formatted for logging and data persistence</step>
+        <step number="6" name="Cryptographic Key Loading">The device loads cryptographic keys and certificates from protected storage and verifies their validity and integrity</step>
+        <step number="7" name="Logging System Initialization">The device initializes the logging subsystem, creates initial log entries, and verifies logging capability</step>
+        <step number="8" name="Device Self-Test Execution">The device performs self-test and diagnostic checks on critical hardware components to verify functional status</step>
+        <step number="9" name="Initialization Completion Verification">The device verifies that all initialization steps have completed successfully and the device is ready for operation</step>
+        <step number="10a" name="Initialization Success">If all initialization steps complete successfully, the device enters an initialized state and the function returns normally (not taken in this exception case)</step>
+        <step number="10b" name="Initialization Failure">If any critical initialization step fails, execution branches to exception handling at step 11</step>
+        <step number="11" name="Exception Context Preparation">Exception context is prepared including the specific initialization step that failed, error details from the failed component, and device state information</step>
+        <step number="12" name="Exception Instance Creation">ErrorDeviceInitializationFailed exception instance is created with appropriate error message indicating which initialization action failed</step>
+        <step number="13" name="Exception Propagation">Exception is raised and propagated up the call stack, leaving the device in an uninitialized and non-operational state</step>
+    </executionSequence>
+    <postconditionality>
+        <state name="Exception State">An ErrorDeviceInitializationFailed exception has been created and raised, containing information about the failed initialization step and component error details</state>
+        <state name="Device Operational State">The device remains in an uninitialized state and is not operational for SE API functions. No SE API functions other than initialize can be called on this device.</state>
+        <state name="Device Internal State">The device may have partially initialized some internal structures (Secure Element communication, state tables, storage verification), but the overall device state is inconsistent and unsuitable for operation.</state>
+        <state name="Secure Element State">The Secure Element may be accessible or initialized, depending on where the initialization process failed. The Secure Element may be in a transient state that requires reset.</state>
+        <state name="Data Integrity State">Existing data in device storage may be inaccessible or unverified due to incomplete initialization. The device cannot be relied upon to provide data consistency.</state>
+        <state name="Function Exit">The function exits abnormally via exception propagation without completing device initialization</state>
+    </postconditionality>
+    <usage>
+        <scenario name="Scenario 1: Hardware Failure During First Initialization">
+            <description>A newly deployed device fails during the initial initialization attempt due to a hardware component being non-functional. The device requires hardware diagnosis and repair.</description>
+            <relatedFunctions>initialize, getComponentVersions, getDeviceHealth</relatedFunctions>
+            <errorContext>Device deployment failure where hardware issue prevents initialization</errorContext>
+        </scenario>
+        <scenario name="Scenario 2: Firmware Corruption After Update">
+            <description>A device was previously operational, but after a firmware update, initialization fails due to firmware corruption or incomplete update. Device requires firmware recovery or rollback.</description>
+            <relatedFunctions>initialize, updateDevice, getComponentVersions</relatedFunctions>
+            <errorContext>Firmware update failure leading to initialization failure</errorContext>
+        </scenario>
+        <scenario name="Scenario 3: Transient Initialization Failure with Retry Recovery">
+            <description>An application encounters this exception during initialization but implements a retry strategy with increasing backoff delays. After 2-3 retries with delays, the device successfully initializes, indicating a transient hardware or timing issue.</description>
+            <relatedFunctions>initialize, getDeviceHealth</relatedFunctions>
+            <errorContext>Transient failure recovery through retry with backoff</errorContext>
+        </scenario>
+        <scenario name="Scenario 4: Persistent Failure Triggering Device Replacement">
+            <description>Repeated initialization attempts fail consistently. After diagnostic checks confirm hardware damage or firmware corruption that cannot be repaired, the device is marked for replacement and failover to a backup device is activated.</description>
+            <relatedFunctions>initialize, getDeviceHealth, getComponentVersions</relatedFunctions>
+            <errorContext>Persistent device failure requiring replacement and failover</errorContext>
+        </scenario>
+    </usage>
+    <implementationContext>
+        <note>The ErrorDeviceInitializationFailed exception represents a critical failure in the device startup sequence that prevents the device from becoming operational. This is distinct from operational failures that occur after successful initialization.</note>
+        <note>The initialize function is a prerequisite for all other SE API functions. Until initialize succeeds, the device is unusable and all other API functions are unavailable.</note>
+        <note>Device implementations perform extensive initialization including Secure Element activation, state structure creation, storage verification, and self-testing. Failures in any of these areas result in this exception.</note>
+        <note>The specific initialization step that failed is typically captured in device logs or diagnostic information. Applications should examine detailed error information to understand whether the failure is hardware-related, firmware-related, or transient.</note>
+        <note>Unlike transient API operation failures, initialization failures are often persistent and may indicate hardware damage or firmware corruption requiring professional service or device replacement.</note>
+        <note>Some devices perform time-consuming initialization procedures including extensive self-tests and verification. Applications should allow appropriate timeouts for initialization to complete (typically seconds to minutes depending on device type).</note>
+        <note>In environments with redundant or clustered devices, initialization failure on one device should trigger automatic failover to alternative devices. The failed device should be isolated and scheduled for diagnostics.</note>
+        <note>The device state after initialization failure may be partially initialized, potentially creating security risks if partially initialized state is exploited. The device should be considered non-operational and untrusted until repair and re-initialization.</note>
+        <note>Factory reset or power cycling may clear transient initialization failures caused by timing issues or temporary state inconsistencies. However, persistent failures indicate hardware or firmware issues requiring professional intervention.</note>
+        <note>Some device implementations may provide detailed diagnostic or boot-failure information through alternative interfaces (UART, diagnostic ports, specialized tools). Applications may need to use these tools to determine the root cause of initialization failures.</note>
+    </implementationContext>
 </exception>
