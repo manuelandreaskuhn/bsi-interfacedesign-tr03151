@@ -64,16 +64,10 @@
     <step number="10">Function returns successfully with transaction logging now locked</step>
   </executionSequence>
   <recovery>
-    <step>Verify device connectivity - check that the Secure Element is accessible and communication channels are functional</step>
-    <step>Check device and logging system state - call getTransactionLoggingState or similar function to determine current logging system state</step>
-    <step>Verify authorization - ensure the caller has proper credentials and permissions to lock transaction logging</step>
-    <step>Review device resources - check for resource constraints or device errors that may be preventing lock operations</step>
-    <step>Retry the lock operation - attempt to call lockTransactionLogging again after a brief delay</step>
-    <step>Check for active transactions - verify if there are active transactions that may be preventing the logging system from being locked</step>
-    <step>Implement exponential backoff - if initial retry fails, implement exponential backoff strategy for subsequent retry attempts</step>
-    <step>Check device error logs - if available, examine device error or event logs to determine the root cause of the lock failure</step>
-    <step>Reset logging system state - if the logging system is in an indeterminate state, attempt to reset or reinitialize it before retrying</step>
-    <step>If persistent, contact device manufacturer - repeated lock failures may indicate a device issue or malfunction requiring device servicing</step>
+    <step>Verify device is initialized</step>
+    <step>Ensure no open transactions exist</step>
+    <step>Retry lock operation after finishing transactions</step>
+    <step>Check device status and SE connectivity</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorUnlockTransactionLoggingFailed</exception>

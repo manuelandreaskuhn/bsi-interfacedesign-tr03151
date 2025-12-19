@@ -101,16 +101,10 @@
     <step number="8">Function proceeds with normal operation logic</step>
   </executionSequence>
   <recovery>
-    <step>Review error message - examine the error message to identify which parameter has the syntax error</step>
-    <step>Check function documentation - consult the SE API documentation for the specific function's parameter requirements</step>
-    <step>Review parameter types - verify that each parameter has the correct data type (string, int, boolean, object, etc.)</step>
-    <step>Check string format - if string parameters, verify they conform to required format and allowed character sets</step>
-    <step>Validate date/time format - if date/time parameters, verify they conform to the required format specification</step>
-    <step>Check numeric ranges - if numeric parameters, verify they are within acceptable ranges (e.g., 1-65535 for ports)</step>
-    <step>Verify required fields - if complex object parameters, verify all required fields are present</step>
-    <step>Validate character encoding - ensure parameter values use correct character encoding</step>
-    <step>Review BSI TR-03151-1 specification - consult the official specification for detailed parameter requirements</step>
-    <step>Correct and retry - fix the parameter values to match the required syntax and type, then retry the function call</step>
+    <step>Review function specification for parameter format requirements</step>
+    <step>Correct parameter format to match specification</step>
+    <step>Validate parameter syntax before function call</step>
+    <step>Retry with correctly formatted parameter</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorParameterMismatch</exception>

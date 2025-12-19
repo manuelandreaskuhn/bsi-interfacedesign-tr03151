@@ -60,16 +60,10 @@
     <step number="10">Function returns valid transaction state value to caller</step>
   </executionSequence>
   <recovery>
-    <step>Verify device operational status - confirm device is initialized, responding to other operations, and not in an error state</step>
-    <step>Verify Secure Element accessibility - confirm device can communicate with Secure Element through diagnostic commands</step>
-    <step>Check device initialization - ensure device has been properly initialized with initDevice before attempting getTransactionState</step>
-    <step>Verify transaction ID validity - confirm the requested transaction ID exists and corresponds to an active or recent transaction</step>
-    <step>Retry getTransactionState operation - attempt the function call again as the failure may be transient</step>
-    <step>Review device diagnostics for transaction management system health - query device for diagnostic information about Secure Element transaction management subsystem status</step>
-    <step>Test other transaction queries - attempt retrieving open transactions or transaction counter to verify general transaction access capability</step>
-    <step>Implement comprehensive error logging and monitoring - log this failure consistently to identify patterns (transient vs. persistent, correlation with transaction operations)</step>
-    <step>If failure is persistent, attempt device firmware update if available - may resolve transaction management subsystem errors or transaction state recovery</step>
-    <step>If failure persists and suspected state corruption, contact device manufacturer or consider device reset - repeated transaction state retrieval failures indicate serious transaction management issues</step>
+    <step>Verify device is initialized</step>
+    <step>Confirm Secure Element is operational</step>
+    <step>Verify transaction number is valid and exists</step>
+    <step>Retry transaction state query after confirming preconditions</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorFunctionFailed</exception>

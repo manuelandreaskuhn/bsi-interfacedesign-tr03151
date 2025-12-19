@@ -60,16 +60,10 @@
     <step number="10">Function returns valid registered client list to caller</step>
   </executionSequence>
   <recovery>
-    <step>Verify device operational status - confirm device is initialized, responding to other operations, and not in an error state</step>
-    <step>Verify Secure Element accessibility - confirm device can communicate with Secure Element through diagnostic commands</step>
-    <step>Check device initialization - ensure device has been properly initialized with initDevice before attempting getRegisteredClients</step>
-    <step>Retry getRegisteredClients operation - attempt the function call again as the failure may be transient</step>
-    <step>Review device diagnostics for client management system health - query device for diagnostic information about Secure Element client registry status</step>
-    <step>Verify client registry integrity through device manufacturer diagnostics - check if client registry is accessible and uncorrupted</step>
-    <step>Test other client queries - attempt retrieving current client count or maximum clients to verify general client management access capability</step>
-    <step>Implement comprehensive error logging and monitoring - log this failure consistently to identify patterns (transient vs. persistent, correlation with client registration/deregistration)</step>
-    <step>If failure is persistent, attempt device firmware update if available - may resolve client management subsystem errors</step>
-    <step>If failure persists and suspected hardware issue, contact device manufacturer or consider device replacement - repeated client enumeration failures indicate serious client management hardware problems</step>
+    <step>Verify device is initialized</step>
+    <step>Confirm Secure Element is operational</step>
+    <step>Retry client list query operation</step>
+    <step>Maintain application-level client registry as backup</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorFunctionFailed</exception>

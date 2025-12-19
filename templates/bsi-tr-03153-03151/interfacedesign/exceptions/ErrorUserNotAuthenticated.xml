@@ -108,14 +108,10 @@
     <step number="10">Operation executes with authentication verified</step>
   </executionSequence>
   <recovery>
-    <step>Review error message - understand authentication is required</step>
-    <step>Check authentication status - verify current user is not authenticated</step>
-    <step>Check session state - verify no active authenticated session</step>
-    <step>Authenticate user - call authenticateUser with valid credentials</step>
-    <step>Verify authentication - confirm authenticateUser succeeded</step>
-    <step>Check authentication timeout - verify authentication has not expired</step>
-    <step>Retry restricted function - attempt original restricted operation again</step>
-    <step>Verify operation completes - confirm restricted function now succeeds</step>
+    <step>Authenticate user first using authenticateUser</step>
+    <step>Provide correct PIN for user authentication</step>
+    <step>Verify user identity before retrying operation</step>
+    <step>Retry after successful user authentication</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorUnknownUserId</exception>

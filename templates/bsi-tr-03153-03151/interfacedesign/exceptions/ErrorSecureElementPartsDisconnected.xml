@@ -78,16 +78,10 @@
     <step number="9">Function processes result and returns to caller</step>
   </executionSequence>
   <recovery>
-    <step>Stop all Secure Element operations immediately - component disconnection indicates hardware failure</step>
-    <step>Review error message - identify which component or subsystem is disconnected</step>
-    <step>Check physical connections - inspect all cables, connectors, and physical interfaces</step>
-    <step>Check component power supplies - verify all components have stable power</step>
-    <step>Attempt device restart - power cycle the Secure Element to reset connections</step>
-    <step>Verify device status - query device to confirm component connectivity restored</step>
-    <step>If still disconnected, check device logs - examine device logs for additional failure information</step>
-    <step>Perform self-test - call selfTest function to verify component connectivity (if available)</step>
-    <step>If persistent, contact manufacturer - component failure may require hardware repair or replacement</step>
-    <step>Do not use device for security operations until connectivity is verified - device integrity may be compromised</step>
+    <step>Verify SE component connections and hardware status</step>
+    <step>Power cycle device if temporary connection issue</step>
+    <step>Perform self-test to diagnose SE status</step>
+    <step>Contact device vendor if components remain disconnected</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorDeviceInitializationFailed</exception>

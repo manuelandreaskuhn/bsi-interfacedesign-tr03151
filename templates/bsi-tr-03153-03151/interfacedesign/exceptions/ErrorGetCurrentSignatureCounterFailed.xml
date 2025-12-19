@@ -60,16 +60,10 @@
     <step number="10">Function returns valid counter values to caller</step>
   </executionSequence>
   <recovery>
-    <step>Verify device operational status - confirm device is initialized, responding to other operations, and not in an error state</step>
-    <step>Verify Secure Element accessibility - confirm device can communicate with Secure Element through diagnostic commands</step>
-    <step>Check device initialization - ensure device has been properly initialized with initDevice before attempting getCurrentLoggingSignatureCounters</step>
-    <step>Check logging subsystem status - verify logging is enabled and configured before querying counter values</step>
-    <step>Retry getCurrentLoggingSignatureCounters operation - attempt the function call again as the failure may be transient</step>
-    <step>Review device diagnostics for logging subsystem health - query device for diagnostic information about Secure Element logging counter status</step>
-    <step>Verify counter storage integrity through device manufacturer diagnostics - check if counter storage is accessible and uncorrupted</step>
-    <step>Attempt counter reinitialization if supported - if available, reinitialize logging counters to restore counter access</step>
-    <step>Implement comprehensive error logging and monitoring - log this failure consistently to identify patterns (transient vs. persistent, correlation with logging operations)</step>
-    <step>If failure is persistent and suspected hardware issue, contact device manufacturer or consider device replacement - repeated counter retrieval failures indicate serious logging subsystem hardware problems</step>
+    <step>Verify device is initialized</step>
+    <step>Confirm Secure Element is operational</step>
+    <step>Retry counter query after confirming device state</step>
+    <step>Check logging subsystem status</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorFunctionFailed</exception>

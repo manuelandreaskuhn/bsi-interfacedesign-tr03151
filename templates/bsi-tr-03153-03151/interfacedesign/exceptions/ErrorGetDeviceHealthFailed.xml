@@ -60,16 +60,10 @@
     <step number="10">Function returns valid health status information to caller</step>
   </executionSequence>
   <recovery>
-    <step>Verify device operational status - confirm device is initialized, responding to other operations, and not in an error state</step>
-    <step>Verify Secure Element accessibility - confirm device can communicate with Secure Element through diagnostic commands</step>
-    <step>Check device initialization - ensure device has been properly initialized with initDevice before attempting getDeviceHealth</step>
-    <step>Retry getDeviceHealth operation - attempt the function call again as the failure may be transient</step>
-    <step>Review device system logs and events - check if health monitoring system has logged errors or warnings</step>
-    <step>Verify health monitoring subsystem status through device manufacturer diagnostics - check if health monitoring is enabled and operational</step>
-    <step>Test other information queries - attempt retrieving other device information to verify general information access capability</step>
-    <step>Implement comprehensive error logging and monitoring - log this failure consistently to identify patterns (transient vs. persistent, correlation with device state changes)</step>
-    <step>If failure is persistent, attempt device firmware update if available - may resolve health monitoring subsystem errors</step>
-    <step>If failure persists and suspected hardware issue, contact device manufacturer or consider device replacement - repeated health retrieval failures indicate serious device monitoring hardware problems</step>
+    <step>Verify device is initialized</step>
+    <step>Retry health query operation</step>
+    <step>Check device logs for error details</step>
+    <step>Contact device vendor if health check unavailable</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorFunctionFailed</exception>

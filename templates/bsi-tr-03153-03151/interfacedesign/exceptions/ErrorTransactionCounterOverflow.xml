@@ -63,17 +63,10 @@
     <step number="11">Function returns to caller indicating transaction recorded with updated counter</step>
   </executionSequence>
   <recovery>
-    <step>Review error message - understand counter has reached maximum value</step>
-    <step>Check counter value - confirm counter at logical maximum through diagnostics</step>
-    <step>Run diagnostics - execute complete device diagnostics to assess counter state</step>
-    <step>Review transaction history - document total transactions executed</step>
-    <step>Document counter state - preserve counter value and transaction history</step>
-    <step>Determine lifecycle status - recognize device has reached end-of-life operational capacity</step>
-    <step>Plan device replacement - schedule device replacement if counter reset not acceptable</step>
-    <step>Consider reset - evaluate risks and benefits of counter reset procedure</step>
-    <step>Backup audit trail - preserve transaction audit trail before reset or replacement</step>
-    <step>Execute procedure - implement device replacement or counter reset as determined</step>
-    <step>Verify recovery - confirm counter functionality after procedure completes</step>
+    <step>Check counter approaching maximum</step>
+    <step>Monitor counter and plan for overflow condition</step>
+    <step>Stop creating transactions before overflow occurs</step>
+    <step>Implement overflow mitigation strategies</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorTransactionCounterExhausted</exception>

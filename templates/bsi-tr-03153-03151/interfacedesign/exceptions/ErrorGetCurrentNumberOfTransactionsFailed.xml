@@ -60,16 +60,10 @@
     <step number="9" name="Device State Verification">The device and transaction registry remain in their current state with no modifications or data extraction having occurred</step>
   </executionSequence>
   <recovery>
-    <step>Verify that the device is functioning properly and is not in a failed, error, or restricted state</step>
-    <step>Ensure the device is properly initialized before attempting to retrieve current transaction count</step>
-    <step>Verify the device's transaction registry is not corrupted or inaccessible using device diagnostics</step>
-    <step>Check the communication channel between the application and device for any errors, interference, or disconnection issues</step>
-    <step>Review device diagnostics to verify that transaction management and registry functionality is operational</step>
-    <step>Verify that currently active transactions can still communicate with the device by testing with existing transaction operations</step>
-    <step>Attempt to start or finish a test transaction to verify that transaction management operations still function correctly</step>
-    <step>Check if transaction registry consistency can be verified through alternative queries (getMaxNumberOfTransactions, getOpenTransactions)</step>
-    <step>Attempt the getCurrentNumberOfTransactions function again after verifying device status to determine if the failure was transient</step>
-    <step>Implement comprehensive logging of this failure to understand if transaction counting is consistently unavailable or experiencing intermittent issues</step>
+    <step>Verify device is initialized</step>
+    <step>Retry transaction count query</step>
+    <step>Check device status and SE connectivity</step>
+    <step>Use application-level transaction tracking as fallback</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorFunctionFailed</exception>

@@ -49,16 +49,11 @@
     </condition>
   </triggerConditions>
   <recovery>
-    <step>Examine the clientId value being passed to the SE API function call and verify it is not null, empty, or corrupted</step>
-    <step>Call registerClient with the intended clientId before attempting any transaction operations (startTransaction, updateTransaction, finishTransaction)</step>
-    <step>Query the list of currently registered clients using getRegisteredClients or getCurrentNumberOfClients functions to verify whether the target clientId is active</step>
-    <step>If the clientId has been previously deregistered, determine whether re-registration is appropriate based on application lifecycle requirements</step>
-    <step>If re-registration is required, call registerClient again with the same clientId, ensuring the device has available capacity (verify using getCurrentNumberOfClients and compare against maximum)</step>
-    <step>In transaction operations, ensure the clientId parameter matches exactly the value used during registerClient invocation, accounting for case sensitivity</step>
-    <step>Implement defensive programming by checking client registration status before critical transaction operations to provide early error detection</step>
-    <step>For deregisterClient operations, verify the clientId is currently registered before attempting deregistration; if already deregistered, silently ignore if appropriate to application logic</step>
-    <step>In multi-threaded environments, implement synchronization mechanisms to prevent race conditions where clientId registration state changes between validation and use</step>
-    <step>Log detailed information about the unregistered clientId attempt (including clientId value, operation type, timestamp) to aid in debugging client lifecycle issues</step>
+    <step>Register the client first using registerClient before operations</step>
+    <step>Verify clientId is valid and registered with getRegisteredClients</step>
+    <step>Check that client deregistration did not occur unexpectedly</step>
+    <step>Ensure application maintains client registration state</step>
+    <step>Review client lifecycle in application code</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorClientAlreadyRegistered</exception>

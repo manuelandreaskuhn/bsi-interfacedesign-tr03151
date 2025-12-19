@@ -46,16 +46,11 @@
     </condition>
   </triggerConditions>
   <recovery>
-    <step>Verify that the device storage is accessible and operational using device health queries or diagnostic functions</step>
-    <step>Check storage medium connection status physically and through software-level diagnostics to ensure the storage device is properly connected and responsive</step>
-    <step>Verify file system health by running file system integrity checks or repair utilities if available through the device API or firmware</step>
-    <step>Ensure sufficient file system permissions for deletion operations on the device storage. Verify the execution context has appropriate access rights.</step>
-    <step>Verify that log messages marked for deletion have been previously exported using exportLogMessages to ensure data preservation before reattempting deletion</step>
-    <step>Check for other processes or system components that may be holding locks on the log message files preventing deletion, and terminate blocking operations if safe</step>
-    <step>Retry the deleteLogMessages operation after resolving storage access issues and allowing brief time for storage subsystem stabilization (typically 100-500ms)</step>
-    <step>If retry fails, perform a partial deletion by specifying a smaller set of log messages to delete and retry in increments to isolate problematic entries</step>
-    <step>Consult device logs, audit trails, or diagnostic information for detailed storage operation failure reasons and correlation with hardware errors</step>
-    <step>If deletion failures persist, perform device storage diagnostics, consider file system rebuild or factory reset, or replace storage hardware if hardware failure is detected</step>
+    <step>Verify device is initialized and has accessible storage</step>
+    <step>Check that log messages exist using appropriate query functions</step>
+    <step>Ensure all messages are exported before deletion attempts</step>
+    <step>Retry deletion operation after confirming preconditions</step>
+    <step>Review device storage status and available capacity</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorStoringLogMessageFailed</exception>

@@ -41,16 +41,10 @@
     </condition>
   </triggerConditions>
   <recovery>
-    <step>Verify the device supports the getCurrentNumberOfClients function by checking the device specification or implementation documentation</step>
-    <step>Check device configuration or firmware version to determine whether client tracking is a supported capability on this device variant</step>
-    <step>Query the maximum number of clients using getMaxNumberOfClients to understand the device's client capacity design (unlimited or bounded)</step>
-    <step>If the device supports client registration, use getRegisteredClients to obtain a list of currently registered clients and count them at the application level</step>
-    <step>Implement client-side tracking by maintaining a registry of registered clients within the application, mirroring the device's internal registrations</step>
-    <step>If client capacity management is critical, check if alternative functions are available (e.g., getMaxNumberOfClients) that provide related information</step>
-    <step>Review device health status using getDeviceHealth to determine if client tracking is unavailable due to a device error or operational issue</step>
-    <step>Consult device documentation or contact the manufacturer to understand whether client tracking is disabled by design or can be re-enabled through configuration</step>
-    <step>In applications where client counting is essential, consider using a different device variant that implements client tracking functionality</step>
-    <step>Document the device capability limitation and adjust application logic to handle the absence of server-side client counting information</step>
+    <step>Confirm device is in valid initialized state</step>
+    <step>Retry getCurrentNumberOfClients operation</step>
+    <step>If unavailable, estimate client count from application-level tracking</step>
+    <step>Check device status using getDeviceHealth</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorGetCurrentNumberOfClientsFailed</exception>

@@ -60,16 +60,10 @@
     <step number="10">Function returns valid time value to caller</step>
   </executionSequence>
   <recovery>
-    <step>Verify device operational status - confirm device is initialized, responding to other operations, and not in an error state</step>
-    <step>Verify Secure Element accessibility - confirm device can communicate with Secure Element through diagnostic commands</step>
-    <step>Check device initialization - ensure device has been properly initialized with initDevice before attempting getCurrentSeTime</step>
-    <step>Retry getCurrentSeTime operation - attempt the function call again as the failure may be transient</step>
-    <step>Review device diagnostics for time management subsystem health - query device for diagnostic information about Secure Element time status</step>
-    <step>Verify Secure Element clock status through device manufacturer diagnostics - check if hardware clock is functioning</step>
-    <step>Attempt device time synchronization with updateTime function - if supported, attempt to reinitialize Secure Element time management</step>
-    <step>Cross-validate time information from alternative sources - check if time can be embedded in cryptographic operations or obtained through other SE API functions</step>
-    <step>Implement comprehensive error logging and monitoring - log this failure consistently to identify patterns (transient vs. persistent, frequency, correlation with other failures)</step>
-    <step>If failure is persistent and suspected hardware issue, contact device manufacturer or consider device replacement - repeated time retrieval failures indicate serious Secure Element clock/time management hardware problems</step>
+    <step>Verify time has been set via updateTime</step>
+    <step>Confirm Secure Element is operational</step>
+    <step>Retry time query after confirming preconditions</step>
+    <step>Synchronize device time if needed</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorFunctionFailed</exception>

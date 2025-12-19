@@ -60,16 +60,10 @@
     <step number="10">Function returns valid end of usage date to caller</step>
   </executionSequence>
   <recovery>
-    <step>Verify device operational status - confirm device is initialized, responding to other operations, and not in an error state</step>
-    <step>Verify Secure Element accessibility - confirm device can communicate with Secure Element through diagnostic commands</step>
-    <step>Check device initialization - ensure device has been properly initialized with initDevice before attempting getEndOfUsageDate</step>
-    <step>Retry getEndOfUsageDate operation - attempt the function call again as the failure may be transient</step>
-    <step>Review device diagnostics for lifecycle management system health - query device for diagnostic information about Secure Element lifecycle status</step>
-    <step>Verify lifecycle date storage integrity through device manufacturer diagnostics - check if date storage is accessible and uncorrupted</step>
-    <step>Test other lifecycle or information queries - attempt retrieving other device information to verify general information access capability</step>
-    <step>Implement comprehensive error logging and monitoring - log this failure consistently to identify patterns (transient vs. persistent, correlation with device lifecycle operations)</step>
-    <step>If failure is persistent, attempt device firmware update if available - may resolve lifecycle management subsystem errors</step>
-    <step>If failure persists and suspected hardware issue, contact device manufacturer or consider device replacement - repeated date retrieval failures indicate serious device lifecycle hardware problems</step>
+    <step>Verify device is initialized</step>
+    <step>Confirm Secure Element is operational</step>
+    <step>Retry end-of-use date query</step>
+    <step>Check device specification for lifecycle information</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorFunctionFailed</exception>

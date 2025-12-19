@@ -64,16 +64,10 @@
     <step number="12">Function returns exported data to caller</step>
   </executionSequence>
   <recovery>
-    <step>Review parameter values - examine all parameters provided to the export function</step>
-    <step>Check date/time ranges - verify that start dates/times are before end dates/times (if applicable)</step>
-    <step>Verify mutual exclusivity - identify any mutually exclusive options and ensure at most one is specified</step>
-    <step>Check value ranges - verify that all numeric parameters are within acceptable ranges</step>
-    <step>Review data model constraints - consult documentation for constraints that apply to parameter combinations</step>
-    <step>Validate parameter format - ensure all parameters are in correct format and data type</step>
-    <step>Correct contradictory parameters - if parameters are contradictory, clarify requirements and specify consistent parameters</step>
-    <step>Consult parameter documentation - review BSI TR-03151-1 or device documentation for parameter requirements and constraints</step>
-    <step>Test with simplified parameters - try export with minimal or simplified parameter set to isolate which parameters are causing the mismatch</step>
-    <step>Retry with corrected parameters - once parameters are corrected to be logically consistent, retry the export operation</step>
+    <step>Verify all function parameters have correct types</step>
+    <step>Check parameter type compatibility in application code</step>
+    <step>Cast or convert parameters to correct types</step>
+    <step>Retry function call with type-correct parameters</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorInvalidEventType</exception>

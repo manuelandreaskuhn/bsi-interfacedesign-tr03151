@@ -43,16 +43,11 @@
     <step number="9">Function returns successfully to the user</step>
   </executionSequence>
   <recovery>
-    <step>Verify that the clientId is already registered by checking the error message or exception details</step>
-    <step>Determine if the duplicate registration was intentional or accidental</step>
-    <step>If duplicate registration was accidental, notify the user that the client is already registered and the operation was not performed</step>
-    <step>If a new client registration is required, choose a different unique clientId and retry registerClient</step>
-    <step>If the application needs to unregister the existing client first, call deregisterClient with the existing clientId</step>
-    <step>After successful deregistration, retry registerClient with the same or a different clientId</step>
-    <step>Query getCurrentNumberOfClients or getRegisteredClients to see which clients are currently registered and determine available IDs</step>
-    <step>Implement application-level logic to track which clientIds are in use and avoid duplicate registration attempts</step>
-    <step>Document the clientId allocation strategy in the application to prevent conflicts</step>
-    <step>Ensure that client lifecycle management (registration, deregistration) is properly synchronized to avoid race conditions</step>
+    <step>Verify which clientId is already registered using getRegisteredClients</step>
+    <step>Choose alternative clientId with different identifier for new registration</step>
+    <step>Or deregister existing client first using deregisterClient before re-registering</step>
+    <step>Ensure application-level logic prevents duplicate registration attempts</step>
+    <step>Review client registration workflow in application code</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorClientLimitReached</exception>

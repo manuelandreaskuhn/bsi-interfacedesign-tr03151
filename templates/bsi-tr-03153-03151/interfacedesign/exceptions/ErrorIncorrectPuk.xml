@@ -60,16 +60,9 @@
     <step number="10">Function returns to caller with PIN unblocked and ready for new authentication attempts</step>
   </executionSequence>
   <recovery>
-    <step>Verify PUK value accuracy - confirm the entered PUK is correct according to user's registered PIN Unblock Key</step>
-    <step>Check for common input errors - verify no keyboard layout issues, language issues, or accidental character transpositions in PUK entry</step>
-    <step>Confirm PIN is currently blocked - ensure PIN is actually blocked and unblock operation is necessary</step>
-    <step>Review failed PUK verification counter if available - check how many failed attempts have been made and how many remain before PUK blocking</step>
-    <step>Retry PIN unblock with verified correct PUK - re-attempt unblockPin with the correct PUK value</step>
-    <step>Verify PUK credential correctness - confirm the PUK being used is the currently registered PIN Unblock Key (not an outdated or incorrect credential)</step>
-    <step>Implement comprehensive error logging and rate limiting - log failed unblock attempts to detect brute force attacks and implement throttling</step>
-    <step>Monitor for PUK retry counter exhaustion - track whether repeated failures may trigger PUK blocking or permanent PIN lock</step>
-    <step>If repeated unblock failures occur, contact administrator for PUK verification - after excessive failed attempts or if PUK is unknown, administrator assistance may be required</step>
-    <step>If concerned about security breach, implement additional security measures - if unauthorized parties are attempting PIN unblock, consider security incident response</step>
+    <step>Verify PUK entry - check for typos</step>
+    <step>Retry unblock operation with correct PUK</step>
+    <step>If PUK forgotten, contact device vendor or support</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorPukBlocked</exception>

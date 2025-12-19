@@ -61,16 +61,10 @@
     <step number="10">Function returns exported data to caller</step>
   </executionSequence>
   <recovery>
-    <step>Review filter criteria - examine the selection/filter parameters used in the export function call</step>
-    <step>Check date ranges - verify that the date range or time window specified actually includes times when data was logged</step>
-    <step>Verify event types - confirm that the specified event type(s) are correct and have actually been logged on the device</step>
-    <step>Check client IDs - if filtering by client ID, verify that the client ID is correct and has been registered/used on the device</step>
-    <step>Query available data - call query functions (if available) to determine what data is stored and what filter criteria would match it</step>
-    <step>Expand filter criteria - try less restrictive filters to see if data exists when some filters are removed</step>
-    <step>Try broadening date range - if using date/time filters, try expanding the date range to see if data exists outside the original range</step>
-    <step>Check device storage status - determine if the storage contains any data at all via device status functions</step>
-    <step>Try exporting all data - attempt export with no filters or minimal filters to see if any data exists on the device</step>
-    <step>If no data exists, confirm this is expected - verify that the expected data should have been logged based on operations performed on the device</step>
+    <step>Verify search parameters match data that exists</step>
+    <step>Check if data exists using appropriate query functions</step>
+    <step>Adjust search criteria to match available data</step>
+    <step>Ensure sufficient data has been created before querying</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorExportLoggingCertificateFailed</exception>

@@ -63,17 +63,10 @@
     <step number="11">Function returns to caller indicating transaction recorded</step>
   </executionSequence>
   <recovery>
-    <step>Review error message - understand counter memory is exhausted</step>
-    <step>Check device status - determine counter memory utilization level</step>
-    <step>Run diagnostic - execute device diagnostics to assess counter memory state</step>
-    <step>Review transaction history - understand transaction volume and counter growth</step>
-    <step>Plan maintenance - schedule device service to address counter memory</step>
-    <step>Contact manufacturer - initiate service procedure with device manufacturer</step>
-    <step>Document counter state - record counter memory status before servicing</step>
-    <step>Cease operations - stop transaction operations to prevent data loss</step>
-    <step>Backup device state - preserve device data if possible before service</step>
-    <step>Service device - execute counter memory restoration or replacement procedure</step>
-    <step>Verify restoration - confirm counter functionality after service</step>
+    <step>Check current counter value</step>
+    <step>Device cannot create new transactions after exhaustion</step>
+    <step>Plan for counter exhaustion reaching device capacity</step>
+    <step>Contact device vendor about counter management</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorSignatureCounterExhausted</exception>

@@ -60,16 +60,10 @@
     <step number="9" name="Device State Verification">The device and version storage remain in their current state with no modifications or data extraction having occurred</step>
   </executionSequence>
   <recovery>
-    <step>Verify that the device is functioning properly and is not in a failed, error, or restricted state</step>
-    <step>Ensure the device is properly initialized before attempting to retrieve component version information</step>
-    <step>Verify the device's version information storage is not corrupted or inaccessible using device diagnostics</step>
-    <step>Check the communication channel between the application and device for any errors, interference, or disconnection issues</step>
-    <step>Review device diagnostics to verify that component version storage and retrieval functionality is operational</step>
-    <step>Verify that the device has not exceeded any version storage limits or quota restrictions</step>
-    <step>Verify the device has not experienced recent power loss or system interruption that could affect version storage integrity</step>
-    <step>Attempt the getComponentVersions function again after verifying device status and connectivity to determine if the failure was transient</step>
-    <step>If version information cannot be retrieved, check alternative device information queries (getEndOfUsageDate, getDeviceHealth) to indirectly determine device compatibility</step>
-    <step>Implement comprehensive logging of this failure to understand if the version retrieval system is consistently unavailable or experiencing intermittent issues</step>
+    <step>Verify device is initialized</step>
+    <step>Confirm Secure Element is operational</step>
+    <step>Retry version query operation</step>
+    <step>Check device status if operation remains unavailable</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorFunctionFailed</exception>

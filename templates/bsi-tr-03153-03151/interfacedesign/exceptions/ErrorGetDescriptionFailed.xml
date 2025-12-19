@@ -60,16 +60,10 @@
     <step number="10">Function returns valid description text to caller</step>
   </executionSequence>
   <recovery>
-    <step>Verify device operational status - confirm device is initialized, responding to other operations, and not in an error state</step>
-    <step>Verify Secure Element accessibility - confirm device can communicate with Secure Element through diagnostic commands</step>
-    <step>Check device initialization - ensure device has been properly initialized with initDevice before attempting getDescription</step>
-    <step>Retry getDescription operation - attempt the function call again as the failure may be transient</step>
-    <step>Review device diagnostics for information subsystem health - query device for diagnostic information about Secure Element device information status</step>
-    <step>Verify description storage integrity through device manufacturer diagnostics - check if description storage is accessible and uncorrupted</step>
-    <step>Attempt alternative information queries - try retrieving other device information (serial number, version) to verify general information access</step>
-    <step>Implement comprehensive error logging and monitoring - log this failure consistently to identify patterns (transient vs. persistent, correlation with other information queries)</step>
-    <step>If failure is persistent and information system is otherwise operational, attempt device firmware update if available - may resolve corrupted description data</step>
-    <step>If failure persists and suspected hardware issue, contact device manufacturer or consider device replacement - repeated description retrieval failures indicate serious device information hardware problems</step>
+    <step>Verify device is initialized</step>
+    <step>Check storage medium is accessible</step>
+    <step>Retry description query operation</step>
+    <step>Verify user has access permissions</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorFunctionFailed</exception>

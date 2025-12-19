@@ -60,16 +60,10 @@
     <step number="10">Function returns valid time sync variant to caller</step>
   </executionSequence>
   <recovery>
-    <step>Verify device operational status - confirm device is initialized, responding to other operations, and not in an error state</step>
-    <step>Verify Secure Element accessibility - confirm device can communicate with Secure Element through diagnostic commands</step>
-    <step>Check device initialization - ensure device has been properly initialized with initDevice before attempting getTimeSyncVariant</step>
-    <step>Retry getTimeSyncVariant operation - attempt the function call again as the failure may be transient</step>
-    <step>Review device diagnostics for time management system health - query device for diagnostic information about Secure Element time management subsystem status</step>
-    <step>Verify time management information integrity through device manufacturer diagnostics - check if time management metadata is accessible and uncorrupted</step>
-    <step>Test other time queries - attempt retrieving current time or end-of-usage date to verify general time management access capability</step>
-    <step>Implement comprehensive error logging and monitoring - log this failure consistently to identify patterns (transient vs. persistent, correlation with time operations)</step>
-    <step>If failure is persistent, attempt device firmware update if available - may resolve time management subsystem errors or update variant information</step>
-    <step>If failure persists and suspected hardware issue, contact device manufacturer or consider device replacement - repeated time capability retrieval failures indicate serious hardware problems</step>
+    <step>Verify device is initialized</step>
+    <step>Retry time sync variant query</step>
+    <step>Check device time synchronization configuration</step>
+    <step>Review time management procedures</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorFunctionFailed</exception>

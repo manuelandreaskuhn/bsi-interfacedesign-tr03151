@@ -72,18 +72,10 @@
     <step number="12">Function returns to caller indicating transaction successfully updated</step>
   </executionSequence>
   <recovery>
-    <step>Review error message - understand reason for transaction update failure</step>
-    <step>Verify transaction state - confirm active transaction exists</step>
-    <step>Verify transaction data - confirm provided data is valid</step>
-    <step>Check transaction counter - verify counter state and availability</step>
-    <step>Check storage - verify storage is available and not full</step>
-    <step>Check logging - verify transaction logging is not locked</step>
-    <step>Check device state - verify device is operational</step>
-    <step>Retry update - attempt updateTransaction again with verified data</step>
-    <step>Rollback transaction - if update cannot be recovered, finish/rollback current transaction</step>
-    <step>Start new transaction - begin new transaction after rollback</step>
-    <step>Run diagnostics - execute device diagnostics to assess transaction functionality</step>
-    <step>Contact support - if updates fail persistently, contact device support</step>
+    <step>Verify transaction exists and is still open</step>
+    <step>Confirm transaction update parameters are valid</step>
+    <step>Check transaction state allows update</step>
+    <step>Retry update after confirming transaction state</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorStartTransactionFailed</exception>

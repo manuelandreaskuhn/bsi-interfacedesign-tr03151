@@ -55,16 +55,12 @@
     <step number="8">Function returns to caller with exception and successful operation result</step>
   </executionSequence>
   <recovery>
-    <step>Verify that the log message was successfully created and stored despite the exception (the primary operation succeeded)</step>
-    <step>Identify which certificate is expired by examining the exception message or log details</step>
-    <step>Check the certificate expiration date (notAfter field) to understand the validity window</step>
-    <step>Determine if a new certificate needs to be installed or if the existing certificate can be renewed</step>
-    <step>Plan certificate replacement or update process to ensure future logging uses valid certificates</step>
-    <step>Review logged messages to confirm they were signed with the expired certificate and stored correctly</step>
-    <step>Implement monitoring to detect future certificate expiration before it occurs</step>
-    <step>Update certificate management procedures to allow certificate rotation without interrupting logging operations</step>
-    <step>Document the expired certificate scenario and any special handling required by the application</step>
-    <step>If operating in a compliance-sensitive environment, notify security or audit personnel of the certificate expiration condition</step>
+    <step>Verify that operation succeeded despite the exception - log message was created and stored</step>
+    <step>Identify the expired certificate from exception message or device logs</step>
+    <step>Check certificate validity period to understand expiration timeline</step>
+    <step>Plan certificate renewal or replacement to prevent persistent expiration</step>
+    <step>Implement proactive certificate monitoring before expiration dates</step>
+    <step>Review logging procedures to ensure continued operation during certificate transitions</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorFunctionFailed</exception>

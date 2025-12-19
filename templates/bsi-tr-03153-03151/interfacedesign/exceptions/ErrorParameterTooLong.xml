@@ -66,16 +66,10 @@
     <step number="5">Function proceeds with normal operation logic</step>
   </executionSequence>
   <recovery>
-    <step>Review error message - examine the error message to identify which parameter is too long</step>
-    <step>Check function documentation - consult the SE API documentation for the specific function's parameter length limits</step>
-    <step>Review parameter lengths - determine the actual length of the offending parameter</step>
-    <step>Identify maximum length - consult device specifications for the maximum allowed length for that parameter</step>
-    <step>Calculate shortfall - determine how many characters need to be removed</step>
-    <step>Truncate or shorten parameter - reduce the parameter length to fit within the maximum limit</step>
-    <step>Consider alternative approaches - if truncation is not acceptable, consider alternative approaches (e.g., shorter identifiers, split operations)</step>
-    <step>Implement length validation - add pre-call validation in client applications to catch oversized parameters early</step>
-    <step>Retry with corrected parameter - call the function again with the shortened parameter</step>
-    <step>Review BSI TR-03151-1 specification - consult the official specification for detailed parameter length requirements</step>
+    <step>Check parameter length limits in function specification</step>
+    <step>Truncate or reduce parameter to maximum length</step>
+    <step>Break long parameters into multiple function calls if needed</step>
+    <step>Retry function with properly sized parameters</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorParameterSyntax</exception>

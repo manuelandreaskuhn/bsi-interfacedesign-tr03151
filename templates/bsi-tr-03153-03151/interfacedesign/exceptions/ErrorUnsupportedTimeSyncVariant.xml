@@ -67,16 +67,10 @@
     <step number="11">Function returns to caller indicating time successfully updated</step>
   </executionSequence>
   <recovery>
-    <step>Review error message - understand variant is not supported</step>
-    <step>Check variant - verify variant parameter provided is correct</step>
-    <step>Query capabilities - determine which time sync variants are supported</step>
-    <step>Review device documentation - check available variants for device type</step>
-    <step>Check firmware version - verify device firmware supports requested variant</step>
-    <step>Check configuration - verify requested variant is not disabled in config</step>
-    <step>Select alternative variant - use supported variant available on device</step>
-    <step>Verify alternatives - confirm selected alternative variant is available</step>
-    <step>Retry time sync - attempt updateTime with supported variant</step>
-    <step>Update firmware - if new variant required, upgrade device firmware</step>
+    <step>Check supported time sync variants</step>
+    <step>Use variant supported by device</step>
+    <step>Verify variant parameter matches supported options</step>
+    <step>Retry with supported synchronization variant</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorTimeNotSet</exception>

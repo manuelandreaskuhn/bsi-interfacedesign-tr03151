@@ -67,16 +67,10 @@
     <step number="11">Function returns self-test results indicating success</step>
   </executionSequence>
   <recovery>
-    <step>Review error message - examine the error message to identify which self-test check failed</step>
-    <step>Review device logs - examine device logs for additional diagnostic information about the failure</step>
-    <step>Check device status - query device status to verify overall functionality despite test failure</step>
-    <step>Retry self-test - attempt selfTest again to determine if failure is persistent or intermittent</step>
-    <step>Check device power - ensure device has stable power supply (unstable power can cause intermittent failures)</step>
-    <step>Check device temperature - verify device is operating within acceptable temperature range</step>
-    <step>Check device communication - verify clean communication channel with device</step>
-    <step>Device reset - power cycle the device and retry self-test</step>
-    <step>Manufacturer diagnostics - use device manufacturer's diagnostic tools to identify specific failure</step>
-    <step>If persistent, contact manufacturer - device may require repair or replacement if self-test consistently fails</step>
+    <step>Perform self-test to identify failing components</step>
+    <step>Review self-test results and error details</step>
+    <step>Power cycle device if transient failure occurred</step>
+    <step>Contact device vendor if self-test consistently fails</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorDeviceInitializationFailed</exception>

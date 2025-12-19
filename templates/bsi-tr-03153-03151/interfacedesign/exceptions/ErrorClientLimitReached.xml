@@ -48,16 +48,11 @@
     <step number="9">Function returns successfully to the user</step>
   </executionSequence>
   <recovery>
-    <step>Query getCurrentNumberOfClients to determine how many clients are currently registered</step>
-    <step>Query getMaxNumberOfClients to understand the device's client capacity limit</step>
-    <step>Review the list of currently registered clients using getRegisteredClients</step>
-    <step>Identify which clients are inactive or no longer needed</step>
-    <step>Deregister inactive clients using the deregisterClient function to free up capacity</step>
-    <step>Retry the registerClient call for the new client after freeing sufficient capacity</step>
-    <step>Implement client lifecycle management in the application to ensure proper deregistration</step>
-    <step>Consider whether the device's maximum client limit is appropriate for the application requirements</step>
-    <step>Implement application-level client pooling or session management to manage clients efficiently</step>
-    <step>Document the maximum client capacity in deployment documentation and ensure applications are aware of this limitation</step>
+    <step>Check current client count using getCurrentNumberOfClients</step>
+    <step>Get maximum capacity using getMaxNumberOfClients</step>
+    <step>Deregister unused clients to free capacity</step>
+    <step>Plan application client usage to stay within device limits</step>
+    <step>If necessary, migrate to device with higher client capacity</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorClientAlreadyRegistered</exception>

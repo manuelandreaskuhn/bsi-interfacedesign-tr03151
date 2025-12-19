@@ -60,16 +60,10 @@
     <step number="10">Function returns to caller with authenticated user context established</step>
   </executionSequence>
   <recovery>
-    <step>Verify PIN value accuracy - confirm the entered PIN is correct according to user's registered credential</step>
-    <step>Check for common input errors - verify no keyboard layout issues, language issues, or accidental character transpositions in PIN entry</step>
-    <step>Confirm authentication is currently attempted - ensure user is not already authenticated and authentication is permitted in current device state</step>
-    <step>Review failed authentication counter if available - check how many failed attempts have been made and how many remain before PIN blocking</step>
-    <step>Retry authentication with verified correct PIN - re-attempt authenticateUser with the correct PIN value</step>
-    <step>Check if PIN has been recently changed - verify whether PIN has been updated through administrative procedures requiring use of new PIN</step>
-    <step>Implement comprehensive error logging and rate limiting - log failed authentication attempts to detect brute force attacks and implement throttling</step>
-    <step>Monitor for PIN retry counter exhaustion - track whether repeated failures may trigger PIN blocking or account lockout</step>
-    <step>If repeated authentication failures occur, contact administrator for PIN reset - after excessive failed attempts, PIN reset through administrative procedures may be required</step>
-    <step>If concerned about security breach, implement additional security measures - if unauthorized parties are attempting authentication, consider security incident response</step>
+    <step>Verify PIN entry - check for typos in user input</step>
+    <step>Retry authentication with correct PIN</step>
+    <step>Check if PIN has been changed recently</step>
+    <step>Use unblockPin if PIN is forgotten and PUK available</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorPinBlocked</exception>

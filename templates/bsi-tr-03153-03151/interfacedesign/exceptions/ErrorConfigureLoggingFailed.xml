@@ -41,16 +41,11 @@
     </condition>
   </triggerConditions>
   <recovery>
-    <step>Verify that the component name and event name parameters are correct and are supported by the device implementation (check device specifications for supported logging targets)</step>
-    <step>Check the device initialization status using getDeviceInfo or similar functions to ensure the device is properly initialized and not in an error state</step>
-    <step>Query the current device health status using getDeviceHealth to determine if the device is experiencing hardware or firmware issues that would prevent configuration updates</step>
-    <step>Examine the device's available memory and resource capacity to ensure there is sufficient space for the new logging configuration entry</step>
-    <step>Retry the configuration operation after a brief delay (typically 100-500ms) to allow the device's logging subsystem to recover from temporary resource contention</step>
-    <step>If the retry fails, attempt to clear existing logging configurations or reduce logging scope to free device resources, then retry</step>
-    <step>Review device logs, audit trails, or diagnostic information using exportLogMessages or device-specific diagnostic functions to identify the underlying cause of the failure</step>
-    <step>If the error persists across multiple retries, perform a device reinitialization using appropriate functions (e.g., updateDevice or firmware reset) to restore the logging subsystem to a known good state</step>
-    <step>As a last resort, contact device manufacturer support or perform a complete device factory reset if logging subsystem corruption is suspected</step>
-    <step>Document the configuration attempt that failed, including component name, event type, logging level, timestamp, and device state, for diagnostic purposes and to inform future recovery strategies</step>
+    <step>Verify device is initialized before configuration attempts</step>
+    <step>Check which events can be configured - some may not be configurable</step>
+    <step>Retry configuration with valid event types</step>
+    <step>Review logging configuration requirements in specification</step>
+    <step>Contact device support if configuration remains unavailable</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorDeviceNotInitialized</exception>

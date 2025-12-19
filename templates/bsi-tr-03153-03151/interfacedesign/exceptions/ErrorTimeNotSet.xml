@@ -72,16 +72,10 @@
     <step number="11">Function returns successfully</step>
   </executionSequence>
   <recovery>
-    <step>Review error message - understand that time needs to be set</step>
-    <step>Get current system time - obtain accurate current time from system or time server</step>
-    <step>Call updateTime - synchronize device time with current time using updateTime function</step>
-    <step>Verify time updated - confirm device time is now set and valid</step>
-    <step>Retry the operation - attempt the transaction operation again</step>
-    <step>Establish time sync procedure - implement regular time synchronization in startup sequence</step>
-    <step>Consider device clock - if device frequently loses time, check battery or power supply</step>
-    <step>Monitor time drift - track device time accuracy over time to detect issues</step>
-    <step>Check system time source - verify system clock used for updateTime is accurate</step>
-    <step>Document time sync requirement - ensure system startup includes time synchronization step</step>
+    <step>Set device time using updateTime before time-dependent operations</step>
+    <step>Synchronize time to accurate external source</step>
+    <step>Verify time synchronization succeeded</step>
+    <step>Retry operation after confirming valid time</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorTimeUpdateFailed</exception>

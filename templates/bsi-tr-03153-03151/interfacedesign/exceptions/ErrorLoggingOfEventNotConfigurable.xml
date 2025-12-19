@@ -62,16 +62,10 @@
     <step number="12">Function returns successfully with new logging configuration applied</step>
   </executionSequence>
   <recovery>
-    <step>Identify configurable event types - query the device to determine which event types support logging configuration</step>
-    <step>Review event type specification - consult device specifications or BSI TR-03151-1 documentation for the event type that was rejected</step>
-    <step>Check device logging capabilities - determine if the device supports per-event logging configuration or only global logging control</step>
-    <step>Verify event type identifier - ensure the event type parameter passed to configureLogging is correct and valid</step>
-    <step>List available events - call getEventTypesForLogging or similar function to retrieve the list of available and configurable events</step>
-    <step>Filter configuration targets - modify the logging configuration logic to only target event types that are configurable</step>
-    <step>Retry with valid event types - attempt configureLogging again using only event types confirmed to be configurable</step>
-    <step>Implement configuration skipping - if certain events must not be configurable, implement logic to skip those event types gracefully</step>
-    <step>Log configuration attempt - record which event types were not configurable for diagnostic purposes</step>
-    <step>If persistent, review device policy - examine device logging policy and design to understand logging configuration constraints</step>
+    <step>Verify which events are configurable in specification</step>
+    <step>Use only configurable event types</step>
+    <step>Accept that certain events have fixed logging configuration</step>
+    <step>Check logging configuration requirements</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorConfigureLoggingFailed</exception>

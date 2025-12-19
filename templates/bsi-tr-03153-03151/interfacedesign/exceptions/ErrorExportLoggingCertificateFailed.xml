@@ -61,16 +61,11 @@
     <step number="10" name="Device State Verification">The Secure Element and certificate storage remain in their current state with no modifications or data extraction having occurred</step>
   </executionSequence>
   <recovery>
-    <step>Verify that the Secure Element is functioning properly and is not in a failed, error, or restricted state</step>
-    <step>Ensure the Secure Element contains valid logging certificates that can be exported by checking Secure Element status and certificate storage</step>
-    <step>Check the communication channel between the device and Secure Element for any errors, interference, or disconnection issues</step>
-    <step>Review Secure Element diagnostics to verify that certificate storage and retrieval functionality is operational and not experiencing errors</step>
-    <step>Verify that the device has not exceeded any certificate storage limits, quota restrictions, or resource limits that might prevent certificate retrieval</step>
-    <step>Check Secure Element logs or diagnostic information to identify the specific error that prevented certificate retrieval</step>
-    <step>Attempt the exportLoggingCertificates function again after verifying Secure Element connectivity, status, and certificate availability</step>
-    <step>If certificate corruption is suspected, verify the integrity of certificate data using Secure Element diagnostics or manufacturer tools</step>
-    <step>If repeated attempts fail consistently, consult the device and Secure Element manufacturer's documentation for certificate management and export troubleshooting</step>
-    <step>Implement comprehensive logging of this failure for forensic analysis, audit trail preservation, and understanding when certificate export functionality became unavailable</step>
+    <step>Verify device is initialized</step>
+    <step>Confirm Secure Element is operational</step>
+    <step>Check output parameter is valid and writable</step>
+    <step>Retry certificate export after confirming preconditions</step>
+    <step>Verify user has authorization for certificate export</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorFunctionFailed</exception>

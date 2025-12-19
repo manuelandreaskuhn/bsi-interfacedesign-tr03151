@@ -63,16 +63,9 @@
     <step number="9">Function returns successfully with PIN unblocked and new PIN set</step>
   </executionSequence>
   <recovery>
-    <step>Confirm temporary PUK block - verify with ErrorPukTemporarilyBlocked that PUK is temporarily blocked</step>
-    <step>Check timeout period - determine the configured timeout duration for PUK temporary block (typically 30 minutes)</step>
-    <step>Wait for timeout expiration - allow the specified timeout period to elapse before attempting unblockPin again</step>
-    <step>Query device state - call appropriate status function to confirm when the temporary block expires (if available)</step>
-    <step>Retry after timeout - attempt unblockPin again with correct PUK after timeout period has expired</step>
-    <step>Verify PUK is correct - ensure the PUK being used is actually correct (review with user or administrator)</step>
-    <step>Implement backoff strategy - if retrying, implement exponential backoff or randomized delays to avoid rapid retries</step>
-    <step>Contact administrator - if timeout is unacceptable or PUK is truly lost, contact device administrator for alternative recovery</step>
-    <step>Check for ongoing attacks - if ErrorPukTemporarilyBlocked occurs frequently, investigate for potential brute-force attacks</step>
-    <step>Consider administrative reset - if PUK cannot be recovered, explore administrative procedures to reset PUK or PIN</step>
+    <step>Wait for PUK temporary blocking timeout to expire</step>
+    <step>Retry unblock operation after blocking timer expires</step>
+    <step>Ensure correct PUK is used on retry</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorIncorrectPuk</exception>

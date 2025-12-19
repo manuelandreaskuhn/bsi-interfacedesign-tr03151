@@ -78,16 +78,11 @@
     <step number="9">Function processes result and returns to caller</step>
   </executionSequence>
   <recovery>
-    <step>Review error message - understand the storage full condition</step>
-    <step>Check storage status - query device to determine current storage utilization</step>
-    <step>Query available free space - determine how much free storage is available</step>
-    <step>Export transaction logs - export accumulated logs to external storage for archival</step>
-    <step>Delete exported logs - delete transaction logs from device after successful export</step>
-    <step>Verify free space restored - query device to confirm storage space is now available</step>
-    <step>Retry the operation - attempt the original operation again after freeing storage</step>
-    <step>Implement storage management - establish regular log export/deletion procedures</step>
-    <step>Consider storage upgrade - if storage fills regularly, upgrade device with larger storage capacity</step>
-    <step>Review storage planning - verify storage capacity is adequate for application workload</step>
+    <step>Check used and free memory using getUsedMemory and getFreeMemory</step>
+    <step>Export and delete old log messages to free space</step>
+    <step>Archive data externally to reduce device storage usage</step>
+    <step>Plan data management to prevent storage full conditions</step>
+    <step>If necessary, migrate to device with larger storage</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorFunctionFailed</exception>

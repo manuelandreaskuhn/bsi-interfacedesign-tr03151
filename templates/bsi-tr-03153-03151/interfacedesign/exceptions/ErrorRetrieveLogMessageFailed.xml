@@ -91,16 +91,11 @@
     <step number="14">Function returns successfully with log message data</step>
   </executionSequence>
   <recovery>
-    <step>Review error message - examine the error message to understand the retrieval failure reason</step>
-    <step>Verify device connectivity - ensure Secure Element is accessible and responsive</step>
-    <step>Check device state - query device to verify it is initialized and operational</step>
-    <step>Check device storage - query device to verify storage is accessible</step>
-    <step>Verify device communication - establish clean communication channel with Secure Element</step>
-    <step>Check log message existence - verify log messages exist using available query mechanisms</step>
-    <step>Retry the retrieval - attempt getLastLogMessage or getLastTransactionLogMessage again</step>
-    <step>Try alternative retrieval - if getLastLogMessage fails, try getLastTransactionLogMessage or vice versa</step>
-    <step>Query log history - if latest message inaccessible, attempt to query older messages</step>
-    <step>If persistent, contact manufacturer - repeated retrieval failures may indicate device or storage issue</step>
+    <step>Verify device is initialized</step>
+    <step>Confirm Secure Element is operational and functional</step>
+    <step>Check storage medium is connected and accessible</step>
+    <step>Retry operation after confirming device state</step>
+    <step>Check logging subsystem health using getDeviceHealth</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorReadingLogMessage</exception>

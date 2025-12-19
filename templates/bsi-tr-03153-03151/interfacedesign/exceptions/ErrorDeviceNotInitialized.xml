@@ -79,16 +79,11 @@
     </condition>
   </triggerConditions>
   <recovery>
-    <step>Verify the current device state and confirm that the initialize function has not been successfully executed by checking initialization state flags</step>
-    <step>If initialize has never been called, call the initialize function immediately to begin device initialization and wait for successful completion</step>
-    <step>If initialize was previously called and failed, review the exception or error details returned by that failed initialization attempt</step>
-    <step>If the initialize function failed with ErrorDeviceInitializationFailed, diagnose and resolve the underlying initialization issues (hardware errors, Secure Element problems, storage issues) before retrying</step>
-    <step>Retry the initialize function and verify successful completion before attempting any device-dependent operations</step>
-    <step>Implement robust error handling for the initialize function to ensure failures are properly detected and reported rather than masked or ignored</step>
-    <step>Restructure application flow to ensure initialize is called early in the application lifecycle, before any attempt to call device-dependent functions</step>
-    <step>Implement comprehensive state tracking in the application to manage the device lifecycle, with clear tracking of whether initialization has been completed</step>
-    <step>After successful initialization, guard all subsequent device function calls with checks to verify the device remains in initialized state in case of state corruption</step>
-    <step>If device state appears to be lost between initialization and use, reinitialize the device or diagnose whether underlying system issues (crashes, firmware problems) have caused state loss</step>
+    <step>Call initialize function before using device API</step>
+    <step>Wait for initialization to complete successfully</step>
+    <step>Verify initialize operation completed without errors</step>
+    <step>Ensure application initialization flow is correct</step>
+    <step>Check device logs for initialization errors</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorDeviceInitializationFailed</exception>

@@ -66,16 +66,10 @@
     <step number="12">Function returns successfully</step>
   </executionSequence>
   <recovery>
-    <step>Review error message - examine the error message to understand the storage failure reason</step>
-    <step>Check device state - query device to verify it is operational and responsive</step>
-    <step>Check storage status - query device storage for capacity and status information</step>
-    <step>Check storage connectivity - verify storage is accessible and operational</step>
-    <step>Verify data validity - ensure the data being stored is valid and well-formed</step>
-    <step>Check storage capacity - verify sufficient storage space is available</step>
-    <step>Retry the operation - attempt the data storage operation again</step>
-    <step>Device reset - power cycle the device to recover from potential storage issue</step>
-    <step>Check device logs - examine device logs for storage error details</step>
-    <step>If persistent, contact manufacturer - device may have storage hardware issues</step>
+    <step>Verify storage medium is accessible</step>
+    <step>Check available storage space</step>
+    <step>Ensure data to store is valid format</step>
+    <step>Retry storage operation after freeing space if needed</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorStorageMemoryFull</exception>

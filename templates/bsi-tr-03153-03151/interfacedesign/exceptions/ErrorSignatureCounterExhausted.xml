@@ -82,16 +82,10 @@
     <step number="11">Function returns successfully</step>
   </executionSequence>
   <recovery>
-    <step>Stop accepting new transactions immediately - signature counter memory is exhausted</step>
-    <step>Review error message - understand the signature counter exhaustion status</step>
-    <step>Query device state - determine current signature counter value and memory status</step>
-    <step>Export existing logs - export all transaction logs while device is still operational</step>
-    <step>Archive transaction history - backup all transaction records for audit purposes</step>
-    <step>Notify administrators - escalate the critical device issue to operations team</step>
-    <step>Plan device replacement - schedule replacement of the device</step>
-    <step>Prepare replacement device - provision new device with same configuration</step>
-    <step>Migrate transactions - transfer any in-flight transactions to replacement device if needed</step>
-    <step>Decommission device - safely decommission the exhausted device according to policy</step>
+    <step>Check current counter using getCurrentLoggingSignatureCounters</step>
+    <step>Plan for counter exhaustion - device cannot log further</step>
+    <step>If counter exhausted, device logging capacity reached</step>
+    <step>Contact device vendor about counter reset options</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorFunctionFailed</exception>

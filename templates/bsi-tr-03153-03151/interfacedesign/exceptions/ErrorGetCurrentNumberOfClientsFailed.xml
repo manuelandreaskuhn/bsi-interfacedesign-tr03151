@@ -60,16 +60,10 @@
     <step number="9" name="Device State Verification">The device and client registry remain in their current state with no modifications or data extraction having occurred</step>
   </executionSequence>
   <recovery>
-    <step>Verify that the device is functioning properly and is not in a failed, error, or restricted state</step>
-    <step>Ensure the device is properly initialized before attempting to retrieve current client count</step>
-    <step>Verify the device's client registry is not corrupted or inaccessible using device diagnostics</step>
-    <step>Check the communication channel between the application and device for any errors, interference, or disconnection issues</step>
-    <step>Review device diagnostics to verify that client management and registry functionality is operational</step>
-    <step>Verify that currently registered clients can still communicate with the device by testing with existing client operations</step>
-    <step>Attempt to register or deregister a test client to verify that client management operations still function correctly</step>
-    <step>Check if client registry consistency can be verified through alternative queries (getMaxNumberOfClients, getRegisteredClients)</step>
-    <step>Attempt the getCurrentNumberOfClients function again after verifying device status to determine if the failure was transient</step>
-    <step>Implement comprehensive logging of this failure to understand if client counting is consistently unavailable or experiencing intermittent issues</step>
+    <step>Verify device is initialized</step>
+    <step>Confirm Secure Element is operational</step>
+    <step>Retry client count query after confirming device state</step>
+    <step>Fall back to application-level client tracking if persistent</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorFunctionFailed</exception>

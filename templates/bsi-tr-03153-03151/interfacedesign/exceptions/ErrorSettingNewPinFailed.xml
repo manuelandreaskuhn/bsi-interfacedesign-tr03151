@@ -69,16 +69,10 @@
     <step number="13">Function returns successfully - PIN unblocked with new PIN set</step>
   </executionSequence>
   <recovery>
-    <step>Review error message - examine the error message to understand why PIN setting failed</step>
-    <step>Verify new PIN format - ensure the new PIN meets security policy requirements</step>
-    <step>Check new PIN length - verify new PIN is not too short or exceeds maximum length</step>
-    <step>Check new PIN characters - verify new PIN uses only allowed characters</step>
-    <step>Check device state - query device to verify it is operational</step>
-    <step>Check device connectivity - verify clean communication with Secure Element</step>
-    <step>Verify PUK is correct - ensure PUK provided is still valid (not exhausted)</step>
-    <step>Retry with valid PIN - attempt unblockPin again with a PIN that meets all requirements</step>
-    <step>Check security policy - verify device security policy allows PIN changes</step>
-    <step>If persistent, contact manufacturer - device may have configuration or storage issues</step>
+    <step>Verify new PIN meets format requirements</step>
+    <step>Confirm Secure Element is operational</step>
+    <step>Retry PIN setting after confirming preconditions</step>
+    <step>Contact device support if setting unavailable</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorUnblockingPinFailed</exception>

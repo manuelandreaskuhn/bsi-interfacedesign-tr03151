@@ -60,16 +60,10 @@
     <step number="10">Function returns valid total memory capacity value to caller</step>
   </executionSequence>
   <recovery>
-    <step>Verify device operational status - confirm device is initialized, responding to other operations, and not in an error state</step>
-    <step>Verify Secure Element accessibility - confirm device can communicate with Secure Element through diagnostic commands</step>
-    <step>Check device initialization - ensure device has been properly initialized with initDevice before attempting getTotalMemory</step>
-    <step>Retry getTotalMemory operation - attempt the function call again as the failure may be transient</step>
-    <step>Review device diagnostics for resource management system health - query device for diagnostic information about Secure Element resource management subsystem status</step>
-    <step>Verify memory information integrity through device manufacturer diagnostics - check if memory capacity metadata is accessible and uncorrupted</step>
-    <step>Test other resource queries - attempt retrieving free memory to verify general resource management access capability</step>
-    <step>Implement comprehensive error logging and monitoring - log this failure consistently to identify patterns (transient vs. persistent, correlation with memory operations)</step>
-    <step>If failure is persistent, attempt device firmware update if available - may resolve resource management subsystem errors or update capacity information</step>
-    <step>If failure persists and suspected hardware issue, contact device manufacturer or consider device replacement - repeated memory capacity retrieval failures indicate serious hardware problems</step>
+    <step>Verify device is initialized</step>
+    <step>Retry total memory query operation</step>
+    <step>Check storage medium status</step>
+    <step>Review device memory specifications</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorFunctionFailed</exception>

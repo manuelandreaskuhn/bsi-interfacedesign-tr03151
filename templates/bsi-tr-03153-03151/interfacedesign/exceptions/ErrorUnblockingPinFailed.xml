@@ -69,17 +69,10 @@
     <step number="11">Function returns to caller indicating PIN successfully unblocked</step>
   </executionSequence>
   <recovery>
-    <step>Review error message - understand PIN unblock failed for specific reason</step>
-    <step>Check PUK - verify PUK provided is correct</step>
-    <step>Verify new PIN format - if new PIN provided, verify format meets requirements</step>
-    <step>Check device state - verify device is initialized and operational</step>
-    <step>Check PIN lock status - confirm PIN is actually locked (not operational)</step>
-    <step>Retry unblock - attempt unblockPin again with verified credentials</step>
-    <step>Check hardware - if repeated failures, verify device hardware is operational</step>
-    <step>Run diagnostics - execute device diagnostics to verify PIN storage health</step>
-    <step>Contact support - if unblock repeatedly fails, contact device support</step>
-    <step>Attempt device reset - if device state issue, may try graceful reset</step>
-    <step>Document failure - record failure for compliance and audit purposes</step>
+    <step>Verify correct PUK is provided</step>
+    <step>Confirm Secure Element is operational</step>
+    <step>Check new PIN meets format requirements</step>
+    <step>Retry unblock operation after confirming preconditions</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorPinBlocked</exception>

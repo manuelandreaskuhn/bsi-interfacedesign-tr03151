@@ -63,16 +63,10 @@
     <step number="9">Function returns successfully with user authenticated</step>
   </executionSequence>
   <recovery>
-    <step>Confirm PIN is blocked - verify with ErrorPinBlocked exception message that PIN is in blocked state</step>
-    <step>Obtain PUK - retrieve the user's PIN Unblock Key (PUK) from secure storage or management system</step>
-    <step>Call unblockPin function - invoke unblockPin with the user ID and correct PUK to unblock the PIN</step>
-    <step>Set new PIN - after successful unblock, set a new PIN via appropriate function or management interface</step>
-    <step>Notify user - inform the user that their PIN was blocked and must be reset</step>
-    <step>Verify recovery - attempt authentication with the new PIN to verify the PIN is now unblocked</step>
-    <step>Check security logs - review device logs to understand why the PIN was blocked (user mistake vs. attack)</step>
-    <step>Implement rate limiting - consider implementing rate limiting or backoff strategies to prevent PIN blocking from user mistakes</step>
-    <step>If PUK is unknown - contact device administrator or manufacturer for administrative PIN reset procedures</step>
-    <step>Investigate failed attempts - if blocked due to attack, investigate the source of failed authentication attempts</step>
+    <step>PIN is blocked after failed authentication attempts</step>
+    <step>Use unblockPin with correct PUK to unblock PIN</step>
+    <step>Wait for any blocking timeout if PUK also blocked</step>
+    <step>Reset PIN to new value during unblocking</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorIncorrectPin</exception>

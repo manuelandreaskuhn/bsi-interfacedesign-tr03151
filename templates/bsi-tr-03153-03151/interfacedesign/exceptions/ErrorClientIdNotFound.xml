@@ -53,16 +53,11 @@
     <step number="9">Function returns export data containing filtered transactions to the user</step>
   </executionSequence>
   <recovery>
-    <step>Verify that the clientId is spelled correctly and matches the actual client identifier</step>
-    <step>Check if the clientId has ever performed any transaction operations using getTransactionState or similar functions</step>
-    <step>Query getRegisteredClients to verify that the clientId exists in the system and determine which clients have data</step>
-    <step>Review the list of registered clients to identify which clients have available transaction log data for export</step>
-    <step>If exporting data for a specific client, verify that transactions were actually started and finished for that client</step>
-    <step>Try exporting without the clientId filter to see if other clients have data, confirming that storage is working correctly</step>
-    <step>If the client has no transaction history, acknowledge that no data is available and consider whether this is expected behavior</step>
-    <step>Adjust filter parameters (date range, transaction numbers) to broaden the export criteria and match available data</step>
-    <step>Use alternative export functions (e.g., exportLogMessages) to retrieve logging data if transaction export is not applicable</step>
-    <step>Document which clients have available transaction data for future export operations</step>
+    <step>Verify the clientId actually exists using getRegisteredClients</step>
+    <step>Confirm clientId spelling and format matches registered client</step>
+    <step>Check if client was already deregistered and no longer available</step>
+    <step>Use valid registered clientId for export operations</step>
+    <step>Review data selection criteria before export</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorNoDataAvailable</exception>

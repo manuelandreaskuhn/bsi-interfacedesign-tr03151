@@ -61,16 +61,10 @@
     <step number="10" name="Device State Verification">The Secure Element and serial number storage remain in their current state with no modifications or data extraction having occurred</step>
   </executionSequence>
   <recovery>
-    <step>Verify that the Secure Element is functioning properly and is not in a failed, error, or restricted state</step>
-    <step>Ensure the Secure Element contains valid serial numbers that can be exported by checking Secure Element status and serial number storage</step>
-    <step>Check the communication channel between the device and Secure Element for any errors, interference, or disconnection issues</step>
-    <step>Review Secure Element diagnostics to verify that serial number storage and retrieval functionality is operational and not experiencing errors</step>
-    <step>Verify that the device has not exceeded any serial number storage limits, quota restrictions, or resource limits that might prevent serial number retrieval</step>
-    <step>Check Secure Element logs or diagnostic information to identify the specific error that prevented serial number retrieval</step>
-    <step>Attempt the exportSerialNumbers function again after verifying Secure Element connectivity, status, and serial number availability</step>
-    <step>If serial number corruption is suspected, verify the integrity of serial number data using Secure Element diagnostics or manufacturer tools</step>
-    <step>If repeated attempts fail consistently, consult the device and Secure Element manufacturer's documentation for serial number management and export troubleshooting</step>
-    <step>Implement comprehensive logging of this failure for forensic analysis, audit trail preservation, and understanding when serial number export functionality became unavailable</step>
+    <step>Verify device is initialized</step>
+    <step>Confirm storage medium is connected and accessible</step>
+    <step>Check output parameter is valid</step>
+    <step>Retry serial number export after confirming preconditions</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorFunctionFailed</exception>

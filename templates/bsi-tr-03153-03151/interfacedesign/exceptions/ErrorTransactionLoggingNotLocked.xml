@@ -62,16 +62,10 @@
     <step number="10">Function returns to caller indicating logging successfully unlocked</step>
   </executionSequence>
   <recovery>
-    <step>Review error message - understand logging is not currently locked</step>
-    <step>Check logging status - verify logging lock status through device diagnostics</step>
-    <step>Confirm logging unlocked - confirm logging is operational and transaction-capable</step>
-    <step>Verify lock status query - use device status function to check lock state</step>
-    <step>Review lock history - check if lock was already cleared or auto-expired</step>
-    <step>Check device restart history - verify if device restart cleared temporary lock</step>
-    <step>Cancel unlock operation - recognize unlock not necessary</step>
-    <step>Proceed with transactions - continue with normal operations if transactions needed</step>
-    <step>Verify logging operational - confirm logging accepts transaction records</step>
-    <step>Update operational procedure - correct procedure to check lock status before unlock</step>
+    <step>Transaction logging is already unlocked</step>
+    <step>Locking may not be needed if already unlocked</step>
+    <step>Verify intended lock state</step>
+    <step>Check transaction logging configuration</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorTransactionLoggingLocked</exception>

@@ -62,16 +62,10 @@
     <step number="10">Function returns successfully with PIN unblocked and counter reset</step>
   </executionSequence>
   <recovery>
-    <step>Verify PIN unblocking succeeded - confirm the PIN is actually unblocked and can be used</step>
-    <step>Check device state - query device to determine if the retry counter is still at old value</step>
-    <step>Manually reset retry counter - if possible, call a retry counter reset function or administrative command</step>
-    <step>Query current retry counter value - determine what value the counter is at</step>
-    <step>Check device storage - verify device storage is functioning and accessible</step>
-    <step>Check device resources - verify device has sufficient memory and processing capacity</step>
-    <step>Verify device connectivity - ensure Secure Element is accessible and responsive</step>
-    <step>Retry the counter reset - attempt to reset the counter via administrative command or function</step>
-    <step>Monitor retry counter - watch for unintended re-blocking if the counter still shows high failed attempts</step>
-    <step>If persistent, contact device manufacturer - repeated counter reset failures may indicate device issue</step>
+    <step>Verify PUK verification succeeded</step>
+    <step>Confirm Secure Element is operational</step>
+    <step>Retry retry counter reset operation</step>
+    <step>Contact device support if reset unavailable</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorUnblockPinFailed</exception>

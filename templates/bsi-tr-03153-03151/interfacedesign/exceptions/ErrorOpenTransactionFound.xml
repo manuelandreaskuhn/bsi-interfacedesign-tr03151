@@ -63,16 +63,10 @@
     <step number="12">Function returns successfully with operation completed</step>
   </executionSequence>
   <recovery>
-    <step>Identify open transactions - query the device to determine how many transactions are currently open</step>
-    <step>List open transaction IDs - retrieve the IDs of all currently open transactions</step>
-    <step>Review transaction context - determine the current state and processing status of each open transaction</step>
-    <step>Complete pending operations - finish processing any incomplete operations associated with open transactions</step>
-    <step>Call finishTransaction for each open transaction - systematically close each open transaction</step>
-    <step>Verify all transactions closed - query the device again to confirm all transactions are now in closed state</step>
-    <step>Retry the operation - once all transactions are closed, retry the disableSecureElement or updateDevice call</step>
-    <step>Handle cascading dependencies - ensure that closing transactions does not trigger other exceptions or state issues</step>
-    <step>Implement cleanup procedures - design applications to ensure transactions are always properly closed, even in error paths</step>
-    <step>If transactions won't close, investigate - determine if transactions are stuck or if there's an underlying issue preventing their completion</step>
+    <step>Check open transactions using getOpenTransactions</step>
+    <step>Finish all open transactions using finishTransaction</step>
+    <step>Retry the operation after all transactions complete</step>
+    <step>Review transaction lifecycle in application</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorDisableSecureElementFailed</exception>

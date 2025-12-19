@@ -61,16 +61,10 @@
     <step number="10">Function returns log messages to caller</step>
   </executionSequence>
   <recovery>
-    <step>Verify logging is enabled - call appropriate status functions to confirm transaction logging is enabled on the device</step>
-    <step>Check logging configuration - determine what events are configured to be logged and what events have actually occurred</step>
-    <step>Confirm device operation - verify that operations have been performed on the device that would generate logged events</step>
-    <step>Check for recent deletions - determine if deleteLogMessages or similar operations recently cleared the log storage</step>
-    <step>Verify logging initialization - ensure the transaction logging subsystem was properly initialized on device startup</step>
-    <step>Enable logging if disabled - if transaction logging is disabled, enable it to begin capturing events</step>
-    <step>Perform test operations - execute operations on the device (transactions, etc.) to generate new log messages</step>
-    <step>Check log storage capacity - verify that the logging storage has sufficient capacity to hold messages</step>
-    <step>Wait for events - if logging is enabled, wait for events to occur that would generate log messages</step>
-    <step>If persistent, review device logging setup - examine the device's logging configuration to understand why no messages are being generated</step>
+    <step>Verify log messages exist using appropriate query</step>
+    <step>Check if device has stored any log messages</step>
+    <step>Perform operations that create log messages first</step>
+    <step>Ensure logging is enabled before creating messages</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorDeleteLogMessagesFailed</exception>

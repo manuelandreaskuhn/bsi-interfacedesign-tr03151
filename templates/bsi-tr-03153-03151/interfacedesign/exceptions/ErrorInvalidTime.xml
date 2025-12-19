@@ -61,16 +61,10 @@
     <step number="10">Function returns to caller with updated time</step>
   </executionSequence>
   <recovery>
-    <step>Verify time parameter ranges - review the TR-03151-1 specification for valid ranges for each time parameter (year, month, day, hour, minute, second)</step>
-    <step>Check year parameter - verify the year is within the supported range for the device (consult device specifications for minimum and maximum year)</step>
-    <step>Validate month parameter - ensure month is between 1 and 12 (inclusive)</step>
-    <step>Validate day parameter - ensure day is valid for the specified month and year (e.g., no February 30, no April 31)</step>
-    <step>Check for leap year - verify that February 29 is only used in leap years (divisible by 4, except century years unless divisible by 400)</step>
-    <step>Validate time-of-day parameters - ensure hour is 0-23, minute is 0-59, second is 0-59</step>
-    <step>Correct invalid parameters - modify time parameters to represent a valid date and time</step>
-    <step>Retry updateTime with corrected parameters - re-attempt the time update with valid time values</step>
-    <step>Implement input validation in application - add client-side validation to check time parameter ranges before calling updateTime</step>
-    <step>Use system time functions - consider using operating system or standard library time functions that validate and normalize time automatically</step>
+    <step>Verify time value format matches specification requirements</step>
+    <step>Ensure time value is within valid range</step>
+    <step>Correct time to proper format and range</step>
+    <step>Retry updateTime with valid time value</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorSetCurrentSeTimeFailed</exception>

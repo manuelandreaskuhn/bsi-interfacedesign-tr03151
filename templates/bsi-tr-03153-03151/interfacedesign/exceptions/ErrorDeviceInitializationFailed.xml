@@ -46,16 +46,11 @@
     </condition>
   </triggerConditions>
   <recovery>
-    <step>Verify that the device hardware is in a functional and accessible state through physical inspection and connection verification</step>
-    <step>Check that all device components (Secure Element, storage, cryptographic processor, communication interfaces) are properly connected, powered, and responsive</step>
-    <step>Verify that the device has not already been initialized by checking for ErrorDeviceIsInitialized or attempting to call a device function that requires initialization</step>
-    <step>Review device firmware version and check for available firmware updates that may address initialization issues</step>
-    <step>Run device self-test or diagnostic functions if available to identify which specific initialization component or step failed</step>
-    <step>Verify that the Secure Element is accessible, responsive, and in a proper firmware state suitable for initialization and operation</step>
-    <step>Check that internal device storage is accessible and not corrupted. Run storage diagnostics if the device supports them.</step>
-    <step>Ensure that cryptographic key files are present, accessible, and not corrupted. Verify key store integrity if available through device API.</step>
-    <step>Retry the initialize operation after a brief delay (typically 500-2000ms) to allow hardware stabilization and recovery from transient failures</step>
-    <step>If repeated failures occur on the same device instance, perform a device factory reset or power cycle to clear transient state and retry initialization</step>
+    <step>Check device self-test status using selfTest</step>
+    <step>Verify Secure Element is functional and connected</step>
+    <step>Confirm device storage is accessible and not full</step>
+    <step>Retry initialization after confirming prerequisites</step>
+    <step>Contact device vendor if initialization persistently fails</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorDeviceIsInitialized</exception>

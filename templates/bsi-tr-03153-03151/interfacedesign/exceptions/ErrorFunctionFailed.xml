@@ -101,16 +101,11 @@
     <step number="10" name="Function Exit">Function execution is terminated and control returns to caller's exception handler</step>
   </executionSequence>
   <recovery>
-    <step>Carefully review the exception message and complete stack trace to identify clues about the critical failure</step>
-    <step>Check system logs, device diagnostics, and error codes to identify any underlying hardware or software errors</step>
-    <step>Verify device connectivity, communication channels, and network status are functioning properly</step>
-    <step>Attempt to diagnose the specific cause of failure by examining device state, resource availability, and status information</step>
-    <step>If the error is transient (temporary communication failure or resource constraint), attempt to retry the operation after a brief delay with exponential backoff</step>
-    <step>Verify that the device is not in an error state, experiencing resource exhaustion (memory, processing), or communication failures</step>
-    <step>Check available firmware or software updates that may address the underlying critical error condition</step>
-    <step>If the error persists across multiple attempts, consult the device manufacturer's documentation, error code reference materials, and troubleshooting guides</step>
-    <step>Implement comprehensive logging of all ErrorFunctionFailed exceptions including timestamps, function names, device state, and context to identify patterns or recurring failure conditions</step>
-    <step>If standard troubleshooting does not resolve the issue, contact device support with detailed logs, reproduction steps, device configuration, and diagnostic information</step>
+    <step>Examine exception message for specific failure reason</step>
+    <step>Verify device is in valid state (initialized, not blocked)</step>
+    <step>Check function parameters for validity</step>
+    <step>Retry operation after confirming preconditions</step>
+    <step>Contact device support with error details if failure persists</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorDeviceNotInitialized</exception>

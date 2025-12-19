@@ -46,16 +46,11 @@
     </condition>
   </triggerConditions>
   <recovery>
-    <step>Verify that the device is in a consistent and operable state using device health queries or diagnostic functions</step>
-    <step>Check that the specified clientId is currently registered in the device by querying getCurrentNumberOfClients or getRegisteredClients</step>
-    <step>Verify that no open transactions are associated with the client being deregistered by checking transaction state and closing any incomplete transactions</step>
-    <step>Ensure that the device storage and internal state management systems are functioning properly by running storage diagnostics or health checks</step>
-    <step>Query device logs or audit information to identify the specific point at which deregistration failed and any underlying system errors</step>
-    <step>If blocking transactions exist, close all transactions initiated by the client using finishTransaction before reattempting deregistration</step>
-    <step>Retry the deregisterClient operation with the same clientId after a brief delay (typically 100-500ms) to allow the client management subsystem to recover</step>
-    <step>If retry fails with the same clientId, attempt to deregister alternative clients to verify that the client management system is functional</step>
-    <step>If deregistration fails consistently for a specific client while other clients deregister successfully, the client's internal state may be corrupted and client-side cleanup may be necessary</step>
-    <step>If repeated failures occur across all clients, reinitialize the device or client management subsystem to restore consistency of the client registry</step>
+    <step>Verify client exists using getRegisteredClients</step>
+    <step>Ensure no open transactions exist for this client before deregistration</step>
+    <step>Retry deregistration after cleaning up client transactions</step>
+    <step>Check device state and storage conditions</step>
+    <step>Verify user has authorization to deregister clients</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorClientNotRegistered</exception>

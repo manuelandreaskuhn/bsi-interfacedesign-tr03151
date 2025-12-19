@@ -63,16 +63,10 @@
     <step number="10">Function returns result to caller</step>
   </executionSequence>
   <recovery>
-    <step>Review error message - understand User-ID is not recognized</step>
-    <step>Verify User-ID - confirm User-ID provided is correct</step>
-    <step>Check format - verify User-ID format matches expected pattern</step>
-    <step>Query registered users - determine which User-IDs are registered</step>
-    <step>Confirm user exists - verify user should be registered</step>
-    <step>Register user - if user not registered, complete user registration first</step>
-    <step>Verify registration - confirm user is now in device registry</step>
-    <step>Retry operation - attempt original operation with correct User-ID</step>
-    <step>Check user status - verify user is active (not deleted/deregistered)</step>
-    <step>Contact administrator - if user registration needed, contact admin</step>
+    <step>Verify userId exists in device user registry</step>
+    <step>Check user management configuration</step>
+    <step>Confirm userId spelling and format</step>
+    <step>Use valid managed userId for authentication</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorParameterSyntax</exception>

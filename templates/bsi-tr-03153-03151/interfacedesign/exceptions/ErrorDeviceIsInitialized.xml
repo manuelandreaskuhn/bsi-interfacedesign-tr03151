@@ -42,16 +42,9 @@
     </condition>
   </triggerConditions>
   <recovery>
-    <step>Verify that the device state is correctly tracked - confirm the device is indeed in an initialized state and operational for API operations</step>
-    <step>Check if the first initialize invocation completed successfully by verifying that device functions are callable and device is responsive</step>
-    <step>Review the application's state management logic to understand why a duplicate initialization was attempted and implement tracking to prevent recurrence</step>
-    <step>Implement initialization guard checks that verify whether initialize has already been called before attempting to call it again</step>
-    <step>If re-initialization is required due to state corruption or device errors, first verify the error condition separately using getDeviceHealth or device diagnostics</step>
-    <step>If the device truly needs re-initialization, explicit device reset or deinitialization may be required (if supported) before retrying initialization</step>
-    <step>In multi-threaded applications, implement synchronization mechanisms (mutex, semaphore, or atomic flags) to prevent concurrent initialization attempts</step>
-    <step>Ensure that error handling for the first initialize invocation was correct and did not inadvertently fail or return without completing initialization</step>
-    <step>Verify all initialization completion conditions and log the initialization status for debugging and state verification</step>
-    <step>Consider implementing a device state query function that verifies initialization status before attempting any initialization operations</step>
+    <step>Device is already initialized - proceed with normal operations</step>
+    <step>No reinitialization needed or permitted</step>
+    <step>Reset device if full reinitialization required</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorDeviceInitializationFailed</exception>

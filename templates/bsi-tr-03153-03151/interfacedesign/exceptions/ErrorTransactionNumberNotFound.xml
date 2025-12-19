@@ -65,17 +65,10 @@
     <step number="10">Function returns transaction data to caller</step>
   </executionSequence>
   <recovery>
-    <step>Review error message - understand transaction number not found</step>
-    <step>Verify transaction number - confirm transaction number provided is correct</step>
-    <step>Check format - verify transaction number format matches expected pattern</step>
-    <step>Review transaction history - confirm transaction was executed and exists</step>
-    <step>Check deletion status - verify transaction hasn't been deleted or archived</step>
-    <step>Query all transactions - attempt query with less restrictive filters to find transaction</step>
-    <step>Check transaction counter - review current transaction counter state</step>
-    <step>Verify device - confirm query on correct device (not different device's number)</step>
-    <step>Export with different filters - attempt export with date range or status filters instead</step>
-    <step>List available transactions - query available transaction numbers to identify correct number</step>
-    <step>Retry query - attempt transaction query again with corrected transaction number</step>
+    <step>Verify transaction number is valid and exists</step>
+    <step>Check finished transactions or transaction history</step>
+    <step>Ensure transaction number matches tracked transaction</step>
+    <step>Use getOpenTransactions to verify active transactions</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorNoDataAvailable</exception>

@@ -65,16 +65,10 @@
     <step number="13">Function returns to caller indicating messages deleted</step>
   </executionSequence>
   <recovery>
-    <step>Review error message - understand messages cannot be deleted due to unexported data</step>
-    <step>Check export status - verify which messages have not been exported</step>
-    <step>Query unexported messages - use exportLogMessages query to identify unexported log data</step>
-    <step>Review export history - check when last export occurred and what was included</step>
-    <step>Export all messages - call exportLogMessages with broad parameters to export all unexported data</step>
-    <step>Archive exported data - store exported log messages in archival system</step>
-    <step>Verify export - confirm all messages have been exported and archived</step>
-    <step>Retry deletion - attempt deleteLogMessages again after export completes</step>
-    <step>Monitor storage - track storage capacity and implement proactive export schedule</step>
-    <step>Verify deletion - confirm messages were deleted and storage reclaimed</step>
+    <step>Export all log messages using exportLogMessages</step>
+    <step>Verify all messages are exported before deletion</step>
+    <step>Check export completion status</step>
+    <step>Retry deletion after confirming all exports complete</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorStorageMemoryFull</exception>

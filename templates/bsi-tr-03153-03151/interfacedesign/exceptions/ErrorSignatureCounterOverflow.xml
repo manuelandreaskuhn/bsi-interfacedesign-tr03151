@@ -82,16 +82,10 @@
     <step number="13">Function returns successfully</step>
   </executionSequence>
   <recovery>
-    <step>Stop accepting new transactions immediately - counter is at maximum and cannot increment</step>
-    <step>Review error message - understand the signature counter overflow status</step>
-    <step>Query device state - determine current signature counter value and maximum</step>
-    <step>Export all transaction logs - export complete transaction history while device is operational</step>
-    <step>Archive transaction history - backup all records for compliance and audit purposes</step>
-    <step>Calculate device lifetime - determine how long device has been in operation and transaction volume</step>
-    <step>Notify administrators and management - escalate critical situation immediately</step>
-    <step>Investigate counter design - verify counter size is appropriate for system requirements</step>
-    <step>Plan device replacement - schedule immediate replacement of the device</step>
-    <step>Decommission device - safely decommission the device according to policy</step>
+    <step>Check current counter value approaching maximum</step>
+    <step>Plan for counter overflow - stop logging operations</step>
+    <step>Implement overflow mitigation in application</step>
+    <step>Monitor counter approaching maximum threshold</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorSignatureCounterExhausted</exception>

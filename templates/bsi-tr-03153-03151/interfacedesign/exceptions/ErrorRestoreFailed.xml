@@ -71,16 +71,10 @@
     <step number="13">Function returns successfully with logs restored</step>
   </executionSequence>
   <recovery>
-    <step>Review error message - examine the error message to understand the restore failure reason</step>
-    <step>Verify backup data integrity - check that backup data is not corrupted and has valid checksums</step>
-    <step>Verify backup data format - ensure backup data is in correct format for the device and version</step>
-    <step>Check device compatibility - verify the device is compatible with the backup data format</step>
-    <step>Check device storage - verify the device has sufficient storage capacity for the restore</step>
-    <step>Check device state - query device to verify it is operational and not in error state</step>
-    <step>Verify device connectivity - ensure Secure Element is accessible and responsive</step>
-    <step>Clean device storage if needed - delete unnecessary logs or data to free storage capacity</step>
-    <step>Retry the restore - attempt restoreLogsFromBackup again with valid backup data</step>
-    <step>If persistent, contact manufacturer - repeated restore failures may indicate device or backup compatibility issue</step>
+    <step>Verify backup source is accessible and valid</step>
+    <step>Confirm device storage has sufficient space</step>
+    <step>Check backup data format compatibility</step>
+    <step>Retry restoration after confirming prerequisites</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorExportLoggingCertificateFailed</exception>

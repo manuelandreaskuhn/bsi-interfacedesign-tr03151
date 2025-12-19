@@ -68,17 +68,10 @@
     <step number="12">Function returns to caller indicating logging successfully unlocked</step>
   </executionSequence>
   <recovery>
-    <step>Review error message - understand logging unlock failed for specific reason</step>
-    <step>Check authorization - verify caller has authorization for unlock</step>
-    <step>Verify credentials - if unlock password/credential required, verify provided</step>
-    <step>Check device state - verify device is initialized and operational</step>
-    <step>Check lock status - verify logging is actually locked (not already unlocked)</step>
-    <step>Retry unlock - attempt unlockTransactionLogging again with verified authorization</step>
-    <step>Check hardware - if repeated failures, verify device hardware is operational</step>
-    <step>Run diagnostics - execute device diagnostics to verify logging control health</step>
-    <step>Contact support - if unlock repeatedly fails, contact device support</step>
-    <step>Check secure element - verify Secure Element communication is functional</step>
-    <step>Attempt device reset - if device state issue, may try graceful reset</step>
+    <step>Verify Secure Element is operational</step>
+    <step>Confirm transaction logging is currently locked</step>
+    <step>Retry unlock operation after confirming preconditions</step>
+    <step>Check device status if unlock unavailable</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorTransactionLoggingNotLocked</exception>

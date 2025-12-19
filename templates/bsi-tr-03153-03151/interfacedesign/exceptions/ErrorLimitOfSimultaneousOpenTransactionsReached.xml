@@ -60,16 +60,11 @@
     <step number="10">Function returns transaction ID to caller with transaction successfully created</step>
   </executionSequence>
   <recovery>
-    <step>Determine device transaction capacity - query device or consult specifications for the maximum number of simultaneously open transactions</step>
-    <step>Check current open transaction count - call getOpenTransactions or getCurrentTransactionCounter to determine how many transactions are currently active</step>
-    <step>Identify incomplete transactions - review which transactions are still open and determine if they should be completed or if they are stalled</step>
-    <step>Complete or close existing transactions - call finishTransaction on any completed transactions to reduce the open transaction count</step>
-    <step>Monitor transaction state - implement monitoring to identify transactions that remain open longer than expected</step>
-    <step>Implement transaction queue - design the application to queue transaction requests and submit them as capacity becomes available</step>
-    <step>Implement retry logic with backoff - add retry logic that waits for transaction capacity to become available before retrying startTransaction</step>
-    <step>Implement transaction pooling - manage a pool of transactions to ensure fair allocation of limited capacity across concurrent operations</step>
-    <step>Review transaction lifecycle - ensure the application properly closes all transactions through finishTransaction, even in error paths</step>
-    <step>If persistent, contact device manufacturer - repeated capacity constraint issues may indicate a need for device reconfiguration or feature upgrade</step>
+    <step>Check open transactions using getOpenTransactions</step>
+    <step>Finish or cancel open transactions to free capacity</step>
+    <step>Wait for transactions to complete</step>
+    <step>Plan transaction concurrency within device limits</step>
+    <step>If necessary, migrate to device with higher transaction capacity</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorGetMaxNumberTransactionsFailed</exception>

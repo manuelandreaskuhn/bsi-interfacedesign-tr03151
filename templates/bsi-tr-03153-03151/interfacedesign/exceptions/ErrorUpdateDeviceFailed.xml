@@ -74,18 +74,10 @@
     <step number="12">Function returns to caller indicating device update completed</step>
   </executionSequence>
   <recovery>
-    <step>Review error message - understand reason for update failure</step>
-    <step>Check device state - verify device is in operational state after failed update</step>
-    <step>Verify update package - confirm update data is not corrupted</step>
-    <step>Validate update compatibility - verify update is compatible with device</step>
-    <step>Check device type - confirm update intended for this device model</step>
-    <step>Verify digital signature - confirm update package has valid signature</step>
-    <step>Check hardware - if hardware error indicated, verify device hardware</step>
-    <step>Retry update - attempt updateDevice again with verified package</step>
-    <step>Run diagnostics - execute device diagnostics to assess health after failure</step>
-    <step>Attempt rollback - if available, rollback to previous stable version</step>
-    <step>Contact support - if update fails repeatedly, contact device support</step>
-    <step>Document failure - record update failure for compliance and analysis</step>
+    <step>Verify device is initialized and ready</step>
+    <step>Ensure no open transactions exist</step>
+    <step>Check device update package validity</step>
+    <step>Retry update after confirming preconditions</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorDeviceInitializationFailed</exception>

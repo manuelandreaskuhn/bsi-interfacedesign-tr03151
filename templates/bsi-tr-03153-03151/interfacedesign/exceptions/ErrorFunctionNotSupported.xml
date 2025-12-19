@@ -101,16 +101,11 @@
     <step number="10" name="Device State Verification">Device state remains unchanged. The function rejection happened at the entry point before any processing or state modifications.</step>
   </executionSequence>
   <recovery>
-    <step>Review the exception message carefully to confirm which optional function is not supported on the device</step>
-    <step>Check the device specification, documentation, and capability lists to verify which optional functions are implemented on this device</step>
-    <step>Use device capability discovery functions (if available) to query supported features and optional function lists</step>
-    <step>Query the device for supported variants, optional function lists, and device capabilities to plan implementation around unavailable features</step>
-    <step>Implement alternative functionality or workarounds in the application that do not depend on the unsupported optional function</step>
-    <step>Verify that the application's core requirements do not depend critically on this specific optional function</step>
-    <step>Check the device manufacturer's documentation to determine if a firmware update is available that includes support for the required optional function</step>
-    <step>If a suitable firmware update exists, plan and execute the firmware upgrade to enable the required optional function</step>
-    <step>Design application logic to gracefully degrade functionality and continue operation when optional functions are unavailable</step>
-    <step>Document in application configuration and user documentation which device models, firmware versions, and variants support which optional functions</step>
+    <step>Verify device supports required function</step>
+    <step>Check device capabilities and variant information</step>
+    <step>Implement alternative approach using supported functions</step>
+    <step>Upgrade device firmware if needed</step>
+    <step>Contact vendor about function availability</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorFunctionFailed</exception>

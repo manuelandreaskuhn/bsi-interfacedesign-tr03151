@@ -92,16 +92,10 @@
     <step number="8">Function processes result and returns to caller</step>
   </executionSequence>
   <recovery>
-    <step>Stop all operations immediately - storage is not accessible and device is unusable</step>
-    <step>Review error message - understand which storage issue is indicated</step>
-    <step>Check physical connections - inspect all cables and connectors to storage</step>
-    <step>Check storage power supply - verify storage subsystem has stable power</step>
-    <step>Check storage presence - verify storage medium is physically present and properly seated</step>
-    <step>Check device status - query device to confirm storage disconnection is detected</step>
-    <step>Reseat connections - power cycle device and reseat all storage connections</step>
-    <step>Verify storage restoration - query device to confirm storage is now accessible</step>
-    <step>If still unavailable, check device logs - examine device logs for storage error details</step>
-    <step>If persistent, contact manufacturer - storage hardware may require repair or replacement</step>
+    <step>Verify storage medium is connected and accessible</step>
+    <step>Power cycle device if connection issue is temporary</step>
+    <step>Check storage hardware status</step>
+    <step>Contact device vendor if storage remains disconnected</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorDeviceInitializationFailed</exception>

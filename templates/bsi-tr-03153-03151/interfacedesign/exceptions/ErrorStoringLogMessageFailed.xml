@@ -83,16 +83,10 @@
     <step number="12">Function returns successfully</step>
   </executionSequence>
   <recovery>
-    <step>Review error message - examine the error message to understand the log storage failure reason</step>
-    <step>Assess transaction state - determine what state the transaction was in when storage failed</step>
-    <step>Check device storage status - query device storage for capacity and health</step>
-    <step>Check device connectivity - verify reliable communication with device storage</step>
-    <step>Verify storage availability - ensure storage medium is connected and accessible</step>
-    <step>Check storage capacity - determine if storage is full and needs cleanup</step>
-    <step>Free storage space if needed - export and delete old logs to free capacity</step>
-    <step>Retry the transaction - attempt the transaction operation again after addressing storage issue</step>
-    <step>Check device logs - examine device logs for additional storage error information</step>
-    <step>If persistent, contact manufacturer - device may have storage hardware issues</step>
+    <step>Verify device storage is accessible and has free space</step>
+    <step>Confirm Secure Element is operational</step>
+    <step>Check logging subsystem health</step>
+    <step>Retry operation after confirming preconditions</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorStorageMemoryFull</exception>

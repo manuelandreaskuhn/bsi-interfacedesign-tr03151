@@ -61,16 +61,10 @@
     <step number="10" name="Device State Verification">The Secure Element remains in an enabled state with all functionality operational. No state changes have been made.</step>
   </executionSequence>
   <recovery>
-    <step>Verify that the Secure Element hardware is physically connected, properly seated, and has not been damaged or disconnected</step>
-    <step>Check the communication channel between the device and Secure Element for any errors, interference, or disconnection issues</step>
-    <step>Verify the Secure Element power supply status - ensure the Secure Element is receiving adequate power and is not in a low-power or suspended state</step>
-    <step>Review the Secure Element's current status and state to understand why deactivation failed - verify whether it remains enabled and operational</step>
-    <step>Consult device logs or diagnostic information to identify the specific error reported by the Secure Element during deactivation attempt</step>
-    <step>Attempt the disableSecureElement function again after verifying hardware connectivity and allowing brief time for Secure Element recovery</step>
-    <step>Perform device-level self-tests or diagnostics to verify Secure Element functionality and communication channel integrity</step>
-    <step>If repeated attempts fail consistently, consult the device and Secure Element manufacturer's documentation or contact support for hardware-level troubleshooting</step>
-    <step>If Secure Element deactivation cannot be achieved, the device may continue operating with the Secure Element enabled - all functionality remains available</step>
-    <step>Implement comprehensive logging and monitoring of this critical failure for forensic analysis, system health monitoring, and technical support investigation</step>
+    <step>Verify device is initialized</step>
+    <step>Check Secure Element status and connectivity</step>
+    <step>Retry disable operation</step>
+    <step>Contact device support if SE disable remains unavailable</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorFunctionFailed</exception>

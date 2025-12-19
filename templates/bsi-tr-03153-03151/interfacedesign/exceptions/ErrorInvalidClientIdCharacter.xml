@@ -64,16 +64,10 @@
     <step number="10">Function returns success status to the caller</step>
   </executionSequence>
   <recovery>
-    <step>Verify clientId is properly formatted - review the clientId specification in TR-03151-1 to understand the allowed character set</step>
-    <step>Identify invalid characters in clientId - inspect each character to identify which ones violate the allowed character set</step>
-    <step>Check for common errors - verify that no special characters, whitespace, control characters, or non-ASCII characters are present</step>
-    <step>Verify character encoding - ensure the clientId string is properly encoded according to the specification (typically UTF-8 or ASCII)</step>
-    <step>Remove or replace invalid characters - remove disallowed characters and replace with allowed alternatives from the character set</step>
-    <step>Validate clientId format - ensure the modified clientId contains only characters from the allowed set</step>
-    <step>Retry client operation with corrected clientId - re-attempt the client operation with the corrected clientId value</step>
-    <step>Implement input validation in application - add client-side validation to check clientId format before calling SE API functions</step>
-    <step>Document allowed character set - maintain clear documentation of which characters are permitted in clientIds for developer reference</step>
-    <step>Consider using identifier generation utilities - use library functions or standardized approaches for generating valid clientIds</step>
+    <step>Review clientId format requirements in specification</step>
+    <step>Remove or replace invalid characters from clientId</step>
+    <step>Use valid clientId containing only allowed characters</step>
+    <step>Retry registration with corrected clientId</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorInvalidClientIdLength</exception>

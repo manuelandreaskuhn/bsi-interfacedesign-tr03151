@@ -67,16 +67,10 @@
     <step number="11">Function returns successfully with client registered and client handle provided</step>
   </executionSequence>
   <recovery>
-    <step>Review error message - examine the error message to understand the specific registration failure reason</step>
-    <step>Check device client capacity - query the device to determine current registered client count and maximum capacity</step>
-    <step>Verify client ID is not duplicate - check if the client ID being registered is already registered on the device</step>
-    <step>Check device resources - verify the device has sufficient memory and storage for client registration</step>
-    <step>Verify device connectivity - ensure the Secure Element is accessible and communication channels are functional</step>
-    <step>Check client parameters - verify all client parameters (ID, description, etc.) are valid and within constraints</step>
-    <step>Deregister unused clients - if capacity limit reached, deregister unused or obsolete clients to free capacity</step>
-    <step>Clean up device - if resource exhaustion, perform device cleanup or reset to free resources</step>
-    <step>Retry the registration - attempt registerClient again after addressing the underlying cause</step>
-    <step>If persistent, contact device administrator - repeated registration failures may require device configuration or servicing</step>
+    <step>Verify device is initialized</step>
+    <step>Check client registry capacity using getMaxNumberOfClients</step>
+    <step>Ensure clientId is valid and unique</step>
+    <step>Retry registration after confirming preconditions</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorClientAlreadyRegistered</exception>

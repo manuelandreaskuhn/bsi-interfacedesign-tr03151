@@ -66,18 +66,10 @@
     <step number="12">Function returns to caller indicating transaction recorded and logged</step>
   </executionSequence>
   <recovery>
-    <step>Review error message - understand transaction logging is locked</step>
-    <step>Check logging lock status - verify logging lock is active</step>
-    <step>Identify lock reason - determine why logging is locked</step>
-    <step>Check administration - contact administrator if lock set by policy</step>
-    <step>Review audit procedures - verify if locked for audit preservation</step>
-    <step>Check device status - confirm device is not in diagnostic or update mode</step>
-    <step>Check security status - verify no security policy lock is active</step>
-    <step>Request unlock - ask administrator to unlock logging if appropriate</step>
-    <step>Verify unlock permissions - ensure authorization for logging unlock</step>
-    <step>Unlock logging - execute unlock procedure through administrative interface</step>
-    <step>Verify unlocked status - confirm logging is now unlocked and operational</step>
-    <step>Retry transaction - attempt transaction operation again after unlock</step>
+    <step>Check transaction logging lock status</step>
+    <step>Transaction creation is blocked while logging locked</step>
+    <step>Wait for logging to be unlocked if temporarily locked</step>
+    <step>Use unlockTransactionLogging to resume transactions</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorFunctionFailed</exception>

@@ -62,16 +62,10 @@
     <step number="9">Function returns records to caller</step>
   </executionSequence>
   <recovery>
-    <step>Review error message - understand that result set exceeds maximum record count</step>
-    <step>Check actual record count - determine how many records match the query</step>
-    <step>Refine query parameters - add more specific filters to reduce result set</step>
-    <step>Add date range filter - narrow query by date range to limit results</step>
-    <step>Add status filter - filter by transaction status or other criteria to reduce results</step>
-    <step>Increase maxRecords - if appropriate, increase the maximum record count parameter</step>
-    <step>Implement pagination - split query into multiple requests with smaller limits</step>
-    <step>Retry with refined query - attempt export again with more specific parameters</step>
-    <step>Process in batches - implement batch processing to retrieve records in chunks</step>
-    <step>Review export strategy - plan export procedures to handle large result sets efficiently</step>
+    <step>Refine search criteria to reduce result set size</step>
+    <step>Use pagination or filtering to limit returned records</step>
+    <step>Export data in multiple batches</step>
+    <step>Review export result limits in specification</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorNoDataAvailable</exception>

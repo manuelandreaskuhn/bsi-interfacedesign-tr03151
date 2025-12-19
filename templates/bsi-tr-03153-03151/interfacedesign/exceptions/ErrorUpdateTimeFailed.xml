@@ -72,17 +72,10 @@
     <step number="12">Function returns to caller indicating time successfully updated</step>
   </executionSequence>
   <recovery>
-    <step>Review error message - understand reason for time update failure</step>
-    <step>Verify time data - confirm provided time data is valid</step>
-    <step>Check time format - verify time format matches variant requirements</step>
-    <step>Check time range - verify time value is within acceptable range</step>
-    <step>Check device state - verify device is initialized and operational</step>
-    <step>Check Secure Element - verify Secure Element is accessible</step>
-    <step>Retry time sync - attempt updateTime again with verified time data</step>
-    <step>Check hardware - if repeated failures, verify device hardware</step>
-    <step>Run diagnostics - execute device diagnostics to assess time functionality</step>
-    <step>Contact support - if time update fails persistently, contact device support</step>
-    <step>Document failure - record time update failure for compliance</step>
+    <step>Verify device time update is supported</step>
+    <step>Confirm time value format is correct</step>
+    <step>Retry time synchronization after confirming prerequisites</step>
+    <step>Check Secure Element time update capability</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorTimeNotSet</exception>

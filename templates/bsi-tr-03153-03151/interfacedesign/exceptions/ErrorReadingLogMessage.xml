@@ -64,16 +64,10 @@
     <step number="11">Function returns log messages to caller</step>
   </executionSequence>
   <recovery>
-    <step>Verify device connectivity - check that the Secure Element is accessible and responding to commands</step>
-    <step>Check device status - query device for error codes or status information indicating the nature of the read failure</step>
-    <step>Examine device logs - if available, review device diagnostic or error logs to understand the storage failure</step>
-    <step>Retry the operation - attempt to call getLastLogMessage or exportLogMessages again after a brief delay</step>
-    <step>Try with different parameters - if using exportLogMessages with filters, try with simpler or different filter criteria</step>
-    <step>Test device storage - perform device storage diagnostics or self-test operations to check storage integrity</step>
-    <step>Check device resources - verify the device has sufficient memory and processing capacity for the operation</step>
-    <step>Review device health - check for other symptoms of device malfunction or degradation</step>
-    <step>Contact device manufacturer - if repeated failures occur, contact manufacturer support for device diagnostics or repair</step>
-    <step>If critical, consider device replacement - persistent storage read failures may indicate device failure requiring replacement</step>
+    <step>Verify log message exists and is accessible</step>
+    <step>Confirm storage medium is connected and readable</step>
+    <step>Retry log message read operation</step>
+    <step>Check storage integrity and availability</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorNoLogMessageFound</exception>

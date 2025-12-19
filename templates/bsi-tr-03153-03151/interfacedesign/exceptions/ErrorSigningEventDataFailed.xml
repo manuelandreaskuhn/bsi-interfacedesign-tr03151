@@ -84,16 +84,10 @@
     <step number="11">Function processes result and returns to caller</step>
   </executionSequence>
   <recovery>
-    <step>Review error message - examine the error message to understand the signing failure reason</step>
-    <step>Check device state - query device to verify it is operational and responsive</step>
-    <step>Check cryptographic resources - verify device cryptographic processor is functioning</step>
-    <step>Verify device connectivity - ensure clean communication channel with Secure Element</step>
-    <step>Check event data validity - verify the transaction event data is valid and well-formed</step>
-    <step>Verify cryptographic keys - ensure signing keys are properly initialized on device</step>
-    <step>Check device storage - verify device has sufficient storage for log messages</step>
-    <step>Retry the operation - attempt the transaction operation again after addressing issues</step>
-    <step>Perform self-test - call selfTest to verify device cryptographic functionality</step>
-    <step>If persistent, contact manufacturer - device may have cryptographic or storage issues</step>
+    <step>Verify device is initialized</step>
+    <step>Confirm Secure Element is operational</step>
+    <step>Check if signature counter is exhausted</step>
+    <step>Retry logging operation after confirming preconditions</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorFunctionFailed</exception>

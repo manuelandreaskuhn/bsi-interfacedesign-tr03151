@@ -92,16 +92,10 @@
     <step number="9">Function processes result and returns to caller</step>
   </executionSequence>
   <recovery>
-    <step>Review error message - understand why the Secure Element is disabled</step>
-    <step>Check device state - query device status to confirm it is disabled</step>
-    <step>Verify administrative policy - check if device disable is intentional or policy-based</step>
-    <step>Contact administrator - request re-enabling of the Secure Element if disable was unintended</step>
-    <step>Check security alerts - verify no security events caused the disable</step>
-    <step>Enable the Secure Element - use management interface or administrative API to enable device</step>
-    <step>Verify device re-enabled - query device state to confirm enabled status</step>
-    <step>Retry the operation - attempt original SE API operation again after device is enabled</step>
-    <step>Validate device functionality - perform self-test or diagnostic operations to verify device is operational</step>
-    <step>If persistent, contact manufacturer - device may require servicing if it cannot be enabled</step>
+    <step>Enable Secure Element for operations requiring cryptography</step>
+    <step>Verify SE status and connectivity</step>
+    <step>Retry operation after enabling SE</step>
+    <step>Contact device support if SE cannot be enabled</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorSecureElementNotInitialized</exception>

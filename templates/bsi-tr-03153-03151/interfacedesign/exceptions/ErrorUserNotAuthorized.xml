@@ -107,15 +107,10 @@
     <step number="10">Operation executes with authorization verified</step>
   </executionSequence>
   <recovery>
-    <step>Review error message - understand authorization is required</step>
-    <step>Check user authorization level - verify current user's role and permissions</step>
-    <step>Check authorization requirements - determine what authorization is needed for function</step>
-    <step>Check authorization status - verify authorization has not expired</step>
-    <step>Contact administrator - request authorization upgrade if appropriate</step>
-    <step>Use different account - switch to account with required authorization</step>
-    <step>Verify authorization granted - confirm authorization upgrade completed</step>
-    <step>Retry function - attempt original restricted operation again</step>
-    <step>Verify operation completes - confirm function now succeeds</step>
+    <step>Verify user has required permissions for operation</step>
+    <step>Check role-based access control configuration</step>
+    <step>Use user account with necessary authorization</step>
+    <step>Contact administrator if permissions need updating</step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorUserNotAuthenticated</exception>
