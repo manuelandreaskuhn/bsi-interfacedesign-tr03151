@@ -27,31 +27,6 @@
   <javadoc>
     <summary>This class defines the exception ErrorRetrieveLogMessageFailed that is thrown if log message retrieval fails.</summary>
     <description>This exception is thrown when the getLastLogMessage or getLastTransactionLogMessage functions attempt to retrieve the most recently created log message from the Secure Element but encounter a failure. Log message retrieval is essential for audit trail access, compliance verification, and transaction history review. ErrorRetrieveLogMessageFailed indicates that log message retrieval cannot be completed successfully. Common causes include: device communication failures, log storage read errors, corrupted log data, device internal errors, or temporary device issues. ErrorRetrieveLogMessageFailed is a High severity exception because it prevents access to critical audit trail information. Unlike ErrorNoLogMessageFound which indicates no log messages exist, ErrorRetrieveLogMessageFailed indicates that log messages exist but cannot be accessed. Recovery requires investigating the device state, communication connectivity, and log storage integrity.</description>
-    <constructors>
-      <constructor>
-        <signature>ErrorRetrieveLogMessageFailed()</signature>
-        <description>Constructs a new ErrorRetrieveLogMessageFailed exception with null as the value for its detail message</description>
-      </constructor>
-      <constructor>
-        <signature>ErrorRetrieveLogMessageFailed(String message)</signature>
-        <description>Constructs a new ErrorRetrieveLogMessageFailed exception whereby its detail message is initialized with the passed value</description>
-        <parameter name="message">value for the detail message of the exception, typically describing the log retrieval failure reason</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorRetrieveLogMessageFailed(String message, Throwable cause)</signature>
-        <description>Constructs a new ErrorRetrieveLogMessageFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorRetrieveLogMessageFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-        <description>Constructs a new ErrorRetrieveLogMessageFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-      </constructor>
-    </constructors>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>

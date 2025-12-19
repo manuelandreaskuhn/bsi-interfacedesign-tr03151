@@ -7,31 +7,6 @@
   <javadoc>
     <summary>This class defines the exception ErrorGetComponentVersionsFailed that is thrown if the SE API function getComponentVersions fails to determine the device information.</summary>
     <description>The getComponentVersions function performs a multi-step process to retrieve version information about device components and software. This exception is raised when the device cannot provide the required version information during the retrieval phase. When this exception occurs, no version data is returned to the user, and the function exits without providing any partial version information. The failure indicates that the device's version information retrieval functionality did not complete successfully, preventing applications from determining which components and versions are present on the device.</description>
-    <constructors>
-      <constructor>
-        <signature>ErrorGetComponentVersionsFailed()</signature>
-        <description>Constructs a new ErrorGetComponentVersionsFailed exception with null as the value for its detail message</description>
-      </constructor>
-      <constructor>
-        <signature>ErrorGetComponentVersionsFailed(String message)</signature>
-        <description>Constructs a new ErrorGetComponentVersionsFailed exception whereby its detail message is initialized with the passed value</description>
-        <parameter name="message">value for the detail message of the exception, typically describing which component version retrieval failed</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorGetComponentVersionsFailed(String message, Throwable cause)</signature>
-        <description>Constructs a new ErrorGetComponentVersionsFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorGetComponentVersionsFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-        <description>Constructs a new ErrorGetComponentVersionsFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-      </constructor>
-    </constructors>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>

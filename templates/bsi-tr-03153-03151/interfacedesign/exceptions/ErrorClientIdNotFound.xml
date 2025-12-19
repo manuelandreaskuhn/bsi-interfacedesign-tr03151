@@ -7,31 +7,6 @@
   <javadoc>
     <summary>This class defines the exception ErrorClientIdNotFound that is thrown if no data has been found for the provided clientID in the context of the export of stored data.</summary>
     <description>The ErrorClientIdNotFound exception occurs during transaction log export operations when a specified clientId has no associated transaction log data in storage. This exception is raised after verifying that the clientId does not have any matching transaction data, indicating that the specified client either has not performed any transactions, or all its transaction data has been deleted or previously exported. The exception is raised specifically when a clientId filter is applied to the exportFilteredTransactionLogs function and no data matches the filter criteria.</description>
-    <constructors>
-      <constructor>
-        <signature>ErrorClientIdNotFound()</signature>
-        <description>Constructs a new ErrorClientIdNotFound exception with null as the value for its detail message</description>
-      </constructor>
-      <constructor>
-        <signature>ErrorClientIdNotFound(String message)</signature>
-        <description>Constructs a new ErrorClientIdNotFound exception whereby its detail message is initialized with the passed value</description>
-        <parameter name="message">value for the detail message of the exception, typically containing the clientId for which no data was found</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorClientIdNotFound(String message, Throwable cause)</signature>
-        <description>Constructs a new ErrorClientIdNotFound exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorClientIdNotFound(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-        <description>Constructs a new ErrorClientIdNotFound exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-      </constructor>
-    </constructors>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>

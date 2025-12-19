@@ -7,31 +7,6 @@
   <javadoc>
     <summary>This class defines the exception ErrorGetCurrentNumberOfTransactionsFailed that is thrown if the determination of the number of currently opened transactions failed.</summary>
     <description>The getCurrentNumberOfTransactions function performs a multi-step process to determine how many transactions are currently opened and active. This exception is raised when the device cannot provide the required transaction count information during the retrieval phase. When this exception occurs, no transaction count data is returned to the user, and the function exits without providing any count information. The failure indicates that the device's transaction counting or reporting functionality did not complete successfully, preventing applications from monitoring active transactions.</description>
-    <constructors>
-      <constructor>
-        <signature>ErrorGetCurrentNumberOfTransactionsFailed()</signature>
-        <description>Constructs a new ErrorGetCurrentNumberOfTransactionsFailed exception with null as the value for its detail message</description>
-      </constructor>
-      <constructor>
-        <signature>ErrorGetCurrentNumberOfTransactionsFailed(String message)</signature>
-        <description>Constructs a new ErrorGetCurrentNumberOfTransactionsFailed exception whereby its detail message is initialized with the passed value</description>
-        <parameter name="message">value for the detail message of the exception, typically describing the transaction count retrieval failure</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorGetCurrentNumberOfTransactionsFailed(String message, Throwable cause)</signature>
-        <description>Constructs a new ErrorGetCurrentNumberOfTransactionsFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorGetCurrentNumberOfTransactionsFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-        <description>Constructs a new ErrorGetCurrentNumberOfTransactionsFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-      </constructor>
-    </constructors>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>

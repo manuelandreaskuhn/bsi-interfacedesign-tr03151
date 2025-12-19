@@ -7,31 +7,6 @@
   <javadoc>
     <summary>This class defines the exception ErrorPukTemporarilyBlocked that is thrown if the PUK is temporarily blocked due to excessive failed attempts.</summary>
     <description>This exception is thrown when the unblockPin function attempts to unblock a user's PIN but the PUK is in a temporarily blocked state. The PUK (PIN Unblock Key) has a temporary lockout mechanism to protect against brute-force attacks. When a user provides an incorrect PUK multiple times in succession, the device temporarily blocks the PUK for a specified timeout period (e.g., 30 minutes). During this timeout period, the unblockPin function cannot verify or use the PUK, so it cannot unblock any PINs. ErrorPukTemporarilyBlocked indicates that the PUK is currently locked out and the caller must wait for the timeout period to expire before attempting PIN unblocking again. This is different from a permanent PUK block (ErrorPukBlocked) - the temporary block expires automatically after the timeout. Recovery requires waiting for the temporary block to expire or using administrative procedures to reset the timeout.</description>
-    <constructors>
-      <constructor>
-        <signature>ErrorPukTemporarilyBlocked()</signature>
-        <description>Constructs a new ErrorPukTemporarilyBlocked exception with null as the value for its detail message</description>
-      </constructor>
-      <constructor>
-        <signature>ErrorPukTemporarilyBlocked(String message)</signature>
-        <description>Constructs a new ErrorPukTemporarilyBlocked exception whereby its detail message is initialized with the passed value</description>
-        <parameter name="message">value for the detail message of the exception, typically indicating PUK is temporarily blocked and approximate time until unblock</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorPukTemporarilyBlocked(String message, Throwable cause)</signature>
-        <description>Constructs a new ErrorPukTemporarilyBlocked exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorPukTemporarilyBlocked(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-        <description>Constructs a new ErrorPukTemporarilyBlocked exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-      </constructor>
-    </constructors>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>

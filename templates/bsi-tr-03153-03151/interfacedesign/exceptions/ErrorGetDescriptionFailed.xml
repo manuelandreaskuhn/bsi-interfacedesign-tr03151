@@ -7,31 +7,6 @@
   <javadoc>
     <summary>This class defines the exception ErrorGetDescriptionFailed that is thrown if the SE API function getDescription fails to determine the short description of the device.</summary>
     <description>This exception is thrown when the getDescription function cannot retrieve the device's short description text from the Secure Element. The device description provides human-readable identification information for the Secure Element, such as device model, variant, or descriptive label. ErrorGetDescriptionFailed indicates that the Secure Element cannot provide the description text due to hardware failure, storage corruption, internal information system errors, communication failures, or Secure Element state restrictions. When this exception occurs, no description data is returned and applications cannot identify or describe the device to users. Recovery typically involves device verification, information subsystem diagnostics, and possible hardware diagnosis if the failure persists.</description>
-    <constructors>
-      <constructor>
-        <signature>ErrorGetDescriptionFailed()</signature>
-        <description>Constructs a new ErrorGetDescriptionFailed exception with null as the value for its detail message</description>
-      </constructor>
-      <constructor>
-        <signature>ErrorGetDescriptionFailed(String message)</signature>
-        <description>Constructs a new ErrorGetDescriptionFailed exception whereby its detail message is initialized with the passed value</description>
-        <parameter name="message">value for the detail message of the exception, typically describing the device description retrieval failure</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorGetDescriptionFailed(String message, Throwable cause)</signature>
-        <description>Constructs a new ErrorGetDescriptionFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorGetDescriptionFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-        <description>Constructs a new ErrorGetDescriptionFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-      </constructor>
-    </constructors>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>

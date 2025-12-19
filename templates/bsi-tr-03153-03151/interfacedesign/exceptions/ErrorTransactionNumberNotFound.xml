@@ -13,31 +13,6 @@
   <javadoc>
     <summary>This class defines the exception ErrorTransactionNumberNotFound that is thrown if no data has been found for the provided transaction number(s).</summary>
     <description>This exception is thrown when transaction export or query operations search for specific transaction number(s) that don't exist in the device's transaction records. Transaction numbers are unique identifiers for each executed transaction. Functions like exportFilteredTransactionLogs and getTransactionState accept transaction number parameters to search for or retrieve specific transactions. If the provided transaction number(s) don't match any records, ErrorTransactionNumberNotFound is raised. This indicates the transaction numbers may be incorrect, the transactions may have been deleted, or they may have never existed. ErrorTransactionNumberNotFound is a Medium severity exception because the query is valid but matches no results. The caller should verify transaction numbers are correct and exist before querying.</description>
-    <constructors>
-      <constructor>
-        <signature>ErrorTransactionNumberNotFound()</signature>
-        <description>Constructs a new ErrorTransactionNumberNotFound exception with null as the value for its detail message</description>
-      </constructor>
-      <constructor>
-        <signature>ErrorTransactionNumberNotFound(String message)</signature>
-        <description>Constructs a new ErrorTransactionNumberNotFound exception whereby its detail message is initialized with the passed value</description>
-        <parameter name="message">value for the detail message of the exception, typically describing which transaction number(s) were not found</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorTransactionNumberNotFound(String message, Throwable cause)</signature>
-        <description>Constructs a new ErrorTransactionNumberNotFound exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorTransactionNumberNotFound(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-        <description>Constructs a new ErrorTransactionNumberNotFound exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-      </constructor>
-    </constructors>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>

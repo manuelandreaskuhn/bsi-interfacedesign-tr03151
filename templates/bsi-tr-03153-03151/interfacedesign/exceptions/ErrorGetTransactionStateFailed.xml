@@ -7,31 +7,6 @@
   <javadoc>
     <summary>This class defines the exception ErrorGetTransactionStateFailed that is thrown if the determination of the transaction state failed.</summary>
     <description>This exception is thrown when the getTransactionState function cannot retrieve the current state of a specific transaction from the Secure Element. Transaction state information describes the operational status of an active transaction (active, pending completion, suspended, etc.). ErrorGetTransactionStateFailed indicates that the Secure Element cannot provide the transaction state due to hardware failure, transaction state storage corruption, internal transaction management system errors, communication failures, or Secure Element state restrictions. When this exception occurs, no transaction state value is returned and applications cannot determine the operational status of the requested transaction. Recovery typically involves transaction diagnostics, transaction management subsystem verification, and state recovery if the failure persists.</description>
-    <constructors>
-      <constructor>
-        <signature>ErrorGetTransactionStateFailed()</signature>
-        <description>Constructs a new ErrorGetTransactionStateFailed exception with null as the value for its detail message</description>
-      </constructor>
-      <constructor>
-        <signature>ErrorGetTransactionStateFailed(String message)</signature>
-        <description>Constructs a new ErrorGetTransactionStateFailed exception whereby its detail message is initialized with the passed value</description>
-        <parameter name="message">value for the detail message of the exception, typically describing the transaction state retrieval failure</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorGetTransactionStateFailed(String message, Throwable cause)</signature>
-        <description>Constructs a new ErrorGetTransactionStateFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorGetTransactionStateFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-        <description>Constructs a new ErrorGetTransactionStateFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-      </constructor>
-    </constructors>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>

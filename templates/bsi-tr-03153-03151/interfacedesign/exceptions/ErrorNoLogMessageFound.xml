@@ -11,31 +11,6 @@
   <javadoc>
     <summary>This class defines the exception ErrorNoLogMessageFound that is thrown if no log message parts have been found in the Secure Element.</summary>
     <description>This exception is thrown when log message retrieval or export functions attempt to access transaction log messages but find that no log messages exist in the Secure Element's storage. Functions such as getLastLogMessage and exportLogMessages are used to retrieve recorded log entries from the device's transaction logging subsystem. ErrorNoLogMessageFound is raised when these functions search the logging storage and find it empty - no log entries are available to retrieve or export. This is an expected condition when the logging storage has not yet accumulated entries or when log messages have been deleted. Recovery requires confirming that logging is enabled and functioning, or verifying that expected events have actually been logged on the device.</description>
-    <constructors>
-      <constructor>
-        <signature>ErrorNoLogMessageFound()</signature>
-        <description>Constructs a new ErrorNoLogMessageFound exception with null as the value for its detail message</description>
-      </constructor>
-      <constructor>
-        <signature>ErrorNoLogMessageFound(String message)</signature>
-        <description>Constructs a new ErrorNoLogMessageFound exception whereby its detail message is initialized with the passed value</description>
-        <parameter name="message">value for the detail message of the exception, typically describing that no log messages are available</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorNoLogMessageFound(String message, Throwable cause)</signature>
-        <description>Constructs a new ErrorNoLogMessageFound exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorNoLogMessageFound(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-        <description>Constructs a new ErrorNoLogMessageFound exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-      </constructor>
-    </constructors>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>

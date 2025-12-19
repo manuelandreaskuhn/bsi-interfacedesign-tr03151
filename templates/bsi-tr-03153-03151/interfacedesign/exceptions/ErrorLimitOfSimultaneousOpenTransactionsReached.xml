@@ -7,31 +7,6 @@
   <javadoc>
     <summary>This class defines the exception ErrorLimitOfSimultaneousOpenTransactionsReached that is thrown if the maximum number of simultaneously open transactions has been reached.</summary>
     <description>This exception is thrown when the startTransaction function cannot create a new transaction because the maximum number of concurrently open transactions supported by the Secure Element has been reached. Each Secure Element has a configurable limit on how many transactions can be in the "open" state at the same time. ErrorLimitOfSimultaneousOpenTransactionsReached indicates that the current number of open transactions equals or exceeds this maximum limit. When this exception occurs, the new transaction is not created and the caller must either wait for existing transactions to complete, finish some open transactions, or implement queuing strategies for transaction requests. Recovery requires completing or closing existing transactions to reduce the active transaction count below the maximum limit.</description>
-    <constructors>
-      <constructor>
-        <signature>ErrorLimitOfSimultaneousOpenTransactionsReached()</signature>
-        <description>Constructs a new ErrorLimitOfSimultaneousOpenTransactionsReached exception with null as the value for its detail message</description>
-      </constructor>
-      <constructor>
-        <signature>ErrorLimitOfSimultaneousOpenTransactionsReached(String message)</signature>
-        <description>Constructs a new ErrorLimitOfSimultaneousOpenTransactionsReached exception whereby its detail message is initialized with the passed value</description>
-        <parameter name="message">value for the detail message of the exception, typically describing the transaction capacity constraint</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorLimitOfSimultaneousOpenTransactionsReached(String message, Throwable cause)</signature>
-        <description>Constructs a new ErrorLimitOfSimultaneousOpenTransactionsReached exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorLimitOfSimultaneousOpenTransactionsReached(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-        <description>Constructs a new ErrorLimitOfSimultaneousOpenTransactionsReached exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-      </constructor>
-    </constructors>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>

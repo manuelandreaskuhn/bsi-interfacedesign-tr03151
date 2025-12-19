@@ -7,31 +7,6 @@
   <javadoc>
     <summary>This class defines the exception ErrorGetCurrentSeTimeFailed that is thrown if the SE API function getCurrentSeTime fails to obtain the current time of the Secure Element.</summary>
     <description>This exception is thrown when the getCurrentSeTime function cannot retrieve the current time value from the Secure Element's internal clock. The Secure Element maintains an independent time source that is used for transaction timestamps, event logging, certificate validity checking, and time-based access control decisions. ErrorGetCurrentSeTimeFailed indicates that the Secure Element cannot provide its current time due to hardware clock malfunction, internal time management system errors, storage corruption, communication failures, or Secure Element state restrictions. When this exception occurs, no time data is returned and applications cannot rely on Secure Element time for their operations. Recovery typically involves device verification, communication checks, potential device time synchronization, and possible hardware diagnosis if the failure persists.</description>
-    <constructors>
-      <constructor>
-        <signature>ErrorGetCurrentSeTimeFailed()</signature>
-        <description>Constructs a new ErrorGetCurrentSeTimeFailed exception with null as the value for its detail message</description>
-      </constructor>
-      <constructor>
-        <signature>ErrorGetCurrentSeTimeFailed(String message)</signature>
-        <description>Constructs a new ErrorGetCurrentSeTimeFailed exception whereby its detail message is initialized with the passed value</description>
-        <parameter name="message">value for the detail message of the exception, typically describing the Secure Element time retrieval failure</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorGetCurrentSeTimeFailed(String message, Throwable cause)</signature>
-        <description>Constructs a new ErrorGetCurrentSeTimeFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorGetCurrentSeTimeFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-        <description>Constructs a new ErrorGetCurrentSeTimeFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-      </constructor>
-    </constructors>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>

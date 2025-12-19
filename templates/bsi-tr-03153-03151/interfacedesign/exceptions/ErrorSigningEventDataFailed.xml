@@ -27,31 +27,6 @@
   <javadoc>
     <summary>This class defines the exception ErrorSigningEventDataFailed that is thrown if Secure Element signing of event data fails.</summary>
     <description>This exception is thrown when the Secure Element fails to create log message parts and digital signatures for transaction event data. Digital signatures on transaction data create a cryptographic proof of transaction integrity and authenticity, preventing tampering and providing audit trail protection. ErrorSigningEventDataFailed indicates that the signing operation could not be completed. Common causes include: cryptographic operation failures (signature generation, key operations), device processing errors, invalid or corrupted event data, insufficient device resources, communication failures, or cryptographic key issues. ErrorSigningEventDataFailed is a Critical severity exception because it indicates the audit trail cannot be reliably maintained for the transaction. Without successful signing, the transaction is not protected by cryptographic proof of integrity. Recovery requires investigating the cryptographic failure and potentially retrying the operation or checking device state.</description>
-    <constructors>
-      <constructor>
-        <signature>ErrorSigningEventDataFailed()</signature>
-        <description>Constructs a new ErrorSigningEventDataFailed exception with null as the value for its detail message</description>
-      </constructor>
-      <constructor>
-        <signature>ErrorSigningEventDataFailed(String message)</signature>
-        <description>Constructs a new ErrorSigningEventDataFailed exception whereby its detail message is initialized with the passed value</description>
-        <parameter name="message">value for the detail message of the exception, typically describing the event signing failure reason</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorSigningEventDataFailed(String message, Throwable cause)</signature>
-        <description>Constructs a new ErrorSigningEventDataFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorSigningEventDataFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-        <description>Constructs a new ErrorSigningEventDataFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-      </constructor>
-    </constructors>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>

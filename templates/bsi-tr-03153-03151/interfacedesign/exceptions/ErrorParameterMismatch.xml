@@ -10,31 +10,6 @@
   <javadoc>
     <summary>This class defines the exception ErrorParameterMismatch that is thrown if there is a mismatch regarding the particular parameters provided for data export operations.</summary>
     <description>This exception is thrown when exportLogMessages or exportFilteredTransactionLogs functions receive parameter values that are incompatible, contradictory, or logically inconsistent. Export functions accept filtering parameters such as date ranges, event types, client IDs, transaction states, and other selection criteria. ErrorParameterMismatch is raised when these parameters have conflicts or inconsistencies that prevent valid export operation execution. Common causes include: date range where start date is after end date, mutually exclusive filter options both specified, parameter values outside acceptable ranges or incompatible with other parameters, or parameters that violate data model constraints. Recovery requires correcting the parameter values to remove contradictions and ensure logical consistency before retrying the export operation.</description>
-    <constructors>
-      <constructor>
-        <signature>ErrorParameterMismatch()</signature>
-        <description>Constructs a new ErrorParameterMismatch exception with null as the value for its detail message</description>
-      </constructor>
-      <constructor>
-        <signature>ErrorParameterMismatch(String message)</signature>
-        <description>Constructs a new ErrorParameterMismatch exception whereby its detail message is initialized with the passed value</description>
-        <parameter name="message">value for the detail message of the exception, typically describing which parameters have conflicts</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorParameterMismatch(String message, Throwable cause)</signature>
-        <description>Constructs a new ErrorParameterMismatch exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorParameterMismatch(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-        <description>Constructs a new ErrorParameterMismatch exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-      </constructor>
-    </constructors>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>

@@ -7,31 +7,6 @@
   <javadoc>
     <summary>This class defines the exception ErrorUnlockTransactionLoggingFailed that is thrown by the unlockTransactionLogging function when the unlock operation fails.</summary>
     <description>This exception is thrown when the unlockTransactionLogging function fails to unlock transaction logging functionality. Transaction logging can be locked administratively or by security policy for maintenance or audit purposes. The unlockTransactionLogging function re-enables transaction recording. If unlock verification fails, authorization is denied, hardware errors occur, or device issues prevent completion, ErrorUnlockTransactionLoggingFailed is raised. This indicates the unlock operation could not be successfully completed. Transaction logging remains locked and operations cannot be recorded. ErrorUnlockTransactionLoggingFailed is a High severity exception because transaction recording capability is unavailable. Recovery requires investigating failure cause and retrying with appropriate authorization or device corrections.</description>
-    <constructors>
-      <constructor>
-        <signature>ErrorUnlockTransactionLoggingFailed()</signature>
-        <description>Constructs a new ErrorUnlockTransactionLoggingFailed exception with null as the value for its detail message</description>
-      </constructor>
-      <constructor>
-        <signature>ErrorUnlockTransactionLoggingFailed(String message)</signature>
-        <description>Constructs a new ErrorUnlockTransactionLoggingFailed exception whereby its detail message is initialized with the passed value</description>
-        <parameter name="message">value for the detail message of the exception, typically describing reason for unlock failure</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorUnlockTransactionLoggingFailed(String message, Throwable cause)</signature>
-        <description>Constructs a new ErrorUnlockTransactionLoggingFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorUnlockTransactionLoggingFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-        <description>Constructs a new ErrorUnlockTransactionLoggingFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-      </constructor>
-    </constructors>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>

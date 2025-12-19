@@ -7,31 +7,6 @@
   <javadoc>
     <summary>This class defines the exception ErrorSettingNewPinFailed that is thrown if new PIN setting fails during unblock.</summary>
     <description>This exception is thrown when the unblockPin function attempts to set a new PIN value during the PIN unblock operation but encounters a failure. The unblockPin function first validates the PUK (PIN Unblock Key) and then attempts to set the new PIN to replace the blocked PIN. ErrorSettingNewPinFailed indicates that the new PIN setting step has failed, leaving the PIN in a blocked state. Common causes include: device storage errors, invalid new PIN format, PIN policy violations (minimum length, character requirements), device internal errors, or communication failures. ErrorSettingNewPinFailed is a High severity exception because it prevents PIN recovery and blocks user authentication. The user remains unable to authenticate with the blocked PIN. Recovery requires investigating the specific failure reason and retrying the unblock operation with a valid PIN.</description>
-    <constructors>
-      <constructor>
-        <signature>ErrorSettingNewPinFailed()</signature>
-        <description>Constructs a new ErrorSettingNewPinFailed exception with null as the value for its detail message</description>
-      </constructor>
-      <constructor>
-        <signature>ErrorSettingNewPinFailed(String message)</signature>
-        <description>Constructs a new ErrorSettingNewPinFailed exception whereby its detail message is initialized with the passed value</description>
-        <parameter name="message">value for the detail message of the exception, typically describing the new PIN setting failure reason</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorSettingNewPinFailed(String message, Throwable cause)</signature>
-        <description>Constructs a new ErrorSettingNewPinFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorSettingNewPinFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-        <description>Constructs a new ErrorSettingNewPinFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-      </constructor>
-    </constructors>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>

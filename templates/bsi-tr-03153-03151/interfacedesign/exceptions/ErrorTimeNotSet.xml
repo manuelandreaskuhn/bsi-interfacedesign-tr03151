@@ -21,31 +21,6 @@
   <javadoc>
     <summary>This class defines the exception ErrorTimeNotSet that is thrown if time-dependent operations are invoked without time being set.</summary>
     <description>This exception is thrown when a time-dependent SE API function (such as transaction operations) is invoked but the Secure Element's internal time has not been properly initialized or synchronized. The Secure Element maintains an internal clock that is used to timestamp transactions, log messages, and audit trail events. After device initialization or after a period of power loss or disconnection, the internal time must be explicitly set via the updateTime function before time-dependent operations can proceed. ErrorTimeNotSet indicates the internal time is not set or not synchronized. Common causes include: time not initialized after device startup, device time lost due to power failure or battery discharge, or time synchronization required before transaction processing. ErrorTimeNotSet is a High severity exception because operations requiring accurate timestamps cannot proceed safely. Recovery requires using updateTime to set the device time synchronously with the current system time.</description>
-    <constructors>
-      <constructor>
-        <signature>ErrorTimeNotSet()</signature>
-        <description>Constructs a new ErrorTimeNotSet exception with null as the value for its detail message</description>
-      </constructor>
-      <constructor>
-        <signature>ErrorTimeNotSet(String message)</signature>
-        <description>Constructs a new ErrorTimeNotSet exception whereby its detail message is initialized with the passed value</description>
-        <parameter name="message">value for the detail message of the exception, typically indicating time not set or out of sync</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorTimeNotSet(String message, Throwable cause)</signature>
-        <description>Constructs a new ErrorTimeNotSet exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorTimeNotSet(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-        <description>Constructs a new ErrorTimeNotSet exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-      </constructor>
-    </constructors>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>

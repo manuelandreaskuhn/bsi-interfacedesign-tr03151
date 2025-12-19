@@ -47,31 +47,6 @@
   <javadoc>
     <summary>This class defines the exception ErrorParameterSyntax that is thrown by any SE API method when at least one parameter is of invalid type or syntax.</summary>
     <description>This exception is thrown when any SE API function receives a parameter with invalid syntax, incorrect data type, or malformed structure. Every SE API function has specific type and format requirements for its parameters. ErrorParameterSyntax is raised when parameters do not conform to these requirements. Common causes include: string parameters with invalid characters or format, numeric parameters that are not numbers, boolean parameters with non-boolean values, complex objects with missing or invalid fields, or any parameter value that cannot be parsed or interpreted according to the function's specification. ErrorParameterSyntax is a common exception that can be raised by any SE API function that accepts parameters. Recovery requires correcting the parameter type or syntax according to the function's documentation and retrying the operation.</description>
-    <constructors>
-      <constructor>
-        <signature>ErrorParameterSyntax()</signature>
-        <description>Constructs a new ErrorParameterSyntax exception with null as the value for its detail message</description>
-      </constructor>
-      <constructor>
-        <signature>ErrorParameterSyntax(String message)</signature>
-        <description>Constructs a new ErrorParameterSyntax exception whereby its detail message is initialized with the passed value</description>
-        <parameter name="message">value for the detail message of the exception, typically identifying which parameter has the syntax error</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorParameterSyntax(String message, Throwable cause)</signature>
-        <description>Constructs a new ErrorParameterSyntax exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorParameterSyntax(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-        <description>Constructs a new ErrorParameterSyntax exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-      </constructor>
-    </constructors>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>

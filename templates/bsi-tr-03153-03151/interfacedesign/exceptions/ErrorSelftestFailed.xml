@@ -8,31 +8,6 @@
   <javadoc>
     <summary>This class defines the exception ErrorSelftestFailed that is thrown if device self-test execution fails.</summary>
     <description>This exception is thrown when the selfTest function attempts to verify the integrity and correct operation of Secure Element components but encounters a failure. Self-test is a critical diagnostic function that validates cryptographic modules, storage integrity, communication interfaces, security processor functionality, and overall device health. ErrorSelftestFailed indicates that one or more self-test checks have failed, revealing potential device malfunctions or integrity issues. Common causes include: component hardware failures, cryptographic module errors, memory corruption, communication subsystem issues, configuration errors, or manufacturing defects. ErrorSelftestFailed is a Critical severity exception because it indicates the device may not be trustworthy for security operations. Failed self-tests suggest the device should not be used for sensitive transactions. Recovery requires investigating the specific test failure, potential hardware repair, or device replacement. The device manufacturer should provide detailed self-test failure analysis capabilities.</description>
-    <constructors>
-      <constructor>
-        <signature>ErrorSelftestFailed()</signature>
-        <description>Constructs a new ErrorSelftestFailed exception with null as the value for its detail message</description>
-      </constructor>
-      <constructor>
-        <signature>ErrorSelftestFailed(String message)</signature>
-        <description>Constructs a new ErrorSelftestFailed exception whereby its detail message is initialized with the passed value</description>
-        <parameter name="message">value for the detail message of the exception, typically identifying which self-test check failed</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorSelftestFailed(String message, Throwable cause)</signature>
-        <description>Constructs a new ErrorSelftestFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorSelftestFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-        <description>Constructs a new ErrorSelftestFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-      </constructor>
-    </constructors>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>

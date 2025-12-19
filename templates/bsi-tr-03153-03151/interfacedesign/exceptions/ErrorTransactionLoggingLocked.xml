@@ -7,31 +7,6 @@
   <javadoc>
     <summary>This class defines the exception ErrorTransactionLoggingLocked that is thrown if transaction logging functionality is currently locked.</summary>
     <description>This exception is thrown when transaction operations are attempted while transaction logging is locked. Transaction logging records all executed transactions for audit, authenticity, and non-repudiation. The logging functionality can be locked for administrative, maintenance, or security policy reasons. When logging is locked, all transaction operations (startTransaction, updateTransaction, finishTransaction) cannot proceed because transactions cannot be properly logged. ErrorTransactionLoggingLocked is a High severity exception because audit trail integrity is critical. Transactions are blocked to ensure all executed transactions are properly recorded in the audit log. Recovery requires unlocking the logging functionality through appropriate administrative procedures.</description>
-    <constructors>
-      <constructor>
-        <signature>ErrorTransactionLoggingLocked()</signature>
-        <description>Constructs a new ErrorTransactionLoggingLocked exception with null as the value for its detail message</description>
-      </constructor>
-      <constructor>
-        <signature>ErrorTransactionLoggingLocked(String message)</signature>
-        <description>Constructs a new ErrorTransactionLoggingLocked exception whereby its detail message is initialized with the passed value</description>
-        <parameter name="message">value for the detail message of the exception, typically describing logging lock reason or status</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorTransactionLoggingLocked(String message, Throwable cause)</signature>
-        <description>Constructs a new ErrorTransactionLoggingLocked exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorTransactionLoggingLocked(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-        <description>Constructs a new ErrorTransactionLoggingLocked exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-      </constructor>
-    </constructors>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>

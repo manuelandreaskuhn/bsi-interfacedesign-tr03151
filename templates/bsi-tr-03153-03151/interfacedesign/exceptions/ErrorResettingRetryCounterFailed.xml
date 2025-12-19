@@ -7,31 +7,6 @@
   <javadoc>
     <summary>This class defines the exception ErrorResettingRetryCounterFailed that is thrown if the PIN retry counter reset fails during PIN unblocking.</summary>
     <description>This exception is thrown when the unblockPin function successfully unblocks the user's PIN and sets a new PIN but fails to reset the failed PIN attempt counter to zero. When a PIN is unblocked via the unblockPin function, the device should perform two operations: 1) Unblock the PIN and set a new PIN, and 2) Reset the failed attempt counter to zero. ErrorResettingRetryCounterFailed indicates that operation 1 succeeded but operation 2 failed. The result is that the PIN is now unblocked and can be used for authentication, but the retry counter still reflects the previous failed attempts. This leaves the account in a potentially inconsistent state - the next failed PIN attempt may immediately trigger a re-block if the counter still shows high failed attempts. ErrorResettingRetryCounterFailed is a High severity exception that indicates a partial failure in the PIN unblocking process. Recovery requires ensuring the retry counter is properly reset so the account is in a consistent state.</description>
-    <constructors>
-      <constructor>
-        <signature>ErrorResettingRetryCounterFailed()</signature>
-        <description>Constructs a new ErrorResettingRetryCounterFailed exception with null as the value for its detail message</description>
-      </constructor>
-      <constructor>
-        <signature>ErrorResettingRetryCounterFailed(String message)</signature>
-        <description>Constructs a new ErrorResettingRetryCounterFailed exception whereby its detail message is initialized with the passed value</description>
-        <parameter name="message">value for the detail message of the exception, typically indicating retry counter reset failure</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorResettingRetryCounterFailed(String message, Throwable cause)</signature>
-        <description>Constructs a new ErrorResettingRetryCounterFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorResettingRetryCounterFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-        <description>Constructs a new ErrorResettingRetryCounterFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-      </constructor>
-    </constructors>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>

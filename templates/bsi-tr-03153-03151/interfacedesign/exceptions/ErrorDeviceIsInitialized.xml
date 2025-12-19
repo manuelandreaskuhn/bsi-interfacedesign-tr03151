@@ -11,31 +11,6 @@
   <javadoc>
     <summary>This class defines the exception ErrorDeviceIsInitialized that is thrown if the SE API function initialize has already been invoked before.</summary>
     <description>The device initialization function has been invoked when the device was already in an initialized state. This exception indicates that a duplicate initialization attempt was detected. Once a device has been successfully initialized, subsequent calls to the initialize function are not permitted and will raise this exception as a safeguard against re-initialization of an already active device.</description>
-    <constructors>
-      <constructor>
-        <signature>ErrorDeviceIsInitialized()</signature>
-        <description>Constructs a new ErrorDeviceIsInitialized exception with null as the value for its detail message</description>
-      </constructor>
-      <constructor>
-        <signature>ErrorDeviceIsInitialized(String message)</signature>
-        <description>Constructs a new ErrorDeviceIsInitialized exception whereby its detail message is initialized with the passed value</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorDeviceIsInitialized(String message, Throwable cause)</signature>
-        <description>Constructs a new ErrorDeviceIsInitialized exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorDeviceIsInitialized(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-        <description>Constructs a new ErrorDeviceIsInitialized exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-      </constructor>
-    </constructors>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>

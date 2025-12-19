@@ -7,31 +7,6 @@
   <javadoc>
     <summary>This class defines the exception ErrorDisableSecureElementFailed that is thrown if the deactivation of the Secure Element failed.</summary>
     <description>The disableSecureElement function invokes the Secure Element's deactivation functionality. This exception is raised when the Secure Element cannot be successfully deactivated. Once raised, the Secure Element remains in an enabled state and all its functionality continues to be accessible. After this exception is raised, the function exits without storing the log message. No further modifications to the device state are made - only the attempted deactivation of the Secure Element failed.</description>
-    <constructors>
-      <constructor>
-        <signature>ErrorDisableSecureElementFailed()</signature>
-        <description>Constructs a new ErrorDisableSecureElementFailed exception with null as the value for its detail message</description>
-      </constructor>
-      <constructor>
-        <signature>ErrorDisableSecureElementFailed(String message)</signature>
-        <description>Constructs a new ErrorDisableSecureElementFailed exception whereby its detail message is initialized with the passed value</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorDisableSecureElementFailed(String message, Throwable cause)</signature>
-        <description>Constructs a new ErrorDisableSecureElementFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorDisableSecureElementFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-        <description>Constructs a new ErrorDisableSecureElementFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-      </constructor>
-    </constructors>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>

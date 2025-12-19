@@ -10,31 +10,6 @@
   <javadoc>
     <summary>This class defines the exception ErrorGetSupportedUpdateVariantsFailed that is thrown if the determination of the supported update variants failed.</summary>
     <description>This exception is thrown when the getSupportedUpdateVariants function cannot retrieve the list of supported firmware update variants from the Secure Element. Supported update variants information describes which update mechanisms (delta, full image, modular, etc.) and configuration variants the Secure Element supports for firmware updates. ErrorGetSupportedUpdateVariantsFailed indicates that the Secure Element cannot provide the supported variants list due to hardware failure, firmware information storage corruption, internal device information system errors, communication failures, or Secure Element state restrictions. When this exception occurs, no supported variants list is returned and applications cannot determine which update strategies are available for this device. Recovery typically involves device verification, device information subsystem diagnostics, and firmware inspection if the failure persists.</description>
-    <constructors>
-      <constructor>
-        <signature>ErrorGetSupportedUpdateVariantsFailed()</signature>
-        <description>Constructs a new ErrorGetSupportedUpdateVariantsFailed exception with null as the value for its detail message</description>
-      </constructor>
-      <constructor>
-        <signature>ErrorGetSupportedUpdateVariantsFailed(String message)</signature>
-        <description>Constructs a new ErrorGetSupportedUpdateVariantsFailed exception whereby its detail message is initialized with the passed value</description>
-        <parameter name="message">value for the detail message of the exception, typically describing the supported update variants retrieval failure</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorGetSupportedUpdateVariantsFailed(String message, Throwable cause)</signature>
-        <description>Constructs a new ErrorGetSupportedUpdateVariantsFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorGetSupportedUpdateVariantsFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-        <description>Constructs a new ErrorGetSupportedUpdateVariantsFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-      </constructor>
-    </constructors>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>

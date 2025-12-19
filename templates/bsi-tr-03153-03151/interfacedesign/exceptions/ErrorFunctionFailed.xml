@@ -7,31 +7,6 @@
   <javadoc>
     <summary>This class defines the exception ErrorFunctionFailed that is thrown if the SE API encounters a critical error which is not covered by the other defined exceptions.</summary>
     <description>ErrorFunctionFailed is a universal exception that is raised when a critical error occurs during function execution and the error does not match any of the specific exception categories defined in the SE API specification. This exception serves as a catch-all mechanism to handle unexpected failure conditions that were not anticipated or specifically addressed by the API design. When this exception is raised, it indicates that the function could not complete its intended operation successfully, but the nature of the failure is not covered by more specific exceptions such as ErrorDeviceNotInitialized, ErrorSecureElementDisabled, ErrorSigningEventDataFailed, or other specialized exception types.</description>
-    <constructors>
-      <constructor>
-        <signature>ErrorFunctionFailed()</signature>
-        <description>Constructs a new ErrorFunctionFailed exception with null as the value for its detail message</description>
-      </constructor>
-      <constructor>
-        <signature>ErrorFunctionFailed(String message)</signature>
-        <description>Constructs a new ErrorFunctionFailed exception whereby its detail message is initialized with the passed value</description>
-        <parameter name="message">value for the detail message of the exception, typically describing the nature of the critical error encountered</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorFunctionFailed(String message, Throwable cause)</signature>
-        <description>Constructs a new ErrorFunctionFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception, representing the underlying error that triggered this critical failure</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorFunctionFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-        <description>Constructs a new ErrorFunctionFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-      </constructor>
-    </constructors>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>

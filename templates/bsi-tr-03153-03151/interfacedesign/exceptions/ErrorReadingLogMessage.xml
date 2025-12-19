@@ -11,31 +11,6 @@
   <javadoc>
     <summary>This class defines the exception ErrorReadingLogMessage that is thrown if reading log message data from the Secure Element fails.</summary>
     <description>This exception is thrown when the getLastLogMessage or exportLogMessages functions successfully locate log messages in the Secure Element's storage but encounter a failure when attempting to read or retrieve the message data. Different from ErrorNoLogMessageFound (which indicates no messages exist), ErrorReadingLogMessage indicates that messages exist but cannot be accessed due to a device-level storage or I/O error. Common causes include: device storage corruption, device communication failure during data retrieval, device internal error during read operation, or insufficient device resources to complete the read operation. ErrorReadingLogMessage is a High severity exception that indicates a device malfunction or serious storage issue. Recovery requires investigating the device error condition and potentially retrying the operation or performing device maintenance.</description>
-    <constructors>
-      <constructor>
-        <signature>ErrorReadingLogMessage()</signature>
-        <description>Constructs a new ErrorReadingLogMessage exception with null as the value for its detail message</description>
-      </constructor>
-      <constructor>
-        <signature>ErrorReadingLogMessage(String message)</signature>
-        <description>Constructs a new ErrorReadingLogMessage exception whereby its detail message is initialized with the passed value</description>
-        <parameter name="message">value for the detail message of the exception, typically describing the log message read failure details</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorReadingLogMessage(String message, Throwable cause)</signature>
-        <description>Constructs a new ErrorReadingLogMessage exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorReadingLogMessage(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-        <description>Constructs a new ErrorReadingLogMessage exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-      </constructor>
-    </constructors>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>

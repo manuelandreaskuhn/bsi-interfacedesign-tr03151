@@ -48,31 +48,6 @@
   <javadoc>
     <summary>This class defines the exception ErrorDeviceNotInitialized that is thrown by any SE API function if the device is not initialized but the function requires the device to be initialized.</summary>
     <description>A function requiring device initialization has been invoked when the device has not yet been initialized. This exception indicates a mandatory prerequisite violation - the initialize function must be called once and complete successfully before any other API functions that require device initialization can be executed. The device must be in an initialized state for the vast majority of API functions to operate correctly.</description>
-    <constructors>
-      <constructor>
-        <signature>ErrorDeviceNotInitialized()</signature>
-        <description>Constructs a new ErrorDeviceNotInitialized exception with null as the value for its detail message</description>
-      </constructor>
-      <constructor>
-        <signature>ErrorDeviceNotInitialized(String message)</signature>
-        <description>Constructs a new ErrorDeviceNotInitialized exception whereby its detail message is initialized with the passed value</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorDeviceNotInitialized(String message, Throwable cause)</signature>
-        <description>Constructs a new ErrorDeviceNotInitialized exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorDeviceNotInitialized(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-        <description>Constructs a new ErrorDeviceNotInitialized exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-      </constructor>
-    </constructors>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>

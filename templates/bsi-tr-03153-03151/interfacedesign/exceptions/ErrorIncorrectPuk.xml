@@ -7,31 +7,6 @@
   <javadoc>
     <summary>This class defines the exception ErrorIncorrectPuk that is thrown if the SE API function unblockPin has been invoked with an incorrect PUK.</summary>
     <description>This exception is thrown when the unblockPin function receives an incorrect PUK that does not match the registered PIN unblock credential. PUK verification is a critical security operation that controls access to PIN unblock functionality and prevents unauthorized PIN reset attempts. ErrorIncorrectPuk indicates that the supplied PUK does not match the registered PIN Unblock Key stored on the Secure Element. When this exception occurs, the PIN unblock operation fails and the PIN remains blocked. The Secure Element may also track failed PUK verification attempts and implement security countermeasures (PUK retry counter decrement, potential PUK blocking after maximum failures). Recovery requires supplying the correct PUK in a subsequent unblock attempt, or requesting administrative assistance if the PUK is incorrect or unknown.</description>
-    <constructors>
-      <constructor>
-        <signature>ErrorIncorrectPuk()</signature>
-        <description>Constructs a new ErrorIncorrectPuk exception with null as the value for its detail message</description>
-      </constructor>
-      <constructor>
-        <signature>ErrorIncorrectPuk(String message)</signature>
-        <description>Constructs a new ErrorIncorrectPuk exception whereby its detail message is initialized with the passed value</description>
-        <parameter name="message">value for the detail message of the exception, typically describing the incorrect PUK error</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorIncorrectPuk(String message, Throwable cause)</signature>
-        <description>Constructs a new ErrorIncorrectPuk exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorIncorrectPuk(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-        <description>Constructs a new ErrorIncorrectPuk exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-      </constructor>
-    </constructors>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>

@@ -7,31 +7,6 @@
   <javadoc>
     <summary>This class defines the exception ErrorGetUsedMemoryFailed that is thrown if the determination of the used storage amount failed.</summary>
     <description>This exception is thrown when the getUsedMemory function cannot retrieve the current memory utilization from the Secure Element. Used memory information describes the amount of storage currently consumed by data, transactions, logging, and other internal structures on the Secure Element. ErrorGetUsedMemoryFailed indicates that the Secure Element cannot provide the used memory information due to hardware failure, memory accounting corruption, internal resource management system errors, communication failures, or Secure Element state restrictions. When this exception occurs, no used memory value is returned and applications cannot determine the current storage utilization. Recovery typically involves device verification, resource management subsystem diagnostics, and accounting verification if the failure persists.</description>
-    <constructors>
-      <constructor>
-        <signature>ErrorGetUsedMemoryFailed()</signature>
-        <description>Constructs a new ErrorGetUsedMemoryFailed exception with null as the value for its detail message</description>
-      </constructor>
-      <constructor>
-        <signature>ErrorGetUsedMemoryFailed(String message)</signature>
-        <description>Constructs a new ErrorGetUsedMemoryFailed exception whereby its detail message is initialized with the passed value</description>
-        <parameter name="message">value for the detail message of the exception, typically describing the used memory retrieval failure</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorGetUsedMemoryFailed(String message, Throwable cause)</signature>
-        <description>Constructs a new ErrorGetUsedMemoryFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorGetUsedMemoryFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-        <description>Constructs a new ErrorGetUsedMemoryFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-      </constructor>
-    </constructors>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>

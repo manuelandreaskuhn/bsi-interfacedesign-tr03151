@@ -10,31 +10,6 @@
   <javadoc>
     <summary>This class defines the exception ErrorTransactionCounterOverflow that is thrown if the transaction counter has reached its logical maximum value.</summary>
     <description>This exception is thrown when the transaction counter reaches its logical maximum value and cannot be incremented further. The transaction counter maintains a numeric record of executed transactions with a defined maximum representable value. This maximum is a logical limit based on counter data type size (typically 64-bit or 128-bit integer). After many transactions over extended operational lifetime, the counter approaches and eventually reaches this logical maximum. Once at maximum, the counter cannot increment without overflow. ErrorTransactionCounterOverflow is a Critical severity exception because transaction functionality is completely blocked. The counter has reached the end of its lifecycle. All transaction operations (startTransaction, updateTransaction, finishTransaction) cannot proceed. Device replacement or counter reset is required, though reset compromises transaction authenticity. ErrorTransactionCounterOverflow indicates a device reaching end-of-life operational capacity.</description>
-    <constructors>
-      <constructor>
-        <signature>ErrorTransactionCounterOverflow()</signature>
-        <description>Constructs a new ErrorTransactionCounterOverflow exception with null as the value for its detail message</description>
-      </constructor>
-      <constructor>
-        <signature>ErrorTransactionCounterOverflow(String message)</signature>
-        <description>Constructs a new ErrorTransactionCounterOverflow exception whereby its detail message is initialized with the passed value</description>
-        <parameter name="message">value for the detail message of the exception, typically describing counter maximum value reached</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorTransactionCounterOverflow(String message, Throwable cause)</signature>
-        <description>Constructs a new ErrorTransactionCounterOverflow exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorTransactionCounterOverflow(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-        <description>Constructs a new ErrorTransactionCounterOverflow exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-      </constructor>
-    </constructors>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>

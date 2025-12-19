@@ -7,31 +7,6 @@
   <javadoc>
     <summary>This class defines the exception ErrorPinBlocked that is thrown if the PIN has been blocked after excessive failed authentication attempts.</summary>
     <description>This exception is thrown when the authenticateUser function is called but the user's PIN is in a blocked state. The PIN blocking mechanism is a critical security feature that prevents brute-force attacks on user authentication. When a user makes several consecutive incorrect PIN entries (typically 3-5 attempts depending on device configuration), the device automatically blocks the PIN to protect account security. ErrorPinBlocked indicates that the PIN is blocked and authentication cannot proceed. The user must unblock the PIN by providing the correct PUK (PIN Unblock Key) via the unblockPin function before authentication can resume. This is a critical security event that requires proper handling and potentially user notification. Recovery requires either calling unblockPin with the correct PUK to unblock the PIN, or administratively resetting the PIN through alternative means if the PUK is lost.</description>
-    <constructors>
-      <constructor>
-        <signature>ErrorPinBlocked()</signature>
-        <description>Constructs a new ErrorPinBlocked exception with null as the value for its detail message</description>
-      </constructor>
-      <constructor>
-        <signature>ErrorPinBlocked(String message)</signature>
-        <description>Constructs a new ErrorPinBlocked exception whereby its detail message is initialized with the passed value</description>
-        <parameter name="message">value for the detail message of the exception, typically indicating PIN is blocked and must be unblocked</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorPinBlocked(String message, Throwable cause)</signature>
-        <description>Constructs a new ErrorPinBlocked exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorPinBlocked(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-        <description>Constructs a new ErrorPinBlocked exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-      </constructor>
-    </constructors>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>

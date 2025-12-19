@@ -7,31 +7,6 @@
   <javadoc>
     <summary>This class defines the exception ErrorClientAlreadyRegistered that is thrown if the SE API function registerClient has already been invoked for the specific clientId. The clientId is therefore already registered.</summary>
     <description>The ErrorClientAlreadyRegistered exception indicates that an attempt was made to register a client ID that has already been registered with the device. Each client ID must be unique within the device's client registry, and duplicate registration attempts violate this constraint. When this exception is raised, the registration operation fails immediately without modifying the client registry or device state. The application must choose a different clientId or deregister the existing client before attempting a new registration with the same ID.</description>
-    <constructors>
-      <constructor>
-        <signature>ErrorClientAlreadyRegistered()</signature>
-        <description>Constructs a new ErrorClientAlreadyRegistered exception with null as the value for its detail message</description>
-      </constructor>
-      <constructor>
-        <signature>ErrorClientAlreadyRegistered(String message)</signature>
-        <description>Constructs a new ErrorClientAlreadyRegistered exception whereby its detail message is initialized with the passed value</description>
-        <parameter name="message">value for the detail message of the exception, typically containing the duplicate clientId</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorClientAlreadyRegistered(String message, Throwable cause)</signature>
-        <description>Constructs a new ErrorClientAlreadyRegistered exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorClientAlreadyRegistered(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-        <description>Constructs a new ErrorClientAlreadyRegistered exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-      </constructor>
-    </constructors>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>

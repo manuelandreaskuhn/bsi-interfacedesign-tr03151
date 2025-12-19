@@ -7,31 +7,6 @@
   <javadoc>
     <summary>The exception ErrorExportLoggingCertificateFailed is thrown if the collection of the certificates for the export failed.</summary>
     <description>The exportLoggingCertificates function performs a multi-step process to export logging certificates from the Secure Element. This exception is raised when the Secure Element cannot provide the required certificates during the collection phase of the export operation. When this exception occurs, no export data is returned to the user, and the function exits without providing any partial certificate data. The failure indicates that the Secure Element's certificate retrieval functionality did not complete successfully.</description>
-    <constructors>
-      <constructor>
-        <signature>ErrorExportLoggingCertificateFailed()</signature>
-        <description>Constructs a new ErrorExportLoggingCertificateFailed exception with null as the value for its detail message</description>
-      </constructor>
-      <constructor>
-        <signature>ErrorExportLoggingCertificateFailed(String message)</signature>
-        <description>Constructs a new ErrorExportLoggingCertificateFailed exception whereby its detail message is initialized with the passed value</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorExportLoggingCertificateFailed(String message, Throwable cause)</signature>
-        <description>Constructs a new ErrorExportLoggingCertificateFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorExportLoggingCertificateFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-        <description>Constructs a new ErrorExportLoggingCertificateFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-      </constructor>
-    </constructors>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>

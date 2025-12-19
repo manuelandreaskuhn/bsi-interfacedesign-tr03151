@@ -10,31 +10,6 @@
   <javadoc>
     <summary>This class defines the exception ErrorTransactionCounterExhausted that is thrown if the physical memory of the transaction counter is exhausted and can no longer guarantee error-free operation.</summary>
     <description>This exception is thrown when the transaction counter's physical memory has been exhausted and cannot guarantee reliable recording of new transactions. The transaction counter maintains a persistent record of all executed transactions for authenticity and non-repudiation purposes. Physical memory resources are finite and can become exhausted after many transactions. When memory is exhausted, the counter cannot reliably record transactions and ErrorTransactionCounterExhausted is raised. This is a Critical severity exception because transaction functionality is completely blocked. All transaction operations (startTransaction, updateTransaction, finishTransaction) cannot proceed. Device maintenance is required to restore or replace counter memory. ErrorTransactionCounterExhausted indicates a serious device resource limitation requiring immediate intervention.</description>
-    <constructors>
-      <constructor>
-        <signature>ErrorTransactionCounterExhausted()</signature>
-        <description>Constructs a new ErrorTransactionCounterExhausted exception with null as the value for its detail message</description>
-      </constructor>
-      <constructor>
-        <signature>ErrorTransactionCounterExhausted(String message)</signature>
-        <description>Constructs a new ErrorTransactionCounterExhausted exception whereby its detail message is initialized with the passed value</description>
-        <parameter name="message">value for the detail message of the exception, typically describing counter memory exhaustion state</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorTransactionCounterExhausted(String message, Throwable cause)</signature>
-        <description>Constructs a new ErrorTransactionCounterExhausted exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorTransactionCounterExhausted(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-        <description>Constructs a new ErrorTransactionCounterExhausted exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-      </constructor>
-    </constructors>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>

@@ -7,31 +7,6 @@
   <javadoc>
     <summary>This class defines the exception ErrorUnblockingPinFailed that is thrown if the unblockPin function fails to unblock a PIN.</summary>
     <description>This exception is thrown when the unblockPin function fails to unblock a locked PIN. PINs can be locked after too many incorrect authentication attempts. The unblockPin function restores PIN functionality by verifying the correct unblock PIN (PUK). If unblock verification fails, hardware errors occur, or device issues prevent completion, ErrorUnblockingPinFailed is raised. This indicates the unblock operation could not be successfully completed. The PIN remains locked and inaccessible. ErrorUnblockingPinFailed is a High severity exception because PIN-protected operations remain unavailable until unblocking succeeds. Recovery requires retrying unblock with correct PUK or investigating device state issues.</description>
-    <constructors>
-      <constructor>
-        <signature>ErrorUnblockingPinFailed()</signature>
-        <description>Constructs a new ErrorUnblockingPinFailed exception with null as the value for its detail message</description>
-      </constructor>
-      <constructor>
-        <signature>ErrorUnblockingPinFailed(String message)</signature>
-        <description>Constructs a new ErrorUnblockingPinFailed exception whereby its detail message is initialized with the passed value</description>
-        <parameter name="message">value for the detail message of the exception, typically describing reason for unblock failure</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorUnblockingPinFailed(String message, Throwable cause)</signature>
-        <description>Constructs a new ErrorUnblockingPinFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorUnblockingPinFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-        <description>Constructs a new ErrorUnblockingPinFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-      </constructor>
-    </constructors>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>

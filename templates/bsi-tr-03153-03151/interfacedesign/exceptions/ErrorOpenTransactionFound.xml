@@ -11,31 +11,6 @@
   <javadoc>
     <summary>This class defines the exception ErrorOpenTransactionFound that is thrown if there are open transactions when they must be closed.</summary>
     <description>This exception is thrown when disableSecureElement or updateDevice functions cannot proceed because there are open (unfinished) transactions on the device. These operations have a prerequisite that all transactions must be in a completed state before they can execute. Open transactions represent active processing contexts that must be properly finalized before certain device-level operations can be safely performed. ErrorOpenTransactionFound indicates that the attempted operation was blocked because at least one transaction is still in the open state. Recovery requires completing (finishing) all open transactions via the finishTransaction function before retrying the blocked operation. This prevents device operations from occurring while transaction processing is incomplete, protecting data consistency and transaction integrity.</description>
-    <constructors>
-      <constructor>
-        <signature>ErrorOpenTransactionFound()</signature>
-        <description>Constructs a new ErrorOpenTransactionFound exception with null as the value for its detail message</description>
-      </constructor>
-      <constructor>
-        <signature>ErrorOpenTransactionFound(String message)</signature>
-        <description>Constructs a new ErrorOpenTransactionFound exception whereby its detail message is initialized with the passed value</description>
-        <parameter name="message">value for the detail message of the exception, typically identifying how many open transactions were found</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorOpenTransactionFound(String message, Throwable cause)</signature>
-        <description>Constructs a new ErrorOpenTransactionFound exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorOpenTransactionFound(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-        <description>Constructs a new ErrorOpenTransactionFound exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-      </constructor>
-    </constructors>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>

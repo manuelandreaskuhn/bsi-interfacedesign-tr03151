@@ -27,31 +27,6 @@
   <javadoc>
     <summary>This class defines the exception ErrorStorageMemoryFull that is thrown if the storage memory is full.</summary>
     <description>This exception is thrown when the device storage capacity is exhausted and no additional data can be written. The device storage holds configuration, transaction logs, user data, and audit trail information. ErrorStorageMemoryFull indicates the storage has reached full capacity and write operations cannot proceed. Common causes include: accumulation of transaction logs, excessive transaction volume, inadequate storage capacity for application workload, or logs not regularly exported or archived. ErrorStorageMemoryFull is a Critical severity exception because it blocks new transactions and prevents critical operations that require storage writes. The device cannot accept new transactions when storage is full. Recovery requires freeing storage space by exporting and deleting logs, or implementing archive procedures to manage storage utilization.</description>
-    <constructors>
-      <constructor>
-        <signature>ErrorStorageMemoryFull()</signature>
-        <description>Constructs a new ErrorStorageMemoryFull exception with null as the value for its detail message</description>
-      </constructor>
-      <constructor>
-        <signature>ErrorStorageMemoryFull(String message)</signature>
-        <description>Constructs a new ErrorStorageMemoryFull exception whereby its detail message is initialized with the passed value</description>
-        <parameter name="message">value for the detail message of the exception, typically describing the storage full condition</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorStorageMemoryFull(String message, Throwable cause)</signature>
-        <description>Constructs a new ErrorStorageMemoryFull exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorStorageMemoryFull(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-        <description>Constructs a new ErrorStorageMemoryFull exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-      </constructor>
-    </constructors>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>

@@ -7,31 +7,6 @@
   <javadoc>
     <summary>This class defines the exception ErrorGetDeviceHealthFailed that is thrown if the SE API function getDeviceHealth fails to determine health information about the device.</summary>
     <description>This exception is thrown when the getDeviceHealth function cannot retrieve the device's health status information from the Secure Element. Device health information provides diagnostic details about the device's operational state, component functionality, error conditions, and resource availability. ErrorGetDeviceHealthFailed indicates that the Secure Element cannot provide health status data due to hardware failure, diagnostic subsystem errors, internal health monitoring system failures, communication failures, or Secure Element state restrictions. When this exception occurs, no health data is returned and applications cannot assess device operational status or identify potential problems. Recovery typically involves device verification, health monitoring subsystem diagnostics, and possible hardware diagnosis if the failure persists.</description>
-    <constructors>
-      <constructor>
-        <signature>ErrorGetDeviceHealthFailed()</signature>
-        <description>Constructs a new ErrorGetDeviceHealthFailed exception with null as the value for its detail message</description>
-      </constructor>
-      <constructor>
-        <signature>ErrorGetDeviceHealthFailed(String message)</signature>
-        <description>Constructs a new ErrorGetDeviceHealthFailed exception whereby its detail message is initialized with the passed value</description>
-        <parameter name="message">value for the detail message of the exception, typically describing the device health retrieval failure</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorGetDeviceHealthFailed(String message, Throwable cause)</signature>
-        <description>Constructs a new ErrorGetDeviceHealthFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorGetDeviceHealthFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-        <description>Constructs a new ErrorGetDeviceHealthFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-      </constructor>
-    </constructors>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>

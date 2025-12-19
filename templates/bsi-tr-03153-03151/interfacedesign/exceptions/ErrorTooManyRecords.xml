@@ -7,31 +7,6 @@
   <javadoc>
     <summary>This class defines the exception ErrorTooManyRecords that is thrown if export query results exceed the specified maximum record count.</summary>
     <description>This exception is thrown when a data export operation would return more records than the maximum number specified by the caller. Export operations (exportLogMessages, exportFilteredTransactionLogs) allow specifying a maximum record count parameter to control result set size and memory usage. ErrorTooManyRecords indicates that the number of matching records exceeds this maximum. The exception helps prevent memory exhaustion and excessive response sizes from returning too many records at once. Common causes include: query parameters too broad, maximum record count too low, or large number of matching records in database. ErrorTooManyRecords is a Medium severity exception because the query is valid but the result set is too large. Recovery requires refining query parameters to be more specific or requesting records in smaller batches using pagination.</description>
-    <constructors>
-      <constructor>
-        <signature>ErrorTooManyRecords()</signature>
-        <description>Constructs a new ErrorTooManyRecords exception with null as the value for its detail message</description>
-      </constructor>
-      <constructor>
-        <signature>ErrorTooManyRecords(String message)</signature>
-        <description>Constructs a new ErrorTooManyRecords exception whereby its detail message is initialized with the passed value</description>
-        <parameter name="message">value for the detail message of the exception, typically describing how many records matched vs maximum allowed</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorTooManyRecords(String message, Throwable cause)</signature>
-        <description>Constructs a new ErrorTooManyRecords exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorTooManyRecords(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-        <description>Constructs a new ErrorTooManyRecords exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-      </constructor>
-    </constructors>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>

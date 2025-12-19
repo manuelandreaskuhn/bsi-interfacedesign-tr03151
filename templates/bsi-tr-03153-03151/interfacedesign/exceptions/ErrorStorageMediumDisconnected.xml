@@ -42,31 +42,6 @@
   <javadoc>
     <summary>This class defines the exception ErrorStorageMediumDisconnected that is thrown if the storage medium is disconnected or unavailable.</summary>
     <description>This exception is thrown when the Secure Element detects that its storage medium is disconnected or not available. The storage medium is critical for all device operations including storing transaction logs, configuration, user data, and audit trail information. ErrorStorageMediumDisconnected indicates that the device cannot access its storage, preventing read and write operations. Common causes include: physical connector disconnection, storage device hardware failure, storage interface malfunction, power loss to storage subsystem, or storage medium removal. ErrorStorageMediumDisconnected is a Critical severity exception because it blocks virtually all SE API operations that depend on storage access. The device is effectively unusable when storage is unavailable. Recovery requires addressing the hardware connectivity issue and restoring storage accessibility.</description>
-    <constructors>
-      <constructor>
-        <signature>ErrorStorageMediumDisconnected()</signature>
-        <description>Constructs a new ErrorStorageMediumDisconnected exception with null as the value for its detail message</description>
-      </constructor>
-      <constructor>
-        <signature>ErrorStorageMediumDisconnected(String message)</signature>
-        <description>Constructs a new ErrorStorageMediumDisconnected exception whereby its detail message is initialized with the passed value</description>
-        <parameter name="message">value for the detail message of the exception, typically describing which storage medium is disconnected</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorStorageMediumDisconnected(String message, Throwable cause)</signature>
-        <description>Constructs a new ErrorStorageMediumDisconnected exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorStorageMediumDisconnected(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-        <description>Constructs a new ErrorStorageMediumDisconnected exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-      </constructor>
-    </constructors>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>

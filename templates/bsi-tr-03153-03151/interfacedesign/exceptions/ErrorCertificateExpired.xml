@@ -7,31 +7,6 @@
   <javadoc>
     <summary>This class defines the exception ErrorCertificateExpired that is thrown if a SE API function is invoked and the certificate with the public key for the verification of the appropriate type of log messages is expired.</summary>
     <description>The ErrorCertificateExpired exception indicates that a function has successfully completed its primary operation (creating and storing a log message), but the certificate used for signing the log message has expired. Unlike typical exception scenarios where the operation fails, this exception is raised AFTER the log message has already been created and stored by the Secure Element. This design ensures that log messages are persisted even when the signing certificate is no longer valid, maintaining logging continuity. Applications should treat this as a warning condition indicating that certificate renewal or replacement may be necessary, while acknowledging that the log message operation succeeded. The expired certificate does not prevent logging but does indicate a potential security or compliance issue that requires attention.</description>
-    <constructors>
-      <constructor>
-        <signature>ErrorCertificateExpired()</signature>
-        <description>Constructs a new ErrorCertificateExpired exception with null as the value for its detail message</description>
-      </constructor>
-      <constructor>
-        <signature>ErrorCertificateExpired(String message)</signature>
-        <description>Constructs a new ErrorCertificateExpired exception whereby its detail message is initialized with the passed value</description>
-        <parameter name="message">value for the detail message of the exception, typically identifying which certificate is expired</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorCertificateExpired(String message, Throwable cause)</signature>
-        <description>Constructs a new ErrorCertificateExpired exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-      </constructor>
-      <constructor>
-        <signature>ErrorCertificateExpired(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-        <description>Constructs a new ErrorCertificateExpired exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-        <parameter name="message">value for the detail message of the exception</parameter>
-        <parameter name="cause">value for the cause of the exception</parameter>
-        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-      </constructor>
-    </constructors>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>
