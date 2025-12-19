@@ -3121,6 +3121,7 @@
       const [notification, setNotification] = useState(null);
       const [activeView, setActiveView] = useState(initialRoute.activeView);
       const [overview, setOverview] = useState(null);
+      const [hasTestCases, setHasTestCases] = useState(false);
       const [selectedItem, setSelectedItem] = useState(initialRoute.selectedItem);
       
       // Initialize
@@ -3165,6 +3166,7 @@
           const data = await response.json();
           if (data.success) {
             setOverview(data.overview);
+            setHasTestCases(data.hasTestCases || false);
           }
           setLoading(false);
         } catch (err) {
@@ -3357,15 +3359,17 @@
               </div>
 
               <div className="flex items-center gap-4">
-                {/* Link to TestCases */}
-                <a
-                  href={`/${instance}`}
-                  className="flex items-center text-sm text-emerald-200 hover:text-white transition-colors"
-                  title="Zum Testcase Manager"
-                >
-                  <Icon name="flask" className="mr-1" />
-                  TestCases
-                </a>
+                {/* Link to TestCases - only show if testcases module is active */}
+                {hasTestCases && (
+                  <a
+                    href={`/${instance}`}
+                    className="flex items-center text-sm text-emerald-200 hover:text-white transition-colors"
+                    title="Zum Testcase Manager"
+                  >
+                    <Icon name="flask" className="mr-1" />
+                    TestCases
+                  </a>
+                )}
                 
                 {/* Refresh Button */}
                 <button

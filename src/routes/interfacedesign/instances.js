@@ -37,7 +37,6 @@ async function getInterfaceStats(interfacedesignPath) {
 
   try {
     await fs.access(interfacedesignPath);
-    stats.hasInterfaces = true;
 
     // Count functions
     const functionsPath = path.join(interfacedesignPath, 'functions');
@@ -54,6 +53,10 @@ async function getInterfaceStats(interfacedesignPath) {
     // Count enums
     const enumsPath = path.join(interfacedesignPath, 'enums');
     stats.enumCount = await countXmlFiles(enumsPath);
+
+    // Only set hasInterfaces to true if at least one XML file exists
+    const totalCount = stats.functionCount + stats.exceptionCount + stats.typeCount + stats.enumCount;
+    stats.hasInterfaces = totalCount > 0;
 
   } catch {
     stats.hasInterfaces = false;
