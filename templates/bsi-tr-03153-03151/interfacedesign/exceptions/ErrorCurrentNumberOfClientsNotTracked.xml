@@ -3,6 +3,7 @@
   <name>ErrorCurrentNumberOfClientsNotTracked</name>
   <description>This exception is thrown if the device does not track the current number of registered clients and therefore cannot provide this information through the getCurrentNumberOfClients function. The exception represents a device capability limitation rather than a functional failure. ErrorCurrentNumberOfClientsNotTracked is raised when an application invokes getCurrentNumberOfClients on a device that supports a practically unlimited number of clients simultaneously and has deliberately omitted client counting functionality to avoid performance overhead. This exception indicates that the device is operating normally, but the specific capability to enumerate or count currently registered clients is not implemented or has been disabled. The exception is raised after the device validates that the function was invoked correctly but determines that client tracking is not available on this device variant.</description>
   <category>Client Management</category>
+  <subcategory>State Tracking</subcategory>
   <severity>Medium</severity>
   <javadoc>
     <summary>This class defines the exception ErrorCurrentNumberOfClientsNotTracked that is thrown if the devices does not track the current number of (registered) clients. Therefore, the SE API function getCurrentNumberOfClients cannot provide a number.</summary>
@@ -103,3 +104,4 @@
     <note>Application cannot retrieve real-time client count at this time</note>
   </implementationContext>
 </exception>
+

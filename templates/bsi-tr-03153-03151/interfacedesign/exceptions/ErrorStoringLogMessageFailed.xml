@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorStoringLogMessageFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorStoringLogMessageFailed</name>
   <description>This exception is thrown if the storage of a log message in the device storage fails. Transaction operations (startTransaction, updateTransaction, finishTransaction) create digitally signed log messages that record transaction events in the audit trail. If the log message cannot be stored to device storage, ErrorStoringLogMessageFailed indicates the transaction was not properly recorded in the audit trail. Common causes include: device storage write errors, insufficient storage capacity, storage medium issues, or communication failures. ErrorStoringLogMessageFailed is a Critical condition because it means the transaction is not protected by a tamper-proof audit trail record. The transaction may have been partially processed but is not reliably recorded.</description>
-  <category>Logging - Log Message Storage - Storage Failure</category>
+  <category>Logging</category>
+  <subcategory>Log Message Storage - Storage Failure</subcategory>
   <severity>Critical</severity>
   <thrownBy>
     <function>authenticateUser</function>
@@ -135,3 +136,4 @@
     <note>Storage failure prevents log message persistence</note>
   </implementationContext>
 </exception>
+

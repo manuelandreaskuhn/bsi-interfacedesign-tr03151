@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorGetSupportedUpdateVariantsFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorGetSupportedUpdateVariantsFailed</name>
   <description>This exception is thrown if the SE API function getSupportedUpdateVariants fails to retrieve the list of supported firmware update variants. The function attempts to determine which update mechanisms and variant configurations the Secure Element supports, but the retrieval process fails before the supported update variants can be determined and returned.</description>
-  <category>Device Update - Update Variants Query</category>
+  <category>Device Update</category>
+  <subcategory>Update Variants Query</subcategory>
   <severity>High</severity>
   <thrownBy>
     <function>getSupportedTransactionUpdateVariants</function>
@@ -113,3 +114,4 @@
     <note>Retrieval failure prevents update capability information</note>
   </implementationContext>
 </exception>
+

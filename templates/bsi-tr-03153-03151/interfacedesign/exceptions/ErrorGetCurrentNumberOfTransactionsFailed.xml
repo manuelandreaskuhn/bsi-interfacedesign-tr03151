@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorGetCurrentNumberOfTransactionsFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorGetCurrentNumberOfTransactionsFailed</name>
   <description>This exception is thrown if the determination of the number of currently opened transactions failed. ErrorGetCurrentNumberOfTransactionsFailed represents a failure in the device's ability to retrieve and report the count of currently active transactions. This exception indicates that the getCurrentNumberOfTransactions function requested transaction count information from the device but the device cannot determine or provide the required count due to a hardware error, firmware issue, transaction registry failure, or communication breakdown. The exception is raised when the device's transaction management tracking functionality did not complete successfully, preventing applications from monitoring active transactions and device transaction utilization. The exception is raised during the transaction count retrieval phase before the count is packaged into the return structure, ensuring no partial or incomplete count data is returned.</description>
-  <category>Transaction Management - Information Retrieval</category>
+  <category>Transaction Management</category>
+  <subcategory>Information Retrieval</subcategory>
   <severity>Medium</severity>
   <javadoc>
     <summary>This class defines the exception ErrorGetCurrentNumberOfTransactionsFailed that is thrown if the determination of the number of currently opened transactions failed.</summary>
@@ -113,3 +114,4 @@
     <note>Retrieval failure prevents transaction count information</note>
   </implementationContext>
 </exception>
+

@@ -3,6 +3,7 @@
   <name>ErrorConfigureLoggingFailed</name>
   <description>This exception is thrown if the invocation of SE API function configureLogging failed to set the logging configuration for a specific event in a component. The exception represents a critical failure in the Secure Element's ability to apply event-based logging policies to its internal components and modules. ErrorConfigureLoggingFailed is raised when the Secure Element attempts to configure logging for a specified component and event pair, but encounters an internal error that prevents the configuration from being successfully applied. This exception indicates that the device's logging subsystem has rejected the configuration request due to device-level constraints, internal state inconsistencies, memory limitations, or Secure Element hardware/firmware errors. The exception is raised after the Secure Element has validated the configuration parameters but failed during the actual application of the logging settings to the component.</description>
   <category>Logging</category>
+  <subcategory>Configuration</subcategory>
   <severity>High</severity>
   <javadoc>
     <summary>This class defines the exception ErrorConfigureLoggingFailed that is thrown if the invokation of SE API function configureLogging failed to set the configuration.</summary>
@@ -106,3 +107,4 @@
     <note>Configuration failure prevents logging behavior changes</note>
   </implementationContext>
 </exception>
+

@@ -3,6 +3,7 @@
   <name>ErrorClientNotRegistered</name>
   <description>This exception is thrown if an SE API function is invoked with a clientId that has not been registered using registerClient beforehand, or if the clientId has been previously deregistered. The exception serves as a critical guard against unauthorized or invalid client access to transaction operations within the Secure Element API. ErrorClientNotRegistered enforces strict client registration requirements and prevents operations that would violate the SE API's client lifecycle management protocol. This exception represents a fundamental contract violation in the client-server transaction model, where every client must be explicitly registered before participating in any transaction operations (startTransaction, updateTransaction, finishTransaction) or being deregistered from the system. The exception is raised after the Secure Element verifies that the provided clientId does not exist in the currently active client registry.</description>
   <category>Client Management</category>
+  <subcategory>Client Validation</subcategory>
   <severity>High</severity>
   <javadoc>
     <summary>This class defines the exception ErrorClientNotRegistered that is thrown if an SE API function is invoked with a clientId, that has not been registered using registerClient beforehand. The clientId is therefore not registered.</summary>
@@ -114,3 +115,4 @@
     <note>Client must be registered via registerClient before transaction operations</note>
   </implementationContext>
 </exception>
+

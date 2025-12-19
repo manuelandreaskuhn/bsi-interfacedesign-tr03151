@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorInvalidTime" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorInvalidTime</name>
   <description>This exception is thrown if the SE API function updateTime fails because the supplied time parameters are not valid or fall outside the acceptable range. The function attempts to update the Secure Element's current time, but the provided time parameters contain invalid values (out-of-range year, month, day, hour, minute, second), causing the time validation to fail.</description>
-  <category>Time Management - Time Validation</category>
+  <category>Time Management</category>
+  <subcategory>Time Validation</subcategory>
   <severity>High</severity>
   <javadoc>
     <summary>This class defines the exception ErrorInvalidTime that is thrown if the supplied time parameters are not valid or are outside valid ranges.</summary>
@@ -114,3 +115,4 @@
     <note>Invalid time prevents time synchronization</note>
   </implementationContext>
 </exception>
+

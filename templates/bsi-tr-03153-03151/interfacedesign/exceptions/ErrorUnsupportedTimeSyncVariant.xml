@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorUnsupportedTimeSyncVariant" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorUnsupportedTimeSyncVariant</name>
   <description>This exception is thrown if the updateTime function is called with a time synchronization variant that is not supported by the device. The updateTime function allows time synchronization using different variant methods (e.g., absolute time update, relative time correction, NTP sync). Different devices may support different time synchronization variants based on their capabilities and configuration. ErrorUnsupportedTimeSyncVariant is raised when the caller requests a variant that the device does not support. ErrorUnsupportedTimeSyncVariant is a Medium severity exception because the operation is invalid but not a device failure. Recovery requires using a supported variant or checking device capabilities to determine available time synchronization methods.</description>
-  <category>Time Management - Synchronization Variants</category>
+  <category>Time Management</category>
+  <subcategory>Synchronization Variants</subcategory>
   <severity>Medium</severity>
   <javadoc>
     <summary>This class defines the exception ErrorUnsupportedTimeSyncVariant that is thrown if the updateTime function is called with an unsupported time synchronization variant.</summary>
@@ -119,3 +120,4 @@
     <note>Unsupported variant prevents time update</note>
   </implementationContext>
 </exception>
+

@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorFunctionNotSupported" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorFunctionNotSupported</name>
   <description>This exception is thrown if an optional SE API function is invoked which is not supported by the device. ErrorFunctionNotSupported indicates that the requested function has not been implemented on the target device due to hardware limitations, firmware configuration, or intentional implementation restrictions. The exception is raised when an application attempts to call an optional SE API function that exists in the specification but is not present in this particular device's implementation. This exception distinguishes between mandatory functions that all compliant devices must support and optional functions whose availability depends on device capabilities and firmware version. The exception is raised immediately upon entry to the optional function when the device detects that the function is not implemented, preventing any attempted execution.</description>
-  <category>Common Exception - Feature Support</category>
+  <category>Common Exception</category>
+  <subcategory>Feature Support</subcategory>
   <severity>Medium</severity>
   <thrownBy>
     <function>authenticateUser</function>
@@ -153,3 +154,4 @@
     <note>Application must check function availability before invocation</note>
   </implementationContext>
 </exception>
+

@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorTransactionNumberNotFound" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorTransactionNumberNotFound</name>
   <description>This exception is thrown if no data has been found for the provided transaction number(s) in the context of exporting or querying transaction data. Transaction numbers are unique identifiers for each executed transaction. When export or query functions search for specific transaction numbers that don't exist in the device's transaction records, ErrorTransactionNumberNotFound is raised. This can occur during data export operations that filter by transaction number or when querying the state of a specific transaction. ErrorTransactionNumberNotFound is a Medium severity exception because the query is valid but matches no records. The requested transaction number(s) may have never existed, been deleted, or the transaction number may be incorrect.</description>
-  <category>Transaction Management - Transaction Number Query</category>
+  <category>Transaction Management</category>
+  <subcategory>Transaction Number Query</subcategory>
   <severity>Medium</severity>
   <thrownBy>
     <function>exportFilteredTransactionLogs</function>
@@ -117,3 +118,4 @@
     <note>Missing transaction prevents operation on specified transaction</note>
   </implementationContext>
 </exception>
+

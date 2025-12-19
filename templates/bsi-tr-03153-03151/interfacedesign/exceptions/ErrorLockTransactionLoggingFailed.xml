@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorLockTransactionLoggingFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorLockTransactionLoggingFailed</name>
   <description>This exception is thrown if the SE API function lockTransactionLogging fails to lock the transaction logging functionality on the Secure Element. The function attempts to transition the transaction logging system into a locked state to prevent further log entries from being recorded, but the locking operation encounters a failure condition that prevents this transition from being completed successfully. ErrorLockTransactionLoggingFailed indicates that the transaction logging system remains in its current state (unlocked or partially locked) and cannot be reliably transitioned to the locked state.</description>
-  <category>Transaction Logging - Lock Management</category>
+  <category>Transaction Logging</category>
+  <subcategory>Lock Management</subcategory>
   <severity>High</severity>
   <javadoc>
     <summary>This class defines the exception ErrorLockTransactionLoggingFailed that is thrown if the transaction logging lock operation fails.</summary>
@@ -117,3 +118,4 @@
     <note>Lock operation failure prevents logging freeze</note>
   </implementationContext>
 </exception>
+

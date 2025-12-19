@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorGetDeviceHealthFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorGetDeviceHealthFailed</name>
   <description>This exception is thrown if the SE API function getDeviceHealth fails to retrieve device health status information from the Secure Element. The function attempts to obtain detailed health information about the device's operational state, component status, and diagnostic metrics, but the retrieval process fails before the health data can be determined and returned.</description>
-  <category>Device Management - Health Status Retrieval</category>
+  <category>Device Management</category>
+  <subcategory>Health Status Retrieval</subcategory>
   <severity>Medium</severity>
   <javadoc>
     <summary>This class defines the exception ErrorGetDeviceHealthFailed that is thrown if the SE API function getDeviceHealth fails to determine health information about the device.</summary>
@@ -113,3 +114,4 @@
     <note>Retrieval failure prevents health status access</note>
   </implementationContext>
 </exception>
+

@@ -3,6 +3,7 @@
   <name>ErrorExportLoggingCertificateFailed</name>
   <description>This exception is thrown if the collection of the certificates for the export failed during execution of the exportLoggingCertificates function. The exception represents a critical failure in the Secure Element's ability to retrieve and provide certificates required for exporting logging data. ErrorExportLoggingCertificateFailed is raised when the exportLoggingCertificates function requests certificate retrieval from the Secure Element but the Secure Element cannot assemble or provide the required certificates due to a hardware error, firmware issue, certificate storage failure, or communication breakdown. This exception indicates that the Secure Element's certificate retrieval functionality did not complete successfully, preventing the assembly of valid export data containing authenticated certificate information. The exception is raised during the certificate collection phase before certificates are packaged into the export data structure, ensuring no partial or incomplete export data is returned.</description>
   <category>Logging Export Operations</category>
+  <subcategory>Export</subcategory>
   <severity>High</severity>
   <javadoc>
     <summary>The exception ErrorExportLoggingCertificateFailed is thrown if the collection of the certificates for the export failed.</summary>
@@ -114,3 +115,4 @@
     <note>Export failure prevents certificate provisioning to external systems</note>
   </implementationContext>
 </exception>
+

@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorStorageMemoryFull" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorStorageMemoryFull</name>
   <description>This exception is thrown if the storage memory of the device is full and cannot accommodate new data. The Secure Element uses storage for device configuration, transaction logs, user data, and audit trail information. When storage reaches capacity, no new data can be written until storage is freed by deleting or exporting logs. ErrorStorageMemoryFull indicates the device storage is exhausted and write operations must be blocked. Common causes include: excessive transaction volume, accumulation of log messages, inadequate storage capacity for workload, or logs not being regularly exported/archived. ErrorStorageMemoryFull is a Critical condition that prevents new transactions and data storage operations until storage space is freed.</description>
-  <category>Storage - Storage Capacity - Memory Full</category>
+  <category>Storage</category>
+  <subcategory>Storage Capacity - Memory Full</subcategory>
   <severity>Critical</severity>
   <thrownBy>
     <function>authenticateUser</function>
@@ -131,3 +132,4 @@
     <note>Full condition prevents write operations</note>
   </implementationContext>
 </exception>
+

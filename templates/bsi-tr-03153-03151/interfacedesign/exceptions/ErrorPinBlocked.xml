@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorPinBlocked" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorPinBlocked</name>
   <description>This exception is thrown if the SE API function authenticateUser fails because the user's PIN has been blocked due to excessive failed authentication attempts. The device tracks the number of consecutive failed PIN attempts and blocks the PIN after exceeding a configurable retry limit. Once blocked, the PIN cannot be used for authentication until it is unblocked via the unblockPin function using the correct PUK (PIN Unblock Key). ErrorPinBlocked indicates that user authentication is no longer possible with the current PIN and PIN unblocking is required.</description>
-  <category>Authentication - PIN Security Lock</category>
+  <category>Authentication</category>
+  <subcategory>PIN Security Lock</subcategory>
   <severity>Critical</severity>
   <javadoc>
     <summary>This class defines the exception ErrorPinBlocked that is thrown if the PIN has been blocked after excessive failed authentication attempts.</summary>
@@ -116,3 +117,4 @@
     <note>Blocked PIN requires unblocking via PUK</note>
   </implementationContext>
 </exception>
+

@@ -3,6 +3,7 @@
   <name>ErrorDeleteLogMessagesFailed</name>
   <description>This exception is thrown if the deletion of log messages from the storage failed during execution of the deleteLogMessages function. The exception represents a critical failure in the device's ability to remove stored log messages from the logging storage subsystem. ErrorDeleteLogMessagesFailed is raised when the device attempts to delete log message files that have been previously exported and marked for deletion, but encounters an I/O error, storage access issue, or system-level failure that prevents successful removal. This exception indicates that the device's storage subsystem has rejected the deletion request due to hardware errors, file system inconsistencies, permission violations, or physical disconnection of the storage medium. The exception is raised after the device has validated deletion prerequisites but failed during the actual removal of log data from persistent storage.</description>
   <category>Logging</category>
+  <subcategory>Deletion</subcategory>
   <severity>High</severity>
   <javadoc>
     <summary>This class defines the exception ErrorDeleteLogMessagesFailed that is thrown if the deletion of log messages from the storage failed.</summary>
@@ -113,3 +114,4 @@
     <note>Device maintains log integrity during deletion attempts</note>
   </implementationContext>
 </exception>
+

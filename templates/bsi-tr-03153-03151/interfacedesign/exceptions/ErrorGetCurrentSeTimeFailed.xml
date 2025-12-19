@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorGetCurrentSeTimeFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorGetCurrentSeTimeFailed</name>
   <description>This exception is thrown if the SE API function getCurrentSeTime fails to obtain the current time of the Secure Element. The function attempts to retrieve the current time maintained by the Secure Element, but the retrieval process fails before the time value can be determined and returned.</description>
-  <category>Time Management - Information Retrieval</category>
+  <category>Time Management</category>
+  <subcategory>Information Retrieval</subcategory>
   <severity>Medium</severity>
   <javadoc>
     <summary>This class defines the exception ErrorGetCurrentSeTimeFailed that is thrown if the SE API function getCurrentSeTime fails to obtain the current time of the Secure Element.</summary>
@@ -112,3 +113,4 @@
     <note>Retrieval failure prevents SE time access</note>
   </implementationContext>
 </exception>
+

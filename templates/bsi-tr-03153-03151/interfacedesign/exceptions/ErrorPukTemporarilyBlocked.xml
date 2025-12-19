@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorPukTemporarilyBlocked" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorPukTemporarilyBlocked</name>
   <description>This exception is thrown if the SE API function unblockPin fails because the PUK (PIN Unblock Key) is temporarily blocked due to excessive failed PUK entry attempts. The device tracks failed PUK attempts and temporarily blocks the PUK to prevent brute-force attacks. When the PUK is temporarily blocked, attempts to unblock a PIN cannot proceed. ErrorPukTemporarilyBlocked indicates that the PUK is in a temporary lockout state and must wait for the timeout period to expire before unblocking operations can resume.</description>
-  <category>Authentication - PUK Temporary Lockout</category>
+  <category>Authentication</category>
+  <subcategory>PUK Temporary Lockout</subcategory>
   <severity>High</severity>
   <javadoc>
     <summary>This class defines the exception ErrorPukTemporarilyBlocked that is thrown if the PUK is temporarily blocked due to excessive failed attempts.</summary>
@@ -115,3 +116,4 @@
     <note>Temporary block delays retry attempts</note>
   </implementationContext>
 </exception>
+

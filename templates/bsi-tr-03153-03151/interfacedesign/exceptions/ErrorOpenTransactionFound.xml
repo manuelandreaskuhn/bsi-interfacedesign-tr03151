@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorOpenTransactionFound" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorOpenTransactionFound</name>
   <description>This exception is thrown if the SE API functions disableSecureElement or updateDevice are called when there are open (unfinished) transactions on the device. The functions require that all transactions be in a completed state before they can execute. If one or more transactions are still in the open state when these operations are attempted, ErrorOpenTransactionFound is raised to prevent the operation from proceeding while transactions remain unfinished.</description>
-  <category>Transaction Management - Transaction State Prerequisites</category>
+  <category>Transaction Management</category>
+  <subcategory>Transaction State Prerequisites</subcategory>
   <severity>High</severity>
   <thrownBy>
     <function>lockTransactionLogging</function>
@@ -116,3 +117,4 @@
     <note>Presence of open transaction blocks operation execution</note>
   </implementationContext>
 </exception>
+

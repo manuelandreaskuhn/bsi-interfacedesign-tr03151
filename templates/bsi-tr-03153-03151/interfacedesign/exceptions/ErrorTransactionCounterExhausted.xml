@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorTransactionCounterExhausted" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorTransactionCounterExhausted</name>
   <description>This exception is thrown if the physical memory of the transaction counter has been exhausted and can no longer guarantee error-free operation. The transaction counter maintains a record of all executed transactions in persistent memory to ensure authenticity and non-repudiation. The physical memory is a finite resource that can become exhausted after many transactions. When memory approaches or reaches saturation, the counter cannot reliably record new transactions. ErrorTransactionCounterExhausted is a Critical severity exception because it prevents all transaction operations and indicates device maintenance is urgently required. The device must be serviced to restore or replace the counter memory before transaction functionality can resume.</description>
-  <category>Transaction Management - Counter Resource Exhaustion</category>
+  <category>Transaction Management</category>
+  <subcategory>Counter Resource Exhaustion</subcategory>
   <severity>Critical</severity>
   <thrownBy>
     <function>startTransaction</function>
@@ -115,3 +116,4 @@
     <note>Exhaustion prevents new transaction creation</note>
   </implementationContext>
 </exception>
+

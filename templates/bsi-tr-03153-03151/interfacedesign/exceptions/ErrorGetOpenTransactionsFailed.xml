@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorGetOpenTransactionsFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorGetOpenTransactionsFailed</name>
   <description>This exception is thrown if the SE API function getOpenTransactions fails to retrieve the list of currently open transactions being managed by the Secure Element. The function attempts to obtain detailed information about all active transactions in progress, but the retrieval process fails before the transaction list can be determined and returned.</description>
-  <category>Transaction Management - Active Transaction Enumeration</category>
+  <category>Transaction Management</category>
+  <subcategory>Active Transaction Enumeration</subcategory>
   <severity>High</severity>
   <javadoc>
     <summary>This class defines the exception ErrorGetOpenTransactionsFailed that is thrown if the determination of open transactions that are currently managed by the device failed.</summary>
@@ -113,3 +114,4 @@
     <note>Retrieval failure prevents open transaction state access</note>
   </implementationContext>
 </exception>
+

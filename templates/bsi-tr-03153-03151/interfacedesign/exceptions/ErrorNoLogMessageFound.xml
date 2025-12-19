@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorNoLogMessageFound" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorNoLogMessageFound</name>
   <description>This exception is thrown if the SE API functions getLastLogMessage or exportLogMessages cannot find any log message parts in the Secure Element's logging storage. The functions attempt to retrieve or export log messages, but the logging storage either contains no messages at all or has been cleared. ErrorNoLogMessageFound indicates that the Secure Element's transaction logging system has no recorded log entries to return to the caller.</description>
-  <category>Event Logging - No Content</category>
+  <category>Event Logging</category>
+  <subcategory>No Content</subcategory>
   <severity>Medium</severity>
   <thrownBy>
     <function>getLastLogMessage</function>
@@ -114,3 +115,4 @@
     <note>Query returns empty result due to absent log data</note>
   </implementationContext>
 </exception>
+

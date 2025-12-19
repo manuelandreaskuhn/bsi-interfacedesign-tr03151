@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorGetCurrentSignatureCounterFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorGetCurrentSignatureCounterFailed</name>
   <description>This exception is thrown if the SE API function getCurrentLoggingSignatureCounters fails to obtain the current signature counter values from the Secure Element's logging subsystem. The function attempts to retrieve the current state of cryptographic signature counters used for logging operations, but the retrieval process fails before the counter values can be determined and returned.</description>
-  <category>Logging - Signature Counter Management</category>
+  <category>Logging</category>
+  <subcategory>Signature Counter Management</subcategory>
   <severity>High</severity>
   <javadoc>
     <summary>This class defines the exception ErrorGetCurrentSignatureCounterFailed that is thrown if the SE API function getCurrentLoggingSignatureCounters fails to obtain the current signature counter values.</summary>
@@ -113,3 +114,4 @@
     <note>Retrieval failure prevents counter value access</note>
   </implementationContext>
 </exception>
+

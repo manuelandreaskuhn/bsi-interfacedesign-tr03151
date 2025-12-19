@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorTransactionLoggingNotLocked" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorTransactionLoggingNotLocked</name>
   <description>This exception is thrown by the unlockTransactionLogging function if transaction logging functionality is not currently locked. The transaction logging system provides lock/unlock functionality to control when transactions can be recorded. The unlockTransactionLogging function is used to re-enable transaction recording after it has been locked for maintenance, audit, or security policy reasons. If unlockTransactionLogging is called when logging is already unlocked, ErrorTransactionLoggingNotLocked is raised to indicate the operation is invalid. ErrorTransactionLoggingNotLocked is a Medium severity exception because logging is already in the desired unlocked state, though the call itself is erroneous.</description>
-  <category>Transaction Management - Logging Lock Management</category>
+  <category>Transaction Management</category>
+  <subcategory>Logging Lock Management</subcategory>
   <severity>Medium</severity>
   <javadoc>
     <summary>This class defines the exception ErrorTransactionLoggingNotLocked that is thrown by the SE API function unlockTransactionLogging if transaction logging is not currently locked.</summary>
@@ -114,3 +115,4 @@
     <note>Unlocked state prevents unlock operation</note>
   </implementationContext>
 </exception>
+

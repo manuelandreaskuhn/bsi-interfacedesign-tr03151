@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorGetCurrentNumberOfClientsFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorGetCurrentNumberOfClientsFailed</name>
   <description>This exception is thrown if the determination of the current number of clients using the SE API failed. ErrorGetCurrentNumberOfClientsFailed represents a failure in the device's ability to retrieve and report the count of currently registered clients. This exception indicates that the getCurrentNumberOfClients function requested client count information from the device but the device cannot determine or provide the required count due to a hardware error, firmware issue, client registry failure, or communication breakdown. The exception is raised when the device's client management tracking functionality did not complete successfully, preventing applications from monitoring client registrations and device utilization. The exception is raised during the client count retrieval phase before the count is packaged into the return structure, ensuring no partial or incomplete count data is returned.</description>
-  <category>Client Management - Information Retrieval</category>
+  <category>Client Management</category>
+  <subcategory>Information Retrieval</subcategory>
   <severity>Medium</severity>
   <javadoc>
     <summary>This class defines the exception ErrorGetCurrentNumberOfClientsFailed that is thrown if the determination of the current number of clients using the SE API failed.</summary>
@@ -113,3 +114,4 @@
     <note>Retrieval failure prevents runtime client count access</note>
   </implementationContext>
 </exception>
+

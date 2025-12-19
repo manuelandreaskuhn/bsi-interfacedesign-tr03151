@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorResettingRetryCounterFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorResettingRetryCounterFailed</name>
   <description>This exception is thrown if the SE API function unblockPin fails to reset the PIN retry counter as part of the PIN unblocking operation. The function successfully unblocks the PIN and sets a new PIN, but fails when attempting to reset the failed attempt counter to zero. ErrorResettingRetryCounterFailed indicates that while the PIN is unblocked, the retry counter was not properly reset, potentially leaving the account in an inconsistent state where the PIN is usable but the retry counter is not reset.</description>
-  <category>Authentication - Retry Counter Management</category>
+  <category>Authentication</category>
+  <subcategory>Retry Counter Management</subcategory>
   <severity>High</severity>
   <javadoc>
     <summary>This class defines the exception ErrorResettingRetryCounterFailed that is thrown if the PIN retry counter reset fails during PIN unblocking.</summary>
@@ -115,3 +116,4 @@
     <note>Reset failure prevents PIN unblocking completion</note>
   </implementationContext>
 </exception>
+

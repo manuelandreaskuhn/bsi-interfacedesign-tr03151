@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorClientIdNotFound" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorClientIdNotFound</name>
   <description>This exception is thrown if no data has been found for the provided clientID in the context of the export of stored data. The exportFilteredTransactionLogs function attempts to export transaction log data filtered by a specific clientId, but no matching data exists for that client in the storage.</description>
-  <category>Data Export - Transaction Filtering</category>
+  <category>Data Export</category>
+  <subcategory>Transaction Filtering</subcategory>
   <severity>Medium</severity>
   <javadoc>
     <summary>This class defines the exception ErrorClientIdNotFound that is thrown if no data has been found for the provided clientID in the context of the export of stored data.</summary>
@@ -106,3 +107,4 @@
     <note>Application must use valid registered clientIds for export operations</note>
   </implementationContext>
 </exception>
+

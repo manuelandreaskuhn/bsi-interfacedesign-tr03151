@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorGetTimeSyncVariantFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorGetTimeSyncVariantFailed</name>
   <description>This exception is thrown if the SE API function getTimeSyncVariant fails to retrieve the supported time synchronization variant. The function attempts to determine which time synchronization mechanism and configuration the Secure Element supports, but the retrieval process fails before the time sync variant can be determined and returned.</description>
-  <category>Time Management - Synchronization Variant Query</category>
+  <category>Time Management</category>
+  <subcategory>Synchronization Variant Query</subcategory>
   <severity>High</severity>
   <javadoc>
     <summary>This class defines the exception ErrorGetTimeSyncVariantFailed that is thrown if the determination of the supported time synchronization variant failed.</summary>
@@ -113,3 +114,4 @@
     <note>Retrieval failure prevents time sync method access</note>
   </implementationContext>
 </exception>
+

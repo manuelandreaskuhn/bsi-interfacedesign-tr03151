@@ -3,6 +3,7 @@
   <name>ErrorGetComponentVersionsFailed</name>
   <description>This exception is thrown if the SE API function getComponentVersions fails to determine the device information. ErrorGetComponentVersionsFailed represents a failure in the device's ability to retrieve and provide component version information. This exception indicates that the getComponentVersions function requested version information from the device but the device cannot assemble or provide the required version data due to a hardware error, firmware issue, version storage failure, or communication breakdown. The exception is raised when the device's component version retrieval functionality did not complete successfully, preventing applications from determining which components, firmware versions, and software versions are present on the device. The exception is raised during the version retrieval phase before version information is packaged into the return structure, ensuring no partial or incomplete version data is returned.</description>
   <category>Device Information Retrieval</category>
+  <subcategory>Version Retrieval</subcategory>
   <severity>Medium</severity>
   <javadoc>
     <summary>This class defines the exception ErrorGetComponentVersionsFailed that is thrown if the SE API function getComponentVersions fails to determine the device information.</summary>
@@ -111,3 +112,4 @@
     <note>Retrieval failure prevents version information access</note>
   </implementationContext>
 </exception>
+

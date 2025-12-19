@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorGetCurrentTransactionCounterFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorGetCurrentTransactionCounterFailed</name>
   <description>This exception is thrown if the SE API function getCurrentTransactionCounter fails to obtain the current transaction counter value from the Secure Element's transaction management subsystem. The function attempts to retrieve the current state of the transaction counter used to track transaction sequence and integrity, but the retrieval process fails before the counter value can be determined and returned.</description>
-  <category>Transaction - Counter Management</category>
+  <category>Transaction</category>
+  <subcategory>Counter Management</subcategory>
   <severity>High</severity>
   <javadoc>
     <summary>This class defines the exception ErrorGetCurrentTransactionCounterFailed that is thrown if the SE API function getCurrentTransactionCounter fails to obtain the current transaction counter value.</summary>
@@ -113,3 +114,4 @@
     <note>Retrieval failure prevents transaction counter access</note>
   </implementationContext>
 </exception>
+

@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorClientLimitReached" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorClientLimitReached</name>
   <description>This exception is thrown if the maximum number of clients has been reached. The registerClient function attempts to register a new client but detects that the device has already registered the maximum number of simultaneous clients it can manage. No further client registrations are possible until existing clients are deregistered.</description>
-  <category>Client Management - Capacity</category>
+  <category>Client Management</category>
+  <subcategory>Capacity</subcategory>
   <severity>High</severity>
   <javadoc>
     <summary>This class defines the exception ErrorClientLimitReached that is thrown if the maximum number of clients has been reached.</summary>
@@ -101,3 +102,4 @@
     <note>Resource constraint prevents registration of additional clients</note>
   </implementationContext>
 </exception>
+

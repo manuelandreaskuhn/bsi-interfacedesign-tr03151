@@ -3,6 +3,7 @@
   <name>ErrorDeregisterClientFailed</name>
   <description>This exception is thrown if the SE API function deregisterClient fails to disable the invocation of startTransaction, updateTransaction, and finishTransaction for the specified clientId. The exception represents a critical failure in the device's client lifecycle management system during the deregistration phase. ErrorDeregisterClientFailed is raised when the device attempts to remove a registered client from its active client registry and disable all transaction operations for that client, but encounters an internal error that prevents the state transition from completing successfully. This exception indicates that the device's client management subsystem has encountered a persistence failure, state inconsistency, or system-level error that prevents the client from being properly deregistered. The exception is raised after the deregistration request has been validated and the deregistration log entry has been created, but before the client's active status has been successfully removed from the internal registry.</description>
   <category>Client Management</category>
+  <subcategory>Deregistration</subcategory>
   <severity>High</severity>
   <javadoc>
     <summary>This class defines the exception ErrorDeregisterClientFailed that is thrown if the SE API function deregisterClient fails to disable the invocation of startTransaction, updateTransaction and finishTransaction for the specified clientId.</summary>
@@ -114,3 +115,4 @@
     <note>Deregistration failure prevents client cleanup and resource release</note>
   </implementationContext>
 </exception>
+

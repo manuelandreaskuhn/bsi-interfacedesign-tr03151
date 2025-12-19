@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorTransactionLoggingLocked" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorTransactionLoggingLocked</name>
   <description>This exception is thrown if transaction logging functionality is currently locked and prevents transaction recording. Transaction logging is a critical security feature that records all executed transactions for audit, authenticity, and non-repudiation purposes. The logging functionality can be temporarily or permanently locked for administrative reasons, maintenance, or security policies. When transaction operations are attempted while logging is locked, ErrorTransactionLoggingLocked is raised. This prevents execution of transactions that cannot be properly logged. ErrorTransactionLoggingLocked is a High severity exception because it blocks transaction functionality to maintain audit trail integrity. Transactions cannot proceed if they cannot be logged, ensuring all executed transactions are properly recorded.</description>
-  <category>Transaction Management - Logging Lock</category>
+  <category>Transaction Management</category>
+  <subcategory>Logging Lock</subcategory>
   <severity>High</severity>
   <javadoc>
     <summary>This class defines the exception ErrorTransactionLoggingLocked that is thrown if transaction logging functionality is currently locked.</summary>
@@ -118,3 +119,4 @@
     <note>Locked state blocks transaction operations</note>
   </implementationContext>
 </exception>
+

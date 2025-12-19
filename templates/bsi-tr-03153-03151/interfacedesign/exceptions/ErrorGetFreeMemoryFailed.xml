@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorGetFreeMemoryFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorGetFreeMemoryFailed</name>
   <description>This exception is thrown if the SE API function getFreeMemory fails to retrieve the amount of currently free memory available in the Secure Element. The function attempts to obtain the current available memory capacity for storing data and processing operations, but the retrieval process fails before the memory value can be determined and returned.</description>
-  <category>Resource Management - Memory Status</category>
+  <category>Resource Management</category>
+  <subcategory>Memory Status</subcategory>
   <severity>Medium</severity>
   <javadoc>
     <summary>This class defines the exception ErrorGetFreeMemoryFailed that is thrown if the SE API function getFreeMemory fails to determine the amount of currently free memory in the device.</summary>
@@ -113,3 +114,4 @@
     <note>Retrieval failure prevents available memory information</note>
   </implementationContext>
 </exception>
+

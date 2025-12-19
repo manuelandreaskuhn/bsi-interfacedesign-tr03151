@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorUnexportedLogMessages" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorUnexportedLogMessages</name>
   <description>This exception is thrown if deletion of log messages from storage fails because the storage contains log messages that have not been exported. The logging system maintains an audit trail of all transactions and events. Before deleting log messages to reclaim storage space, all messages should be exported for archival and compliance purposes. ErrorUnexportedLogMessages is raised when deleteLogMessages is called on a device that contains unexported messages. This protects audit trail integrity by preventing permanent deletion of unarchived log data. ErrorUnexportedLogMessages is a High severity exception because it indicates a potential data loss risk. The caller must first export messages before deletion can proceed to ensure all audit trail data is preserved.</description>
-  <category>Logging - Data Preservation</category>
+  <category>Logging</category>
+  <subcategory>Data Preservation</subcategory>
   <severity>High</severity>
   <javadoc>
     <summary>This class defines the exception ErrorUnexportedLogMessages that is thrown if deletion of log messages fails because storage contains unexported log messages.</summary>
@@ -117,3 +118,4 @@
     <note>Unexported messages prevent deletion</note>
   </implementationContext>
 </exception>
+

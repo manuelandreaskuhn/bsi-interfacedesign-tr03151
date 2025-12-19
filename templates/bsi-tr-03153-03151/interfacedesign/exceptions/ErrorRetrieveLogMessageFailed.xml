@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorRetrieveLogMessageFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorRetrieveLogMessageFailed</name>
   <description>This exception is thrown if the SE API functions getLastLogMessage or getLastTransactionLogMessage fail to retrieve the most recently created log message from the Secure Element. The function attempts to read the latest log message data that was previously recorded during SE API operations, but the retrieval fails due to device communication errors, storage read errors, log data corruption, or other failure conditions. ErrorRetrieveLogMessageFailed indicates that the log message could not be successfully retrieved from the device's logging storage and the audit trail information is inaccessible. This exception is distinct from ErrorNoLogMessageFound which indicates no log messages exist; ErrorRetrieveLogMessageFailed indicates that messages exist but cannot be accessed.</description>
-  <category>Logging - Log Message Retrieval Failure</category>
+  <category>Logging</category>
+  <subcategory>Log Message Retrieval Failure</subcategory>
   <severity>High</severity>
   <thrownBy>
     <function>authenticateUser</function>
@@ -145,3 +146,4 @@
     <note>Retrieval failure indicates logging operation incomplete</note>
   </implementationContext>
 </exception>
+

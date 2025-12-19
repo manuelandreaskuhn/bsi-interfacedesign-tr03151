@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorSignatureCounterExhausted" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorSignatureCounterExhausted</name>
   <description>This exception is thrown if the physical memory of the signature counter can no longer guarantee error-free operation. The signature counter is a critical component that maintains a monotonically increasing counter value for digital signatures on transactions, providing audit trail integrity and replay attack protection. The physical storage backing the signature counter has limited write cycles. When the physical memory approaches or exceeds its safe operational limits, the device can no longer guarantee the integrity of the signature counter. ErrorSignatureCounterExhausted indicates the signature counter storage is exhausted and the device cannot safely continue operations that require signature counter increments. This is a Critical condition requiring immediate administrative attention and device maintenance or replacement.</description>
-  <category>Logging - Signature Counter - Memory Exhaustion</category>
+  <category>Logging</category>
+  <subcategory>Signature Counter - Memory Exhaustion</subcategory>
   <severity>Critical</severity>
   <thrownBy>
     <function>authenticateUser</function>
@@ -134,3 +135,4 @@
     <note>Exhaustion prevents further log message creation</note>
   </implementationContext>
 </exception>
+

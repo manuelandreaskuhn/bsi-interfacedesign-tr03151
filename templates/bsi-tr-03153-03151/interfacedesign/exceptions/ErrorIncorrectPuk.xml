@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorIncorrectPuk" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorIncorrectPuk</name>
   <description>This exception is thrown if the SE API function unblockPin fails because an incorrect PUK (PIN Unblock Key) was provided. The function attempts to unblock a blocked PIN by verifying the supplied PUK, but the provided PUK does not match the registered PIN unblock credential, causing the unblock operation to fail and be rejected.</description>
-  <category>Authentication - PIN Unblock Security</category>
+  <category>Authentication</category>
+  <subcategory>PIN Unblock Security</subcategory>
   <severity>High</severity>
   <javadoc>
     <summary>This class defines the exception ErrorIncorrectPuk that is thrown if the SE API function unblockPin has been invoked with an incorrect PUK.</summary>
@@ -112,3 +113,4 @@
     <note>PUK mismatch prevents PIN unblocking</note>
   </implementationContext>
 </exception>
+

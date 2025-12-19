@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorStorageMediumDisconnected" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorStorageMediumDisconnected</name>
   <description>This exception is thrown if the storage medium is disconnected or not available to the Secure Element. The Secure Element uses storage for device data, transaction logs, configuration, and audit trail information. If the storage medium becomes disconnected or unavailable, the device cannot read from or write to storage, preventing critical operations. ErrorStorageMediumDisconnected indicates a hardware failure or connection issue affecting storage accessibility. Common causes include: physical connector disconnection, storage device failure, communication interface failure, power loss to storage, or storage medium removal. ErrorStorageMediumDisconnected is a Critical condition that affects all storage-dependent operations and requires immediate attention.</description>
-  <category>Storage - Storage Medium - Disconnection/Unavailable</category>
+  <category>Storage</category>
+  <subcategory>Storage Medium - Disconnection/Unavailable</subcategory>
   <severity>Critical</severity>
   <thrownBy>
     <function>authenticateUser</function>
@@ -144,3 +145,4 @@
     <note>Disconnection prevents data write operations</note>
   </implementationContext>
 </exception>
+

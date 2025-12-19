@@ -3,6 +3,7 @@
   <name>ErrorExportSerialNumbersFailed</name>
   <description>This exception is thrown if the collection of the serial number(s) failed during execution of the exportSerialNumbers function. The exception represents a critical failure in the Secure Element's ability to retrieve and provide serial numbers required for exporting device identification data. ErrorExportSerialNumbersFailed is raised when the exportSerialNumbers function requests serial number retrieval from the Secure Element but the Secure Element cannot assemble or provide the required serial numbers due to a hardware error, firmware issue, serial number storage failure, or communication breakdown. This exception indicates that the Secure Element's serial number retrieval functionality did not complete successfully, preventing the assembly of valid export data containing authenticated device identification information. The exception is raised during the serial number collection phase before serial numbers are packaged into the export data structure, ensuring no partial or incomplete export data is returned.</description>
   <category>Information Export Operations</category>
+  <subcategory>Export</subcategory>
   <severity>High</severity>
   <javadoc>
     <summary>This class defines the exception ErrorExportSerialNumbersFailed that is thrown if the collection of the serial number(s) failed.</summary>
@@ -113,3 +114,4 @@
     <note>Export failure prevents device identification data retrieval</note>
   </implementationContext>
 </exception>
+

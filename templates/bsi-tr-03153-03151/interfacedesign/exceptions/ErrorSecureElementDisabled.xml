@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorSecureElementDisabled" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorSecureElementDisabled</name>
   <description>This exception is thrown if SE API functions are invoked which require an active and enabled Secure Element, but the Secure Element has been disabled. A disabled Secure Element cannot execute any SE API operations that require cryptographic operations, authentication, logging, transactions, or other core functionality. The Secure Element is typically disabled through administrative action (disable operation) or due to security policy. ErrorSecureElementDisabled indicates that the requested operation cannot proceed because the device is not in the enabled state required for operation. All state-changing operations and data access operations require an enabled Secure Element.</description>
-  <category>Secure Element State - Device Disabled</category>
+  <category>Secure Element State</category>
+  <subcategory>Device Disabled</subcategory>
   <severity>Critical</severity>
   <thrownBy>
     <function>authenticateUser</function>
@@ -144,3 +145,4 @@
     <note>SE must be enabled for operation execution</note>
   </implementationContext>
 </exception>
+

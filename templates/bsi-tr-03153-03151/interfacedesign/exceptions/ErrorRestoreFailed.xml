@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorRestoreFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorRestoreFailed</name>
   <description>This exception is thrown if the SE API function restoreLogsFromBackup fails to restore transaction log messages from a backup into the Secure Element. The function attempts to restore previously exported log data back into the device's logging storage, but the restore operation fails due to device error, incompatible backup data, device storage issues, or other failure conditions. ErrorRestoreFailed indicates that the backup data could not be successfully restored and the device's log storage remains in its state prior to the restore attempt.</description>
-  <category>Data Management - Backup Restore Failure</category>
+  <category>Data Management</category>
+  <subcategory>Backup Restore Failure</subcategory>
   <severity>Critical</severity>
   <javadoc>
     <summary>This class defines the exception ErrorRestoreFailed that is thrown if the backup restore operation fails.</summary>
@@ -124,3 +125,4 @@
     <note>Restore failure prevents log recovery</note>
   </implementationContext>
 </exception>
+

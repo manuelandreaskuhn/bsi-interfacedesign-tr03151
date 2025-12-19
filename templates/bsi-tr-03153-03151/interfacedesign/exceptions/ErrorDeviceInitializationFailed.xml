@@ -3,6 +3,7 @@
   <name>ErrorDeviceInitializationFailed</name>
   <description>This exception is thrown if any necessary action to initialize the device fails during execution of the initialize function. The exception represents a critical failure in the device's startup sequence that prevents the device from entering an operational state. ErrorDeviceInitializationFailed is raised when the device attempts to perform one or more essential initialization actions (such as Secure Element activation, internal state setup, client registry creation, logging system initialization, or cryptographic key loading), but encounters a hardware error, firmware issue, state management failure, or system-level error that prevents successful completion. This exception indicates that the device initialization process has partially failed at some critical checkpoint, leaving the device in an uninitialized and unusable state. The exception is raised after the device has attempted initialization but before all necessary initialization steps have been completed and verified.</description>
   <category>Initialization</category>
+  <subcategory>Initialization Process</subcategory>
   <severity>Critical</severity>
   <javadoc>
     <summary>This class defines the exception ErrorDeviceInitializationFailed that is thrown if any necessary action to initialize the device fails.</summary>
@@ -115,3 +116,4 @@
     <note>Initialization failure prevents device from reaching ready state</note>
   </implementationContext>
 </exception>
+

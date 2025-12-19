@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorSigningEventDataFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorSigningEventDataFailed</name>
   <description>This exception is thrown if the Secure Element fails to create the log message parts and digital signature for event data during transaction processing. The Secure Element signs transaction event data to create a tamper-proof audit trail where signatures prove the integrity and authenticity of recorded transactions. The signing process includes formatting event data, computing digital signatures, and creating log message parts. If the signing operation fails, ErrorSigningEventDataFailed indicates the event data could not be signed and no tamper-proof record of the transaction was created. Common causes include: cryptographic operation failures, device processing errors, invalid event data, insufficient device resources, or communication failures. ErrorSigningEventDataFailed indicates a critical audit trail failure and the transaction may not have been properly recorded.</description>
-  <category>Logging - Event Signing - Signature Creation Failure</category>
+  <category>Logging</category>
+  <subcategory>Event Signing - Signature Creation Failure</subcategory>
   <severity>Critical</severity>
   <thrownBy>
     <function>authenticateUser</function>
@@ -136,3 +137,4 @@
     <note>Signing failure prevents log message creation</note>
   </implementationContext>
 </exception>
+

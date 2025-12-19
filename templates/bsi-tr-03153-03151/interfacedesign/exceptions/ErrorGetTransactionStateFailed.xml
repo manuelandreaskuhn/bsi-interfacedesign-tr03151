@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorGetTransactionStateFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorGetTransactionStateFailed</name>
   <description>This exception is thrown if the SE API function getTransactionState fails to retrieve the current state of a specific transaction. The function attempts to determine the operational state of an active transaction, but the retrieval process fails before the transaction state can be determined and returned.</description>
-  <category>Transaction Management - Transaction State Query</category>
+  <category>Transaction Management</category>
+  <subcategory>Transaction State Query</subcategory>
   <severity>High</severity>
   <javadoc>
     <summary>This class defines the exception ErrorGetTransactionStateFailed that is thrown if the determination of the transaction state failed.</summary>
@@ -113,3 +114,4 @@
     <note>Retrieval failure prevents transaction state access</note>
   </implementationContext>
 </exception>
+

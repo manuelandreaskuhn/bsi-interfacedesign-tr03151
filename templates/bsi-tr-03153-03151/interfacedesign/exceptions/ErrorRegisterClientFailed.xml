@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorRegisterClientFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorRegisterClientFailed</name>
   <description>This exception is thrown if the SE API function registerClient fails to register a new client application with the Secure Element. The function attempts to add a new client to the device's registered client list, but the registration operation fails due to device error, resource limitations, capacity constraints, or other device-level failure conditions. ErrorRegisterClientFailed indicates that the client could not be registered and is not available for performing transactions on the device.</description>
-  <category>Client Management - Registration Failure</category>
+  <category>Client Management</category>
+  <subcategory>Registration Failure</subcategory>
   <severity>High</severity>
   <javadoc>
     <summary>This class defines the exception ErrorRegisterClientFailed that is thrown if the client registration operation fails.</summary>
@@ -120,3 +121,4 @@
     <note>Registration failure prevents client from being added</note>
   </implementationContext>
 </exception>
+

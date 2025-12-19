@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorUnblockingPinFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorUnblockingPinFailed</name>
   <description>This exception is thrown if the unblockPin function fails to unblock a PIN. The unblockPin function is used to restore PIN functionality after too many incorrect attempts have caused the PIN to be locked. Unblocking requires providing the correct unblock PIN (PUK - Personal Unblock Key) to verify authorization. ErrorUnblockingPinFailed is raised when the unblock operation cannot be completed successfully, which may occur due to invalid unblock PIN, hardware errors, device state issues, or other failures. ErrorUnblockingPinFailed is a High severity exception because it prevents restoration of PIN functionality. Users remain locked out of PIN-protected operations until the unblock succeeds.</description>
-  <category>Authentication - PIN Management Failure</category>
+  <category>Authentication</category>
+  <subcategory>PIN Management Failure</subcategory>
   <severity>High</severity>
   <javadoc>
     <summary>This class defines the exception ErrorUnblockingPinFailed that is thrown if the unblockPin function fails to unblock a PIN.</summary>
@@ -121,3 +122,4 @@
     <note>Unblock failure prevents PIN recovery</note>
   </implementationContext>
 </exception>
+

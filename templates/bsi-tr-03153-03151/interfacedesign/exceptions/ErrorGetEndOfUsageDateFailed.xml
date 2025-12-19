@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorGetEndOfUsageDateFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorGetEndOfUsageDateFailed</name>
   <description>This exception is thrown if the SE API function getEndOfUsageDate fails to retrieve the end of usage date of the Secure Element device. The function attempts to obtain the date after which the Secure Element can no longer be used for cryptographic operations, but the retrieval process fails before the date value can be determined and returned.</description>
-  <category>Device Lifecycle - Usage Period Management</category>
+  <category>Device Lifecycle</category>
+  <subcategory>Usage Period Management</subcategory>
   <severity>Medium</severity>
   <javadoc>
     <summary>This class defines the exception ErrorGetEndOfUsageDateFailed that is thrown if the SE API function getEndOfUsageDate fails to determine the end of usage date of the device.</summary>
@@ -113,3 +114,4 @@
     <note>Retrieval failure prevents lifecycle information access</note>
   </implementationContext>
 </exception>
+

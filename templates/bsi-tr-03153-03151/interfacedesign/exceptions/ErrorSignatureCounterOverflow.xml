@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorSignatureCounterOverflow" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorSignatureCounterOverflow</name>
   <description>This exception is thrown if the signature counter reaches its logical maximum value. The signature counter is a monotonically increasing value that provides audit trail integrity and replay attack protection for transactions. The counter has a maximum value (e.g., 2^64-1 for a 64-bit counter) and cannot be incremented further once this maximum is reached. ErrorSignatureCounterOverflow indicates that the signature counter has reached its logical limit and cannot accept new transactions. This is an extremely rare condition that typically requires device replacement or counter reset procedures. Common causes include: device has processed an extraordinarily large number of transactions over its lifetime, counter implementation limits reached, or counter not properly designed for system lifetime.</description>
-  <category>Logging - Signature Counter - Overflow</category>
+  <category>Logging</category>
+  <subcategory>Signature Counter - Overflow</subcategory>
   <severity>Critical</severity>
   <thrownBy>
     <function>authenticateUser</function>
@@ -134,3 +135,4 @@
     <note>Overflow condition blocks further signatures</note>
   </implementationContext>
 </exception>
+

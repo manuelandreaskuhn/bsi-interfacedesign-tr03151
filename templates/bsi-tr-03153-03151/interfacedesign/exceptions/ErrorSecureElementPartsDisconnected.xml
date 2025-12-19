@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorSecureElementPartsDisconnected" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorSecureElementPartsDisconnected</name>
   <description>This exception is thrown if logical or physical components of the Secure Element become disconnected during operation. The Secure Element may consist of multiple physical components or logical subsystems (cryptographic module, storage subsystem, communication interface, security processor) that must remain connected and communicating. If any critical component becomes disconnected or unreachable, the Secure Element cannot operate safely. ErrorSecureElementPartsDisconnected indicates that the Secure Element integrity has been compromised due to component disconnection. This is a hardware or communication failure requiring immediate attention. Common causes include: physical connector failure, communication channel loss, hardware malfunction, or component removal during operation.</description>
-  <category>Secure Element Hardware - Component Disconnection</category>
+  <category>Secure Element Hardware</category>
+  <subcategory>Component Disconnection</subcategory>
   <severity>Critical</severity>
   <thrownBy>
     <function>authenticateUser</function>
@@ -130,3 +131,4 @@
     <note>Disconnection prevents cryptographic operations</note>
   </implementationContext>
 </exception>
+

@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorGetMaxNumberOfClientsFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorGetMaxNumberOfClientsFailed</name>
   <description>This exception is thrown if the SE API function getMaxNumberOfClients fails to retrieve the maximum number of clients that can simultaneously use the Secure Element. The function attempts to determine the device's client capacity limit, but the retrieval process fails before the capacity value can be determined and returned.</description>
-  <category>Client Management - Capacity Query</category>
+  <category>Client Management</category>
+  <subcategory>Capacity Query</subcategory>
   <severity>Medium</severity>
   <javadoc>
     <summary>This class defines the exception ErrorGetMaxNumberOfClientsFailed that is thrown if the determination of the maximum number of clients that could use the SE API simultaneously failed.</summary>
@@ -113,3 +114,4 @@
     <note>Retrieval failure prevents capacity information access</note>
   </implementationContext>
 </exception>
+

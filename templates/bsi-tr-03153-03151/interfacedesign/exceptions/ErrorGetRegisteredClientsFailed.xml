@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorGetRegisteredClientsFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorGetRegisteredClientsFailed</name>
   <description>This exception is thrown if the SE API function getRegisteredClients fails to retrieve the list of currently registered clients on the Secure Element. The function attempts to obtain detailed information about all registered client applications, but the retrieval process fails before the client list can be determined and returned.</description>
-  <category>Client Management - Client Enumeration</category>
+  <category>Client Management</category>
+  <subcategory>Client Enumeration</subcategory>
   <severity>High</severity>
   <javadoc>
     <summary>This class defines the exception ErrorGetRegisteredClientsFailed that is thrown if the determination of the currently registered clients failed.</summary>
@@ -113,3 +114,4 @@
     <note>Retrieval failure prevents registered client list access</note>
   </implementationContext>
 </exception>
+

@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorStoringDataFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorStoringDataFailed</name>
   <description>This exception is thrown if a storage operation fails when attempting to store data on the device. The Secure Element stores various types of data including device description, configuration parameters, and operational data. If the storage write operation fails, ErrorStoringDataFailed indicates the data could not be successfully written to device storage. Common causes include: device storage errors, storage write failures, corrupted storage, insufficient storage capacity, storage medium issues, or communication failures. ErrorStoringDataFailed indicates that the requested data update was not completed and the device's stored data remains unchanged. This prevents configuration updates and data management operations from completing successfully.</description>
-  <category>Storage - Data Storage Failure</category>
+  <category>Storage</category>
+  <subcategory>Data Storage Failure</subcategory>
   <severity>High</severity>
   <thrownBy>
     <function>setDescription</function>
@@ -118,3 +119,4 @@
     <note>Storage failure prevents description update</note>
   </implementationContext>
 </exception>
+

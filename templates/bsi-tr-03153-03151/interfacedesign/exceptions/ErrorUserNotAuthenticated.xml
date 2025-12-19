@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorUserNotAuthenticated" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorUserNotAuthenticated</name>
   <description>This exception is thrown if a restricted SE API function is invoked by a user who does not have authenticated status. The device maintains user authentication state to control access to security-sensitive operations. Certain functions (configuration, logging control, device management, PIN operations) require the user to be in authenticated state. Authentication is established through successful user authentication via authenticateUser. ErrorUserNotAuthenticated is raised when a restricted function is called without the caller being in authenticated state. ErrorUserNotAuthenticated is a High severity exception because it indicates unauthorized access attempt or user session management issue. Recovery requires authenticating the user before the restricted operation can proceed.</description>
-  <category>Authentication - Access Control</category>
+  <category>Authentication</category>
+  <subcategory>Access Control</subcategory>
   <severity>High</severity>
   <thrownBy>
     <function>configureLogging</function>
@@ -160,3 +161,4 @@
     <note>Unauthenticated state prevents operation execution</note>
   </implementationContext>
 </exception>
+

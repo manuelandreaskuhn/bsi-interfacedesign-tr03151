@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorGetMaxNumberTransactionsFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorGetMaxNumberTransactionsFailed</name>
   <description>This exception is thrown if the SE API function getMaxNumberOfTransactions fails to retrieve the maximum number of transactions that can be simultaneously managed by the Secure Element. The function attempts to determine the device's transaction capacity limit, but the retrieval process fails before the capacity value can be determined and returned.</description>
-  <category>Transaction Management - Capacity Query</category>
+  <category>Transaction Management</category>
+  <subcategory>Capacity Query</subcategory>
   <severity>Medium</severity>
   <javadoc>
     <summary>This class defines the exception ErrorGetMaxNumberTransactionsFailed that is thrown if the determination of the maximum number of transactions that can be managed simultaneously failed.</summary>
@@ -113,3 +114,4 @@
     <note>Retrieval failure prevents transaction limit information</note>
   </implementationContext>
 </exception>
+

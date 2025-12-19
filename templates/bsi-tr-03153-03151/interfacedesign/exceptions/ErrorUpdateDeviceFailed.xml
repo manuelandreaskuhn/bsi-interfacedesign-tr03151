@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorUpdateDeviceFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorUpdateDeviceFailed</name>
   <description>This exception is thrown by the updateDevice function when the device update operation fails. The updateDevice function performs firmware, configuration, or component updates to the Secure Element. Updates may include firmware patches, security updates, configuration changes, or other device modifications. ErrorUpdateDeviceFailed is raised when the update operation cannot be completed successfully, which may occur due to verification failures, hardware errors, corrupted update data, device state incompatibility, or other operational failures. ErrorUpdateDeviceFailed is a Critical severity exception because device updates are essential for security and functionality. A failed update leaves the device in potentially unstable state and requires investigation and recovery procedures.</description>
-  <category>Device Management - Update Operations</category>
+  <category>Device Management</category>
+  <subcategory>Update Operations</subcategory>
   <severity>Critical</severity>
   <javadoc>
     <summary>This class defines the exception ErrorUpdateDeviceFailed that is thrown by the updateDevice function when the device update operation fails.</summary>
@@ -126,3 +127,4 @@
     <note>Update failure prevents firmware upgrade</note>
   </implementationContext>
 </exception>
+

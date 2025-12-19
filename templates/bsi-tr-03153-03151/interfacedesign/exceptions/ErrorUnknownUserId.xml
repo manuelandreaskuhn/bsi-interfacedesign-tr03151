@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorUnknownUserId" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorUnknownUserId</name>
   <description>This exception is thrown if a function is invoked with a User-ID that is not registered or recognized by the device. User-IDs identify users within the device's user management system. The device maintains a registry of valid User-IDs that can authenticate and perform operations. When a function receives a User-ID that doesn't match any registered user, ErrorUnknownUserId is raised. ErrorUnknownUserId is a High severity exception because it indicates an attempt to authenticate or operate as an unrecognized user. This may represent incorrect credentials, user not registered, or invalid user parameter. Recovery requires providing a valid, registered User-ID.</description>
-  <category>Authentication - User Management</category>
+  <category>Authentication</category>
+  <subcategory>User Management</subcategory>
   <severity>High</severity>
   <thrownBy>
     <function>authenticateUser</function>
@@ -115,3 +116,4 @@
     <note>Unknown user prevents authentication</note>
   </implementationContext>
 </exception>
+

@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorUserNotAuthorized" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorUserNotAuthorized</name>
   <description>This exception is thrown if an authenticated user attempts to invoke a restricted SE API function but lacks the authorization/permissions required to execute that function. The device implements role-based access control where different users have different authorization levels. Certain functions (configuration, management, logging control, PIN operations) require specific authorization roles or permissions. ErrorUserNotAuthorized is raised when an authenticated user attempts a restricted function they are not authorized to perform. ErrorUserNotAuthorized is a High severity exception because it indicates an access control violation and potential security policy breach. The authenticated user is known but does not have sufficient permissions for the requested operation.</description>
-  <category>Authentication - Authorization Control</category>
+  <category>Authentication</category>
+  <subcategory>Authorization Control</subcategory>
   <severity>High</severity>
   <thrownBy>
     <function>configureLogging</function>
@@ -159,3 +160,4 @@
     <note>Insufficient authorization prevents operation execution</note>
   </implementationContext>
 </exception>
+

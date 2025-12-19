@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorTransactionCounterOverflow" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorTransactionCounterOverflow</name>
   <description>This exception is thrown if the transaction counter has reached its logical maximum value and cannot be incremented further. The transaction counter maintains a numeric record of executed transactions with a defined maximum value (typically a large 64-bit or 128-bit integer). After many transactions, the counter value approaches or reaches this logical maximum. Once at maximum, the counter cannot increment further without overflow. ErrorTransactionCounterOverflow is a Critical severity exception because it indicates the counter is exhausted and all transaction functionality must stop. The counter has reached the end of its lifecycle. Device replacement or counter reset procedure is required to restore transaction functionality, though resetting the counter may compromise transaction authenticity and audit trail integrity.</description>
-  <category>Transaction Management - Counter Overflow</category>
+  <category>Transaction Management</category>
+  <subcategory>Counter Overflow</subcategory>
   <severity>Critical</severity>
   <thrownBy>
     <function>startTransaction</function>
@@ -115,3 +116,4 @@
     <note>Overflow condition blocks new transactions</note>
   </implementationContext>
 </exception>
+

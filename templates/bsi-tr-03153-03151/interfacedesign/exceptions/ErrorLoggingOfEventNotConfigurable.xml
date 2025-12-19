@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorLoggingOfEventNotConfigurable" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorLoggingOfEventNotConfigurable</name>
   <description>This exception is thrown if the SE API function configureLogging fails because the specified event type is not configurable for logging. The function attempts to modify the logging configuration for a specific event type, but that event type does not support logging configuration changes on this device. ErrorLoggingOfEventNotConfigurable indicates that the event type is either not loggable at all, has a fixed logging configuration that cannot be changed, or is a system event that is not subject to user configuration.</description>
-  <category>Event Logging - Configuration Constraints</category>
+  <category>Event Logging</category>
+  <subcategory>Configuration Constraints</subcategory>
   <severity>Medium</severity>
   <javadoc>
     <summary>This class defines the exception ErrorLoggingOfEventNotConfigurable that is thrown if the specified event is not configurable for logging.</summary>
@@ -115,3 +116,4 @@
     <note>Non-configurable events cannot be controlled by application</note>
   </implementationContext>
 </exception>
+

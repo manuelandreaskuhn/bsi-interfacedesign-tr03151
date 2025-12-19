@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorFunctionFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorFunctionFailed</name>
   <description>This exception is thrown if the SE API encounters a critical error which is not covered by the other defined exceptions. ErrorFunctionFailed represents a universal catch-all exception for unexpected failures that do not fall into any other specific exception category. This exception indicates that a critical error prevented the function from executing its defined process and producing expected results. ErrorFunctionFailed is raised when any SE API function encounters a critical failure condition that is not explicitly addressed by the more specific exception types defined in the API specification. The exception serves as a safety mechanism to ensure that critical errors are communicated to the caller even when the specific failure cause does not match any predefined exception category. This exception is universal and can be raised by virtually any SE API function when an unspecified critical failure occurs.</description>
-  <category>Common Exception - Catch-All</category>
+  <category>Common Exception</category>
+  <subcategory>Catch-All</subcategory>
   <severity>Critical</severity>
   <javadoc>
     <summary>This class defines the exception ErrorFunctionFailed that is thrown if the SE API encounters a critical error which is not covered by the other defined exceptions.</summary>
@@ -158,3 +159,4 @@
     <note>Application must determine root cause from exception message</note>
   </implementationContext>
 </exception>
+

@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorSettingNewPinFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorSettingNewPinFailed</name>
   <description>This exception is thrown if the SE API function unblockPin fails to set the new PIN during the unblock operation. The unblockPin function attempts to unblock a blocked or locked PIN by using the PUK (PIN Unblock Key) and setting a new PIN value. If the new PIN setting operation fails after successful PUK authentication, ErrorSettingNewPinFailed indicates the PIN change could not be completed. Common causes include: device storage errors, invalid PIN format, PIN policy violations, device internal errors, or communication failures. ErrorSettingNewPinFailed indicates the unblock operation is incomplete - the old PIN remains blocked and the new PIN was not set.</description>
-  <category>Authentication - PIN Management - PIN Setting Failure</category>
+  <category>Authentication</category>
+  <subcategory>PIN Management - PIN Setting Failure</subcategory>
   <severity>High</severity>
   <javadoc>
     <summary>This class defines the exception ErrorSettingNewPinFailed that is thrown if new PIN setting fails during unblock.</summary>
@@ -122,3 +123,4 @@
     <note>Setting failure prevents PIN update</note>
   </implementationContext>
 </exception>
+

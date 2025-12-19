@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorNoDataAvailable" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorNoDataAvailable</name>
   <description>This exception is thrown if the SE API export functions cannot find any data matching the provided selection or filter criteria. The functions exportLogMessages or exportFilteredTransactionLogs attempt to export stored data (log messages, transaction records, or other logged information) based on the caller's filtering or selection parameters, but no data in the Secure Element's storage matches those selection criteria. ErrorNoDataAvailable indicates that the export query returned an empty result set - the requested data simply does not exist or has been purged from the device.</description>
-  <category>Data Export - No Match Condition</category>
+  <category>Data Export</category>
+  <subcategory>No Match Condition</subcategory>
   <severity>Medium</severity>
   <javadoc>
     <summary>This class defines the exception ErrorNoDataAvailable that is thrown if no data has been found for the provided selection in the context of the export of stored data.</summary>
@@ -114,3 +115,4 @@
     <note>Query execution completes without finding matching records</note>
   </implementationContext>
 </exception>
+

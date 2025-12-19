@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorTimeNotSet" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorTimeNotSet</name>
   <description>This exception is thrown if a time-dependent SE API function is invoked but the time in the Secure Element has not been properly set. The Secure Element maintains an internal time that is used to timestamp transactions and log messages for audit trail integrity. After device initialization or after a period of power loss or absence of current to the Secure Element, the internal time must be explicitly set via updateTime before time-dependent operations can proceed. ErrorTimeNotSet indicates the device time is not synchronized or has not been initialized. Common causes include: time not set after device initialization, device time reset due to power loss, or time synchronization required after long offline period. Time-dependent operations cannot proceed safely without accurate time.</description>
-  <category>Time Synchronization - Time Not Initialized</category>
+  <category>Time Synchronization</category>
+  <subcategory>Time Not Initialized</subcategory>
   <severity>High</severity>
   <thrownBy>
     <function>deleteLogMessages</function>
@@ -123,3 +124,4 @@
     <note>Unset time prevents time-dependent function execution</note>
   </implementationContext>
 </exception>
+

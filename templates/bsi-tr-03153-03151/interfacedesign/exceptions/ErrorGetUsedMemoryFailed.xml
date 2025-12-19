@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorGetUsedMemoryFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorGetUsedMemoryFailed</name>
   <description>This exception is thrown if the SE API function getUsedMemory fails to retrieve the amount of storage currently consumed on the Secure Element. The function attempts to determine how much of the total storage capacity is currently in use, but the retrieval process fails before the used memory information can be determined and returned.</description>
-  <category>Resource Management - Memory Utilization Query</category>
+  <category>Resource Management</category>
+  <subcategory>Memory Utilization Query</subcategory>
   <severity>High</severity>
   <javadoc>
     <summary>This class defines the exception ErrorGetUsedMemoryFailed that is thrown if the determination of the used storage amount failed.</summary>
@@ -113,3 +114,4 @@
     <note>Retrieval failure prevents memory usage information</note>
   </implementationContext>
 </exception>
+

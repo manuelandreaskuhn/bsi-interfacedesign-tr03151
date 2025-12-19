@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorClientAlreadyRegistered" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorClientAlreadyRegistered</name>
   <description>This exception is thrown if the SE API function registerClient has already been invoked for the specific clientId. The clientId is therefore already registered. The function attempts to register a new client but detects that the provided clientId is already in use by another registered client.</description>
-  <category>Client Management - Registration</category>
+  <category>Client Management</category>
+  <subcategory>Registration</subcategory>
   <severity>Medium</severity>
   <javadoc>
     <summary>This class defines the exception ErrorClientAlreadyRegistered that is thrown if the SE API function registerClient has already been invoked for the specific clientId. The clientId is therefore already registered.</summary>
@@ -96,3 +97,4 @@
     <note>Prevents duplicate client identities that would violate uniqueness constraint</note>
   </implementationContext>
 </exception>
+

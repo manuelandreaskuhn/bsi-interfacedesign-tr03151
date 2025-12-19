@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorUpdateTimeFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorUpdateTimeFailed</name>
   <description>This exception is thrown if the execution of the Secure Element functionality for setting or synchronizing the device time fails. The updateTime function synchronizes device time with provided time data using the specified variant method. Time synchronization is essential for transaction timestamps, audit trails, and security operations. ErrorUpdateTimeFailed is raised when the Secure Element's time update functionality encounters failures during execution, which may occur due to invalid time data, hardware errors, device state issues, verification failures, or other operational problems. ErrorUpdateTimeFailed is a High severity exception because proper time management is critical to device security and transaction integrity.</description>
-  <category>Time Management - Time Update Failure</category>
+  <category>Time Management</category>
+  <subcategory>Time Update Failure</subcategory>
   <severity>High</severity>
   <javadoc>
     <summary>This class defines the exception ErrorUpdateTimeFailed that is thrown if the Secure Element time update functionality fails during execution.</summary>
@@ -124,3 +125,4 @@
     <note>Update failure prevents time synchronization</note>
   </implementationContext>
 </exception>
+

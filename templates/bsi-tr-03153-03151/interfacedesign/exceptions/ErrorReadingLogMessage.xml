@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorReadingLogMessage" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorReadingLogMessage</name>
   <description>This exception is thrown if the SE API functions getLastLogMessage or exportLogMessages encounter a failure while reading or retrieving log message data from the Secure Element's logging storage. The functions successfully locate log messages but encounter an error when attempting to read, extract, or retrieve the message data from device storage. ErrorReadingLogMessage indicates that a device-level I/O or storage access error occurred during the log message retrieval operation, preventing successful reading of the located messages.</description>
-  <category>Event Logging - Storage Access Failure</category>
+  <category>Event Logging</category>
+  <subcategory>Storage Access Failure</subcategory>
   <severity>High</severity>
   <thrownBy>
     <function>getLastLogMessage</function>
@@ -117,3 +118,4 @@
     <note>Read failure prevents message data access</note>
   </implementationContext>
 </exception>
+

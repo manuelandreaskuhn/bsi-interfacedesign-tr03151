@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorTooManyRecords" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorTooManyRecords</name>
   <description>This exception is thrown if a data export query would return more records than the maximum specified by the caller. Export operations (exportLogMessages, exportFilteredTransactionLogs) allow callers to specify a maximum number of records to retrieve in a single operation to manage memory usage and response size. If the query matches more records than this maximum, ErrorTooManyRecords is raised to indicate the result set is too large. The caller must refine the query parameters or request records in smaller batches to retrieve all matching data. This prevents memory exhaustion and excessive response sizes from large result sets.</description>
-  <category>Data Export - Record Limit Exceeded</category>
+  <category>Data Export</category>
+  <subcategory>Record Limit Exceeded</subcategory>
   <severity>Medium</severity>
   <javadoc>
     <summary>This class defines the exception ErrorTooManyRecords that is thrown if export query results exceed the specified maximum record count.</summary>
@@ -114,3 +115,4 @@
     <note>Large result prevents complete data retrieval</note>
   </implementationContext>
 </exception>
+

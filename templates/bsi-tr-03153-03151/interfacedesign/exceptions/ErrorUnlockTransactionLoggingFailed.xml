@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorUnlockTransactionLoggingFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorUnlockTransactionLoggingFailed</name>
   <description>This exception is thrown by the unlockTransactionLogging function when the operation fails to unlock transaction logging functionality. Transaction logging provides lock/unlock control to manage when transactions can be recorded. The unlockTransactionLogging function re-enables transaction recording after logging has been locked for maintenance or audit purposes. ErrorUnlockTransactionLoggingFailed is raised when the unlock operation cannot be completed successfully, which may occur due to authorization failures, hardware errors, device state issues, or other operational failures. ErrorUnlockTransactionLoggingFailed is a High severity exception because it prevents restoration of transaction recording capability.</description>
-  <category>Transaction Management - Logging Control Failure</category>
+  <category>Transaction Management</category>
+  <subcategory>Logging Control Failure</subcategory>
   <severity>High</severity>
   <javadoc>
     <summary>This class defines the exception ErrorUnlockTransactionLoggingFailed that is thrown by the unlockTransactionLogging function when the unlock operation fails.</summary>
@@ -120,3 +121,4 @@
     <note>Unlock failure prevents logging resumption</note>
   </implementationContext>
 </exception>
+

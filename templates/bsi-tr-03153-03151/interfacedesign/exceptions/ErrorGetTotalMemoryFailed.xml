@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorGetTotalMemoryFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorGetTotalMemoryFailed</name>
   <description>This exception is thrown if the SE API function getTotalMemory fails to retrieve the total storage capacity of the Secure Element. The function attempts to determine the complete storage capacity available on the device, but the retrieval process fails before the total memory information can be determined and returned.</description>
-  <category>Resource Management - Memory Capacity Query</category>
+  <category>Resource Management</category>
+  <subcategory>Memory Capacity Query</subcategory>
   <severity>High</severity>
   <javadoc>
     <summary>This class defines the exception ErrorGetTotalMemoryFailed that is thrown if the determination of the total storage capacity failed.</summary>
@@ -113,3 +114,4 @@
     <note>Retrieval failure prevents total memory information</note>
   </implementationContext>
 </exception>
+

@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorCertificateExpired" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorCertificateExpired</name>
   <description>This exception is thrown if a SE API function is invoked and the certificate corresponding to a private key used to create log messages is expired. Even if a certificate is expired, the log message SHALL be created by the Secure Element and stored by the device. In this case, the exception ErrorCertificateExpired SHALL be raised only after the data of the log message has been stored. This is a warning exception that indicates the operation succeeded but with a certificate validity concern.</description>
-  <category>Certificate Management - Logging Operations</category>
+  <category>Certificate Management</category>
+  <subcategory>Logging Operations</subcategory>
   <severity>Medium</severity>
   <javadoc>
     <summary>This class defines the exception ErrorCertificateExpired that is thrown if a SE API function is invoked and the certificate with the public key for the verification of the appropriate type of log messages is expired.</summary>
@@ -105,3 +106,4 @@
     <note>Application must implement certificate management to prevent persistent expiration conditions</note>
   </implementationContext>
 </exception>
+

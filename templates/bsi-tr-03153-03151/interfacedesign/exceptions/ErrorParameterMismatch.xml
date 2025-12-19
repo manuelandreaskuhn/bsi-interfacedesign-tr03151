@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorParameterMismatch" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorParameterMismatch</name>
   <description>This exception is thrown if the SE API export functions exportLogMessages or exportFilteredTransactionLogs detect that the provided filter or selection parameters are incompatible, contradictory, or logically inconsistent. The parameters may violate expected constraints, have logically contradictory values, or be inconsistent with each other. ErrorParameterMismatch indicates that the combination of parameters provided cannot be used to perform a valid export operation due to parameter conflicts or incompatibilities.</description>
-  <category>Data Export - Parameter Validation</category>
+  <category>Data Export</category>
+  <subcategory>Parameter Validation</subcategory>
   <severity>Medium</severity>
   <thrownBy>
     <function>exportFilteredTransactionLogs</function>
@@ -117,3 +118,4 @@
     <note>Type mismatch prevents function execution</note>
   </implementationContext>
 </exception>
+

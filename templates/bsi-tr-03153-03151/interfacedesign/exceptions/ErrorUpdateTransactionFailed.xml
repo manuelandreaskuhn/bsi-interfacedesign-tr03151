@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorUpdateTransactionFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorUpdateTransactionFailed</name>
   <description>This exception is thrown if the execution of the Secure Element functionality for updating a transaction fails. The updateTransaction function modifies or extends an in-progress transaction after it has been started with startTransaction. UpdateTransaction records intermediate data, status changes, or additional information within an active transaction. ErrorUpdateTransactionFailed is raised when the Secure Element's transaction update functionality encounters failures during execution, which may occur due to invalid transaction state, hardware errors, counter issues, storage failures, or other operational problems. ErrorUpdateTransactionFailed is a High severity exception because transaction integrity is compromised if updates cannot be recorded.</description>
-  <category>Transaction Management - Update Failure</category>
+  <category>Transaction Management</category>
+  <subcategory>Update Failure</subcategory>
   <severity>High</severity>
   <javadoc>
     <summary>This class defines the exception ErrorUpdateTransactionFailed that is thrown if the Secure Element transaction update functionality fails during execution.</summary>
@@ -124,3 +125,4 @@
     <note>Update failure prevents transaction modification</note>
   </implementationContext>
 </exception>
+

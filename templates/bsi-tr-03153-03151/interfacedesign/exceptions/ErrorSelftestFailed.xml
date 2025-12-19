@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorSelftestFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorSelftestFailed</name>
   <description>This exception is thrown if the execution of the self-tests of the Secure Element components fails. The selfTest function performs comprehensive integrity checks of device components, cryptographic modules, storage subsystems, communication interfaces, and security functions to verify the device is operating correctly. If any self-test check fails or reports a failure condition, the device indicates a potential integrity issue or malfunction. ErrorSelftestFailed indicates that the device may not be trustworthy for security operations. Common causes include: component failures, cryptographic test failures, memory errors, communication issues, configuration problems, or manufacturing defects. The device should not be used for critical operations until the self-test failure is investigated and resolved.</description>
-  <category>Device Management - Self-Test Failure</category>
+  <category>Device Management</category>
+  <subcategory>Self-Test Failure</subcategory>
   <severity>Critical</severity>
   <thrownBy/>
   <javadoc>
@@ -119,3 +120,4 @@
     <note>Test failure indicates potential device malfunction</note>
   </implementationContext>
 </exception>
+

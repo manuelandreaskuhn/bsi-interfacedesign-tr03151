@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorParameterTooLong" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorParameterTooLong</name>
   <description>This exception is thrown by SE API functions when one or more parameters exceed the maximum allowed length specified for that parameter. Different parameters have different length constraints to ensure efficient device operation, network transmission, and storage. ErrorParameterTooLong indicates that a parameter value (typically a string or data array) exceeds the device's maximum length limit for that parameter, preventing the function from processing the oversized parameter.</description>
-  <category>Input Validation - Parameter Length Constraints</category>
+  <category>Input Validation</category>
+  <subcategory>Parameter Length Constraints</subcategory>
   <severity>Medium</severity>
   <thrownBy>
     <function>authenticateUser</function>
@@ -118,3 +119,4 @@
     <note>Oversized parameter prevents function execution</note>
   </implementationContext>
 </exception>
+

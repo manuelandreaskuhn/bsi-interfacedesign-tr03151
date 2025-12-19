@@ -2,7 +2,8 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorInvalidClientIdCharacter" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorInvalidClientIdCharacter</name>
   <description>This exception is thrown if a provided clientId parameter contains characters that violate the allowed character set or format specification for client identifiers. The function attempts to process a client operation with a supplied clientId, but the identifier contains invalid or disallowed characters, causing the operation to fail validation.</description>
-  <category>Client Management - Input Validation</category>
+  <category>Client Management</category>
+  <subcategory>Input Validation</subcategory>
   <severity>High</severity>
   <javadoc>
     <summary>This class defines the exception ErrorInvalidClientIdCharacter that is thrown if the provided clientId contains characters not allowed by the specification.</summary>
@@ -117,3 +118,4 @@
     <note>Invalid character prevents client registration</note>
   </implementationContext>
 </exception>
+

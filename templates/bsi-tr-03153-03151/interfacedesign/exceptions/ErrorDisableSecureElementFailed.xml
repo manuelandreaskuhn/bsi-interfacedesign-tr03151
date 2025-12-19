@@ -3,6 +3,7 @@
   <name>ErrorDisableSecureElementFailed</name>
   <description>This exception is thrown if the deactivation of the Secure Element failed during execution of the disableSecureElement function. The exception represents a critical failure in the device's ability to deactivate and disable the Secure Element's cryptographic and logging functionality. ErrorDisableSecureElementFailed is raised when the disableSecureElement function invokes the Secure Element's deactivation command but the Secure Element cannot complete the deactivation process due to a hardware failure, firmware error, communication breakdown, or internal Secure Element malfunction. This exception indicates that the Secure Element remains in an enabled, operational state and all of its functionality continues to be fully accessible and functional. The exception is raised after validation checks but before the deactivation log entry is created, preventing any state change or audit trail entry from being recorded.</description>
   <category>Secure Element Operation</category>
+  <subcategory>SE Control</subcategory>
   <severity>Critical</severity>
   <javadoc>
     <summary>This class defines the exception ErrorDisableSecureElementFailed that is thrown if the deactivation of the Secure Element failed.</summary>
@@ -114,3 +115,4 @@
     <note>SE disable failure prevents security configuration change</note>
   </implementationContext>
 </exception>
+
