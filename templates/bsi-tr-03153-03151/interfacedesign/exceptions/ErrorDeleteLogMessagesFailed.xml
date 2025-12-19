@@ -1,159 +1,159 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<exception id="ErrorDeleteLogMessagesFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
-    <name>ErrorDeleteLogMessagesFailed</name>
-    <description>This exception is thrown if the deletion of log messages from the storage failed during execution of the deleteLogMessages function. The exception represents a critical failure in the device's ability to remove stored log messages from the logging storage subsystem. ErrorDeleteLogMessagesFailed is raised when the device attempts to delete log message files that have been previously exported and marked for deletion, but encounters an I/O error, storage access issue, or system-level failure that prevents successful removal. This exception indicates that the device's storage subsystem has rejected the deletion request due to hardware errors, file system inconsistencies, permission violations, or physical disconnection of the storage medium. The exception is raised after the device has validated deletion prerequisites but failed during the actual removal of log data from persistent storage.</description>
-    <category>Logging</category>
-    <severity>High</severity>
-    <javadoc>
-        <summary>This class defines the exception ErrorDeleteLogMessagesFailed that is thrown if the deletion of log messages from the storage failed.</summary>
-        <description>The deletion operation of log messages from the device storage encountered a failure condition. This exception indicates that the deleteLogMessages function was unable to successfully remove stored log messages. This failure may be due to storage access issues, insufficient permissions, or system-level I/O errors during the deletion process.</description>
-        <constructors>
-            <constructor>
-                <signature>ErrorDeleteLogMessagesFailed()</signature>
-                <description>Constructs a new ErrorDeleteLogMessagesFailed exception with null as the value for its detail message</description>
-            </constructor>
-            <constructor>
-                <signature>ErrorDeleteLogMessagesFailed(String message)</signature>
-                <description>Constructs a new ErrorDeleteLogMessagesFailed exception whereby its detail message is initialized with the passed value</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorDeleteLogMessagesFailed(String message, Throwable cause)</signature>
-                <description>Constructs a new ErrorDeleteLogMessagesFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorDeleteLogMessagesFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-                <description>Constructs a new ErrorDeleteLogMessagesFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-            </constructor>
-        </constructors>
-    </javadoc>
-    <specification>
-        <source>BSI TR-03151-1</source>
-        <section>3.6.4.4</section>
-        <requirement>SHALL be raised when the deletion of log message files from the storage fails. If the deletion of the data fails, the function SHALL raise the exception ErrorDeleteLogMessagesFailed and exit the function.</requirement>
-        <applicability>Log message deletion operations when storage removal fails</applicability>
-        <reference>deleteLogMessages – Exceptions (3.6.4.4)</reference>
-    </specification>
-    <thrownBy>
-        <function>deleteLogMessages</function>
-    </thrownBy>
-    <triggerConditions>
-        <condition>
-            <scenario>Storage medium I/O error during deletion operation</scenario>
-            <description>The device initiates deletion of log message files, but the storage medium encounters a read-modify-write error, CRC failure, or other I/O error that prevents successful file removal. The error may originate from hardware malfunction, firmware issues, or storage medium degradation.</description>
-            <trigger>I/O error or storage hardware failure during file deletion operation</trigger>
-        </condition>
-        <condition>
-            <scenario>Storage medium disconnection or unavailability</scenario>
-            <description>The storage medium becomes disconnected, unavailable, or inaccessible during the deletion operation. This can occur if an external storage device is physically removed, a network storage connection is lost, or the storage subsystem enters an offline state.</description>
-            <trigger>Storage medium becomes inaccessible during deletion</trigger>
-        </condition>
-        <condition>
-            <scenario>File system corruption or inconsistency</scenario>
-            <description>The device's file system containing the log messages has become corrupted, inconsistent, or damaged. The file system cannot locate the log message files to be deleted, or the file system metadata is too corrupted to perform deletion operations.</description>
-            <trigger>File system corruption preventing file deletion</trigger>
-        </condition>
-        <condition>
-            <scenario>Permission or access control violation</scenario>
-            <description>The deletion operation is attempted on log message files, but the operating system or security subsystem denies the deletion due to permission restrictions, file locks held by other processes, or security policy enforcement.</description>
-            <trigger>Insufficient permissions or access restrictions preventing deletion</trigger>
-        </condition>
-        <condition>
-            <scenario>Storage capacity or resource exhaustion</scenario>
-            <description>The device's storage system has entered a state where deletion operations cannot proceed due to insufficient resources, file system journal space exhaustion, or transaction log overflow that prevents recording the deletion operation.</description>
-            <trigger>Storage resource exhaustion preventing deletion completion</trigger>
-        </condition>
-    </triggerConditions>
-    <recovery>
-        <step>Verify that the device storage is accessible and operational using device health queries or diagnostic functions</step>
-        <step>Check storage medium connection status physically and through software-level diagnostics to ensure the storage device is properly connected and responsive</step>
-        <step>Verify file system health by running file system integrity checks or repair utilities if available through the device API or firmware</step>
-        <step>Ensure sufficient file system permissions for deletion operations on the device storage. Verify the execution context has appropriate access rights.</step>
-        <step>Verify that log messages marked for deletion have been previously exported using exportLogMessages to ensure data preservation before reattempting deletion</step>
-        <step>Check for other processes or system components that may be holding locks on the log message files preventing deletion, and terminate blocking operations if safe</step>
-        <step>Retry the deleteLogMessages operation after resolving storage access issues and allowing brief time for storage subsystem stabilization (typically 100-500ms)</step>
-        <step>If retry fails, perform a partial deletion by specifying a smaller set of log messages to delete and retry in increments to isolate problematic entries</step>
-        <step>Consult device logs, audit trails, or diagnostic information for detailed storage operation failure reasons and correlation with hardware errors</step>
-        <step>If deletion failures persist, perform device storage diagnostics, consider file system rebuild or factory reset, or replace storage hardware if hardware failure is detected</step>
-    </recovery>
-    <relatedExceptions>
-        <exception>ErrorStoringLogMessageFailed</exception>
-        <exception>ErrorRetrieveLogMessageFailed</exception>
-        <exception>ErrorUnexportedLogMessages</exception>
-        <exception>ErrorStorageMediumDisconnected</exception>
-    </relatedExceptions>
-    <notes>
-        <note>This exception indicates a storage system failure during the deletion phase of log message management. It represents a critical issue that prevents successful removal of exported log data from persistent storage.</note>
-        <note>The exception may be raised even if preliminary checks (such as exported log verification via ErrorUnexportedLogMessages) have succeeded, indicating a failure during actual data removal from the storage medium.</note>
-        <note>Applications should ensure that critical log messages are exported before attempting deletion using exportLogMessages to prevent data loss if the deletion operation fails.</note>
-        <note>Unlike ErrorStoringLogMessageFailed (which indicates inability to write new log entries), ErrorDeleteLogMessagesFailed indicates inability to remove previously stored log entries, affecting log retention and storage space management.</note>
-        <note>Storage integrity should be verified through device diagnostics if repeated deletion failures occur, as this may indicate hardware-level issues, file system corruption, or storage medium degradation that requires professional intervention.</note>
-        <note>The log messages that failed to be deleted remain in storage. If the failure is not resolved, repeated deletion attempts will continue to fail for the same messages, and storage capacity will not be freed.</note>
-        <note>Some device implementations may support partial deletion where only a subset of requested log messages are successfully deleted. Applications should verify the number of deleted messages to detect partial deletion scenarios.</note>
-        <note>If the storage medium is externally connected (e.g., USB, network storage), the deletion failure may indicate disconnection, network issues, or external device malfunction. Physical and network connectivity should be verified.</note>
-        <note>In systems with redundant storage or backup logging, deletion failure on one storage path should not necessarily prevent continued operation. Alternative storage paths may remain operational.</note>
-        <note>The exception does not indicate whether specific log message data has been corrupted or rendered unrecoverable. Storage recovery services may be able to retrieve deleted or partially deleted log entries from the storage medium.</note>
-    </notes>
-    <executionSequence>
-        <step number="1" name="Function Invocation">Function entry point is reached with parameters specifying the log message selection criteria (date range, clientId, transaction id, or other filters)</step>
-        <step number="2" name="Parameter Validation">The Secure Element validates that filter parameters are valid and correspond to supported filtering criteria</step>
-        <step number="3" name="Pre-deletion Checks">The device performs preliminary checks to verify that deletion preconditions are met, such as verifying all matching log messages have been exported if required by device policy</step>
-        <step number="4" name="Storage Access Acquisition">The device acquires access to the storage subsystem and initiates a transaction for safe log message deletion</step>
-        <step number="5" name="Log Message Location">The device locates log message files matching the specified filter criteria in the storage medium</step>
-        <step number="6" name="Deletion Attempt">The device attempts to delete located log message files through file system operations on the storage medium</step>
-        <step number="7a" name="Deletion Success">If deletion completes successfully, execution continues to transaction commit and function completion (not taken in this exception case)</step>
-        <step number="7b" name="Deletion Failure">If the storage medium or file system returns an error during deletion, execution branches to exception handling at step 8</step>
-        <step number="8" name="Transaction Rollback">The device attempts to rollback the deletion transaction to restore consistency, though some storage systems may not support transactional deletion</step>
-        <step number="9" name="Exception Context Preparation">Exception context is prepared including filter criteria, number of messages targeted for deletion, storage error details, and device state information</step>
-        <step number="10" name="Exception Instance Creation">ErrorDeleteLogMessagesFailed exception instance is created with appropriate error message detailing the storage deletion failure</step>
-        <step number="11" name="Exception Propagation">Exception is raised and propagated up the call stack to the calling application, allowing error handling and recovery at application level</step>
-    </executionSequence>
-    <postconditionality>
-        <state name="Exception State">An ErrorDeleteLogMessagesFailed exception has been created and raised, containing filter criteria, targeted message count, and storage error details</state>
-        <state name="Log Message State">The log messages targeted for deletion remain in storage unchanged. Deletion has not been successfully completed. Depending on device implementation, some messages may be partially deleted or marked for deletion but not fully removed.</state>
-        <state name="Storage State">The storage medium and file system remain in their previous state, with all targeted log messages still present and accessible. Storage space has not been freed for the messages targeted for deletion.</state>
-        <state name="Transaction State">If the device supports transactional deletion, the deletion transaction has been rolled back and the storage is returned to its pre-deletion state. If transactions are not supported, storage state is indeterminate.</state>
-        <state name="Function Exit">The function exits abnormally via exception propagation without completing the log message deletion operation</state>
-        <state name="Device Availability">The Secure Element and logging subsystem remain available for subsequent API calls, though the storage error condition may persist and affect future delete operations. The device continues to operate, but with the storage issue unresolved.</state>
-    </postconditionality>
-    <usage>
-        <scenario name="Scenario 1: Storage Medium Disconnection During Deletion">
-            <description>An application initiates deletion of log messages to free storage space, but the external storage medium becomes disconnected during the deletion operation, causing this exception.</description>
-            <relatedFunctions>deleteLogMessages, exportLogMessages, getDeviceHealth</relatedFunctions>
-            <errorContext>Hardware connectivity failure during log message deletion operation</errorContext>
-        </scenario>
-        <scenario name="Scenario 2: File System Corruption Detection">
-            <description>Repeated deletion operations have been succeeding, but after a device crash or power cycle, subsequent deletion attempts fail due to file system corruption, indicating the need for storage recovery.</description>
-            <relatedFunctions>deleteLogMessages, exportLogMessages, initializeDevice</relatedFunctions>
-            <errorContext>Storage integrity issue manifesting as repeated deletion failures after device recovery</errorContext>
-        </scenario>
-        <scenario name="Scenario 3: Gradual Storage Degradation">
-            <description>A device gradually accumulates storage errors over time. Initially storage is reliable, but as storage medium ages, deletion operations begin failing intermittently, indicating hardware degradation.</description>
-            <relatedFunctions>deleteLogMessages, getComponentVersions, getDeviceHealth</relatedFunctions>
-            <errorContext>Progressive hardware failure where storage becomes increasingly unreliable</errorContext>
-        </scenario>
-        <scenario name="Scenario 4: Permission Violation in Secure Environment">
-            <description>In a multi-tenant or secure environment, a deletion attempt fails because the requesting principal lacks sufficient permissions to delete log messages owned by other principals or sensitive system components.</description>
-            <relatedFunctions>deleteLogMessages, exportLogMessages, getDeviceHealth</relatedFunctions>
-            <errorContext>Access control and permission enforcement during log deletion</errorContext>
-        </scenario>
-    </usage>
-    <implementationContext>
-        <note>The ErrorDeleteLogMessagesFailed exception represents a storage system failure that prevents successful removal of log data, affecting log retention policy enforcement and storage capacity management.</note>
-        <note>The device's ability to delete log messages is critical for compliance with data retention policies, storage space management, and performance maintenance. Deletion failures block these essential operations.</note>
-        <note>Unlike ErrorStoringLogMessageFailed (which prevents new log entries) or ErrorRetrieveLogMessageFailed (which prevents log export), ErrorDeleteLogMessagesFailed specifically affects log retention and storage cleanup operations.</note>
-        <note>Different device implementations may have different deletion semantics. Some may support immediate deletion, while others may support soft-delete (marking for deletion) followed by garbage collection phases.</note>
-        <note>Transactional deletion guarantees vary by implementation. Some devices may guarantee all-or-nothing deletion of matching messages, while others may allow partial deletion where some messages are successfully deleted and others fail.</note>
-        <note>Storage error conditions may be permanent (requiring hardware replacement) or temporary (requiring reconnection or subsystem restart). Applications should implement retry logic with appropriate backoff strategies.</note>
-        <note>In systems with audit trails or immutable logging requirements, log message deletion may be intentionally restricted or prevented. The exception may indicate policy enforcement rather than a true storage failure.</note>
-        <note>External storage devices may have their own error reporting mechanisms and recovery procedures. Detailed error information from the storage device may be necessary to diagnose and resolve deletion failures.</note>
-        <note>The exception does not indicate whether the deletion operation was partially completed before failing. Applications requiring atomicity should verify log message counts after handling this exception.</note>
-        <note>In distributed or replicated logging systems, deletion failure on one replica may not indicate failure on other replicas. Applications should verify deletion status across the full storage infrastructure.</note>
-    </implementationContext>
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorDeleteLogMessagesFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+  <name>ErrorDeleteLogMessagesFailed</name>
+  <description>This exception is thrown if the deletion of log messages from the storage failed during execution of the deleteLogMessages function. The exception represents a critical failure in the device's ability to remove stored log messages from the logging storage subsystem. ErrorDeleteLogMessagesFailed is raised when the device attempts to delete log message files that have been previously exported and marked for deletion, but encounters an I/O error, storage access issue, or system-level failure that prevents successful removal. This exception indicates that the device's storage subsystem has rejected the deletion request due to hardware errors, file system inconsistencies, permission violations, or physical disconnection of the storage medium. The exception is raised after the device has validated deletion prerequisites but failed during the actual removal of log data from persistent storage.</description>
+  <category>Logging</category>
+  <severity>High</severity>
+  <javadoc>
+    <summary>This class defines the exception ErrorDeleteLogMessagesFailed that is thrown if the deletion of log messages from the storage failed.</summary>
+    <description>The deletion operation of log messages from the device storage encountered a failure condition. This exception indicates that the deleteLogMessages function was unable to successfully remove stored log messages. This failure may be due to storage access issues, insufficient permissions, or system-level I/O errors during the deletion process.</description>
+    <constructors>
+      <constructor>
+        <signature>ErrorDeleteLogMessagesFailed()</signature>
+        <description>Constructs a new ErrorDeleteLogMessagesFailed exception with null as the value for its detail message</description>
+      </constructor>
+      <constructor>
+        <signature>ErrorDeleteLogMessagesFailed(String message)</signature>
+        <description>Constructs a new ErrorDeleteLogMessagesFailed exception whereby its detail message is initialized with the passed value</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorDeleteLogMessagesFailed(String message, Throwable cause)</signature>
+        <description>Constructs a new ErrorDeleteLogMessagesFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorDeleteLogMessagesFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+        <description>Constructs a new ErrorDeleteLogMessagesFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+      </constructor>
+    </constructors>
+  </javadoc>
+  <specification>
+    <source>BSI TR-03151-1</source>
+    <section>3.6.4.4</section>
+    <requirement>SHALL be raised when the deletion of log message files from the storage fails. If the deletion of the data fails, the function SHALL raise the exception ErrorDeleteLogMessagesFailed and exit the function.</requirement>
+    <applicability>Log message deletion operations when storage removal fails</applicability>
+    <reference>deleteLogMessages – Exceptions (3.6.4.4)</reference>
+  </specification>
+  <thrownBy>
+    <function>deleteLogMessages</function>
+  </thrownBy>
+  <triggerConditions>
+    <condition>
+      <scenario>Storage medium I/O error during deletion operation</scenario>
+      <description>The device initiates deletion of log message files, but the storage medium encounters a read-modify-write error, CRC failure, or other I/O error that prevents successful file removal. The error may originate from hardware malfunction, firmware issues, or storage medium degradation.</description>
+      <trigger>I/O error or storage hardware failure during file deletion operation</trigger>
+    </condition>
+    <condition>
+      <scenario>Storage medium disconnection or unavailability</scenario>
+      <description>The storage medium becomes disconnected, unavailable, or inaccessible during the deletion operation. This can occur if an external storage device is physically removed, a network storage connection is lost, or the storage subsystem enters an offline state.</description>
+      <trigger>Storage medium becomes inaccessible during deletion</trigger>
+    </condition>
+    <condition>
+      <scenario>File system corruption or inconsistency</scenario>
+      <description>The device's file system containing the log messages has become corrupted, inconsistent, or damaged. The file system cannot locate the log message files to be deleted, or the file system metadata is too corrupted to perform deletion operations.</description>
+      <trigger>File system corruption preventing file deletion</trigger>
+    </condition>
+    <condition>
+      <scenario>Permission or access control violation</scenario>
+      <description>The deletion operation is attempted on log message files, but the operating system or security subsystem denies the deletion due to permission restrictions, file locks held by other processes, or security policy enforcement.</description>
+      <trigger>Insufficient permissions or access restrictions preventing deletion</trigger>
+    </condition>
+    <condition>
+      <scenario>Storage capacity or resource exhaustion</scenario>
+      <description>The device's storage system has entered a state where deletion operations cannot proceed due to insufficient resources, file system journal space exhaustion, or transaction log overflow that prevents recording the deletion operation.</description>
+      <trigger>Storage resource exhaustion preventing deletion completion</trigger>
+    </condition>
+  </triggerConditions>
+  <recovery>
+    <step>Verify that the device storage is accessible and operational using device health queries or diagnostic functions</step>
+    <step>Check storage medium connection status physically and through software-level diagnostics to ensure the storage device is properly connected and responsive</step>
+    <step>Verify file system health by running file system integrity checks or repair utilities if available through the device API or firmware</step>
+    <step>Ensure sufficient file system permissions for deletion operations on the device storage. Verify the execution context has appropriate access rights.</step>
+    <step>Verify that log messages marked for deletion have been previously exported using exportLogMessages to ensure data preservation before reattempting deletion</step>
+    <step>Check for other processes or system components that may be holding locks on the log message files preventing deletion, and terminate blocking operations if safe</step>
+    <step>Retry the deleteLogMessages operation after resolving storage access issues and allowing brief time for storage subsystem stabilization (typically 100-500ms)</step>
+    <step>If retry fails, perform a partial deletion by specifying a smaller set of log messages to delete and retry in increments to isolate problematic entries</step>
+    <step>Consult device logs, audit trails, or diagnostic information for detailed storage operation failure reasons and correlation with hardware errors</step>
+    <step>If deletion failures persist, perform device storage diagnostics, consider file system rebuild or factory reset, or replace storage hardware if hardware failure is detected</step>
+  </recovery>
+  <relatedExceptions>
+    <exception>ErrorStoringLogMessageFailed</exception>
+    <exception>ErrorRetrieveLogMessageFailed</exception>
+    <exception>ErrorUnexportedLogMessages</exception>
+    <exception>ErrorStorageMediumDisconnected</exception>
+  </relatedExceptions>
+  <notes>
+    <note>This exception indicates a storage system failure during the deletion phase of log message management. It represents a critical issue that prevents successful removal of exported log data from persistent storage.</note>
+    <note>The exception may be raised even if preliminary checks (such as exported log verification via ErrorUnexportedLogMessages) have succeeded, indicating a failure during actual data removal from the storage medium.</note>
+    <note>Applications should ensure that critical log messages are exported before attempting deletion using exportLogMessages to prevent data loss if the deletion operation fails.</note>
+    <note>Unlike ErrorStoringLogMessageFailed (which indicates inability to write new log entries), ErrorDeleteLogMessagesFailed indicates inability to remove previously stored log entries, affecting log retention and storage space management.</note>
+    <note>Storage integrity should be verified through device diagnostics if repeated deletion failures occur, as this may indicate hardware-level issues, file system corruption, or storage medium degradation that requires professional intervention.</note>
+    <note>The log messages that failed to be deleted remain in storage. If the failure is not resolved, repeated deletion attempts will continue to fail for the same messages, and storage capacity will not be freed.</note>
+    <note>Some device implementations may support partial deletion where only a subset of requested log messages are successfully deleted. Applications should verify the number of deleted messages to detect partial deletion scenarios.</note>
+    <note>If the storage medium is externally connected (e.g., USB, network storage), the deletion failure may indicate disconnection, network issues, or external device malfunction. Physical and network connectivity should be verified.</note>
+    <note>In systems with redundant storage or backup logging, deletion failure on one storage path should not necessarily prevent continued operation. Alternative storage paths may remain operational.</note>
+    <note>The exception does not indicate whether specific log message data has been corrupted or rendered unrecoverable. Storage recovery services may be able to retrieve deleted or partially deleted log entries from the storage medium.</note>
+  </notes>
+  <executionSequence>
+    <step number="1" name="Function Invocation">Function entry point is reached with parameters specifying the log message selection criteria (date range, clientId, transaction id, or other filters)</step>
+    <step number="2" name="Parameter Validation">The Secure Element validates that filter parameters are valid and correspond to supported filtering criteria</step>
+    <step number="3" name="Pre-deletion Checks">The device performs preliminary checks to verify that deletion preconditions are met, such as verifying all matching log messages have been exported if required by device policy</step>
+    <step number="4" name="Storage Access Acquisition">The device acquires access to the storage subsystem and initiates a transaction for safe log message deletion</step>
+    <step number="5" name="Log Message Location">The device locates log message files matching the specified filter criteria in the storage medium</step>
+    <step number="6" name="Deletion Attempt">The device attempts to delete located log message files through file system operations on the storage medium</step>
+    <step number="7a" name="Deletion Success">If deletion completes successfully, execution continues to transaction commit and function completion (not taken in this exception case)</step>
+    <step number="7b" name="Deletion Failure">If the storage medium or file system returns an error during deletion, execution branches to exception handling at step 8</step>
+    <step number="8" name="Transaction Rollback">The device attempts to rollback the deletion transaction to restore consistency, though some storage systems may not support transactional deletion</step>
+    <step number="9" name="Exception Context Preparation">Exception context is prepared including filter criteria, number of messages targeted for deletion, storage error details, and device state information</step>
+    <step number="10" name="Exception Instance Creation">ErrorDeleteLogMessagesFailed exception instance is created with appropriate error message detailing the storage deletion failure</step>
+    <step number="11" name="Exception Propagation">Exception is raised and propagated up the call stack to the calling application, allowing error handling and recovery at application level</step>
+  </executionSequence>
+  <postconditionality>
+    <state name="Exception State">An ErrorDeleteLogMessagesFailed exception has been created and raised, containing filter criteria, targeted message count, and storage error details</state>
+    <state name="Log Message State">The log messages targeted for deletion remain in storage unchanged. Deletion has not been successfully completed. Depending on device implementation, some messages may be partially deleted or marked for deletion but not fully removed.</state>
+    <state name="Storage State">The storage medium and file system remain in their previous state, with all targeted log messages still present and accessible. Storage space has not been freed for the messages targeted for deletion.</state>
+    <state name="Transaction State">If the device supports transactional deletion, the deletion transaction has been rolled back and the storage is returned to its pre-deletion state. If transactions are not supported, storage state is indeterminate.</state>
+    <state name="Function Exit">The function exits abnormally via exception propagation without completing the log message deletion operation</state>
+    <state name="Device Availability">The Secure Element and logging subsystem remain available for subsequent API calls, though the storage error condition may persist and affect future delete operations. The device continues to operate, but with the storage issue unresolved.</state>
+  </postconditionality>
+  <usage>
+    <scenario name="Scenario 1: Storage Medium Disconnection During Deletion">
+      <description>An application initiates deletion of log messages to free storage space, but the external storage medium becomes disconnected during the deletion operation, causing this exception.</description>
+      <relatedFunctions>deleteLogMessages, exportLogMessages, getDeviceHealth</relatedFunctions>
+      <errorContext>Hardware connectivity failure during log message deletion operation</errorContext>
+    </scenario>
+    <scenario name="Scenario 2: File System Corruption Detection">
+      <description>Repeated deletion operations have been succeeding, but after a device crash or power cycle, subsequent deletion attempts fail due to file system corruption, indicating the need for storage recovery.</description>
+      <relatedFunctions>deleteLogMessages, exportLogMessages, initializeDevice</relatedFunctions>
+      <errorContext>Storage integrity issue manifesting as repeated deletion failures after device recovery</errorContext>
+    </scenario>
+    <scenario name="Scenario 3: Gradual Storage Degradation">
+      <description>A device gradually accumulates storage errors over time. Initially storage is reliable, but as storage medium ages, deletion operations begin failing intermittently, indicating hardware degradation.</description>
+      <relatedFunctions>deleteLogMessages, getComponentVersions, getDeviceHealth</relatedFunctions>
+      <errorContext>Progressive hardware failure where storage becomes increasingly unreliable</errorContext>
+    </scenario>
+    <scenario name="Scenario 4: Permission Violation in Secure Environment">
+      <description>In a multi-tenant or secure environment, a deletion attempt fails because the requesting principal lacks sufficient permissions to delete log messages owned by other principals or sensitive system components.</description>
+      <relatedFunctions>deleteLogMessages, exportLogMessages, getDeviceHealth</relatedFunctions>
+      <errorContext>Access control and permission enforcement during log deletion</errorContext>
+    </scenario>
+  </usage>
+  <implementationContext>
+    <note>The ErrorDeleteLogMessagesFailed exception represents a storage system failure that prevents successful removal of log data, affecting log retention policy enforcement and storage capacity management.</note>
+    <note>The device's ability to delete log messages is critical for compliance with data retention policies, storage space management, and performance maintenance. Deletion failures block these essential operations.</note>
+    <note>Unlike ErrorStoringLogMessageFailed (which prevents new log entries) or ErrorRetrieveLogMessageFailed (which prevents log export), ErrorDeleteLogMessagesFailed specifically affects log retention and storage cleanup operations.</note>
+    <note>Different device implementations may have different deletion semantics. Some may support immediate deletion, while others may support soft-delete (marking for deletion) followed by garbage collection phases.</note>
+    <note>Transactional deletion guarantees vary by implementation. Some devices may guarantee all-or-nothing deletion of matching messages, while others may allow partial deletion where some messages are successfully deleted and others fail.</note>
+    <note>Storage error conditions may be permanent (requiring hardware replacement) or temporary (requiring reconnection or subsystem restart). Applications should implement retry logic with appropriate backoff strategies.</note>
+    <note>In systems with audit trails or immutable logging requirements, log message deletion may be intentionally restricted or prevented. The exception may indicate policy enforcement rather than a true storage failure.</note>
+    <note>External storage devices may have their own error reporting mechanisms and recovery procedures. Detailed error information from the storage device may be necessary to diagnose and resolve deletion failures.</note>
+    <note>The exception does not indicate whether the deletion operation was partially completed before failing. Applications requiring atomicity should verify log message counts after handling this exception.</note>
+    <note>In distributed or replicated logging systems, deletion failure on one replica may not indicate failure on other replicas. Applications should verify deletion status across the full storage infrastructure.</note>
+  </implementationContext>
 </exception>

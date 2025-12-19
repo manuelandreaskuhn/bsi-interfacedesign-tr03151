@@ -1,172 +1,172 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<exception id="ErrorTransactionLoggingLocked" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
-    <name>ErrorTransactionLoggingLocked</name>
-    <description>This exception is thrown if transaction logging functionality is currently locked and prevents transaction recording. Transaction logging is a critical security feature that records all executed transactions for audit, authenticity, and non-repudiation purposes. The logging functionality can be temporarily or permanently locked for administrative reasons, maintenance, or security policies. When transaction operations are attempted while logging is locked, ErrorTransactionLoggingLocked is raised. This prevents execution of transactions that cannot be properly logged. ErrorTransactionLoggingLocked is a High severity exception because it blocks transaction functionality to maintain audit trail integrity. Transactions cannot proceed if they cannot be logged, ensuring all executed transactions are properly recorded.</description>
-    <category>Transaction Management - Logging Lock</category>
-    <severity>High</severity>
-    <javadoc>
-        <summary>This class defines the exception ErrorTransactionLoggingLocked that is thrown if transaction logging functionality is currently locked.</summary>
-        <description>This exception is thrown when transaction operations are attempted while transaction logging is locked. Transaction logging records all executed transactions for audit, authenticity, and non-repudiation. The logging functionality can be locked for administrative, maintenance, or security policy reasons. When logging is locked, all transaction operations (startTransaction, updateTransaction, finishTransaction) cannot proceed because transactions cannot be properly logged. ErrorTransactionLoggingLocked is a High severity exception because audit trail integrity is critical. Transactions are blocked to ensure all executed transactions are properly recorded in the audit log. Recovery requires unlocking the logging functionality through appropriate administrative procedures.</description>
-        <constructors>
-            <constructor>
-                <signature>ErrorTransactionLoggingLocked()</signature>
-                <description>Constructs a new ErrorTransactionLoggingLocked exception with null as the value for its detail message</description>
-            </constructor>
-            <constructor>
-                <signature>ErrorTransactionLoggingLocked(String message)</signature>
-                <description>Constructs a new ErrorTransactionLoggingLocked exception whereby its detail message is initialized with the passed value</description>
-                <parameter name="message">value for the detail message of the exception, typically describing logging lock reason or status</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorTransactionLoggingLocked(String message, Throwable cause)</signature>
-                <description>Constructs a new ErrorTransactionLoggingLocked exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorTransactionLoggingLocked(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-                <description>Constructs a new ErrorTransactionLoggingLocked exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-            </constructor>
-        </constructors>
-    </javadoc>
-    <specification>
-        <source>BSI TR-03151-1</source>
-        <section>3.2.2 Transaction Management - Transaction Logging</section>
-        <requirement>Transaction logging records all executed transactions for audit, authenticity, and non-repudiation purposes. Logging functionality can be locked administratively or by security policy for maintenance, audit preservation, or security reasons. When logging is locked, the Secure Element SHALL raise ErrorTransactionLoggingLocked if transaction operations are attempted. This prevents execution of transactions that cannot be properly logged, ensuring all executed transactions are recorded in the audit trail. ErrorTransactionLoggingLocked is a High severity exception because audit trail integrity is critical to the security model. Transactions cannot proceed without logging capability to maintain authentic, non-repudiable transaction records.</requirement>
-        <applicability>All transaction operations when logging locked: startTransaction, updateTransaction, finishTransaction</applicability>
-        <reference>Transaction Management (3.2.2), Transaction Logging (3.2.2), startTransaction – Function (3.2.2), updateTransaction – Function (3.2.2), finishTransaction – Function (3.2.2)</reference>
-    </specification>
-    <thrownBy>
-        <function>startTransaction</function>
-        <function>updateTransaction</function>
-        <function>finishTransaction</function>
-    </thrownBy>
-    <triggerConditions>
-        <condition>
-            <scenario>Transaction logging administratively locked for maintenance</scenario>
-            <description>Administrator locks transaction logging to perform maintenance or audit procedures</description>
-            <trigger>Administrator executes command to lock transaction logging. Operator attempts startTransaction. Device detects logging locked state and raises ErrorTransactionLoggingLocked to prevent unlogged transactions.</trigger>
-        </condition>
-        <condition>
-            <scenario>Logging locked by security policy after audit trigger event</scenario>
-            <description>Security policy locks logging in response to detected security event</description>
-            <trigger>Device detects unusual activity or security anomaly. Security policy triggers automatic logging lock. Next updateTransaction call detects locked state and raises ErrorTransactionLoggingLocked.</trigger>
-        </condition>
-        <condition>
-            <scenario>Logging locked during device diagnostics or testing</scenario>
-            <description>Logging locked for diagnostics, testing, or firmware update procedures</description>
-            <trigger>Device enters diagnostic mode which locks logging. Test attempts to execute finishTransaction. Device raises ErrorTransactionLoggingLocked because logging unavailable during diagnostics.</trigger>
-        </condition>
-        <condition>
-            <scenario>Logging lock persists after backup or export operation</scenario>
-            <description>Logging remains locked after completing backup or export procedures</description>
-            <trigger>Administrator exports transaction logs. Logging remains locked after export for audit preservation. Next transaction attempt raises ErrorTransactionLoggingLocked until logging re-enabled.</trigger>
-        </condition>
-        <condition>
-            <scenario>Device firmware update locks logging temporarily</scenario>
-            <description>Firmware update procedure locks logging during update process</description>
-            <trigger>Firmware update begins and locks logging to prevent inconsistent state. If transaction attempted during update, ErrorTransactionLoggingLocked raised. Logging re-enabled after update completes.</trigger>
-        </condition>
-    </triggerConditions>
-    <executionSequence>
-        <step number="1">User/application calls transaction operation (e.g., startTransaction, updateTransaction, finishTransaction)</step>
-        <step number="2">Function validates input parameters and transaction prerequisites</step>
-        <step number="3">Function initiates communication with Secure Element</step>
-        <step number="4">Secure Element receives transaction operation request</step>
-        <step number="5">Secure Element checks transaction logging lock status</step>
-        <step number="5a">If logging locked → ErrorTransactionLoggingLocked raised, operation aborted</step>
-        <step number="5b">If logging unlocked → proceed to step 6</step>
-        <step number="6">Secure Element prepares transaction record for logging</step>
-        <step number="7">Secure Element prepares counter increment</step>
-        <step number="8">Secure Element validates logging capability to accept transaction record</step>
-        <step number="8a">If logging becomes locked during operation → ErrorTransactionLoggingLocked raised</step>
-        <step number="8b">If logging available → proceed to step 9</step>
-        <step number="9">Secure Element writes transaction record to logging storage</step>
-        <step number="10">Secure Element increments transaction counter</step>
-        <step number="11">Secure Element returns success to function</step>
-        <step number="12">Function returns to caller indicating transaction recorded and logged</step>
-    </executionSequence>
-    <recovery>
-        <step>Review error message - understand transaction logging is locked</step>
-        <step>Check logging lock status - verify logging lock is active</step>
-        <step>Identify lock reason - determine why logging is locked</step>
-        <step>Check administration - contact administrator if lock set by policy</step>
-        <step>Review audit procedures - verify if locked for audit preservation</step>
-        <step>Check device status - confirm device is not in diagnostic or update mode</step>
-        <step>Check security status - verify no security policy lock is active</step>
-        <step>Request unlock - ask administrator to unlock logging if appropriate</step>
-        <step>Verify unlock permissions - ensure authorization for logging unlock</step>
-        <step>Unlock logging - execute unlock procedure through administrative interface</step>
-        <step>Verify unlocked status - confirm logging is now unlocked and operational</step>
-        <step>Retry transaction - attempt transaction operation again after unlock</step>
-    </recovery>
-    <relatedExceptions>
-        <exception>ErrorFunctionFailed</exception>
-        <exception>ErrorDeviceNotInitialized</exception>
-        <exception>ErrorParameterMismatch</exception>
-        <exception>ErrorSecureElementDisabled</exception>
-    </relatedExceptions>
-    <postconditionality>
-        <state name="Transaction Operations Blocked">Transaction operations cannot proceed (startTransaction, updateTransaction, finishTransaction).</state>
-        <state name="Transaction Not Recorded">Transaction record is not written to logging storage.</state>
-        <state name="Counter Not Incremented">Transaction counter remains unchanged.</state>
-        <state name="Logging Remains Locked">Logging lock status unchanged - remains locked.</state>
-        <state name="High Exception Returned">Function returns ErrorTransactionLoggingLocked High exception to caller.</state>
-        <state name="Audit Trail Protected">Audit trail integrity protected by preventing unlogged transactions.</state>
-    </postconditionality>
-    <notes>
-        <note>ErrorTransactionLoggingLocked is thrown by 3 core transaction functions</note>
-        <note>This is a High severity exception blocking all transaction functionality</note>
-        <note>Logging lock is an administrative or security policy control mechanism</note>
-        <note>Transactions are blocked to maintain audit trail integrity</note>
-        <note>Logging lock prevents execution of transactions that cannot be logged</note>
-        <note>Lock can be temporary (maintenance) or longer-term (security policy)</note>
-        <note>Lock reason should be documented for audit and compliance purposes</note>
-        <note>Audit trail protection is critical to transaction authenticity</note>
-        <note>Lock status should be visible through device diagnostic/status interface</note>
-        <note>Logging lock is distinct from logging storage availability</note>
-        <note>Transaction logging is essential security feature for non-repudiation</note>
-        <note>Lock might be triggered by security anomaly detection</note>
-        <note>Firmware updates may temporarily lock logging</note>
-        <note>Backup/export operations may set persistent locks</note>
-        <note>Lock should be documented with timestamp and reason for audit</note>
-    </notes>
-    <usage>
-        <scenario name="Scenario 1: Administrative Maintenance Lock">
-            <description>Administrator initiates maintenance procedure on transaction logging. Command locks logging to ensure consistent state. Operator attempts to execute transaction via startTransaction. Device detects logging locked status and raises ErrorTransactionLoggingLocked. Operator waits for maintenance completion and logging unlock.</description>
-            <relatedFunctions>startTransaction, updateTransaction, finishTransaction</relatedFunctions>
-            <errorContext>Administrative lock prevents transactions during maintenance - audit trail consistency</errorContext>
-        </scenario>
-        <scenario name="Scenario 2: Security Policy Triggered Lock">
-            <description>Device detects security anomaly (unusual transaction pattern or attempted unauthorized access). Security policy automatically locks logging and alerts administrator. Next finishTransaction call detects locked logging and raises ErrorTransactionLoggingLocked. Operations blocked until administrator investigates and re-enables logging.</description>
-            <relatedFunctions>finishTransaction, startTransaction</relatedFunctions>
-            <errorContext>Automated security policy protects audit trail during security event</errorContext>
-        </scenario>
-        <scenario name="Scenario 3: Audit Preservation Lock After Export">
-            <description>Administrator executes command to export transaction logs for compliance audit. After export completes, logging is locked to preserve exported audit trail state. Subsequent updateTransaction call detects locked logging and raises ErrorTransactionLoggingLocked. Administrator reviews exported logs before re-enabling logging.</description>
-            <relatedFunctions>updateTransaction, exportLogMessages</relatedFunctions>
-            <errorContext>Lock preserves exported audit trail integrity pending review</errorContext>
-        </scenario>
-        <scenario name="Scenario 4: Firmware Update with Temporary Lock">
-            <description>Device administrator initiates firmware update procedure. Update process temporarily locks logging to maintain consistent state during update. If any transaction attempted via startTransaction during update, ErrorTransactionLoggingLocked raised. Update completes, logging automatically re-enabled, transactions can resume.</description>
-            <relatedFunctions>startTransaction, updateTransaction, finishTransaction</relatedFunctions>
-            <errorContext>Temporary lock during firmware update maintains system consistency</errorContext>
-        </scenario>
-    </usage>
-    <implementationContext>
-        <note>Logging lock status must be checked before each transaction operation</note>
-        <note>Lock check should occur early in transaction processing flow</note>
-        <note>Lock status must be atomic and consistent throughout transaction</note>
-        <note>Lock state should be persistent across device restarts if policy lock</note>
-        <note>Lock status should be queryable through diagnostic interface</note>
-        <note>Error messages should indicate if lock is temporary vs policy-based</note>
-        <note>Lock duration and reason should be documented for audit purposes</note>
-        <note>Administrative unlock procedures should require appropriate authorization</note>
-        <note>Security policy triggered locks should log the triggering event</note>
-        <note>Firmware update locks should be automatically released after update completion</note>
-    </implementationContext>
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorTransactionLoggingLocked" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+  <name>ErrorTransactionLoggingLocked</name>
+  <description>This exception is thrown if transaction logging functionality is currently locked and prevents transaction recording. Transaction logging is a critical security feature that records all executed transactions for audit, authenticity, and non-repudiation purposes. The logging functionality can be temporarily or permanently locked for administrative reasons, maintenance, or security policies. When transaction operations are attempted while logging is locked, ErrorTransactionLoggingLocked is raised. This prevents execution of transactions that cannot be properly logged. ErrorTransactionLoggingLocked is a High severity exception because it blocks transaction functionality to maintain audit trail integrity. Transactions cannot proceed if they cannot be logged, ensuring all executed transactions are properly recorded.</description>
+  <category>Transaction Management - Logging Lock</category>
+  <severity>High</severity>
+  <javadoc>
+    <summary>This class defines the exception ErrorTransactionLoggingLocked that is thrown if transaction logging functionality is currently locked.</summary>
+    <description>This exception is thrown when transaction operations are attempted while transaction logging is locked. Transaction logging records all executed transactions for audit, authenticity, and non-repudiation. The logging functionality can be locked for administrative, maintenance, or security policy reasons. When logging is locked, all transaction operations (startTransaction, updateTransaction, finishTransaction) cannot proceed because transactions cannot be properly logged. ErrorTransactionLoggingLocked is a High severity exception because audit trail integrity is critical. Transactions are blocked to ensure all executed transactions are properly recorded in the audit log. Recovery requires unlocking the logging functionality through appropriate administrative procedures.</description>
+    <constructors>
+      <constructor>
+        <signature>ErrorTransactionLoggingLocked()</signature>
+        <description>Constructs a new ErrorTransactionLoggingLocked exception with null as the value for its detail message</description>
+      </constructor>
+      <constructor>
+        <signature>ErrorTransactionLoggingLocked(String message)</signature>
+        <description>Constructs a new ErrorTransactionLoggingLocked exception whereby its detail message is initialized with the passed value</description>
+        <parameter name="message">value for the detail message of the exception, typically describing logging lock reason or status</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorTransactionLoggingLocked(String message, Throwable cause)</signature>
+        <description>Constructs a new ErrorTransactionLoggingLocked exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorTransactionLoggingLocked(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+        <description>Constructs a new ErrorTransactionLoggingLocked exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+      </constructor>
+    </constructors>
+  </javadoc>
+  <specification>
+    <source>BSI TR-03151-1</source>
+    <section>3.2.2 Transaction Management - Transaction Logging</section>
+    <requirement>Transaction logging records all executed transactions for audit, authenticity, and non-repudiation purposes. Logging functionality can be locked administratively or by security policy for maintenance, audit preservation, or security reasons. When logging is locked, the Secure Element SHALL raise ErrorTransactionLoggingLocked if transaction operations are attempted. This prevents execution of transactions that cannot be properly logged, ensuring all executed transactions are recorded in the audit trail. ErrorTransactionLoggingLocked is a High severity exception because audit trail integrity is critical to the security model. Transactions cannot proceed without logging capability to maintain authentic, non-repudiable transaction records.</requirement>
+    <applicability>All transaction operations when logging locked: startTransaction, updateTransaction, finishTransaction</applicability>
+    <reference>Transaction Management (3.2.2), Transaction Logging (3.2.2), startTransaction – Function (3.2.2), updateTransaction – Function (3.2.2), finishTransaction – Function (3.2.2)</reference>
+  </specification>
+  <thrownBy>
+    <function>startTransaction</function>
+    <function>updateTransaction</function>
+    <function>finishTransaction</function>
+  </thrownBy>
+  <triggerConditions>
+    <condition>
+      <scenario>Transaction logging administratively locked for maintenance</scenario>
+      <description>Administrator locks transaction logging to perform maintenance or audit procedures</description>
+      <trigger>Administrator executes command to lock transaction logging. Operator attempts startTransaction. Device detects logging locked state and raises ErrorTransactionLoggingLocked to prevent unlogged transactions.</trigger>
+    </condition>
+    <condition>
+      <scenario>Logging locked by security policy after audit trigger event</scenario>
+      <description>Security policy locks logging in response to detected security event</description>
+      <trigger>Device detects unusual activity or security anomaly. Security policy triggers automatic logging lock. Next updateTransaction call detects locked state and raises ErrorTransactionLoggingLocked.</trigger>
+    </condition>
+    <condition>
+      <scenario>Logging locked during device diagnostics or testing</scenario>
+      <description>Logging locked for diagnostics, testing, or firmware update procedures</description>
+      <trigger>Device enters diagnostic mode which locks logging. Test attempts to execute finishTransaction. Device raises ErrorTransactionLoggingLocked because logging unavailable during diagnostics.</trigger>
+    </condition>
+    <condition>
+      <scenario>Logging lock persists after backup or export operation</scenario>
+      <description>Logging remains locked after completing backup or export procedures</description>
+      <trigger>Administrator exports transaction logs. Logging remains locked after export for audit preservation. Next transaction attempt raises ErrorTransactionLoggingLocked until logging re-enabled.</trigger>
+    </condition>
+    <condition>
+      <scenario>Device firmware update locks logging temporarily</scenario>
+      <description>Firmware update procedure locks logging during update process</description>
+      <trigger>Firmware update begins and locks logging to prevent inconsistent state. If transaction attempted during update, ErrorTransactionLoggingLocked raised. Logging re-enabled after update completes.</trigger>
+    </condition>
+  </triggerConditions>
+  <executionSequence>
+    <step number="1">User/application calls transaction operation (e.g., startTransaction, updateTransaction, finishTransaction)</step>
+    <step number="2">Function validates input parameters and transaction prerequisites</step>
+    <step number="3">Function initiates communication with Secure Element</step>
+    <step number="4">Secure Element receives transaction operation request</step>
+    <step number="5">Secure Element checks transaction logging lock status</step>
+    <step number="5a">If logging locked → ErrorTransactionLoggingLocked raised, operation aborted</step>
+    <step number="5b">If logging unlocked → proceed to step 6</step>
+    <step number="6">Secure Element prepares transaction record for logging</step>
+    <step number="7">Secure Element prepares counter increment</step>
+    <step number="8">Secure Element validates logging capability to accept transaction record</step>
+    <step number="8a">If logging becomes locked during operation → ErrorTransactionLoggingLocked raised</step>
+    <step number="8b">If logging available → proceed to step 9</step>
+    <step number="9">Secure Element writes transaction record to logging storage</step>
+    <step number="10">Secure Element increments transaction counter</step>
+    <step number="11">Secure Element returns success to function</step>
+    <step number="12">Function returns to caller indicating transaction recorded and logged</step>
+  </executionSequence>
+  <recovery>
+    <step>Review error message - understand transaction logging is locked</step>
+    <step>Check logging lock status - verify logging lock is active</step>
+    <step>Identify lock reason - determine why logging is locked</step>
+    <step>Check administration - contact administrator if lock set by policy</step>
+    <step>Review audit procedures - verify if locked for audit preservation</step>
+    <step>Check device status - confirm device is not in diagnostic or update mode</step>
+    <step>Check security status - verify no security policy lock is active</step>
+    <step>Request unlock - ask administrator to unlock logging if appropriate</step>
+    <step>Verify unlock permissions - ensure authorization for logging unlock</step>
+    <step>Unlock logging - execute unlock procedure through administrative interface</step>
+    <step>Verify unlocked status - confirm logging is now unlocked and operational</step>
+    <step>Retry transaction - attempt transaction operation again after unlock</step>
+  </recovery>
+  <relatedExceptions>
+    <exception>ErrorFunctionFailed</exception>
+    <exception>ErrorDeviceNotInitialized</exception>
+    <exception>ErrorParameterMismatch</exception>
+    <exception>ErrorSecureElementDisabled</exception>
+  </relatedExceptions>
+  <postconditionality>
+    <state name="Transaction Operations Blocked">Transaction operations cannot proceed (startTransaction, updateTransaction, finishTransaction).</state>
+    <state name="Transaction Not Recorded">Transaction record is not written to logging storage.</state>
+    <state name="Counter Not Incremented">Transaction counter remains unchanged.</state>
+    <state name="Logging Remains Locked">Logging lock status unchanged - remains locked.</state>
+    <state name="High Exception Returned">Function returns ErrorTransactionLoggingLocked High exception to caller.</state>
+    <state name="Audit Trail Protected">Audit trail integrity protected by preventing unlogged transactions.</state>
+  </postconditionality>
+  <notes>
+    <note>ErrorTransactionLoggingLocked is thrown by 3 core transaction functions</note>
+    <note>This is a High severity exception blocking all transaction functionality</note>
+    <note>Logging lock is an administrative or security policy control mechanism</note>
+    <note>Transactions are blocked to maintain audit trail integrity</note>
+    <note>Logging lock prevents execution of transactions that cannot be logged</note>
+    <note>Lock can be temporary (maintenance) or longer-term (security policy)</note>
+    <note>Lock reason should be documented for audit and compliance purposes</note>
+    <note>Audit trail protection is critical to transaction authenticity</note>
+    <note>Lock status should be visible through device diagnostic/status interface</note>
+    <note>Logging lock is distinct from logging storage availability</note>
+    <note>Transaction logging is essential security feature for non-repudiation</note>
+    <note>Lock might be triggered by security anomaly detection</note>
+    <note>Firmware updates may temporarily lock logging</note>
+    <note>Backup/export operations may set persistent locks</note>
+    <note>Lock should be documented with timestamp and reason for audit</note>
+  </notes>
+  <usage>
+    <scenario name="Scenario 1: Administrative Maintenance Lock">
+      <description>Administrator initiates maintenance procedure on transaction logging. Command locks logging to ensure consistent state. Operator attempts to execute transaction via startTransaction. Device detects logging locked status and raises ErrorTransactionLoggingLocked. Operator waits for maintenance completion and logging unlock.</description>
+      <relatedFunctions>startTransaction, updateTransaction, finishTransaction</relatedFunctions>
+      <errorContext>Administrative lock prevents transactions during maintenance - audit trail consistency</errorContext>
+    </scenario>
+    <scenario name="Scenario 2: Security Policy Triggered Lock">
+      <description>Device detects security anomaly (unusual transaction pattern or attempted unauthorized access). Security policy automatically locks logging and alerts administrator. Next finishTransaction call detects locked logging and raises ErrorTransactionLoggingLocked. Operations blocked until administrator investigates and re-enables logging.</description>
+      <relatedFunctions>finishTransaction, startTransaction</relatedFunctions>
+      <errorContext>Automated security policy protects audit trail during security event</errorContext>
+    </scenario>
+    <scenario name="Scenario 3: Audit Preservation Lock After Export">
+      <description>Administrator executes command to export transaction logs for compliance audit. After export completes, logging is locked to preserve exported audit trail state. Subsequent updateTransaction call detects locked logging and raises ErrorTransactionLoggingLocked. Administrator reviews exported logs before re-enabling logging.</description>
+      <relatedFunctions>updateTransaction, exportLogMessages</relatedFunctions>
+      <errorContext>Lock preserves exported audit trail integrity pending review</errorContext>
+    </scenario>
+    <scenario name="Scenario 4: Firmware Update with Temporary Lock">
+      <description>Device administrator initiates firmware update procedure. Update process temporarily locks logging to maintain consistent state during update. If any transaction attempted via startTransaction during update, ErrorTransactionLoggingLocked raised. Update completes, logging automatically re-enabled, transactions can resume.</description>
+      <relatedFunctions>startTransaction, updateTransaction, finishTransaction</relatedFunctions>
+      <errorContext>Temporary lock during firmware update maintains system consistency</errorContext>
+    </scenario>
+  </usage>
+  <implementationContext>
+    <note>Logging lock status must be checked before each transaction operation</note>
+    <note>Lock check should occur early in transaction processing flow</note>
+    <note>Lock status must be atomic and consistent throughout transaction</note>
+    <note>Lock state should be persistent across device restarts if policy lock</note>
+    <note>Lock status should be queryable through diagnostic interface</note>
+    <note>Error messages should indicate if lock is temporary vs policy-based</note>
+    <note>Lock duration and reason should be documented for audit purposes</note>
+    <note>Administrative unlock procedures should require appropriate authorization</note>
+    <note>Security policy triggered locks should log the triggering event</note>
+    <note>Firmware update locks should be automatically released after update completion</note>
+  </implementationContext>
 </exception>

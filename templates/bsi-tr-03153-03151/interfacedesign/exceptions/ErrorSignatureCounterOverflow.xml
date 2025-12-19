@@ -1,172 +1,186 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<exception id="ErrorSignatureCounterOverflow" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
-    <name>ErrorSignatureCounterOverflow</name>
-    <description>This exception is thrown if the signature counter reaches its logical maximum value. The signature counter is a monotonically increasing value that provides audit trail integrity and replay attack protection for transactions. The counter has a maximum value (e.g., 2^64-1 for a 64-bit counter) and cannot be incremented further once this maximum is reached. ErrorSignatureCounterOverflow indicates that the signature counter has reached its logical limit and cannot accept new transactions. This is an extremely rare condition that typically requires device replacement or counter reset procedures. Common causes include: device has processed an extraordinarily large number of transactions over its lifetime, counter implementation limits reached, or counter not properly designed for system lifetime.</description>
-    <category>Logging - Signature Counter - Overflow</category>
-    <severity>Critical</severity>
-    <javadoc>
-        <summary>This class defines the exception ErrorSignatureCounterOverflow that is thrown if the signature counter reaches its logical maximum.</summary>
-        <description>This exception is thrown when the signature counter reaches its logical maximum value and cannot be incremented further. The signature counter is a critical component that maintains a monotonically increasing counter for transaction signatures, providing audit trail integrity and replay attack protection. The counter has a defined maximum value (implementation-dependent, e.g., 2^64-1 for a 64-bit counter). ErrorSignatureCounterOverflow indicates that the counter has reached this logical limit. This is an extremely rare condition in practice because the maximum is typically very large. Common causes include: device has processed an extraordinarily large number of transactions (billions or trillions), counter design does not match system transaction volume, or counter has been in production for an exceptionally long time with high transaction load. ErrorSignatureCounterOverflow is a Critical severity exception because it permanently prevents transaction processing. The counter cannot wrap around to zero (which would compromise audit trail integrity). The device is effectively unusable and requires replacement or counter reset procedures.</description>
-        <constructors>
-            <constructor>
-                <signature>ErrorSignatureCounterOverflow()</signature>
-                <description>Constructs a new ErrorSignatureCounterOverflow exception with null as the value for its detail message</description>
-            </constructor>
-            <constructor>
-                <signature>ErrorSignatureCounterOverflow(String message)</signature>
-                <description>Constructs a new ErrorSignatureCounterOverflow exception whereby its detail message is initialized with the passed value</description>
-                <parameter name="message">value for the detail message of the exception, typically describing the signature counter maximum value reached</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorSignatureCounterOverflow(String message, Throwable cause)</signature>
-                <description>Constructs a new ErrorSignatureCounterOverflow exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorSignatureCounterOverflow(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-                <description>Constructs a new ErrorSignatureCounterOverflow exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-            </constructor>
-        </constructors>
-    </javadoc>
-    <specification>
-        <source>BSI TR-03151-1</source>
-        <section>3.3.2 Transaction Operations and 3.3.3 Logging Operations - Signature Counter Management</section>
-        <requirement>The Secure Element maintains a signature counter that is incremented for each transaction, providing audit trail integrity and replay attack protection. The signature counter is monotonically increasing and has a defined maximum value (implementation-dependent). When the signature counter reaches its logical maximum value, the device cannot increment it further and SHALL raise ErrorSignatureCounterOverflow on any operation requiring counter increment (startTransaction, updateTransaction, finishTransaction, configureLogging). The device must not accept new transactions when counter is at maximum, as wrapping to zero would compromise audit trail integrity. This is an extremely rare condition expected to occur only after processing an extraordinarily large number of transactions over many years.</requirement>
-        <applicability>Transaction operations requiring signature counter increment: startTransaction, updateTransaction, finishTransaction, configureLogging</applicability>
-        <reference>Transaction Operations (3.3.2), Logging Operations (3.3.3), Signature Counter Management</reference>
-    </specification>
-    <thrownBy>
-        <function>startTransaction</function>
-        <function>updateTransaction</function>
-        <function>finishTransaction</function>
-        <function>configureLogging</function>
-    </thrownBy>
-    <triggerConditions>
-        <condition>
-            <scenario>Signature counter reaches logical maximum value</scenario>
-            <description>The signature counter has been incremented to its maximum possible value</description>
-            <trigger>A startTransaction call is made but the device detects the signature counter is already at maximum value (e.g., 2^64-1). ErrorSignatureCounterOverflow is raised because the counter cannot be incremented further.</trigger>
-        </condition>
-        <condition>
-            <scenario>Extremely high transaction volume over device lifetime</scenario>
-            <description>The device has processed an extraordinarily large number of transactions</description>
-            <trigger>After many years of production operation with very high transaction load, a finishTransaction call detects the signature counter has reached maximum. ErrorSignatureCounterOverflow is raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Counter size insufficient for system requirements</scenario>
-            <description>The counter implementation uses insufficient bit width for the system's transaction volume</description>
-            <trigger>An updateTransaction call is made but counter reaches maximum because the counter size is too small for the system's transaction rate. ErrorSignatureCounterOverflow is raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Signature counter increment operation would overflow</scenario>
-            <description>The next increment operation would cause the counter to exceed its maximum value</description>
-            <trigger>A configureLogging call attempts to enable more transactions but the counter cannot be incremented further. ErrorSignatureCounterOverflow is raised to prevent overflow.</trigger>
-        </condition>
-        <condition>
-            <scenario>Device approaching or at theoretical maximum transaction limit</scenario>
-            <description>The device is at or approaching the theoretical maximum transactions it can support</description>
-            <trigger>Any transaction operation detects the counter is at maximum. The device has reached its absolute transaction processing limit.</trigger>
-        </condition>
-    </triggerConditions>
-    <executionSequence>
-        <step number="1">User/application calls transaction operation that requires signature counter increment (e.g., startTransaction)</step>
-        <step number="2">Function validates input parameters</step>
-        <step number="3">Function initiates communication with Secure Element</step>
-        <step number="4">Secure Element receives transaction request</step>
-        <step number="5">Secure Element checks current signature counter value</step>
-        <step number="5a">If counter is at maximum → ErrorSignatureCounterOverflow raised, operation aborted</step>
-        <step number="5b">If counter is below maximum → proceed to step 6</step>
-        <step number="6">Secure Element processes transaction operation</step>
-        <step number="7">Secure Element calculates new counter value = current counter + 1</step>
-        <step number="8">Secure Element verifies new counter does not exceed maximum</step>
-        <step number="8a">If new counter would exceed maximum → ErrorSignatureCounterOverflow raised, operation aborted</step>
-        <step number="8b">If new counter is valid → proceed to step 9</step>
-        <step number="9">Secure Element increments signature counter</step>
-        <step number="10">Secure Element writes updated counter value to storage</step>
-        <step number="11">Secure Element completes transaction operation</step>
-        <step number="12">Secure Element returns result to function</step>
-        <step number="13">Function returns successfully</step>
-    </executionSequence>
-    <recovery>
-        <step>Stop accepting new transactions immediately - counter is at maximum and cannot increment</step>
-        <step>Review error message - understand the signature counter overflow status</step>
-        <step>Query device state - determine current signature counter value and maximum</step>
-        <step>Export all transaction logs - export complete transaction history while device is operational</step>
-        <step>Archive transaction history - backup all records for compliance and audit purposes</step>
-        <step>Calculate device lifetime - determine how long device has been in operation and transaction volume</step>
-        <step>Notify administrators and management - escalate critical situation immediately</step>
-        <step>Investigate counter design - verify counter size is appropriate for system requirements</step>
-        <step>Plan device replacement - schedule immediate replacement of the device</step>
-        <step>Decommission device - safely decommission the device according to policy</step>
-    </recovery>
-    <relatedExceptions>
-        <exception>ErrorSignatureCounterExhausted</exception>
-        <exception>ErrorFunctionFailed</exception>
-        <exception>ErrorLimitOfSimultaneousOpenTransactionsReached</exception>
-        <exception>ErrorOpenTransactionFound</exception>
-    </relatedExceptions>
-    <postconditionality>
-        <state name="Transaction Not Created">The requested transaction is not created due to counter overflow.</state>
-        <state name="Signature Counter Not Incremented">The counter remains at maximum and cannot be incremented.</state>
-        <state name="Device Cannot Process Transactions">The device cannot process any new transactions - counter overflow is permanent.</state>
-        <state name="Audit Trail Protection Broken">Allowing counter to wrap would compromise audit trail integrity.</state>
-        <state name="Device Effectively Decommissioned">The device has reached the end of its useful transaction processing life.</state>
-        <state name="Device Requires Replacement">The device must be replaced or decommissioned.</state>
-    </postconditionality>
-    <notes>
-        <note>ErrorSignatureCounterOverflow is thrown by 4 functions: startTransaction, updateTransaction, finishTransaction, configureLogging</note>
-        <note>This exception indicates the counter has reached its logical limit, not a software or hardware failure</note>
-        <note>The exception has Critical severity because it permanently blocks transaction processing</note>
-        <note>This is an extremely rare condition expected only after extraordinarily long device operation</note>
-        <note>Counter overflow prevents audit trail wraparound which would compromise security</note>
-        <note>Counter size should be chosen to exceed expected device lifetime and transaction volume</note>
-        <note>64-bit counters (2^64 maximum) provide extremely large capacity for most applications</note>
-        <note>Counter overflow typically indicates either: exceptionally long device lifetime, extremely high transaction load, or counter design issue</note>
-        <note>Capacity planning should account for maximum counter value and design counter appropriately</note>
-        <note>Error messages should indicate the counter maximum value and current value</note>
-        <note>Device monitoring should warn well before counter approaches maximum (at 80-90% capacity)</note>
-        <note>Business continuity plans must account for device reaching counter maximum</note>
-        <note>Transaction logs should be exported and archived when counter reaches critical levels</note>
-        <note>Counter overflow is different from counter exhaustion (physical memory limits)</note>
-        <note>Device manufacturers should provide high-capacity counters (64-bit or larger) to prevent overflow</note>
-    </notes>
-    <usage>
-        <scenario name="Scenario 1: Counter Overflow After Decades of Operation">
-            <description>A device has been in production for 20+ years processing millions of transactions daily. A startTransaction call finally receives ErrorSignatureCounterOverflow. The counter has reached its maximum after processing billions of transactions. The device is decommissioned and replaced.</description>
-            <relatedFunctions>startTransaction, exportLogMessages, getDescription</relatedFunctions>
-            <errorContext>Device end-of-life due to counter overflow after decades of operation</errorContext>
-        </scenario>
-        <scenario name="Scenario 2: Counter Monitoring Predicts Overflow">
-            <description>Capacity planning tools monitor counter growth rates and predict when counters will overflow based on current transaction volume. For a device projected to overflow in 5 years, replacement is scheduled proactively.</description>
-            <relatedFunctions>getDescription, startTransaction</relatedFunctions>
-            <errorContext>Proactive planning detects future counter overflow risk</errorContext>
-        </scenario>
-        <scenario name="Scenario 3: Unexpected Counter Overflow Detection">
-            <description>A system experiences unexpected transaction processing failure. Investigation reveals a startTransaction call receives ErrorSignatureCounterOverflow. Analysis shows the counter was undersized for the actual transaction volume. Emergency device replacement is performed and counter sizing is reviewed.</description>
-            <relatedFunctions>startTransaction, finishTransaction</relatedFunctions>
-            <errorContext>Emergency handling of unexpected counter overflow due to undersized counter</errorContext>
-        </scenario>
-        <scenario name="Scenario 4: High-Load System Counter Management">
-            <description>A high-volume transaction system monitors counter increment rates. When counter is predicted to overflow in 2 months at current load, the system schedules gradual migration of transactions to replacement devices to maintain continuous service.</description>
-            <relatedFunctions>startTransaction, getDescription</relatedFunctions>
-            <errorContext>Managed transition planning for high-load systems with predictable counter overflow</errorContext>
-        </scenario>
-    </usage>
-    <implementationContext>
-        <note>Counter maximum value should be well-documented (e.g., 2^64-1 for 64-bit counter)</note>
-        <note>Counter size should be chosen to vastly exceed expected device lifetime and transaction volume</note>
-        <note>Device should check for counter overflow before attempting increment</note>
-        <note>Error messages should clearly indicate counter is at maximum value</note>
-        <note>Device firmware should provide status API to query counter value and maximum</note>
-        <note>Monitoring should provide early warning when counter approaches maximum (80%+ capacity)</note>
-        <note>Counter overflow check must prevent counter from wrapping to zero</note>
-        <note>Device should never silently wrap counter to zero - overflow must always be reported</note>
-        <note>Documentation should clearly explain counter capacity and expected device lifetime</note>
-        <note>Capacity planning tools should model counter growth and predict overflow timing</note>
-    </implementationContext>
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorSignatureCounterOverflow" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+  <name>ErrorSignatureCounterOverflow</name>
+  <description>This exception is thrown if the signature counter reaches its logical maximum value. The signature counter is a monotonically increasing value that provides audit trail integrity and replay attack protection for transactions. The counter has a maximum value (e.g., 2^64-1 for a 64-bit counter) and cannot be incremented further once this maximum is reached. ErrorSignatureCounterOverflow indicates that the signature counter has reached its logical limit and cannot accept new transactions. This is an extremely rare condition that typically requires device replacement or counter reset procedures. Common causes include: device has processed an extraordinarily large number of transactions over its lifetime, counter implementation limits reached, or counter not properly designed for system lifetime.</description>
+  <category>Logging - Signature Counter - Overflow</category>
+  <severity>Critical</severity>
+  <thrownBy>
+    <function>authenticateUser</function>
+    <function>configureLogging</function>
+    <function>deleteLogMessages</function>
+    <function>deregisterClient</function>
+    <function>disableSecureElement</function>
+    <function>finishTransaction</function>
+    <function>initialize</function>
+    <function>lockTransactionLogging</function>
+    <function>logOut</function>
+    <function>registerClient</function>
+    <function>selfTest</function>
+    <function>setDescription</function>
+    <function>startTransaction</function>
+    <function>unblockPin</function>
+    <function>unlockTransactionLogging</function>
+    <function>updateDevice</function>
+    <function>updateTime</function>
+    <function>updateTransaction</function>
+  </thrownBy>
+  <javadoc>
+    <summary>This class defines the exception ErrorSignatureCounterOverflow that is thrown if the signature counter reaches its logical maximum.</summary>
+    <description>This exception is thrown when the signature counter reaches its logical maximum value and cannot be incremented further. The signature counter is a critical component that maintains a monotonically increasing counter for transaction signatures, providing audit trail integrity and replay attack protection. The counter has a defined maximum value (implementation-dependent, e.g., 2^64-1 for a 64-bit counter). ErrorSignatureCounterOverflow indicates that the counter has reached this logical limit. This is an extremely rare condition in practice because the maximum is typically very large. Common causes include: device has processed an extraordinarily large number of transactions (billions or trillions), counter design does not match system transaction volume, or counter has been in production for an exceptionally long time with high transaction load. ErrorSignatureCounterOverflow is a Critical severity exception because it permanently prevents transaction processing. The counter cannot wrap around to zero (which would compromise audit trail integrity). The device is effectively unusable and requires replacement or counter reset procedures.</description>
+    <constructors>
+      <constructor>
+        <signature>ErrorSignatureCounterOverflow()</signature>
+        <description>Constructs a new ErrorSignatureCounterOverflow exception with null as the value for its detail message</description>
+      </constructor>
+      <constructor>
+        <signature>ErrorSignatureCounterOverflow(String message)</signature>
+        <description>Constructs a new ErrorSignatureCounterOverflow exception whereby its detail message is initialized with the passed value</description>
+        <parameter name="message">value for the detail message of the exception, typically describing the signature counter maximum value reached</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorSignatureCounterOverflow(String message, Throwable cause)</signature>
+        <description>Constructs a new ErrorSignatureCounterOverflow exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorSignatureCounterOverflow(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+        <description>Constructs a new ErrorSignatureCounterOverflow exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+      </constructor>
+    </constructors>
+  </javadoc>
+  <specification>
+    <source>BSI TR-03151-1</source>
+    <section>3.3.2 Transaction Operations and 3.3.3 Logging Operations - Signature Counter Management</section>
+    <requirement>The Secure Element maintains a signature counter that is incremented for each transaction, providing audit trail integrity and replay attack protection. The signature counter is monotonically increasing and has a defined maximum value (implementation-dependent). When the signature counter reaches its logical maximum value, the device cannot increment it further and SHALL raise ErrorSignatureCounterOverflow on any operation requiring counter increment (startTransaction, updateTransaction, finishTransaction, configureLogging). The device must not accept new transactions when counter is at maximum, as wrapping to zero would compromise audit trail integrity. This is an extremely rare condition expected to occur only after processing an extraordinarily large number of transactions over many years.</requirement>
+    <applicability>Transaction operations requiring signature counter increment: startTransaction, updateTransaction, finishTransaction, configureLogging</applicability>
+    <reference>Transaction Operations (3.3.2), Logging Operations (3.3.3), Signature Counter Management</reference>
+  </specification>
+  <triggerConditions>
+    <condition>
+      <scenario>Signature counter reaches logical maximum value</scenario>
+      <description>The signature counter has been incremented to its maximum possible value</description>
+      <trigger>A startTransaction call is made but the device detects the signature counter is already at maximum value (e.g., 2^64-1). ErrorSignatureCounterOverflow is raised because the counter cannot be incremented further.</trigger>
+    </condition>
+    <condition>
+      <scenario>Extremely high transaction volume over device lifetime</scenario>
+      <description>The device has processed an extraordinarily large number of transactions</description>
+      <trigger>After many years of production operation with very high transaction load, a finishTransaction call detects the signature counter has reached maximum. ErrorSignatureCounterOverflow is raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Counter size insufficient for system requirements</scenario>
+      <description>The counter implementation uses insufficient bit width for the system's transaction volume</description>
+      <trigger>An updateTransaction call is made but counter reaches maximum because the counter size is too small for the system's transaction rate. ErrorSignatureCounterOverflow is raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Signature counter increment operation would overflow</scenario>
+      <description>The next increment operation would cause the counter to exceed its maximum value</description>
+      <trigger>A configureLogging call attempts to enable more transactions but the counter cannot be incremented further. ErrorSignatureCounterOverflow is raised to prevent overflow.</trigger>
+    </condition>
+    <condition>
+      <scenario>Device approaching or at theoretical maximum transaction limit</scenario>
+      <description>The device is at or approaching the theoretical maximum transactions it can support</description>
+      <trigger>Any transaction operation detects the counter is at maximum. The device has reached its absolute transaction processing limit.</trigger>
+    </condition>
+  </triggerConditions>
+  <executionSequence>
+    <step number="1">User/application calls transaction operation that requires signature counter increment (e.g., startTransaction)</step>
+    <step number="2">Function validates input parameters</step>
+    <step number="3">Function initiates communication with Secure Element</step>
+    <step number="4">Secure Element receives transaction request</step>
+    <step number="5">Secure Element checks current signature counter value</step>
+    <step number="5a">If counter is at maximum → ErrorSignatureCounterOverflow raised, operation aborted</step>
+    <step number="5b">If counter is below maximum → proceed to step 6</step>
+    <step number="6">Secure Element processes transaction operation</step>
+    <step number="7">Secure Element calculates new counter value = current counter + 1</step>
+    <step number="8">Secure Element verifies new counter does not exceed maximum</step>
+    <step number="8a">If new counter would exceed maximum → ErrorSignatureCounterOverflow raised, operation aborted</step>
+    <step number="8b">If new counter is valid → proceed to step 9</step>
+    <step number="9">Secure Element increments signature counter</step>
+    <step number="10">Secure Element writes updated counter value to storage</step>
+    <step number="11">Secure Element completes transaction operation</step>
+    <step number="12">Secure Element returns result to function</step>
+    <step number="13">Function returns successfully</step>
+  </executionSequence>
+  <recovery>
+    <step>Stop accepting new transactions immediately - counter is at maximum and cannot increment</step>
+    <step>Review error message - understand the signature counter overflow status</step>
+    <step>Query device state - determine current signature counter value and maximum</step>
+    <step>Export all transaction logs - export complete transaction history while device is operational</step>
+    <step>Archive transaction history - backup all records for compliance and audit purposes</step>
+    <step>Calculate device lifetime - determine how long device has been in operation and transaction volume</step>
+    <step>Notify administrators and management - escalate critical situation immediately</step>
+    <step>Investigate counter design - verify counter size is appropriate for system requirements</step>
+    <step>Plan device replacement - schedule immediate replacement of the device</step>
+    <step>Decommission device - safely decommission the device according to policy</step>
+  </recovery>
+  <relatedExceptions>
+    <exception>ErrorSignatureCounterExhausted</exception>
+    <exception>ErrorFunctionFailed</exception>
+    <exception>ErrorLimitOfSimultaneousOpenTransactionsReached</exception>
+    <exception>ErrorOpenTransactionFound</exception>
+  </relatedExceptions>
+  <postconditionality>
+    <state name="Transaction Not Created">The requested transaction is not created due to counter overflow.</state>
+    <state name="Signature Counter Not Incremented">The counter remains at maximum and cannot be incremented.</state>
+    <state name="Device Cannot Process Transactions">The device cannot process any new transactions - counter overflow is permanent.</state>
+    <state name="Audit Trail Protection Broken">Allowing counter to wrap would compromise audit trail integrity.</state>
+    <state name="Device Effectively Decommissioned">The device has reached the end of its useful transaction processing life.</state>
+    <state name="Device Requires Replacement">The device must be replaced or decommissioned.</state>
+  </postconditionality>
+  <notes>
+    <note>ErrorSignatureCounterOverflow is thrown by 4 functions: startTransaction, updateTransaction, finishTransaction, configureLogging</note>
+    <note>This exception indicates the counter has reached its logical limit, not a software or hardware failure</note>
+    <note>The exception has Critical severity because it permanently blocks transaction processing</note>
+    <note>This is an extremely rare condition expected only after extraordinarily long device operation</note>
+    <note>Counter overflow prevents audit trail wraparound which would compromise security</note>
+    <note>Counter size should be chosen to exceed expected device lifetime and transaction volume</note>
+    <note>64-bit counters (2^64 maximum) provide extremely large capacity for most applications</note>
+    <note>Counter overflow typically indicates either: exceptionally long device lifetime, extremely high transaction load, or counter design issue</note>
+    <note>Capacity planning should account for maximum counter value and design counter appropriately</note>
+    <note>Error messages should indicate the counter maximum value and current value</note>
+    <note>Device monitoring should warn well before counter approaches maximum (at 80-90% capacity)</note>
+    <note>Business continuity plans must account for device reaching counter maximum</note>
+    <note>Transaction logs should be exported and archived when counter reaches critical levels</note>
+    <note>Counter overflow is different from counter exhaustion (physical memory limits)</note>
+    <note>Device manufacturers should provide high-capacity counters (64-bit or larger) to prevent overflow</note>
+  </notes>
+  <usage>
+    <scenario name="Scenario 1: Counter Overflow After Decades of Operation">
+      <description>A device has been in production for 20+ years processing millions of transactions daily. A startTransaction call finally receives ErrorSignatureCounterOverflow. The counter has reached its maximum after processing billions of transactions. The device is decommissioned and replaced.</description>
+      <relatedFunctions>startTransaction, exportLogMessages, getDescription</relatedFunctions>
+      <errorContext>Device end-of-life due to counter overflow after decades of operation</errorContext>
+    </scenario>
+    <scenario name="Scenario 2: Counter Monitoring Predicts Overflow">
+      <description>Capacity planning tools monitor counter growth rates and predict when counters will overflow based on current transaction volume. For a device projected to overflow in 5 years, replacement is scheduled proactively.</description>
+      <relatedFunctions>getDescription, startTransaction</relatedFunctions>
+      <errorContext>Proactive planning detects future counter overflow risk</errorContext>
+    </scenario>
+    <scenario name="Scenario 3: Unexpected Counter Overflow Detection">
+      <description>A system experiences unexpected transaction processing failure. Investigation reveals a startTransaction call receives ErrorSignatureCounterOverflow. Analysis shows the counter was undersized for the actual transaction volume. Emergency device replacement is performed and counter sizing is reviewed.</description>
+      <relatedFunctions>startTransaction, finishTransaction</relatedFunctions>
+      <errorContext>Emergency handling of unexpected counter overflow due to undersized counter</errorContext>
+    </scenario>
+    <scenario name="Scenario 4: High-Load System Counter Management">
+      <description>A high-volume transaction system monitors counter increment rates. When counter is predicted to overflow in 2 months at current load, the system schedules gradual migration of transactions to replacement devices to maintain continuous service.</description>
+      <relatedFunctions>startTransaction, getDescription</relatedFunctions>
+      <errorContext>Managed transition planning for high-load systems with predictable counter overflow</errorContext>
+    </scenario>
+  </usage>
+  <implementationContext>
+    <note>Counter maximum value should be well-documented (e.g., 2^64-1 for 64-bit counter)</note>
+    <note>Counter size should be chosen to vastly exceed expected device lifetime and transaction volume</note>
+    <note>Device should check for counter overflow before attempting increment</note>
+    <note>Error messages should clearly indicate counter is at maximum value</note>
+    <note>Device firmware should provide status API to query counter value and maximum</note>
+    <note>Monitoring should provide early warning when counter approaches maximum (80%+ capacity)</note>
+    <note>Counter overflow check must prevent counter from wrapping to zero</note>
+    <note>Device should never silently wrap counter to zero - overflow must always be reported</note>
+    <note>Documentation should clearly explain counter capacity and expected device lifetime</note>
+    <note>Capacity planning tools should model counter growth and predict overflow timing</note>
+  </implementationContext>
 </exception>

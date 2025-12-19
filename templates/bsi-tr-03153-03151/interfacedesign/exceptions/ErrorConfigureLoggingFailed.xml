@@ -1,148 +1,148 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<exception id="ErrorConfigureLoggingFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
-    <name>ErrorConfigureLoggingFailed</name>
-    <description>This exception is thrown if the invocation of SE API function configureLogging failed to set the logging configuration for a specific event in a component. The exception represents a critical failure in the Secure Element's ability to apply event-based logging policies to its internal components and modules. ErrorConfigureLoggingFailed is raised when the Secure Element attempts to configure logging for a specified component and event pair, but encounters an internal error that prevents the configuration from being successfully applied. This exception indicates that the device's logging subsystem has rejected the configuration request due to device-level constraints, internal state inconsistencies, memory limitations, or Secure Element hardware/firmware errors. The exception is raised after the Secure Element has validated the configuration parameters but failed during the actual application of the logging settings to the component.</description>
-    <category>Logging</category>
-    <severity>High</severity>
-    <javadoc>
-        <summary>This class defines the exception ErrorConfigureLoggingFailed that is thrown if the invokation of SE API function configureLogging failed to set the configuration.</summary>
-        <description>The configuration of the logging of device events failed. This exception is raised when the attempt to set the logging configuration for a specific event in a component fails due to an error in the Secure Element or device functionality.</description>
-        <constructors>
-            <constructor>
-                <signature>ErrorConfigureLoggingFailed()</signature>
-                <description>Constructs a new ErrorConfigureLoggingFailed exception with null as the value for its detail message</description>
-            </constructor>
-            <constructor>
-                <signature>ErrorConfigureLoggingFailed(String message)</signature>
-                <description>Constructs a new ErrorConfigureLoggingFailed exception whereby its detail message is initialized with the passed value</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorConfigureLoggingFailed(String message, Throwable cause)</signature>
-                <description>Constructs a new ErrorConfigureLoggingFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorConfigureLoggingFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-                <description>Constructs a new ErrorConfigureLoggingFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-            </constructor>
-        </constructors>
-    </javadoc>
-    <specification>
-        <source>BSI TR-03151-1</source>
-        <section>3.6.1.4</section>
-        <requirement>SHALL be raised when setting the logging of an event in a component fails. If the execution fails, the function SHALL raise the exception ErrorConfigureLoggingFailed and exit the function.</requirement>
-        <applicability>Logging configuration operations when event logging cannot be applied</applicability>
-        <reference>configureLogging – Exceptions (3.6.1.4)</reference>
-    </specification>
-    <thrownBy>
-        <function>configureLogging</function>
-    </thrownBy>
-    <triggerConditions>
-        <condition>
-            <scenario>Secure Element internal error during configuration application</scenario>
-            <description>The Secure Element accepts the logging configuration request (component name, event type, and logging level are valid), but encounters an internal error while attempting to apply the configuration to the target component. The error may originate from firmware limitations, hardware malfunction, or internal subsystem failures.</description>
-            <trigger>Secure Element hardware or firmware error preventing configuration application</trigger>
-        </condition>
-        <condition>
-            <scenario>Device memory or resource constraints</scenario>
-            <description>The device has insufficient memory or resources to allocate for the new logging configuration. This can occur if the device's logging buffer is nearly full, the configuration table is at capacity, or memory fragmentation prevents allocation of required structures.</description>
-            <trigger>Insufficient device memory or logging resource exhaustion</trigger>
-        </condition>
-        <condition>
-            <scenario>Logging subsystem state inconsistency</scenario>
-            <description>The Secure Element's logging subsystem has entered an inconsistent or error state that prevents new configurations from being applied. This can occur after failed previous configuration attempts, after device state transitions, or due to corruption in the logging configuration table.</description>
-            <trigger>Logging subsystem in invalid state preventing configuration updates</trigger>
-        </condition>
-        <condition>
-            <scenario>Component not accessible or unavailable</scenario>
-            <description>The specified component exists and is valid, but is currently not accessible for configuration due to the component being in an error state, being actively processing events, or having been temporarily disabled by device firmware.</description>
-            <trigger>Target component temporarily unavailable for configuration</trigger>
-        </condition>
-    </triggerConditions>
-    <recovery>
-        <step>Verify that the component name and event name parameters are correct and are supported by the device implementation (check device specifications for supported logging targets)</step>
-        <step>Check the device initialization status using getDeviceInfo or similar functions to ensure the device is properly initialized and not in an error state</step>
-        <step>Query the current device health status using getDeviceHealth to determine if the device is experiencing hardware or firmware issues that would prevent configuration updates</step>
-        <step>Examine the device's available memory and resource capacity to ensure there is sufficient space for the new logging configuration entry</step>
-        <step>Retry the configuration operation after a brief delay (typically 100-500ms) to allow the device's logging subsystem to recover from temporary resource contention</step>
-        <step>If the retry fails, attempt to clear existing logging configurations or reduce logging scope to free device resources, then retry</step>
-        <step>Review device logs, audit trails, or diagnostic information using exportLogMessages or device-specific diagnostic functions to identify the underlying cause of the failure</step>
-        <step>If the error persists across multiple retries, perform a device reinitialization using appropriate functions (e.g., updateDevice or firmware reset) to restore the logging subsystem to a known good state</step>
-        <step>As a last resort, contact device manufacturer support or perform a complete device factory reset if logging subsystem corruption is suspected</step>
-        <step>Document the configuration attempt that failed, including component name, event type, logging level, timestamp, and device state, for diagnostic purposes and to inform future recovery strategies</step>
-    </recovery>
-    <relatedExceptions>
-        <exception>ErrorDeviceNotInitialized</exception>
-        <exception>ErrorLoggingOfEventNotConfigurable</exception>
-        <exception>ErrorFunctionFailed</exception>
-    </relatedExceptions>
-    <notes>
-        <note>This exception is specific to the configureLogging function and indicates a failure at the Secure Element or device level rather than invalid parameters. Parameter validation occurs before this exception is raised, so the parameters themselves are valid.</note>
-        <note>The exception may indicate issues with Secure Element communication, memory constraints, logging buffer exhaustion, or device state inconsistencies that prevent the logging subsystem from accepting new configurations.</note>
-        <note>Recovery actions should focus on verifying device status, examining available resources, and potentially reinitializing the device or Secure Element to restore the logging subsystem to a operational state.</note>
-        <note>Unlike configuration parameter validation errors, ErrorConfigureLoggingFailed represents an operational failure in applying a valid configuration, not a problem with the configuration itself.</note>
-        <note>The logging subsystem may enter a degraded or restricted mode after this exception. Subsequent logging configuration attempts may also fail or may succeed with reduced capability until the device is reinitialized.</note>
-        <note>Device implementations may have variant behavior regarding logging capacity, resource constraints, and recovery mechanisms. Some implementations may support configuration rollback, while others may leave the logging subsystem in a partially configured state.</note>
-        <note>This exception does not necessarily indicate data corruption or security issues. It is primarily a resource management or state consistency issue within the logging subsystem.</note>
-        <note>Some device implementations may queue configuration requests and process them asynchronously. A delayed retry may succeed even without explicit recovery actions, as the device may have recovered from temporary resource constraints.</note>
-    </notes>
-    <executionSequence>
-        <step number="1" name="Function Invocation">Function entry point is reached with parameters for component name, event type, and desired logging level provided by the caller</step>
-        <step number="2" name="Parameter Validation">The Secure Element validates that component name and event type are valid and correspond to known logging targets in the device configuration</step>
-        <step number="3" name="Logging Level Validation">The logging level parameter is validated to ensure it is within the supported range and is appropriate for the specified component and event</step>
-        <step number="4" name="Device State Check">The device verifies that it is in a state suitable for configuration updates (initialized, not in error state, and logging subsystem responsive)</step>
-        <step number="5" name="Resource Availability Check">The device checks available memory and logging resource capacity to ensure sufficient space for the new configuration entry</step>
-        <step number="6" name="Configuration Application Attempt">The device attempts to apply the logging configuration to the target component, creating or updating the configuration entry in the device's logging settings table</step>
-        <step number="7a" name="Configuration Success">If configuration is successfully applied, execution continues to complete the function normally and return to caller with success status</step>
-        <step number="7b" name="Configuration Failure">If the application of configuration fails due to hardware error, firmware limitation, or subsystem state issue, execution branches to step 8</step>
-        <step number="8" name="Exception Context Preparation">Exception context is prepared including the component name, event type, logging level being configured, device state information, and error details from the logging subsystem</step>
-        <step number="9" name="Exception Instance Creation">ErrorConfigureLoggingFailed exception instance is created with appropriate error message detailing the configuration failure</step>
-        <step number="10" name="Exception Propagation">Exception is raised and propagated up the call stack to the calling application, allowing error handling at application level</step>
-    </executionSequence>
-    <postconditionality>
-        <state name="Exception State">An ErrorConfigureLoggingFailed exception has been created and raised, containing the failed component name, event type, logging level, and diagnostic timestamp</state>
-        <state name="Device Logging State">The device's logging configuration remains in its previous state. The configuration update has not been successfully applied. Depending on implementation, the logging subsystem may have created a partial entry or left configuration unchanged.</state>
-        <state name="Logging Subsystem State">The logging subsystem may be in a degraded or inconsistent state. Subsequent logging configuration attempts may fail or succeed with reduced capability. The subsystem may require reinitialization to restore full functionality.</state>
-        <state name="Resource State">Device resources (memory, configuration table slots) remain unchanged. No resources have been allocated for the failed configuration. If configuration was partially attempted, some resources may be in an indeterminate state.</state>
-        <state name="Function Exit">The function exits abnormally via exception propagation without completing its intended configuration operation</state>
-        <state name="Device Availability">The Secure Element remains available for subsequent API calls, although the logging subsystem may have limited or degraded functionality. The device itself has not failed; only the specific logging configuration operation was rejected.</state>
-    </postconditionality>
-    <usage>
-        <scenario name="Scenario 1: Logging Configuration Failure During Startup">
-            <description>An application attempts to configure event logging during device initialization, but the logging subsystem is not yet fully operational or encounters an error.</description>
-            <relatedFunctions>configureLogging, initializeDevice, getDeviceHealth</relatedFunctions>
-            <errorContext>Device initialization phase where logging subsystem configuration fails</errorContext>
-        </scenario>
-        <scenario name="Scenario 2: Resource Exhaustion in Logging Subsystem">
-            <description>An application has been configuring multiple event logging targets, and after several successful configurations, the next configuration fails due to insufficient device resources or logging buffer exhaustion.</description>
-            <relatedFunctions>configureLogging, getComponentVersions, exportLogMessages</relatedFunctions>
-            <errorContext>Progressive resource depletion scenario where later configurations fail while earlier ones succeeded</errorContext>
-        </scenario>
-        <scenario name="Scenario 3: Recovery Through Logging Subsystem Reset">
-            <description>An application encounters this exception and implements recovery by clearing existing logging configurations, waiting for device stabilization, and then retrying the configuration.</description>
-            <relatedFunctions>configureLogging, deleteLogMessages, updateDevice</relatedFunctions>
-            <errorContext>Recovery strategy focused on freeing resources and restoring logging subsystem state</errorContext>
-        </scenario>
-        <scenario name="Scenario 4: Proactive Health Checking Before Configuration">
-            <description>An application proactively checks device health and available resources before attempting logging configuration to prevent this exception.</description>
-            <relatedFunctions>configureLogging, getDeviceHealth, getComponentVersions</relatedFunctions>
-            <errorContext>Defensive programming approach using device health status to prevent configuration failures</errorContext>
-        </scenario>
-    </usage>
-    <implementationContext>
-        <note>The ErrorConfigureLoggingFailed exception represents a failure in the runtime application of a valid logging configuration to the device, distinct from parameter validation errors.</note>
-        <note>The logging subsystem in many SE API implementations is resource-constrained due to memory limitations in the Secure Element. Configuration failures often indicate resource exhaustion rather than parameter errors.</note>
-        <note>Some device implementations may perform configuration asynchronously. A delayed retry may succeed if the device's internal queue processes and recovers from temporary contention.</note>
-        <note>The exception does not distinguish between different root causes (hardware error vs. memory exhaustion vs. state inconsistency). Applications may need to examine device health status separately to determine the underlying issue.</note>
-        <note>Device implementations may vary significantly in their recovery behavior. Some devices may automatically clear partial configuration state, while others may leave the logging subsystem in a partially configured and unusable state until reinitialization.</note>
-        <note>In implementations supporting multiple logging targets, a failure to configure one target may or may not affect the configuration of other targets previously applied. The atomicity of configuration operations varies by device.</note>
-        <note>The logging subsystem's state after this exception may prevent subsequent logging operations (e.g., exportLogMessages) from functioning correctly. Applications should consider reinitializing the device if critical logging functionality becomes unavailable.</note>
-        <note>This exception does not necessarily indicate a security or compliance issue. Logging configuration is typically a best-effort feature, and many devices continue to operate with default or partial logging configurations even when configuration updates fail.</note>
-    </implementationContext>
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorConfigureLoggingFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+  <name>ErrorConfigureLoggingFailed</name>
+  <description>This exception is thrown if the invocation of SE API function configureLogging failed to set the logging configuration for a specific event in a component. The exception represents a critical failure in the Secure Element's ability to apply event-based logging policies to its internal components and modules. ErrorConfigureLoggingFailed is raised when the Secure Element attempts to configure logging for a specified component and event pair, but encounters an internal error that prevents the configuration from being successfully applied. This exception indicates that the device's logging subsystem has rejected the configuration request due to device-level constraints, internal state inconsistencies, memory limitations, or Secure Element hardware/firmware errors. The exception is raised after the Secure Element has validated the configuration parameters but failed during the actual application of the logging settings to the component.</description>
+  <category>Logging</category>
+  <severity>High</severity>
+  <javadoc>
+    <summary>This class defines the exception ErrorConfigureLoggingFailed that is thrown if the invokation of SE API function configureLogging failed to set the configuration.</summary>
+    <description>The configuration of the logging of device events failed. This exception is raised when the attempt to set the logging configuration for a specific event in a component fails due to an error in the Secure Element or device functionality.</description>
+    <constructors>
+      <constructor>
+        <signature>ErrorConfigureLoggingFailed()</signature>
+        <description>Constructs a new ErrorConfigureLoggingFailed exception with null as the value for its detail message</description>
+      </constructor>
+      <constructor>
+        <signature>ErrorConfigureLoggingFailed(String message)</signature>
+        <description>Constructs a new ErrorConfigureLoggingFailed exception whereby its detail message is initialized with the passed value</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorConfigureLoggingFailed(String message, Throwable cause)</signature>
+        <description>Constructs a new ErrorConfigureLoggingFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorConfigureLoggingFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+        <description>Constructs a new ErrorConfigureLoggingFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+      </constructor>
+    </constructors>
+  </javadoc>
+  <specification>
+    <source>BSI TR-03151-1</source>
+    <section>3.6.1.4</section>
+    <requirement>SHALL be raised when setting the logging of an event in a component fails. If the execution fails, the function SHALL raise the exception ErrorConfigureLoggingFailed and exit the function.</requirement>
+    <applicability>Logging configuration operations when event logging cannot be applied</applicability>
+    <reference>configureLogging – Exceptions (3.6.1.4)</reference>
+  </specification>
+  <thrownBy>
+    <function>configureLogging</function>
+  </thrownBy>
+  <triggerConditions>
+    <condition>
+      <scenario>Secure Element internal error during configuration application</scenario>
+      <description>The Secure Element accepts the logging configuration request (component name, event type, and logging level are valid), but encounters an internal error while attempting to apply the configuration to the target component. The error may originate from firmware limitations, hardware malfunction, or internal subsystem failures.</description>
+      <trigger>Secure Element hardware or firmware error preventing configuration application</trigger>
+    </condition>
+    <condition>
+      <scenario>Device memory or resource constraints</scenario>
+      <description>The device has insufficient memory or resources to allocate for the new logging configuration. This can occur if the device's logging buffer is nearly full, the configuration table is at capacity, or memory fragmentation prevents allocation of required structures.</description>
+      <trigger>Insufficient device memory or logging resource exhaustion</trigger>
+    </condition>
+    <condition>
+      <scenario>Logging subsystem state inconsistency</scenario>
+      <description>The Secure Element's logging subsystem has entered an inconsistent or error state that prevents new configurations from being applied. This can occur after failed previous configuration attempts, after device state transitions, or due to corruption in the logging configuration table.</description>
+      <trigger>Logging subsystem in invalid state preventing configuration updates</trigger>
+    </condition>
+    <condition>
+      <scenario>Component not accessible or unavailable</scenario>
+      <description>The specified component exists and is valid, but is currently not accessible for configuration due to the component being in an error state, being actively processing events, or having been temporarily disabled by device firmware.</description>
+      <trigger>Target component temporarily unavailable for configuration</trigger>
+    </condition>
+  </triggerConditions>
+  <recovery>
+    <step>Verify that the component name and event name parameters are correct and are supported by the device implementation (check device specifications for supported logging targets)</step>
+    <step>Check the device initialization status using getDeviceInfo or similar functions to ensure the device is properly initialized and not in an error state</step>
+    <step>Query the current device health status using getDeviceHealth to determine if the device is experiencing hardware or firmware issues that would prevent configuration updates</step>
+    <step>Examine the device's available memory and resource capacity to ensure there is sufficient space for the new logging configuration entry</step>
+    <step>Retry the configuration operation after a brief delay (typically 100-500ms) to allow the device's logging subsystem to recover from temporary resource contention</step>
+    <step>If the retry fails, attempt to clear existing logging configurations or reduce logging scope to free device resources, then retry</step>
+    <step>Review device logs, audit trails, or diagnostic information using exportLogMessages or device-specific diagnostic functions to identify the underlying cause of the failure</step>
+    <step>If the error persists across multiple retries, perform a device reinitialization using appropriate functions (e.g., updateDevice or firmware reset) to restore the logging subsystem to a known good state</step>
+    <step>As a last resort, contact device manufacturer support or perform a complete device factory reset if logging subsystem corruption is suspected</step>
+    <step>Document the configuration attempt that failed, including component name, event type, logging level, timestamp, and device state, for diagnostic purposes and to inform future recovery strategies</step>
+  </recovery>
+  <relatedExceptions>
+    <exception>ErrorDeviceNotInitialized</exception>
+    <exception>ErrorLoggingOfEventNotConfigurable</exception>
+    <exception>ErrorFunctionFailed</exception>
+  </relatedExceptions>
+  <notes>
+    <note>This exception is specific to the configureLogging function and indicates a failure at the Secure Element or device level rather than invalid parameters. Parameter validation occurs before this exception is raised, so the parameters themselves are valid.</note>
+    <note>The exception may indicate issues with Secure Element communication, memory constraints, logging buffer exhaustion, or device state inconsistencies that prevent the logging subsystem from accepting new configurations.</note>
+    <note>Recovery actions should focus on verifying device status, examining available resources, and potentially reinitializing the device or Secure Element to restore the logging subsystem to a operational state.</note>
+    <note>Unlike configuration parameter validation errors, ErrorConfigureLoggingFailed represents an operational failure in applying a valid configuration, not a problem with the configuration itself.</note>
+    <note>The logging subsystem may enter a degraded or restricted mode after this exception. Subsequent logging configuration attempts may also fail or may succeed with reduced capability until the device is reinitialized.</note>
+    <note>Device implementations may have variant behavior regarding logging capacity, resource constraints, and recovery mechanisms. Some implementations may support configuration rollback, while others may leave the logging subsystem in a partially configured state.</note>
+    <note>This exception does not necessarily indicate data corruption or security issues. It is primarily a resource management or state consistency issue within the logging subsystem.</note>
+    <note>Some device implementations may queue configuration requests and process them asynchronously. A delayed retry may succeed even without explicit recovery actions, as the device may have recovered from temporary resource constraints.</note>
+  </notes>
+  <executionSequence>
+    <step number="1" name="Function Invocation">Function entry point is reached with parameters for component name, event type, and desired logging level provided by the caller</step>
+    <step number="2" name="Parameter Validation">The Secure Element validates that component name and event type are valid and correspond to known logging targets in the device configuration</step>
+    <step number="3" name="Logging Level Validation">The logging level parameter is validated to ensure it is within the supported range and is appropriate for the specified component and event</step>
+    <step number="4" name="Device State Check">The device verifies that it is in a state suitable for configuration updates (initialized, not in error state, and logging subsystem responsive)</step>
+    <step number="5" name="Resource Availability Check">The device checks available memory and logging resource capacity to ensure sufficient space for the new configuration entry</step>
+    <step number="6" name="Configuration Application Attempt">The device attempts to apply the logging configuration to the target component, creating or updating the configuration entry in the device's logging settings table</step>
+    <step number="7a" name="Configuration Success">If configuration is successfully applied, execution continues to complete the function normally and return to caller with success status</step>
+    <step number="7b" name="Configuration Failure">If the application of configuration fails due to hardware error, firmware limitation, or subsystem state issue, execution branches to step 8</step>
+    <step number="8" name="Exception Context Preparation">Exception context is prepared including the component name, event type, logging level being configured, device state information, and error details from the logging subsystem</step>
+    <step number="9" name="Exception Instance Creation">ErrorConfigureLoggingFailed exception instance is created with appropriate error message detailing the configuration failure</step>
+    <step number="10" name="Exception Propagation">Exception is raised and propagated up the call stack to the calling application, allowing error handling at application level</step>
+  </executionSequence>
+  <postconditionality>
+    <state name="Exception State">An ErrorConfigureLoggingFailed exception has been created and raised, containing the failed component name, event type, logging level, and diagnostic timestamp</state>
+    <state name="Device Logging State">The device's logging configuration remains in its previous state. The configuration update has not been successfully applied. Depending on implementation, the logging subsystem may have created a partial entry or left configuration unchanged.</state>
+    <state name="Logging Subsystem State">The logging subsystem may be in a degraded or inconsistent state. Subsequent logging configuration attempts may fail or succeed with reduced capability. The subsystem may require reinitialization to restore full functionality.</state>
+    <state name="Resource State">Device resources (memory, configuration table slots) remain unchanged. No resources have been allocated for the failed configuration. If configuration was partially attempted, some resources may be in an indeterminate state.</state>
+    <state name="Function Exit">The function exits abnormally via exception propagation without completing its intended configuration operation</state>
+    <state name="Device Availability">The Secure Element remains available for subsequent API calls, although the logging subsystem may have limited or degraded functionality. The device itself has not failed; only the specific logging configuration operation was rejected.</state>
+  </postconditionality>
+  <usage>
+    <scenario name="Scenario 1: Logging Configuration Failure During Startup">
+      <description>An application attempts to configure event logging during device initialization, but the logging subsystem is not yet fully operational or encounters an error.</description>
+      <relatedFunctions>configureLogging, initializeDevice, getDeviceHealth</relatedFunctions>
+      <errorContext>Device initialization phase where logging subsystem configuration fails</errorContext>
+    </scenario>
+    <scenario name="Scenario 2: Resource Exhaustion in Logging Subsystem">
+      <description>An application has been configuring multiple event logging targets, and after several successful configurations, the next configuration fails due to insufficient device resources or logging buffer exhaustion.</description>
+      <relatedFunctions>configureLogging, getComponentVersions, exportLogMessages</relatedFunctions>
+      <errorContext>Progressive resource depletion scenario where later configurations fail while earlier ones succeeded</errorContext>
+    </scenario>
+    <scenario name="Scenario 3: Recovery Through Logging Subsystem Reset">
+      <description>An application encounters this exception and implements recovery by clearing existing logging configurations, waiting for device stabilization, and then retrying the configuration.</description>
+      <relatedFunctions>configureLogging, deleteLogMessages, updateDevice</relatedFunctions>
+      <errorContext>Recovery strategy focused on freeing resources and restoring logging subsystem state</errorContext>
+    </scenario>
+    <scenario name="Scenario 4: Proactive Health Checking Before Configuration">
+      <description>An application proactively checks device health and available resources before attempting logging configuration to prevent this exception.</description>
+      <relatedFunctions>configureLogging, getDeviceHealth, getComponentVersions</relatedFunctions>
+      <errorContext>Defensive programming approach using device health status to prevent configuration failures</errorContext>
+    </scenario>
+  </usage>
+  <implementationContext>
+    <note>The ErrorConfigureLoggingFailed exception represents a failure in the runtime application of a valid logging configuration to the device, distinct from parameter validation errors.</note>
+    <note>The logging subsystem in many SE API implementations is resource-constrained due to memory limitations in the Secure Element. Configuration failures often indicate resource exhaustion rather than parameter errors.</note>
+    <note>Some device implementations may perform configuration asynchronously. A delayed retry may succeed if the device's internal queue processes and recovers from temporary contention.</note>
+    <note>The exception does not distinguish between different root causes (hardware error vs. memory exhaustion vs. state inconsistency). Applications may need to examine device health status separately to determine the underlying issue.</note>
+    <note>Device implementations may vary significantly in their recovery behavior. Some devices may automatically clear partial configuration state, while others may leave the logging subsystem in a partially configured and unusable state until reinitialization.</note>
+    <note>In implementations supporting multiple logging targets, a failure to configure one target may or may not affect the configuration of other targets previously applied. The atomicity of configuration operations varies by device.</note>
+    <note>The logging subsystem's state after this exception may prevent subsequent logging operations (e.g., exportLogMessages) from functioning correctly. Applications should consider reinitializing the device if critical logging functionality becomes unavailable.</note>
+    <note>This exception does not necessarily indicate a security or compliance issue. Logging configuration is typically a best-effort feature, and many devices continue to operate with default or partial logging configurations even when configuration updates fail.</note>
+  </implementationContext>
 </exception>

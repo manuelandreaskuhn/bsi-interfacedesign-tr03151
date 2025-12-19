@@ -1,171 +1,170 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<exception id="ErrorStoringDataFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
-    <name>ErrorStoringDataFailed</name>
-    <description>This exception is thrown if a storage operation fails when attempting to store data on the device. The Secure Element stores various types of data including device description, configuration parameters, and operational data. If the storage write operation fails, ErrorStoringDataFailed indicates the data could not be successfully written to device storage. Common causes include: device storage errors, storage write failures, corrupted storage, insufficient storage capacity, storage medium issues, or communication failures. ErrorStoringDataFailed indicates that the requested data update was not completed and the device's stored data remains unchanged. This prevents configuration updates and data management operations from completing successfully.</description>
-    <category>Storage - Data Storage Failure</category>
-    <severity>High</severity>
-    <javadoc>
-        <summary>This class defines the exception ErrorStoringDataFailed that is thrown if data storage operations fail.</summary>
-        <description>This exception is thrown when a storage write operation fails while attempting to store data on the Secure Element. The device stores configuration, description, and operational data that must be persisted reliably. ErrorStoringDataFailed indicates that a data storage operation (typically setDescription or initialize) could not complete successfully. Common causes include: device storage write errors, storage medium issues, corrupted storage, insufficient storage capacity, or communication failures during write. ErrorStoringDataFailed is a High severity exception because it prevents configuration updates and data management. The device's stored data remains in its previous state - the failed write does not update the data. Recovery requires investigating the storage issue and potentially retrying the operation or addressing underlying storage problems.</description>
-        <constructors>
-            <constructor>
-                <signature>ErrorStoringDataFailed()</signature>
-                <description>Constructs a new ErrorStoringDataFailed exception with null as the value for its detail message</description>
-            </constructor>
-            <constructor>
-                <signature>ErrorStoringDataFailed(String message)</signature>
-                <description>Constructs a new ErrorStoringDataFailed exception whereby its detail message is initialized with the passed value</description>
-                <parameter name="message">value for the detail message of the exception, typically describing which data storage operation failed</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorStoringDataFailed(String message, Throwable cause)</signature>
-                <description>Constructs a new ErrorStoringDataFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorStoringDataFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-                <description>Constructs a new ErrorStoringDataFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-            </constructor>
-        </constructors>
-    </javadoc>
-    <specification>
-        <source>BSI TR-03151-1</source>
-        <section>3.2 Device Configuration and 3.3.1 Device Information Operations - Data Storage</section>
-        <requirement>The Secure Element stores device configuration and operational data including device description and initialization data. Operations that update stored data (setDescription, initialize) must persist the data reliably to device storage. If a data storage operation fails to successfully write data to device storage, the function SHALL raise ErrorStoringDataFailed. The device's stored data remains unchanged if the write fails. Data storage failures must be reported clearly so the caller knows the operation did not complete. Storage failures may require addressing underlying storage issues before retry.</requirement>
-        <applicability>Data storage operations: setDescription, initialize</applicability>
-        <reference>Device Configuration (3.2), Device Information Operations (3.3.1)</reference>
-    </specification>
-    <thrownBy>
-        <function>setDescription</function>
-        <function>initialize</function>
-    </thrownBy>
-    <triggerConditions>
-        <condition>
-            <scenario>Device storage write error</scenario>
-            <description>The device storage system fails to write data successfully</description>
-            <trigger>A setDescription call attempts to store device description but the storage write operation fails (I/O error, hardware issue). ErrorStoringDataFailed is raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Storage medium issue or corruption</scenario>
-            <description>The storage medium has problems or data is corrupted during write</description>
-            <trigger>An initialize call attempts to store initialization data but storage corruption is detected or write fails. ErrorStoringDataFailed is raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Insufficient storage capacity</scenario>
-            <description>Storage capacity is insufficient to store the data</description>
-            <trigger>A setDescription call attempts to store data but storage is full or insufficient space available. Write cannot complete and ErrorStoringDataFailed is raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Communication failure during storage write</scenario>
-            <description>Communication with the device fails during the storage write operation</description>
-            <trigger>An initialize call transmits data for storage but communication is interrupted before write completes. ErrorStoringDataFailed is raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Device storage controller error</scenario>
-            <description>The storage controller or write verification fails</description>
-            <trigger>A setDescription call initiates storage write but the device storage controller fails or write verification fails. ErrorStoringDataFailed is raised.</trigger>
-        </condition>
-    </triggerConditions>
-    <executionSequence>
-        <step number="1">User/application calls a data storage operation (e.g., setDescription)</step>
-        <step number="2">Function validates input data parameters</step>
-        <step number="3">Function checks data format and validity</step>
-        <step number="3a">If data invalid → may raise ErrorParameterSyntax instead</step>
-        <step number="3b">If data valid → proceed to step 4</step>
-        <step number="4">Function initiates communication with Secure Element</step>
-        <step number="5">Function sends data storage request with data payload to Secure Element</step>
-        <step number="6">Secure Element receives data storage request</step>
-        <step number="7">Secure Element validates received data</step>
-        <step number="8">Secure Element attempts to write data to storage</step>
-        <step number="8a">If storage write fails → ErrorStoringDataFailed raised, operation aborted</step>
-        <step number="8b">If storage write succeeds → proceed to step 9</step>
-        <step number="9">Secure Element verifies write completion and data integrity</step>
-        <step number="9a">If verification fails → ErrorStoringDataFailed raised</step>
-        <step number="9b">If verification succeeds → proceed to step 10</step>
-        <step number="10">Secure Element returns success acknowledgment to function</step>
-        <step number="11">Function closes communication with Secure Element</step>
-        <step number="12">Function returns successfully</step>
-    </executionSequence>
-    <recovery>
-        <step>Review error message - examine the error message to understand the storage failure reason</step>
-        <step>Check device state - query device to verify it is operational and responsive</step>
-        <step>Check storage status - query device storage for capacity and status information</step>
-        <step>Check storage connectivity - verify storage is accessible and operational</step>
-        <step>Verify data validity - ensure the data being stored is valid and well-formed</step>
-        <step>Check storage capacity - verify sufficient storage space is available</step>
-        <step>Retry the operation - attempt the data storage operation again</step>
-        <step>Device reset - power cycle the device to recover from potential storage issue</step>
-        <step>Check device logs - examine device logs for storage error details</step>
-        <step>If persistent, contact manufacturer - device may have storage hardware issues</step>
-    </recovery>
-    <relatedExceptions>
-        <exception>ErrorStorageMemoryFull</exception>
-        <exception>ErrorStorageMediumDisconnected</exception>
-        <exception>ErrorFunctionFailed</exception>
-        <exception>ErrorParameterSyntax</exception>
-    </relatedExceptions>
-    <postconditionality>
-        <state name="Data Not Stored">The data is not stored on the device.</state>
-        <state name="Device Data Unchanged">The device's stored data remains in its previous state - the write did not complete.</state>
-        <state name="Operation Not Completed">The data storage operation is not completed successfully.</state>
-        <state name="Configuration Not Updated">Device configuration is not updated with the new data.</state>
-        <state name="Caller Receives Exception">The function returns ErrorStoringDataFailed exception instead of success.</state>
-        <state name="Retry Possible">The storage operation can be retried after addressing the storage issue.</state>
-    </postconditionality>
-    <notes>
-        <note>ErrorStoringDataFailed is thrown by 2 functions: setDescription, initialize</note>
-        <note>This exception indicates a storage write failure, not data validation failure</note>
-        <note>The exception has High severity because it prevents configuration and data management</note>
-        <note>Data storage is critical for device configuration and operation</note>
-        <note>Storage write failures may indicate hardware or capacity issues</note>
-        <note>Failed writes do not update the device's stored data - previous values remain</note>
-        <note>Storage capacity must be verified before attempting data writes</note>
-        <note>Communication reliability is important during data storage operations</note>
-        <note>Data should be validated before transmission to device for storage</note>
-        <note>Error messages should indicate whether issue is capacity, connectivity, or hardware</note>
-        <note>Device should not corrupt or lose data during failed storage operations</note>
-        <note>Storage integrity should be verified after write operations</note>
-        <note>Device should provide clear status on storage health and capacity</note>
-        <note>Retry logic should include delays to allow temporary issues to resolve</note>
-        <note>Data persistence is essential for configuration management across device resets</note>
-    </notes>
-    <usage>
-        <scenario name="Scenario 1: Device Description Update with Storage Failure">
-            <description>An administrator calls setDescription to update device description. The device storage fails during write. ErrorStoringDataFailed is raised. The administrator verifies device storage status and retries the update.</description>
-            <relatedFunctions>setDescription, getDescription, getTotalMemory</relatedFunctions>
-            <errorContext>Device configuration update blocked by storage write failure</errorContext>
-        </scenario>
-        <scenario name="Scenario 2: Device Initialization with Storage Issue">
-            <description>Device initialization calls initialize to store initialization data but the storage write fails. ErrorStoringDataFailed is raised. Device initialization is incomplete and must be retried after checking storage.</description>
-            <relatedFunctions>initialize, getDeviceInfo</relatedFunctions>
-            <errorContext>Device initialization fails due to storage write error</errorContext>
-        </scenario>
-        <scenario name="Scenario 3: Storage Capacity Management">
-            <description>A setDescription call fails with ErrorStoringDataFailed due to insufficient storage. System exports and deletes old logs to free storage space, then retries the description update successfully.</description>
-            <relatedFunctions>setDescription, exportLogMessages, deleteLogMessages</relatedFunctions>
-            <errorContext>Storage write failure due to capacity - resolved by freeing storage space</errorContext>
-        </scenario>
-        <scenario name="Scenario 4: Troubleshooting Storage Reliability">
-            <description>Multiple ErrorStoringDataFailed exceptions occur during routine configuration updates. Investigation reveals storage device is degrading. Device is replaced before catastrophic storage failure occurs.</description>
-            <relatedFunctions>setDescription, initialize, selfTest</relatedFunctions>
-            <errorContext>Repeated storage failures trigger device replacement due to storage degradation</errorContext>
-        </scenario>
-    </usage>
-    <implementationContext>
-        <note>Data must be validated and formatted before transmission to device for storage</note>
-        <note>Storage capacity should be checked before attempting data write operations</note>
-        <note>Write operations should be atomic - either fully commit or fully rollback</note>
-        <note>Storage write should be verified and data integrity checked after write</note>
-        <note>Communication during storage operations must be reliable with error checking</note>
-        <note>Error messages should distinguish between capacity issues, connectivity issues, and hardware failures</note>
-        <note>Device should not lose or corrupt data during failed storage operations</note>
-        <note>Storage health should be monitored and diagnostic information provided</note>
-        <note>Retry logic should be implemented with appropriate delays and attempt limits</note>
-        <note>Device manufacturer should provide storage diagnostics and health status APIs</note>
-    </implementationContext>
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorStoringDataFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+  <name>ErrorStoringDataFailed</name>
+  <description>This exception is thrown if a storage operation fails when attempting to store data on the device. The Secure Element stores various types of data including device description, configuration parameters, and operational data. If the storage write operation fails, ErrorStoringDataFailed indicates the data could not be successfully written to device storage. Common causes include: device storage errors, storage write failures, corrupted storage, insufficient storage capacity, storage medium issues, or communication failures. ErrorStoringDataFailed indicates that the requested data update was not completed and the device's stored data remains unchanged. This prevents configuration updates and data management operations from completing successfully.</description>
+  <category>Storage - Data Storage Failure</category>
+  <severity>High</severity>
+  <thrownBy>
+    <function>setDescription</function>
+  </thrownBy>
+  <javadoc>
+    <summary>This class defines the exception ErrorStoringDataFailed that is thrown if data storage operations fail.</summary>
+    <description>This exception is thrown when a storage write operation fails while attempting to store data on the Secure Element. The device stores configuration, description, and operational data that must be persisted reliably. ErrorStoringDataFailed indicates that a data storage operation (typically setDescription or initialize) could not complete successfully. Common causes include: device storage write errors, storage medium issues, corrupted storage, insufficient storage capacity, or communication failures during write. ErrorStoringDataFailed is a High severity exception because it prevents configuration updates and data management. The device's stored data remains in its previous state - the failed write does not update the data. Recovery requires investigating the storage issue and potentially retrying the operation or addressing underlying storage problems.</description>
+    <constructors>
+      <constructor>
+        <signature>ErrorStoringDataFailed()</signature>
+        <description>Constructs a new ErrorStoringDataFailed exception with null as the value for its detail message</description>
+      </constructor>
+      <constructor>
+        <signature>ErrorStoringDataFailed(String message)</signature>
+        <description>Constructs a new ErrorStoringDataFailed exception whereby its detail message is initialized with the passed value</description>
+        <parameter name="message">value for the detail message of the exception, typically describing which data storage operation failed</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorStoringDataFailed(String message, Throwable cause)</signature>
+        <description>Constructs a new ErrorStoringDataFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorStoringDataFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+        <description>Constructs a new ErrorStoringDataFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+      </constructor>
+    </constructors>
+  </javadoc>
+  <specification>
+    <source>BSI TR-03151-1</source>
+    <section>3.2 Device Configuration and 3.3.1 Device Information Operations - Data Storage</section>
+    <requirement>The Secure Element stores device configuration and operational data including device description and initialization data. Operations that update stored data (setDescription, initialize) must persist the data reliably to device storage. If a data storage operation fails to successfully write data to device storage, the function SHALL raise ErrorStoringDataFailed. The device's stored data remains unchanged if the write fails. Data storage failures must be reported clearly so the caller knows the operation did not complete. Storage failures may require addressing underlying storage issues before retry.</requirement>
+    <applicability>Data storage operations: setDescription, initialize</applicability>
+    <reference>Device Configuration (3.2), Device Information Operations (3.3.1)</reference>
+  </specification>
+  <triggerConditions>
+    <condition>
+      <scenario>Device storage write error</scenario>
+      <description>The device storage system fails to write data successfully</description>
+      <trigger>A setDescription call attempts to store device description but the storage write operation fails (I/O error, hardware issue). ErrorStoringDataFailed is raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Storage medium issue or corruption</scenario>
+      <description>The storage medium has problems or data is corrupted during write</description>
+      <trigger>An initialize call attempts to store initialization data but storage corruption is detected or write fails. ErrorStoringDataFailed is raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Insufficient storage capacity</scenario>
+      <description>Storage capacity is insufficient to store the data</description>
+      <trigger>A setDescription call attempts to store data but storage is full or insufficient space available. Write cannot complete and ErrorStoringDataFailed is raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Communication failure during storage write</scenario>
+      <description>Communication with the device fails during the storage write operation</description>
+      <trigger>An initialize call transmits data for storage but communication is interrupted before write completes. ErrorStoringDataFailed is raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Device storage controller error</scenario>
+      <description>The storage controller or write verification fails</description>
+      <trigger>A setDescription call initiates storage write but the device storage controller fails or write verification fails. ErrorStoringDataFailed is raised.</trigger>
+    </condition>
+  </triggerConditions>
+  <executionSequence>
+    <step number="1">User/application calls a data storage operation (e.g., setDescription)</step>
+    <step number="2">Function validates input data parameters</step>
+    <step number="3">Function checks data format and validity</step>
+    <step number="3a">If data invalid → may raise ErrorParameterSyntax instead</step>
+    <step number="3b">If data valid → proceed to step 4</step>
+    <step number="4">Function initiates communication with Secure Element</step>
+    <step number="5">Function sends data storage request with data payload to Secure Element</step>
+    <step number="6">Secure Element receives data storage request</step>
+    <step number="7">Secure Element validates received data</step>
+    <step number="8">Secure Element attempts to write data to storage</step>
+    <step number="8a">If storage write fails → ErrorStoringDataFailed raised, operation aborted</step>
+    <step number="8b">If storage write succeeds → proceed to step 9</step>
+    <step number="9">Secure Element verifies write completion and data integrity</step>
+    <step number="9a">If verification fails → ErrorStoringDataFailed raised</step>
+    <step number="9b">If verification succeeds → proceed to step 10</step>
+    <step number="10">Secure Element returns success acknowledgment to function</step>
+    <step number="11">Function closes communication with Secure Element</step>
+    <step number="12">Function returns successfully</step>
+  </executionSequence>
+  <recovery>
+    <step>Review error message - examine the error message to understand the storage failure reason</step>
+    <step>Check device state - query device to verify it is operational and responsive</step>
+    <step>Check storage status - query device storage for capacity and status information</step>
+    <step>Check storage connectivity - verify storage is accessible and operational</step>
+    <step>Verify data validity - ensure the data being stored is valid and well-formed</step>
+    <step>Check storage capacity - verify sufficient storage space is available</step>
+    <step>Retry the operation - attempt the data storage operation again</step>
+    <step>Device reset - power cycle the device to recover from potential storage issue</step>
+    <step>Check device logs - examine device logs for storage error details</step>
+    <step>If persistent, contact manufacturer - device may have storage hardware issues</step>
+  </recovery>
+  <relatedExceptions>
+    <exception>ErrorStorageMemoryFull</exception>
+    <exception>ErrorStorageMediumDisconnected</exception>
+    <exception>ErrorFunctionFailed</exception>
+    <exception>ErrorParameterSyntax</exception>
+  </relatedExceptions>
+  <postconditionality>
+    <state name="Data Not Stored">The data is not stored on the device.</state>
+    <state name="Device Data Unchanged">The device's stored data remains in its previous state - the write did not complete.</state>
+    <state name="Operation Not Completed">The data storage operation is not completed successfully.</state>
+    <state name="Configuration Not Updated">Device configuration is not updated with the new data.</state>
+    <state name="Caller Receives Exception">The function returns ErrorStoringDataFailed exception instead of success.</state>
+    <state name="Retry Possible">The storage operation can be retried after addressing the storage issue.</state>
+  </postconditionality>
+  <notes>
+    <note>ErrorStoringDataFailed is thrown by 2 functions: setDescription, initialize</note>
+    <note>This exception indicates a storage write failure, not data validation failure</note>
+    <note>The exception has High severity because it prevents configuration and data management</note>
+    <note>Data storage is critical for device configuration and operation</note>
+    <note>Storage write failures may indicate hardware or capacity issues</note>
+    <note>Failed writes do not update the device's stored data - previous values remain</note>
+    <note>Storage capacity must be verified before attempting data writes</note>
+    <note>Communication reliability is important during data storage operations</note>
+    <note>Data should be validated before transmission to device for storage</note>
+    <note>Error messages should indicate whether issue is capacity, connectivity, or hardware</note>
+    <note>Device should not corrupt or lose data during failed storage operations</note>
+    <note>Storage integrity should be verified after write operations</note>
+    <note>Device should provide clear status on storage health and capacity</note>
+    <note>Retry logic should include delays to allow temporary issues to resolve</note>
+    <note>Data persistence is essential for configuration management across device resets</note>
+  </notes>
+  <usage>
+    <scenario name="Scenario 1: Device Description Update with Storage Failure">
+      <description>An administrator calls setDescription to update device description. The device storage fails during write. ErrorStoringDataFailed is raised. The administrator verifies device storage status and retries the update.</description>
+      <relatedFunctions>setDescription, getDescription, getTotalMemory</relatedFunctions>
+      <errorContext>Device configuration update blocked by storage write failure</errorContext>
+    </scenario>
+    <scenario name="Scenario 2: Device Initialization with Storage Issue">
+      <description>Device initialization calls initialize to store initialization data but the storage write fails. ErrorStoringDataFailed is raised. Device initialization is incomplete and must be retried after checking storage.</description>
+      <relatedFunctions>initialize, getDeviceInfo</relatedFunctions>
+      <errorContext>Device initialization fails due to storage write error</errorContext>
+    </scenario>
+    <scenario name="Scenario 3: Storage Capacity Management">
+      <description>A setDescription call fails with ErrorStoringDataFailed due to insufficient storage. System exports and deletes old logs to free storage space, then retries the description update successfully.</description>
+      <relatedFunctions>setDescription, exportLogMessages, deleteLogMessages</relatedFunctions>
+      <errorContext>Storage write failure due to capacity - resolved by freeing storage space</errorContext>
+    </scenario>
+    <scenario name="Scenario 4: Troubleshooting Storage Reliability">
+      <description>Multiple ErrorStoringDataFailed exceptions occur during routine configuration updates. Investigation reveals storage device is degrading. Device is replaced before catastrophic storage failure occurs.</description>
+      <relatedFunctions>setDescription, initialize, selfTest</relatedFunctions>
+      <errorContext>Repeated storage failures trigger device replacement due to storage degradation</errorContext>
+    </scenario>
+  </usage>
+  <implementationContext>
+    <note>Data must be validated and formatted before transmission to device for storage</note>
+    <note>Storage capacity should be checked before attempting data write operations</note>
+    <note>Write operations should be atomic - either fully commit or fully rollback</note>
+    <note>Storage write should be verified and data integrity checked after write</note>
+    <note>Communication during storage operations must be reliable with error checking</note>
+    <note>Error messages should distinguish between capacity issues, connectivity issues, and hardware failures</note>
+    <note>Device should not lose or corrupt data during failed storage operations</note>
+    <note>Storage health should be monitored and diagnostic information provided</note>
+    <note>Retry logic should be implemented with appropriate delays and attempt limits</note>
+    <note>Device manufacturer should provide storage diagnostics and health status APIs</note>
+  </implementationContext>
 </exception>

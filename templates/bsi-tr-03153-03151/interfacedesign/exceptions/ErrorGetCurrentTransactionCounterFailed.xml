@@ -1,163 +1,163 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<exception id="ErrorGetCurrentTransactionCounterFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
-    <name>ErrorGetCurrentTransactionCounterFailed</name>
-    <description>This exception is thrown if the SE API function getCurrentTransactionCounter fails to obtain the current transaction counter value from the Secure Element's transaction management subsystem. The function attempts to retrieve the current state of the transaction counter used to track transaction sequence and integrity, but the retrieval process fails before the counter value can be determined and returned.</description>
-    <category>Transaction - Counter Management</category>
-    <severity>High</severity>
-    <javadoc>
-        <summary>This class defines the exception ErrorGetCurrentTransactionCounterFailed that is thrown if the SE API function getCurrentTransactionCounter fails to obtain the current transaction counter value.</summary>
-        <description>This exception is thrown when the getCurrentTransactionCounter function cannot retrieve the current transaction counter value from the Secure Element's transaction management subsystem. Transaction counters are critical components of the transaction infrastructure that track and validate the sequence and integrity of transactions. ErrorGetCurrentTransactionCounterFailed indicates that the Secure Element cannot provide the current counter state due to hardware failure, storage corruption, internal transaction system errors, communication failures, or Secure Element state restrictions. When this exception occurs, no counter data is returned and applications cannot verify transaction integrity or determine current counter state. Recovery typically involves device verification, transaction subsystem diagnostics, potential counter reinitialization, and possible hardware diagnosis if the failure persists.</description>
-        <constructors>
-            <constructor>
-                <signature>ErrorGetCurrentTransactionCounterFailed()</signature>
-                <description>Constructs a new ErrorGetCurrentTransactionCounterFailed exception with null as the value for its detail message</description>
-            </constructor>
-            <constructor>
-                <signature>ErrorGetCurrentTransactionCounterFailed(String message)</signature>
-                <description>Constructs a new ErrorGetCurrentTransactionCounterFailed exception whereby its detail message is initialized with the passed value</description>
-                <parameter name="message">value for the detail message of the exception, typically describing the transaction counter retrieval failure</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorGetCurrentTransactionCounterFailed(String message, Throwable cause)</signature>
-                <description>Constructs a new ErrorGetCurrentTransactionCounterFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorGetCurrentTransactionCounterFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-                <description>Constructs a new ErrorGetCurrentTransactionCounterFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-            </constructor>
-        </constructors>
-    </javadoc>
-    <specification>
-        <source>BSI TR-03151-1</source>
-        <section>3.4.1 Transaction Management - getCurrentTransactionCounter</section>
-        <requirement>The function getCurrentTransactionCounter SHALL retrieve the current transaction counter value maintained by the Secure Element's transaction management subsystem. If the Secure Element cannot provide or return the required counter information, the function SHALL raise the exception ErrorGetCurrentTransactionCounterFailed and exit without returning any counter data. The transaction counter retrieval failure indicates the Secure Element's transaction counter query functionality could not complete successfully.</requirement>
-        <applicability>Transaction operations - getCurrentTransactionCounter function only</applicability>
-        <reference>getCurrentTransactionCounter – Function (3.4.1)</reference>
-    </specification>
-    <thrownBy>
-        <function>getCurrentTransactionCounter</function>
-    </thrownBy>
-    <triggerConditions>
-        <condition>
-            <scenario>Transaction counter storage hardware failure</scenario>
-            <description>The Secure Element's counter storage hardware malfunctions or becomes inaccessible, preventing counter value retrieval</description>
-            <trigger>The Secure Element's counter storage hardware fails or experiences read errors. When getCurrentTransactionCounter is called, the counter retrieval query is sent to the Secure Element, but the hardware cannot provide valid counter data. The function receives a failure status from the Secure Element, triggering ErrorGetCurrentTransactionCounterFailed.</trigger>
-        </condition>
-        <condition>
-            <scenario>Transaction subsystem counter storage corruption</scenario>
-            <description>The Secure Element's transaction subsystem counter storage becomes corrupted or data is lost</description>
-            <trigger>The Secure Element's memory containing counter data or transaction state tables becomes corrupted, experiences data loss, or is marked as inaccessible due to storage errors. When getCurrentTransactionCounter attempts to read counter values from storage, the data cannot be reliably retrieved, triggering ErrorGetCurrentTransactionCounterFailed.</trigger>
-        </condition>
-        <condition>
-            <scenario>Transaction subsystem internal error in counter calculation</scenario>
-            <description>The Secure Element's transaction subsystem encounters critical errors that prevent counter value calculation or retrieval</description>
-            <trigger>The Secure Element's transaction management subsystem (responsible for maintaining counter values, updating counters on transaction events, and providing counter state) encounters an internal error, deadlock, or exception. When getCurrentTransactionCounter is called, the transaction subsystem cannot process the counter query, triggering ErrorGetCurrentTransactionCounterFailed.</trigger>
-        </condition>
-        <condition>
-            <scenario>Device-to-Secure Element communication failure during counter query</scenario>
-            <description>The communication channel between device and Secure Element is disrupted during transaction counter retrieval</description>
-            <trigger>A communication failure occurs while getCurrentTransactionCounter transmits the counter query to the Secure Element or while receiving the counter response. The command may be corrupted, the response may be incomplete, or the communication link may be temporarily unavailable. The function receives a communication error status, triggering ErrorGetCurrentTransactionCounterFailed.</trigger>
-        </condition>
-        <condition>
-            <scenario>Secure Element in restricted or error state prohibiting counter access</scenario>
-            <description>The Secure Element is in a locked, restricted, or error state that prevents external queries for counter information</description>
-            <trigger>The Secure Element enters a state where transaction operations or transaction counter access is not permitted. When getCurrentTransactionCounter is called and the Secure Element's state prohibits counter access, the function receives a state-related rejection, triggering ErrorGetCurrentTransactionCounterFailed.</trigger>
-        </condition>
-    </triggerConditions>
-    <executionSequence>
-        <step number="1">User/application calls getCurrentTransactionCounter function on device</step>
-        <step number="2">Function validates input parameters and checks authentication status (if required by referencing guideline)</step>
-        <step number="3">Function checks authorization for counter information access (if required by referencing guideline)</step>
-        <step number="4">Function verifies device is properly initialized and transaction subsystem is operational</step>
-        <step number="5">Function initiates communication channel to Secure Element and prepares counter query command</step>
-        <step number="6">Function transmits counter query command to Secure Element requesting current transaction counter value</step>
-        <step number="6a">If Secure Element responds with failure status (storage error, counter calculation error, subsystem error) → ErrorGetCurrentTransactionCounterFailed raised, function exits without counter data</step>
-        <step number="6b">If communication failure occurs during query transmission or response reception → ErrorGetCurrentTransactionCounterFailed raised, function exits</step>
-        <step number="7">If successful, function receives counter value from Secure Element</step>
-        <step number="8">Function validates counter value for correctness (format, sequence, logical consistency)</step>
-        <step number="9">Function closes Secure Element communication channel</step>
-        <step number="10">Function returns valid counter value to caller</step>
-    </executionSequence>
-    <recovery>
-        <step>Verify device operational status - confirm device is initialized, responding to other operations, and not in an error state</step>
-        <step>Verify Secure Element accessibility - confirm device can communicate with Secure Element through diagnostic commands</step>
-        <step>Check device initialization - ensure device has been properly initialized with initDevice before attempting getCurrentTransactionCounter</step>
-        <step>Check transaction subsystem status - verify transaction management is enabled before querying counter values</step>
-        <step>Retry getCurrentTransactionCounter operation - attempt the function call again as the failure may be transient</step>
-        <step>Review device diagnostics for transaction subsystem health - query device for diagnostic information about Secure Element transaction counter status</step>
-        <step>Verify counter storage integrity through device manufacturer diagnostics - check if counter storage is accessible and uncorrupted</step>
-        <step>Attempt counter reinitialization if supported - if available, reinitialize transaction counters to restore counter access</step>
-        <step>Implement comprehensive error logging and monitoring - log this failure consistently to identify patterns (transient vs. persistent, correlation with transaction operations)</step>
-        <step>If failure is persistent and suspected hardware issue, contact device manufacturer or consider device replacement - repeated counter retrieval failures indicate serious transaction subsystem hardware problems</step>
-    </recovery>
-    <relatedExceptions>
-        <exception>ErrorFunctionFailed</exception>
-        <exception>ErrorDeviceNotInitialized</exception>
-        <exception>ErrorStartTransactionFailed</exception>
-        <exception>ErrorUpdateTransactionFailed</exception>
-        <exception>ErrorFinishTransactionFailed</exception>
-    </relatedExceptions>
-    <postconditionality>
-        <state name="Device Operational State">Device remains fully operational and unmodified. The failure to retrieve counter values does not affect device initialization state, transaction operations, internal memory, stored data, or the ability to perform other operations. All device components remain in their pre-call state.</state>
-        <state name="Counter Data Return Status">No counter value is returned to the caller. The function exits without providing any counter information. Applications must not assume default or cached counter values; they must handle the exception as indicating counter information is unavailable.</state>
-        <state name="Secure Element Transaction State">Secure Element transaction subsystem remains unchanged by the failed counter query. No state modifications, counter updates, or transaction configuration changes occur. Transaction operations continue internally in the Secure Element regardless of the retrieval failure.</state>
-        <state name="Counter Advancement Continuity">Secure Element's transaction counter continues to advance as transaction events occur. The failure to retrieve counter values does not stop or pause counter tracking. Subsequent attempts to query counter or perform transaction operations may succeed once the underlying issue is resolved.</state>
-        <state name="No Cascading State Effects">No cascading state inconsistencies or secondary failures occur as a result of the counter retrieval failure. Device internal consistency is maintained. Other SE API functions and transaction operations continue normally without state corruption.</state>
-        <state name="Recovery Preconditions Met">The device state after exception is consistent and allows for recovery operations. The underlying issue (storage error, communication error, subsystem error) remains present, but the device is stable enough to accept diagnostic queries or recovery attempts.</state>
-    </postconditionality>
-    <notes>
-        <note>ErrorGetCurrentTransactionCounterFailed is thrown ONLY by the getCurrentTransactionCounter function - it is the most specific and precise exception for Secure Element transaction counter retrieval failures</note>
-        <note>This exception indicates a failure in the Secure Element's ability to report its current transaction counter value. It is a critical transaction integrity issue, not a general operational failure</note>
-        <note>Critical distinction from ErrorFunctionFailed: ErrorGetCurrentTransactionCounterFailed specifically indicates counter information is unavailable at the transaction subsystem level, while ErrorFunctionFailed indicates broader unspecified critical failures</note>
-        <note>Exception is raised during the counter retrieval phase (steps 6-7), after device initialization and authentication checks have passed</note>
-        <note>After this exception, the Secure Element transaction subsystem remains unchanged and continues to advance counter as transaction events occur. Counter queries can be retried once the underlying issue is resolved</note>
-        <note>This exception has High severity because it prevents users from querying transaction counter state (critical for transaction integrity verification) and indicates potential transaction subsystem compromise</note>
-        <note>Transaction counters are essential for tracking the sequence of transactions and validating transaction integrity throughout their lifecycle</note>
-        <note>The exception indicates counter data cannot be reliably obtained; applications must not implement workarounds using system-level counters without explicit validation</note>
-        <note>Failure scenarios range from transient (temporary communication issues, temporary state) to persistent (storage corruption, hardware failure, firmware error)</note>
-        <note>If this exception occurs frequently or persistently, it indicates serious issues with Secure Element transaction subsystem hardware, firmware, or counter storage that require diagnostic investigation or device replacement</note>
-        <note>Counter retrieval is a read-only query; failure does not modify any Secure Element transaction state, so recovery typically requires only retrying the query once underlying issue is resolved</note>
-        <note>Different device models and firmware versions may maintain different numbers of transaction counters (per-transaction counters, global counters, etc.) - consult device specifications</note>
-        <note>Transaction counter values are essential for validating the integrity of transactions and detecting tampering with the transaction audit trail</note>
-        <note>Applications must implement appropriate error handling and monitoring for counter retrieval failures, especially in security-critical or transaction-sensitive deployments</note>
-        <note>Repeated counter retrieval failures may indicate device needs firmware update, transaction subsystem reset, or hardware service - manufacturer support should be engaged for persistent issues</note>
-    </notes>
-    <usage>
-        <scenario name="Scenario 1: Transaction Integrity Verification Before Critical Operations">
-            <description>An application must verify transaction integrity by checking the current transaction counter state before performing critical operations. The application retrieves the current transaction counter value to establish a baseline. If ErrorGetCurrentTransactionCounterFailed is raised, the application cannot verify transaction integrity and must conservatively reject critical operations to ensure transaction security.</description>
-            <relatedFunctions>getCurrentTransactionCounter, startTransaction, finishTransaction</relatedFunctions>
-            <errorContext>Transaction counter state cannot be verified due to unavailable counter information</errorContext>
-        </scenario>
-        <scenario name="Scenario 2: Transaction State Consistency Verification and Diagnostics">
-            <description>An audit system monitors transaction subsystem health by periodically querying the transaction counter value. The system uses counter values to verify that transactions are operating correctly and counters are advancing as expected with each transaction event. If ErrorGetCurrentTransactionCounterFailed is raised, the system logs this as a critical diagnostic indicator of potential transaction subsystem compromise or hardware failure.</description>
-            <relatedFunctions>getCurrentTransactionCounter, startTransaction, updateTransaction</relatedFunctions>
-            <errorContext>Transaction counter value unavailable for transaction health monitoring and consistency verification</errorContext>
-        </scenario>
-        <scenario name="Scenario 3: Counter State Validation During Transaction Export or Audit Operations">
-            <description>Before exporting transaction audit trail or generating transaction audit reports, an application retrieves the current counter value to document the transaction state at audit time. This creates a checkpoint showing what portion of the transaction history is being audited. If ErrorGetCurrentTransactionCounterFailed is raised, the application cannot create this checkpoint and must either defer the audit or audit without integrity metadata.</description>
-            <relatedFunctions>getCurrentTransactionCounter, startTransaction, finishTransaction</relatedFunctions>
-            <errorContext>Counter state checkpoint unavailable during transaction audit or export operation</errorContext>
-        </scenario>
-        <scenario name="Scenario 4: Multi-Device Transaction Synchronization and Audit Trail Coordination">
-            <description>An enterprise system manages transactions across multiple devices and must coordinate transaction audit trails. The system queries getCurrentTransactionCounter on each device to create a synchronized view of transaction state across the infrastructure. If ErrorGetCurrentTransactionCounterFailed is raised on one device, the system cannot synchronize transaction state with that device and must flag it for investigation.</description>
-            <relatedFunctions>getCurrentTransactionCounter, startTransaction</relatedFunctions>
-            <errorContext>Transaction counter value unavailable for multi-device transaction synchronization</errorContext>
-        </scenario>
-    </usage>
-    <implementationContext>
-        <note>The getCurrentTransactionCounter function retrieves the transaction counter value maintained by the Secure Element's transaction management subsystem</note>
-        <note>Transaction counters track the sequence of transactions and are used to validate the integrity and authenticity of the transaction audit trail</note>
-        <note>Different transaction configurations and variants may maintain different counter state tracking mechanisms (per-transaction counters, global transaction counters, etc.)</note>
-        <note>The current transaction counter value is essential for validating that transactions have not been tampered with and for verifying the complete sequence of transaction events</note>
-        <note>Transaction counter maintenance is part of the configured transaction management variant - counter state depends on transaction configuration and security policies</note>
-        <note>If counter value retrieval fails but transaction operations continue successfully (new transactions are started, updated, and finished), the issue is specific to counter query mechanism, not to transaction functionality itself</note>
-        <note>Counter storage corruption or counter calculation errors in the transaction subsystem represent critical integrity threats to the transaction audit trail and require immediate investigation</note>
-        <note>Counter retrieval is a read-only query; ErrorGetCurrentTransactionCounterFailed does not indicate state corruption requiring state recovery - it indicates the counter information source is temporarily unavailable</note>
-    </implementationContext>
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorGetCurrentTransactionCounterFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+  <name>ErrorGetCurrentTransactionCounterFailed</name>
+  <description>This exception is thrown if the SE API function getCurrentTransactionCounter fails to obtain the current transaction counter value from the Secure Element's transaction management subsystem. The function attempts to retrieve the current state of the transaction counter used to track transaction sequence and integrity, but the retrieval process fails before the counter value can be determined and returned.</description>
+  <category>Transaction - Counter Management</category>
+  <severity>High</severity>
+  <javadoc>
+    <summary>This class defines the exception ErrorGetCurrentTransactionCounterFailed that is thrown if the SE API function getCurrentTransactionCounter fails to obtain the current transaction counter value.</summary>
+    <description>This exception is thrown when the getCurrentTransactionCounter function cannot retrieve the current transaction counter value from the Secure Element's transaction management subsystem. Transaction counters are critical components of the transaction infrastructure that track and validate the sequence and integrity of transactions. ErrorGetCurrentTransactionCounterFailed indicates that the Secure Element cannot provide the current counter state due to hardware failure, storage corruption, internal transaction system errors, communication failures, or Secure Element state restrictions. When this exception occurs, no counter data is returned and applications cannot verify transaction integrity or determine current counter state. Recovery typically involves device verification, transaction subsystem diagnostics, potential counter reinitialization, and possible hardware diagnosis if the failure persists.</description>
+    <constructors>
+      <constructor>
+        <signature>ErrorGetCurrentTransactionCounterFailed()</signature>
+        <description>Constructs a new ErrorGetCurrentTransactionCounterFailed exception with null as the value for its detail message</description>
+      </constructor>
+      <constructor>
+        <signature>ErrorGetCurrentTransactionCounterFailed(String message)</signature>
+        <description>Constructs a new ErrorGetCurrentTransactionCounterFailed exception whereby its detail message is initialized with the passed value</description>
+        <parameter name="message">value for the detail message of the exception, typically describing the transaction counter retrieval failure</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorGetCurrentTransactionCounterFailed(String message, Throwable cause)</signature>
+        <description>Constructs a new ErrorGetCurrentTransactionCounterFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorGetCurrentTransactionCounterFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+        <description>Constructs a new ErrorGetCurrentTransactionCounterFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+      </constructor>
+    </constructors>
+  </javadoc>
+  <specification>
+    <source>BSI TR-03151-1</source>
+    <section>3.4.1 Transaction Management - getCurrentTransactionCounter</section>
+    <requirement>The function getCurrentTransactionCounter SHALL retrieve the current transaction counter value maintained by the Secure Element's transaction management subsystem. If the Secure Element cannot provide or return the required counter information, the function SHALL raise the exception ErrorGetCurrentTransactionCounterFailed and exit without returning any counter data. The transaction counter retrieval failure indicates the Secure Element's transaction counter query functionality could not complete successfully.</requirement>
+    <applicability>Transaction operations - getCurrentTransactionCounter function only</applicability>
+    <reference>getCurrentTransactionCounter – Function (3.4.1)</reference>
+  </specification>
+  <thrownBy>
+    <function>getCurrentTransactionCounter</function>
+  </thrownBy>
+  <triggerConditions>
+    <condition>
+      <scenario>Transaction counter storage hardware failure</scenario>
+      <description>The Secure Element's counter storage hardware malfunctions or becomes inaccessible, preventing counter value retrieval</description>
+      <trigger>The Secure Element's counter storage hardware fails or experiences read errors. When getCurrentTransactionCounter is called, the counter retrieval query is sent to the Secure Element, but the hardware cannot provide valid counter data. The function receives a failure status from the Secure Element, triggering ErrorGetCurrentTransactionCounterFailed.</trigger>
+    </condition>
+    <condition>
+      <scenario>Transaction subsystem counter storage corruption</scenario>
+      <description>The Secure Element's transaction subsystem counter storage becomes corrupted or data is lost</description>
+      <trigger>The Secure Element's memory containing counter data or transaction state tables becomes corrupted, experiences data loss, or is marked as inaccessible due to storage errors. When getCurrentTransactionCounter attempts to read counter values from storage, the data cannot be reliably retrieved, triggering ErrorGetCurrentTransactionCounterFailed.</trigger>
+    </condition>
+    <condition>
+      <scenario>Transaction subsystem internal error in counter calculation</scenario>
+      <description>The Secure Element's transaction subsystem encounters critical errors that prevent counter value calculation or retrieval</description>
+      <trigger>The Secure Element's transaction management subsystem (responsible for maintaining counter values, updating counters on transaction events, and providing counter state) encounters an internal error, deadlock, or exception. When getCurrentTransactionCounter is called, the transaction subsystem cannot process the counter query, triggering ErrorGetCurrentTransactionCounterFailed.</trigger>
+    </condition>
+    <condition>
+      <scenario>Device-to-Secure Element communication failure during counter query</scenario>
+      <description>The communication channel between device and Secure Element is disrupted during transaction counter retrieval</description>
+      <trigger>A communication failure occurs while getCurrentTransactionCounter transmits the counter query to the Secure Element or while receiving the counter response. The command may be corrupted, the response may be incomplete, or the communication link may be temporarily unavailable. The function receives a communication error status, triggering ErrorGetCurrentTransactionCounterFailed.</trigger>
+    </condition>
+    <condition>
+      <scenario>Secure Element in restricted or error state prohibiting counter access</scenario>
+      <description>The Secure Element is in a locked, restricted, or error state that prevents external queries for counter information</description>
+      <trigger>The Secure Element enters a state where transaction operations or transaction counter access is not permitted. When getCurrentTransactionCounter is called and the Secure Element's state prohibits counter access, the function receives a state-related rejection, triggering ErrorGetCurrentTransactionCounterFailed.</trigger>
+    </condition>
+  </triggerConditions>
+  <executionSequence>
+    <step number="1">User/application calls getCurrentTransactionCounter function on device</step>
+    <step number="2">Function validates input parameters and checks authentication status (if required by referencing guideline)</step>
+    <step number="3">Function checks authorization for counter information access (if required by referencing guideline)</step>
+    <step number="4">Function verifies device is properly initialized and transaction subsystem is operational</step>
+    <step number="5">Function initiates communication channel to Secure Element and prepares counter query command</step>
+    <step number="6">Function transmits counter query command to Secure Element requesting current transaction counter value</step>
+    <step number="6a">If Secure Element responds with failure status (storage error, counter calculation error, subsystem error) → ErrorGetCurrentTransactionCounterFailed raised, function exits without counter data</step>
+    <step number="6b">If communication failure occurs during query transmission or response reception → ErrorGetCurrentTransactionCounterFailed raised, function exits</step>
+    <step number="7">If successful, function receives counter value from Secure Element</step>
+    <step number="8">Function validates counter value for correctness (format, sequence, logical consistency)</step>
+    <step number="9">Function closes Secure Element communication channel</step>
+    <step number="10">Function returns valid counter value to caller</step>
+  </executionSequence>
+  <recovery>
+    <step>Verify device operational status - confirm device is initialized, responding to other operations, and not in an error state</step>
+    <step>Verify Secure Element accessibility - confirm device can communicate with Secure Element through diagnostic commands</step>
+    <step>Check device initialization - ensure device has been properly initialized with initDevice before attempting getCurrentTransactionCounter</step>
+    <step>Check transaction subsystem status - verify transaction management is enabled before querying counter values</step>
+    <step>Retry getCurrentTransactionCounter operation - attempt the function call again as the failure may be transient</step>
+    <step>Review device diagnostics for transaction subsystem health - query device for diagnostic information about Secure Element transaction counter status</step>
+    <step>Verify counter storage integrity through device manufacturer diagnostics - check if counter storage is accessible and uncorrupted</step>
+    <step>Attempt counter reinitialization if supported - if available, reinitialize transaction counters to restore counter access</step>
+    <step>Implement comprehensive error logging and monitoring - log this failure consistently to identify patterns (transient vs. persistent, correlation with transaction operations)</step>
+    <step>If failure is persistent and suspected hardware issue, contact device manufacturer or consider device replacement - repeated counter retrieval failures indicate serious transaction subsystem hardware problems</step>
+  </recovery>
+  <relatedExceptions>
+    <exception>ErrorFunctionFailed</exception>
+    <exception>ErrorDeviceNotInitialized</exception>
+    <exception>ErrorStartTransactionFailed</exception>
+    <exception>ErrorUpdateTransactionFailed</exception>
+    <exception>ErrorFinishTransactionFailed</exception>
+  </relatedExceptions>
+  <postconditionality>
+    <state name="Device Operational State">Device remains fully operational and unmodified. The failure to retrieve counter values does not affect device initialization state, transaction operations, internal memory, stored data, or the ability to perform other operations. All device components remain in their pre-call state.</state>
+    <state name="Counter Data Return Status">No counter value is returned to the caller. The function exits without providing any counter information. Applications must not assume default or cached counter values; they must handle the exception as indicating counter information is unavailable.</state>
+    <state name="Secure Element Transaction State">Secure Element transaction subsystem remains unchanged by the failed counter query. No state modifications, counter updates, or transaction configuration changes occur. Transaction operations continue internally in the Secure Element regardless of the retrieval failure.</state>
+    <state name="Counter Advancement Continuity">Secure Element's transaction counter continues to advance as transaction events occur. The failure to retrieve counter values does not stop or pause counter tracking. Subsequent attempts to query counter or perform transaction operations may succeed once the underlying issue is resolved.</state>
+    <state name="No Cascading State Effects">No cascading state inconsistencies or secondary failures occur as a result of the counter retrieval failure. Device internal consistency is maintained. Other SE API functions and transaction operations continue normally without state corruption.</state>
+    <state name="Recovery Preconditions Met">The device state after exception is consistent and allows for recovery operations. The underlying issue (storage error, communication error, subsystem error) remains present, but the device is stable enough to accept diagnostic queries or recovery attempts.</state>
+  </postconditionality>
+  <notes>
+    <note>ErrorGetCurrentTransactionCounterFailed is thrown ONLY by the getCurrentTransactionCounter function - it is the most specific and precise exception for Secure Element transaction counter retrieval failures</note>
+    <note>This exception indicates a failure in the Secure Element's ability to report its current transaction counter value. It is a critical transaction integrity issue, not a general operational failure</note>
+    <note>Critical distinction from ErrorFunctionFailed: ErrorGetCurrentTransactionCounterFailed specifically indicates counter information is unavailable at the transaction subsystem level, while ErrorFunctionFailed indicates broader unspecified critical failures</note>
+    <note>Exception is raised during the counter retrieval phase (steps 6-7), after device initialization and authentication checks have passed</note>
+    <note>After this exception, the Secure Element transaction subsystem remains unchanged and continues to advance counter as transaction events occur. Counter queries can be retried once the underlying issue is resolved</note>
+    <note>This exception has High severity because it prevents users from querying transaction counter state (critical for transaction integrity verification) and indicates potential transaction subsystem compromise</note>
+    <note>Transaction counters are essential for tracking the sequence of transactions and validating transaction integrity throughout their lifecycle</note>
+    <note>The exception indicates counter data cannot be reliably obtained; applications must not implement workarounds using system-level counters without explicit validation</note>
+    <note>Failure scenarios range from transient (temporary communication issues, temporary state) to persistent (storage corruption, hardware failure, firmware error)</note>
+    <note>If this exception occurs frequently or persistently, it indicates serious issues with Secure Element transaction subsystem hardware, firmware, or counter storage that require diagnostic investigation or device replacement</note>
+    <note>Counter retrieval is a read-only query; failure does not modify any Secure Element transaction state, so recovery typically requires only retrying the query once underlying issue is resolved</note>
+    <note>Different device models and firmware versions may maintain different numbers of transaction counters (per-transaction counters, global counters, etc.) - consult device specifications</note>
+    <note>Transaction counter values are essential for validating the integrity of transactions and detecting tampering with the transaction audit trail</note>
+    <note>Applications must implement appropriate error handling and monitoring for counter retrieval failures, especially in security-critical or transaction-sensitive deployments</note>
+    <note>Repeated counter retrieval failures may indicate device needs firmware update, transaction subsystem reset, or hardware service - manufacturer support should be engaged for persistent issues</note>
+  </notes>
+  <usage>
+    <scenario name="Scenario 1: Transaction Integrity Verification Before Critical Operations">
+      <description>An application must verify transaction integrity by checking the current transaction counter state before performing critical operations. The application retrieves the current transaction counter value to establish a baseline. If ErrorGetCurrentTransactionCounterFailed is raised, the application cannot verify transaction integrity and must conservatively reject critical operations to ensure transaction security.</description>
+      <relatedFunctions>getCurrentTransactionCounter, startTransaction, finishTransaction</relatedFunctions>
+      <errorContext>Transaction counter state cannot be verified due to unavailable counter information</errorContext>
+    </scenario>
+    <scenario name="Scenario 2: Transaction State Consistency Verification and Diagnostics">
+      <description>An audit system monitors transaction subsystem health by periodically querying the transaction counter value. The system uses counter values to verify that transactions are operating correctly and counters are advancing as expected with each transaction event. If ErrorGetCurrentTransactionCounterFailed is raised, the system logs this as a critical diagnostic indicator of potential transaction subsystem compromise or hardware failure.</description>
+      <relatedFunctions>getCurrentTransactionCounter, startTransaction, updateTransaction</relatedFunctions>
+      <errorContext>Transaction counter value unavailable for transaction health monitoring and consistency verification</errorContext>
+    </scenario>
+    <scenario name="Scenario 3: Counter State Validation During Transaction Export or Audit Operations">
+      <description>Before exporting transaction audit trail or generating transaction audit reports, an application retrieves the current counter value to document the transaction state at audit time. This creates a checkpoint showing what portion of the transaction history is being audited. If ErrorGetCurrentTransactionCounterFailed is raised, the application cannot create this checkpoint and must either defer the audit or audit without integrity metadata.</description>
+      <relatedFunctions>getCurrentTransactionCounter, startTransaction, finishTransaction</relatedFunctions>
+      <errorContext>Counter state checkpoint unavailable during transaction audit or export operation</errorContext>
+    </scenario>
+    <scenario name="Scenario 4: Multi-Device Transaction Synchronization and Audit Trail Coordination">
+      <description>An enterprise system manages transactions across multiple devices and must coordinate transaction audit trails. The system queries getCurrentTransactionCounter on each device to create a synchronized view of transaction state across the infrastructure. If ErrorGetCurrentTransactionCounterFailed is raised on one device, the system cannot synchronize transaction state with that device and must flag it for investigation.</description>
+      <relatedFunctions>getCurrentTransactionCounter, startTransaction</relatedFunctions>
+      <errorContext>Transaction counter value unavailable for multi-device transaction synchronization</errorContext>
+    </scenario>
+  </usage>
+  <implementationContext>
+    <note>The getCurrentTransactionCounter function retrieves the transaction counter value maintained by the Secure Element's transaction management subsystem</note>
+    <note>Transaction counters track the sequence of transactions and are used to validate the integrity and authenticity of the transaction audit trail</note>
+    <note>Different transaction configurations and variants may maintain different counter state tracking mechanisms (per-transaction counters, global transaction counters, etc.)</note>
+    <note>The current transaction counter value is essential for validating that transactions have not been tampered with and for verifying the complete sequence of transaction events</note>
+    <note>Transaction counter maintenance is part of the configured transaction management variant - counter state depends on transaction configuration and security policies</note>
+    <note>If counter value retrieval fails but transaction operations continue successfully (new transactions are started, updated, and finished), the issue is specific to counter query mechanism, not to transaction functionality itself</note>
+    <note>Counter storage corruption or counter calculation errors in the transaction subsystem represent critical integrity threats to the transaction audit trail and require immediate investigation</note>
+    <note>Counter retrieval is a read-only query; ErrorGetCurrentTransactionCounterFailed does not indicate state corruption requiring state recovery - it indicates the counter information source is temporarily unavailable</note>
+  </implementationContext>
 </exception>

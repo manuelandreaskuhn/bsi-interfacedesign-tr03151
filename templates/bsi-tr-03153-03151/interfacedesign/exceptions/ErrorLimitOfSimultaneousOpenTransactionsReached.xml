@@ -1,163 +1,163 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<exception id="ErrorLimitOfSimultaneousOpenTransactionsReached" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
-    <name>ErrorLimitOfSimultaneousOpenTransactionsReached</name>
-    <description>This exception is thrown if the SE API function startTransaction fails because the maximum number of simultaneously open transactions supported by the Secure Element has been reached. The function attempts to initiate a new transaction, but the number of currently active transactions has already reached the device's capacity limit, preventing the creation of additional concurrent transactions.</description>
-    <category>Transaction Management - Capacity Constraint</category>
-    <severity>High</severity>
-    <javadoc>
-        <summary>This class defines the exception ErrorLimitOfSimultaneousOpenTransactionsReached that is thrown if the maximum number of simultaneously open transactions has been reached.</summary>
-        <description>This exception is thrown when the startTransaction function cannot create a new transaction because the maximum number of concurrently open transactions supported by the Secure Element has been reached. Each Secure Element has a configurable limit on how many transactions can be in the "open" state at the same time. ErrorLimitOfSimultaneousOpenTransactionsReached indicates that the current number of open transactions equals or exceeds this maximum limit. When this exception occurs, the new transaction is not created and the caller must either wait for existing transactions to complete, finish some open transactions, or implement queuing strategies for transaction requests. Recovery requires completing or closing existing transactions to reduce the active transaction count below the maximum limit.</description>
-        <constructors>
-            <constructor>
-                <signature>ErrorLimitOfSimultaneousOpenTransactionsReached()</signature>
-                <description>Constructs a new ErrorLimitOfSimultaneousOpenTransactionsReached exception with null as the value for its detail message</description>
-            </constructor>
-            <constructor>
-                <signature>ErrorLimitOfSimultaneousOpenTransactionsReached(String message)</signature>
-                <description>Constructs a new ErrorLimitOfSimultaneousOpenTransactionsReached exception whereby its detail message is initialized with the passed value</description>
-                <parameter name="message">value for the detail message of the exception, typically describing the transaction capacity constraint</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorLimitOfSimultaneousOpenTransactionsReached(String message, Throwable cause)</signature>
-                <description>Constructs a new ErrorLimitOfSimultaneousOpenTransactionsReached exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorLimitOfSimultaneousOpenTransactionsReached(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-                <description>Constructs a new ErrorLimitOfSimultaneousOpenTransactionsReached exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-            </constructor>
-        </constructors>
-    </javadoc>
-    <specification>
-        <source>BSI TR-03151-1</source>
-        <section>3.1.2 Transaction Management - startTransaction</section>
-        <requirement>The function startTransaction SHALL create a new transaction if the current number of open transactions is below the maximum supported limit. If the number of currently open transactions has reached the maximum limit configured for the device, the function SHALL raise the exception ErrorLimitOfSimultaneousOpenTransactionsReached and reject the transaction creation. The maximum number of simultaneously open transactions is a device capability that may be queried via getMaxNumberTransactionsFailed or similar functions.</requirement>
-        <applicability>Transaction creation operations - startTransaction function only</applicability>
-        <reference>startTransaction – Function (3.1.2)</reference>
-    </specification>
-    <thrownBy>
-        <function>startTransaction</function>
-    </thrownBy>
-    <triggerConditions>
-        <condition>
-            <scenario>Transaction capacity at maximum</scenario>
-            <description>The current number of simultaneously open transactions equals the device's maximum transaction capacity</description>
-            <trigger>The Secure Element is already managing the maximum number of simultaneously open transactions. When startTransaction is called to initiate a new transaction, the transaction management subsystem checks the current open transaction count and finds it equals the maximum limit. The new transaction cannot be created and ErrorLimitOfSimultaneousOpenTransactionsReached is raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Rapid transaction creation exceeding device capacity</scenario>
-            <description>Multiple rapid transaction creation requests cause the open transaction count to exceed the device's capacity limit</description>
-            <trigger>The application or multiple concurrent processes call startTransaction multiple times in rapid succession, creating many transactions faster than they can be completed. The accumulated open transactions reach the device limit, and subsequent startTransaction calls fail with ErrorLimitOfSimultaneousOpenTransactionsReached.</trigger>
-        </condition>
-        <condition>
-            <scenario>Transactions not being completed or closed properly</scenario>
-            <description>Existing transactions remain open indefinitely because they are not being completed or closed through finishTransaction</description>
-            <trigger>The application creates transactions but fails to properly complete them using finishTransaction, leaving them in the open state. As new transaction creation attempts are made, the accumulated unclosed transactions eventually reach the device limit, causing ErrorLimitOfSimultaneousOpenTransactionsReached.</trigger>
-        </condition>
-        <condition>
-            <scenario>Device configured with low maximum transaction limit</scenario>
-            <description>The device is configured with a relatively low maximum number of simultaneously open transactions compared to the application's needs</description>
-            <trigger>The device's maximum transaction capacity is low (e.g., 5 concurrent transactions) but the application tries to manage many more transactions simultaneously. As the device reaches its capacity, startTransaction fails with ErrorLimitOfSimultaneousOpenTransactionsReached.</trigger>
-        </condition>
-        <condition>
-            <scenario>Long-running transactions blocking capacity</scenario>
-            <description>A few long-running transactions consume most or all of the available transaction capacity, preventing new transactions from being created</description>
-            <trigger>The application creates a few long-running transactions that take significant time to complete. These transactions consume transaction slots in the device's capacity. When other parts of the application try to create additional transactions, they fail because the long-running transactions are occupying most or all available capacity.</trigger>
-        </condition>
-    </triggerConditions>
-    <executionSequence>
-        <step number="1">User/application calls startTransaction function with transaction parameters (clientId, etc.)</step>
-        <step number="2">Function validates input parameters including clientId and transaction parameters</step>
-        <step number="3">Function checks authorization and device state for transaction operations</step>
-        <step number="4">Function queries Secure Element for the current number of open transactions</step>
-        <step number="4a">If current open transaction count is below maximum → proceed to step 5</step>
-        <step number="4b">If current open transaction count equals or exceeds maximum → ErrorLimitOfSimultaneousOpenTransactionsReached raised, function exits</step>
-        <step number="5">Function initiates communication with Secure Element and prepares transaction creation command</step>
-        <step number="6">Function transmits transaction creation command to Secure Element</step>
-        <step number="7">Function receives transaction ID and acknowledgment from Secure Element</step>
-        <step number="8">Function records the new transaction as open and manages transaction state</step>
-        <step number="9">Function closes Secure Element communication channel</step>
-        <step number="10">Function returns transaction ID to caller with transaction successfully created</step>
-    </executionSequence>
-    <recovery>
-        <step>Determine device transaction capacity - query device or consult specifications for the maximum number of simultaneously open transactions</step>
-        <step>Check current open transaction count - call getOpenTransactions or getCurrentTransactionCounter to determine how many transactions are currently active</step>
-        <step>Identify incomplete transactions - review which transactions are still open and determine if they should be completed or if they are stalled</step>
-        <step>Complete or close existing transactions - call finishTransaction on any completed transactions to reduce the open transaction count</step>
-        <step>Monitor transaction state - implement monitoring to identify transactions that remain open longer than expected</step>
-        <step>Implement transaction queue - design the application to queue transaction requests and submit them as capacity becomes available</step>
-        <step>Implement retry logic with backoff - add retry logic that waits for transaction capacity to become available before retrying startTransaction</step>
-        <step>Implement transaction pooling - manage a pool of transactions to ensure fair allocation of limited capacity across concurrent operations</step>
-        <step>Review transaction lifecycle - ensure the application properly closes all transactions through finishTransaction, even in error paths</step>
-        <step>If persistent, contact device manufacturer - repeated capacity constraint issues may indicate a need for device reconfiguration or feature upgrade</step>
-    </recovery>
-    <relatedExceptions>
-        <exception>ErrorGetMaxNumberTransactionsFailed</exception>
-        <exception>ErrorGetOpenTransactionsFailed</exception>
-        <exception>ErrorStartTransactionFailed</exception>
-        <exception>ErrorTransactionNotFound</exception>
-        <exception>ErrorFunctionFailed</exception>
-    </relatedExceptions>
-    <postconditionality>
-        <state name="Transaction Not Created">No new transaction is created. The failed transaction creation does not result in a transaction ID being generated or returned to the caller. The transaction count remains unchanged.</state>
-        <state name="Transaction Capacity Unchanged">The device's transaction capacity and the maximum transaction limit remain unchanged. The limitation is a device characteristic, not affected by the failed creation attempt.</state>
-        <state name="Open Transaction Count Unchanged">The number of currently open transactions on the Secure Element remains at its pre-call state. No transaction state modifications occur.</state>
-        <state name="Device State Unmodified">Device state remains completely unchanged. Transaction management subsystem operates normally. The failure is a capacity constraint, not a device malfunction.</state>
-        <state name="No Cascading State Effects">The failed transaction creation does not cause any cascading state changes or secondary failures. Other open transactions and device operations continue normally.</state>
-        <state name="Recovery Preconditions Met">The device is stable and operational. Recovery is possible by completing existing transactions to reduce the open count. The situation is expected and handled through normal transaction lifecycle management.</state>
-    </postconditionality>
-    <notes>
-        <note>ErrorLimitOfSimultaneousOpenTransactionsReached is thrown ONLY by the startTransaction function - it is the most specific exception for transaction capacity constraints</note>
-        <note>This exception indicates a capacity constraint, not a system error or device malfunction - it is an expected condition when transaction load approaches device capacity</note>
-        <note>Transaction capacity is a device characteristic determined at manufacturing/configuration time - different device models may have different limits</note>
-        <note>Maximum transaction capacity can typically be queried via getMaxNumberTransactionsFailed function to enable application-level capacity planning</note>
-        <note>Current open transaction count can be determined via getCurrentTransactionCounter or getOpenTransactions functions</note>
-        <note>This exception has High severity because it impacts application ability to perform transaction operations - capacity management is critical in high-load scenarios</note>
-        <note>Applications must implement transaction queuing, pooling, or retry strategies to handle capacity constraints in production environments</note>
-        <note>Long-running transactions can consume device capacity - applications should implement transaction timeout or monitoring to identify stalled transactions</note>
-        <note>Proper transaction lifecycle management (always calling finishTransaction) is essential to prevent capacity starvation</note>
-        <note>If this exception occurs frequently, it indicates application design may not match device capacity - capacity planning or design changes may be needed</note>
-        <note>Multiple concurrent threads or processes creating transactions simultaneously can quickly reach device capacity - synchronization and queuing may be needed</note>
-        <note>ErrorLimitOfSimultaneousOpenTransactionsReached is an expected, normal exception in high-load scenarios - applications must handle it gracefully</note>
-        <note>Capacity constraints apply only to simultaneously open transactions - completed and closed transactions do not consume capacity</note>
-        <note>Applications should monitor transaction creation failures and implement metrics/alerts when approaching capacity limits</note>
-        <note>Different transaction types or transaction states may have different impacts on capacity - consult device specifications for details</note>
-    </notes>
-    <usage>
-        <scenario name="Scenario 1: High-Load Transaction Processing with Capacity Management">
-            <description>A high-throughput system processes many transactions concurrently. The system monitors transaction capacity and implements queuing when approaching limits. When startTransaction raises ErrorLimitOfSimultaneousOpenTransactionsReached, the system queues the request and retries when capacity becomes available after transactions complete.</description>
-            <relatedFunctions>startTransaction, finishTransaction, getCurrentTransactionCounter, getMaxNumberTransactionsFailed</relatedFunctions>
-            <errorContext>Transaction capacity constraint triggers queuing and retry logic</errorContext>
-        </scenario>
-        <scenario name="Scenario 2: Multi-Threaded Transaction Management with Thread Pool">
-            <description>A multi-threaded application uses a thread pool to manage transactions. When ErrorLimitOfSimultaneousOpenTransactionsReached is raised, the thread pool pauses new transaction submissions until existing transactions complete, preventing capacity exhaustion.</description>
-            <relatedFunctions>startTransaction, finishTransaction</relatedFunctions>
-            <errorContext>Capacity constraint prevents concurrent transaction creation</errorContext>
-        </scenario>
-        <scenario name="Scenario 3: Transaction Lifecycle Monitoring and Capacity Recovery">
-            <description>A monitoring system tracks transaction creation and completion. When ErrorLimitOfSimultaneousOpenTransactionsReached is raised, the monitoring system checks for stalled transactions and completes them to restore capacity. The system then retries the failed transaction creation.</description>
-            <relatedFunctions>startTransaction, finishTransaction, getOpenTransactions, getTransactionState</relatedFunctions>
-            <errorContext>Capacity constraint detected and resolved by completing stalled transactions</errorContext>
-        </scenario>
-        <scenario name="Scenario 4: Capacity-Aware Application Design and Load Balancing">
-            <description>An enterprise system designed with awareness of transaction capacity limits implements load balancing across multiple devices. When one device reaches capacity, new transactions are directed to devices with available capacity. ErrorLimitOfSimultaneousOpenTransactionsReached on one device triggers load balancing to alternate devices.</description>
-            <relatedFunctions>startTransaction, getMaxNumberTransactionsFailed, getCurrentTransactionCounter</relatedFunctions>
-            <errorContext>Capacity constraint on one device triggers load balancing to alternate devices</errorContext>
-        </scenario>
-    </usage>
-    <implementationContext>
-        <note>The startTransaction function enforces the Secure Element's maximum simultaneous transaction limit - this is a hard device capability</note>
-        <note>Transaction capacity is typically a configurable device parameter set during device initialization or manufacturing</note>
-        <note>The maximum transaction limit is separate from the maximum number of transactions the device can manage over its lifetime</note>
-        <note>Applications must implement capacity-aware transaction management strategies appropriate for their workload characteristics</note>
-        <note>Transaction capacity is a shared resource - all concurrent callers of startTransaction compete for available capacity</note>
-        <note>Proper transaction completion through finishTransaction is essential - incomplete transactions consume capacity indefinitely</note>
-        <note>Application should implement monitoring and alerting for capacity constraints - knowing when limits are being approached enables proactive management</note>
-        <note>Different transaction types or priorities may have different capacity implications - consult device specifications for transaction capacity details</note>
-    </implementationContext>
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorLimitOfSimultaneousOpenTransactionsReached" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+  <name>ErrorLimitOfSimultaneousOpenTransactionsReached</name>
+  <description>This exception is thrown if the SE API function startTransaction fails because the maximum number of simultaneously open transactions supported by the Secure Element has been reached. The function attempts to initiate a new transaction, but the number of currently active transactions has already reached the device's capacity limit, preventing the creation of additional concurrent transactions.</description>
+  <category>Transaction Management - Capacity Constraint</category>
+  <severity>High</severity>
+  <javadoc>
+    <summary>This class defines the exception ErrorLimitOfSimultaneousOpenTransactionsReached that is thrown if the maximum number of simultaneously open transactions has been reached.</summary>
+    <description>This exception is thrown when the startTransaction function cannot create a new transaction because the maximum number of concurrently open transactions supported by the Secure Element has been reached. Each Secure Element has a configurable limit on how many transactions can be in the "open" state at the same time. ErrorLimitOfSimultaneousOpenTransactionsReached indicates that the current number of open transactions equals or exceeds this maximum limit. When this exception occurs, the new transaction is not created and the caller must either wait for existing transactions to complete, finish some open transactions, or implement queuing strategies for transaction requests. Recovery requires completing or closing existing transactions to reduce the active transaction count below the maximum limit.</description>
+    <constructors>
+      <constructor>
+        <signature>ErrorLimitOfSimultaneousOpenTransactionsReached()</signature>
+        <description>Constructs a new ErrorLimitOfSimultaneousOpenTransactionsReached exception with null as the value for its detail message</description>
+      </constructor>
+      <constructor>
+        <signature>ErrorLimitOfSimultaneousOpenTransactionsReached(String message)</signature>
+        <description>Constructs a new ErrorLimitOfSimultaneousOpenTransactionsReached exception whereby its detail message is initialized with the passed value</description>
+        <parameter name="message">value for the detail message of the exception, typically describing the transaction capacity constraint</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorLimitOfSimultaneousOpenTransactionsReached(String message, Throwable cause)</signature>
+        <description>Constructs a new ErrorLimitOfSimultaneousOpenTransactionsReached exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorLimitOfSimultaneousOpenTransactionsReached(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+        <description>Constructs a new ErrorLimitOfSimultaneousOpenTransactionsReached exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+      </constructor>
+    </constructors>
+  </javadoc>
+  <specification>
+    <source>BSI TR-03151-1</source>
+    <section>3.1.2 Transaction Management - startTransaction</section>
+    <requirement>The function startTransaction SHALL create a new transaction if the current number of open transactions is below the maximum supported limit. If the number of currently open transactions has reached the maximum limit configured for the device, the function SHALL raise the exception ErrorLimitOfSimultaneousOpenTransactionsReached and reject the transaction creation. The maximum number of simultaneously open transactions is a device capability that may be queried via getMaxNumberTransactionsFailed or similar functions.</requirement>
+    <applicability>Transaction creation operations - startTransaction function only</applicability>
+    <reference>startTransaction – Function (3.1.2)</reference>
+  </specification>
+  <thrownBy>
+    <function>startTransaction</function>
+  </thrownBy>
+  <triggerConditions>
+    <condition>
+      <scenario>Transaction capacity at maximum</scenario>
+      <description>The current number of simultaneously open transactions equals the device's maximum transaction capacity</description>
+      <trigger>The Secure Element is already managing the maximum number of simultaneously open transactions. When startTransaction is called to initiate a new transaction, the transaction management subsystem checks the current open transaction count and finds it equals the maximum limit. The new transaction cannot be created and ErrorLimitOfSimultaneousOpenTransactionsReached is raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Rapid transaction creation exceeding device capacity</scenario>
+      <description>Multiple rapid transaction creation requests cause the open transaction count to exceed the device's capacity limit</description>
+      <trigger>The application or multiple concurrent processes call startTransaction multiple times in rapid succession, creating many transactions faster than they can be completed. The accumulated open transactions reach the device limit, and subsequent startTransaction calls fail with ErrorLimitOfSimultaneousOpenTransactionsReached.</trigger>
+    </condition>
+    <condition>
+      <scenario>Transactions not being completed or closed properly</scenario>
+      <description>Existing transactions remain open indefinitely because they are not being completed or closed through finishTransaction</description>
+      <trigger>The application creates transactions but fails to properly complete them using finishTransaction, leaving them in the open state. As new transaction creation attempts are made, the accumulated unclosed transactions eventually reach the device limit, causing ErrorLimitOfSimultaneousOpenTransactionsReached.</trigger>
+    </condition>
+    <condition>
+      <scenario>Device configured with low maximum transaction limit</scenario>
+      <description>The device is configured with a relatively low maximum number of simultaneously open transactions compared to the application's needs</description>
+      <trigger>The device's maximum transaction capacity is low (e.g., 5 concurrent transactions) but the application tries to manage many more transactions simultaneously. As the device reaches its capacity, startTransaction fails with ErrorLimitOfSimultaneousOpenTransactionsReached.</trigger>
+    </condition>
+    <condition>
+      <scenario>Long-running transactions blocking capacity</scenario>
+      <description>A few long-running transactions consume most or all of the available transaction capacity, preventing new transactions from being created</description>
+      <trigger>The application creates a few long-running transactions that take significant time to complete. These transactions consume transaction slots in the device's capacity. When other parts of the application try to create additional transactions, they fail because the long-running transactions are occupying most or all available capacity.</trigger>
+    </condition>
+  </triggerConditions>
+  <executionSequence>
+    <step number="1">User/application calls startTransaction function with transaction parameters (clientId, etc.)</step>
+    <step number="2">Function validates input parameters including clientId and transaction parameters</step>
+    <step number="3">Function checks authorization and device state for transaction operations</step>
+    <step number="4">Function queries Secure Element for the current number of open transactions</step>
+    <step number="4a">If current open transaction count is below maximum → proceed to step 5</step>
+    <step number="4b">If current open transaction count equals or exceeds maximum → ErrorLimitOfSimultaneousOpenTransactionsReached raised, function exits</step>
+    <step number="5">Function initiates communication with Secure Element and prepares transaction creation command</step>
+    <step number="6">Function transmits transaction creation command to Secure Element</step>
+    <step number="7">Function receives transaction ID and acknowledgment from Secure Element</step>
+    <step number="8">Function records the new transaction as open and manages transaction state</step>
+    <step number="9">Function closes Secure Element communication channel</step>
+    <step number="10">Function returns transaction ID to caller with transaction successfully created</step>
+  </executionSequence>
+  <recovery>
+    <step>Determine device transaction capacity - query device or consult specifications for the maximum number of simultaneously open transactions</step>
+    <step>Check current open transaction count - call getOpenTransactions or getCurrentTransactionCounter to determine how many transactions are currently active</step>
+    <step>Identify incomplete transactions - review which transactions are still open and determine if they should be completed or if they are stalled</step>
+    <step>Complete or close existing transactions - call finishTransaction on any completed transactions to reduce the open transaction count</step>
+    <step>Monitor transaction state - implement monitoring to identify transactions that remain open longer than expected</step>
+    <step>Implement transaction queue - design the application to queue transaction requests and submit them as capacity becomes available</step>
+    <step>Implement retry logic with backoff - add retry logic that waits for transaction capacity to become available before retrying startTransaction</step>
+    <step>Implement transaction pooling - manage a pool of transactions to ensure fair allocation of limited capacity across concurrent operations</step>
+    <step>Review transaction lifecycle - ensure the application properly closes all transactions through finishTransaction, even in error paths</step>
+    <step>If persistent, contact device manufacturer - repeated capacity constraint issues may indicate a need for device reconfiguration or feature upgrade</step>
+  </recovery>
+  <relatedExceptions>
+    <exception>ErrorGetMaxNumberTransactionsFailed</exception>
+    <exception>ErrorGetOpenTransactionsFailed</exception>
+    <exception>ErrorStartTransactionFailed</exception>
+    <exception>ErrorTransactionNotFound</exception>
+    <exception>ErrorFunctionFailed</exception>
+  </relatedExceptions>
+  <postconditionality>
+    <state name="Transaction Not Created">No new transaction is created. The failed transaction creation does not result in a transaction ID being generated or returned to the caller. The transaction count remains unchanged.</state>
+    <state name="Transaction Capacity Unchanged">The device's transaction capacity and the maximum transaction limit remain unchanged. The limitation is a device characteristic, not affected by the failed creation attempt.</state>
+    <state name="Open Transaction Count Unchanged">The number of currently open transactions on the Secure Element remains at its pre-call state. No transaction state modifications occur.</state>
+    <state name="Device State Unmodified">Device state remains completely unchanged. Transaction management subsystem operates normally. The failure is a capacity constraint, not a device malfunction.</state>
+    <state name="No Cascading State Effects">The failed transaction creation does not cause any cascading state changes or secondary failures. Other open transactions and device operations continue normally.</state>
+    <state name="Recovery Preconditions Met">The device is stable and operational. Recovery is possible by completing existing transactions to reduce the open count. The situation is expected and handled through normal transaction lifecycle management.</state>
+  </postconditionality>
+  <notes>
+    <note>ErrorLimitOfSimultaneousOpenTransactionsReached is thrown ONLY by the startTransaction function - it is the most specific exception for transaction capacity constraints</note>
+    <note>This exception indicates a capacity constraint, not a system error or device malfunction - it is an expected condition when transaction load approaches device capacity</note>
+    <note>Transaction capacity is a device characteristic determined at manufacturing/configuration time - different device models may have different limits</note>
+    <note>Maximum transaction capacity can typically be queried via getMaxNumberTransactionsFailed function to enable application-level capacity planning</note>
+    <note>Current open transaction count can be determined via getCurrentTransactionCounter or getOpenTransactions functions</note>
+    <note>This exception has High severity because it impacts application ability to perform transaction operations - capacity management is critical in high-load scenarios</note>
+    <note>Applications must implement transaction queuing, pooling, or retry strategies to handle capacity constraints in production environments</note>
+    <note>Long-running transactions can consume device capacity - applications should implement transaction timeout or monitoring to identify stalled transactions</note>
+    <note>Proper transaction lifecycle management (always calling finishTransaction) is essential to prevent capacity starvation</note>
+    <note>If this exception occurs frequently, it indicates application design may not match device capacity - capacity planning or design changes may be needed</note>
+    <note>Multiple concurrent threads or processes creating transactions simultaneously can quickly reach device capacity - synchronization and queuing may be needed</note>
+    <note>ErrorLimitOfSimultaneousOpenTransactionsReached is an expected, normal exception in high-load scenarios - applications must handle it gracefully</note>
+    <note>Capacity constraints apply only to simultaneously open transactions - completed and closed transactions do not consume capacity</note>
+    <note>Applications should monitor transaction creation failures and implement metrics/alerts when approaching capacity limits</note>
+    <note>Different transaction types or transaction states may have different impacts on capacity - consult device specifications for details</note>
+  </notes>
+  <usage>
+    <scenario name="Scenario 1: High-Load Transaction Processing with Capacity Management">
+      <description>A high-throughput system processes many transactions concurrently. The system monitors transaction capacity and implements queuing when approaching limits. When startTransaction raises ErrorLimitOfSimultaneousOpenTransactionsReached, the system queues the request and retries when capacity becomes available after transactions complete.</description>
+      <relatedFunctions>startTransaction, finishTransaction, getCurrentTransactionCounter, getMaxNumberTransactionsFailed</relatedFunctions>
+      <errorContext>Transaction capacity constraint triggers queuing and retry logic</errorContext>
+    </scenario>
+    <scenario name="Scenario 2: Multi-Threaded Transaction Management with Thread Pool">
+      <description>A multi-threaded application uses a thread pool to manage transactions. When ErrorLimitOfSimultaneousOpenTransactionsReached is raised, the thread pool pauses new transaction submissions until existing transactions complete, preventing capacity exhaustion.</description>
+      <relatedFunctions>startTransaction, finishTransaction</relatedFunctions>
+      <errorContext>Capacity constraint prevents concurrent transaction creation</errorContext>
+    </scenario>
+    <scenario name="Scenario 3: Transaction Lifecycle Monitoring and Capacity Recovery">
+      <description>A monitoring system tracks transaction creation and completion. When ErrorLimitOfSimultaneousOpenTransactionsReached is raised, the monitoring system checks for stalled transactions and completes them to restore capacity. The system then retries the failed transaction creation.</description>
+      <relatedFunctions>startTransaction, finishTransaction, getOpenTransactions, getTransactionState</relatedFunctions>
+      <errorContext>Capacity constraint detected and resolved by completing stalled transactions</errorContext>
+    </scenario>
+    <scenario name="Scenario 4: Capacity-Aware Application Design and Load Balancing">
+      <description>An enterprise system designed with awareness of transaction capacity limits implements load balancing across multiple devices. When one device reaches capacity, new transactions are directed to devices with available capacity. ErrorLimitOfSimultaneousOpenTransactionsReached on one device triggers load balancing to alternate devices.</description>
+      <relatedFunctions>startTransaction, getMaxNumberTransactionsFailed, getCurrentTransactionCounter</relatedFunctions>
+      <errorContext>Capacity constraint on one device triggers load balancing to alternate devices</errorContext>
+    </scenario>
+  </usage>
+  <implementationContext>
+    <note>The startTransaction function enforces the Secure Element's maximum simultaneous transaction limit - this is a hard device capability</note>
+    <note>Transaction capacity is typically a configurable device parameter set during device initialization or manufacturing</note>
+    <note>The maximum transaction limit is separate from the maximum number of transactions the device can manage over its lifetime</note>
+    <note>Applications must implement capacity-aware transaction management strategies appropriate for their workload characteristics</note>
+    <note>Transaction capacity is a shared resource - all concurrent callers of startTransaction compete for available capacity</note>
+    <note>Proper transaction completion through finishTransaction is essential - incomplete transactions consume capacity indefinitely</note>
+    <note>Application should implement monitoring and alerting for capacity constraints - knowing when limits are being approached enables proactive management</note>
+    <note>Different transaction types or priorities may have different capacity implications - consult device specifications for transaction capacity details</note>
+  </implementationContext>
 </exception>

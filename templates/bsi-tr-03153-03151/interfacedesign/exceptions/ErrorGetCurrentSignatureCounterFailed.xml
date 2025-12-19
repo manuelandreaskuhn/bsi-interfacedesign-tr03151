@@ -1,163 +1,163 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<exception id="ErrorGetCurrentSignatureCounterFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
-    <name>ErrorGetCurrentSignatureCounterFailed</name>
-    <description>This exception is thrown if the SE API function getCurrentLoggingSignatureCounters fails to obtain the current signature counter values from the Secure Element's logging subsystem. The function attempts to retrieve the current state of cryptographic signature counters used for logging operations, but the retrieval process fails before the counter values can be determined and returned.</description>
-    <category>Logging - Signature Counter Management</category>
-    <severity>High</severity>
-    <javadoc>
-        <summary>This class defines the exception ErrorGetCurrentSignatureCounterFailed that is thrown if the SE API function getCurrentLoggingSignatureCounters fails to obtain the current signature counter values.</summary>
-        <description>This exception is thrown when the getCurrentLoggingSignatureCounters function cannot retrieve the current signature counter values from the Secure Element's logging subsystem. Signature counters are critical components of the logging infrastructure that track and validate the sequence and integrity of logged events. ErrorGetCurrentSignatureCounterFailed indicates that the Secure Element cannot provide the current counter state due to hardware failure, storage corruption, internal logging system errors, communication failures, or Secure Element state restrictions. When this exception occurs, no counter data is returned and applications cannot verify logging integrity or determine current counter state. Recovery typically involves device verification, logging subsystem diagnostics, potential counter reinitialization, and possible hardware diagnosis if the failure persists.</description>
-        <constructors>
-            <constructor>
-                <signature>ErrorGetCurrentSignatureCounterFailed()</signature>
-                <description>Constructs a new ErrorGetCurrentSignatureCounterFailed exception with null as the value for its detail message</description>
-            </constructor>
-            <constructor>
-                <signature>ErrorGetCurrentSignatureCounterFailed(String message)</signature>
-                <description>Constructs a new ErrorGetCurrentSignatureCounterFailed exception whereby its detail message is initialized with the passed value</description>
-                <parameter name="message">value for the detail message of the exception, typically describing the signature counter retrieval failure</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorGetCurrentSignatureCounterFailed(String message, Throwable cause)</signature>
-                <description>Constructs a new ErrorGetCurrentSignatureCounterFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorGetCurrentSignatureCounterFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-                <description>Constructs a new ErrorGetCurrentSignatureCounterFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-            </constructor>
-        </constructors>
-    </javadoc>
-    <specification>
-        <source>BSI TR-03151-1</source>
-        <section>3.2.6 Logging - getCurrentLoggingSignatureCounters</section>
-        <requirement>The function getCurrentLoggingSignatureCounters SHALL retrieve the current signature counter values maintained by the Secure Element's logging subsystem. If the Secure Element cannot provide or return the required counter information, the function SHALL raise the exception ErrorGetCurrentSignatureCounterFailed and exit without returning any counter data. The signature counter retrieval failure indicates the Secure Element's logging counter query functionality could not complete successfully.</requirement>
-        <applicability>Logging operations - getCurrentLoggingSignatureCounters function only</applicability>
-        <reference>getCurrentLoggingSignatureCounters – Function (3.2.6)</reference>
-    </specification>
-    <thrownBy>
-        <function>getCurrentLoggingSignatureCounters</function>
-    </thrownBy>
-    <triggerConditions>
-        <condition>
-            <scenario>Signature counter storage hardware failure</scenario>
-            <description>The Secure Element's counter storage hardware malfunctions or becomes inaccessible, preventing counter value retrieval</description>
-            <trigger>The Secure Element's counter storage hardware fails or experiences read errors. When getCurrentLoggingSignatureCounters is called, the counter retrieval query is sent to the Secure Element, but the hardware cannot provide valid counter data. The function receives a failure status from the Secure Element, triggering ErrorGetCurrentSignatureCounterFailed.</trigger>
-        </condition>
-        <condition>
-            <scenario>Logging subsystem counter storage corruption</scenario>
-            <description>The Secure Element's logging subsystem counter storage becomes corrupted or data is lost</description>
-            <trigger>The Secure Element's memory containing counter data or logging state tables becomes corrupted, experiences data loss, or is marked as inaccessible due to storage errors. When getCurrentLoggingSignatureCounters attempts to read counter values from storage, the data cannot be reliably retrieved, triggering ErrorGetCurrentSignatureCounterFailed.</trigger>
-        </condition>
-        <condition>
-            <scenario>Logging subsystem internal error in counter calculation</scenario>
-            <description>The Secure Element's logging subsystem encounters critical errors that prevent counter value calculation or retrieval</description>
-            <trigger>The Secure Element's logging management subsystem (responsible for maintaining counter values, updating counters on log events, and providing counter state) encounters an internal error, deadlock, or exception. When getCurrentLoggingSignatureCounters is called, the logging subsystem cannot process the counter query, triggering ErrorGetCurrentSignatureCounterFailed.</trigger>
-        </condition>
-        <condition>
-            <scenario>Device-to-Secure Element communication failure during counter query</scenario>
-            <description>The communication channel between device and Secure Element is disrupted during signature counter retrieval</description>
-            <trigger>A communication failure occurs while getCurrentLoggingSignatureCounters transmits the counter query to the Secure Element or while receiving the counter response. The command may be corrupted, the response may be incomplete, or the communication link may be temporarily unavailable. The function receives a communication error status, triggering ErrorGetCurrentSignatureCounterFailed.</trigger>
-        </condition>
-        <condition>
-            <scenario>Secure Element in restricted or error state prohibiting counter access</scenario>
-            <description>The Secure Element is in a locked, restricted, or error state that prevents external queries for counter information</description>
-            <trigger>The Secure Element enters a state where logging operations or logging counter access is not permitted. When getCurrentLoggingSignatureCounters is called and the Secure Element's state prohibits counter access, the function receives a state-related rejection, triggering ErrorGetCurrentSignatureCounterFailed.</trigger>
-        </condition>
-    </triggerConditions>
-    <executionSequence>
-        <step number="1">User/application calls getCurrentLoggingSignatureCounters function on device</step>
-        <step number="2">Function validates input parameters and checks authentication status (if required by referencing guideline)</step>
-        <step number="3">Function checks authorization for counter information access (if required by referencing guideline)</step>
-        <step number="4">Function verifies device is properly initialized and logging subsystem is operational</step>
-        <step number="5">Function initiates communication channel to Secure Element and prepares counter query command</step>
-        <step number="6">Function transmits counter query command to Secure Element requesting current signature counter values</step>
-        <step number="6a">If Secure Element responds with failure status (storage error, counter calculation error, subsystem error) → ErrorGetCurrentSignatureCounterFailed raised, function exits without counter data</step>
-        <step number="6b">If communication failure occurs during query transmission or response reception → ErrorGetCurrentSignatureCounterFailed raised, function exits</step>
-        <step number="7">If successful, function receives counter values from Secure Element</step>
-        <step number="8">Function validates counter values for correctness (format, sequence, logical consistency)</step>
-        <step number="9">Function closes Secure Element communication channel</step>
-        <step number="10">Function returns valid counter values to caller</step>
-    </executionSequence>
-    <recovery>
-        <step>Verify device operational status - confirm device is initialized, responding to other operations, and not in an error state</step>
-        <step>Verify Secure Element accessibility - confirm device can communicate with Secure Element through diagnostic commands</step>
-        <step>Check device initialization - ensure device has been properly initialized with initDevice before attempting getCurrentLoggingSignatureCounters</step>
-        <step>Check logging subsystem status - verify logging is enabled and configured before querying counter values</step>
-        <step>Retry getCurrentLoggingSignatureCounters operation - attempt the function call again as the failure may be transient</step>
-        <step>Review device diagnostics for logging subsystem health - query device for diagnostic information about Secure Element logging counter status</step>
-        <step>Verify counter storage integrity through device manufacturer diagnostics - check if counter storage is accessible and uncorrupted</step>
-        <step>Attempt counter reinitialization if supported - if available, reinitialize logging counters to restore counter access</step>
-        <step>Implement comprehensive error logging and monitoring - log this failure consistently to identify patterns (transient vs. persistent, correlation with logging operations)</step>
-        <step>If failure is persistent and suspected hardware issue, contact device manufacturer or consider device replacement - repeated counter retrieval failures indicate serious logging subsystem hardware problems</step>
-    </recovery>
-    <relatedExceptions>
-        <exception>ErrorFunctionFailed</exception>
-        <exception>ErrorDeviceNotInitialized</exception>
-        <exception>ErrorConfigureLoggingFailed</exception>
-        <exception>ErrorExportLoggingCertificateFailed</exception>
-        <exception>ErrorDeleteLogMessagesFailed</exception>
-    </relatedExceptions>
-    <postconditionality>
-        <state name="Device Operational State">Device remains fully operational and unmodified. The failure to retrieve counter values does not affect device initialization state, logging operations, internal memory, stored data, or the ability to perform other operations. All device components remain in their pre-call state.</state>
-        <state name="Counter Data Return Status">No counter values are returned to the caller. The function exits without providing any counter information. Applications must not assume default or cached counter values; they must handle the exception as indicating counter information is unavailable.</state>
-        <state name="Secure Element Logging State">Secure Element logging subsystem remains unchanged by the failed counter query. No state modifications, counter updates, or logging configuration changes occur. Logging operations continue internally in the Secure Element regardless of the retrieval failure.</state>
-        <state name="Counter Advancement Continuity">Secure Element's signature counters continue to advance as logging events occur. The failure to retrieve counter values does not stop or pause counter tracking. Subsequent attempts to query counters or perform logging operations may succeed once the underlying issue is resolved.</state>
-        <state name="No Cascading State Effects">No cascading state inconsistencies or secondary failures occur as a result of the counter retrieval failure. Device internal consistency is maintained. Other SE API functions and logging operations continue normally without state corruption.</state>
-        <state name="Recovery Preconditions Met">The device state after exception is consistent and allows for recovery operations. The underlying issue (storage error, communication error, subsystem error) remains present, but the device is stable enough to accept diagnostic queries or recovery attempts.</state>
-    </postconditionality>
-    <notes>
-        <note>ErrorGetCurrentSignatureCounterFailed is thrown ONLY by the getCurrentLoggingSignatureCounters function - it is the most specific and precise exception for Secure Element logging counter retrieval failures</note>
-        <note>This exception indicates a failure in the Secure Element's ability to report its current logging signature counter values. It is a critical logging integrity issue, not a general operational failure</note>
-        <note>Critical distinction from ErrorFunctionFailed: ErrorGetCurrentSignatureCounterFailed specifically indicates counter information is unavailable at the logging subsystem level, while ErrorFunctionFailed indicates broader unspecified critical failures</note>
-        <note>Exception is raised during the counter retrieval phase (steps 6-7), after device initialization and authentication checks have passed</note>
-        <note>After this exception, the Secure Element logging subsystem remains unchanged and continues to advance counters as logging events occur. Counter queries can be retried once the underlying issue is resolved</note>
-        <note>This exception has High severity because it prevents users from querying logging counter state (critical for logging integrity verification) and indicates potential logging subsystem compromise</note>
-        <note>Signature counters are essential for cryptographic validation of logged events and for detecting tampering with the logging audit trail</note>
-        <note>The exception indicates counter data cannot be reliably obtained; applications must not implement workarounds using system-level counters without explicit validation</note>
-        <note>Failure scenarios range from transient (temporary communication issues, temporary state) to persistent (storage corruption, hardware failure, firmware error)</note>
-        <note>If this exception occurs frequently or persistently, it indicates serious issues with Secure Element logging subsystem hardware, firmware, or counter storage that require diagnostic investigation or device replacement</note>
-        <note>Counter retrieval is a read-only query; failure does not modify any Secure Element logging state, so recovery typically requires only retrying the query once underlying issue is resolved</note>
-        <note>Different device models and firmware versions may maintain different numbers of signature counters (per-key counters, global counters, etc.) - consult device specifications</note>
-        <note>Signature counter values are essential for validating the integrity of logged events and detecting tampering with the logging audit trail</note>
-        <note>Applications must implement appropriate error handling and monitoring for counter retrieval failures, especially in security-critical or audit-sensitive deployments</note>
-        <note>Repeated counter retrieval failures may indicate device needs firmware update, logging subsystem reset, or hardware service - manufacturer support should be engaged for persistent issues</note>
-    </notes>
-    <usage>
-        <scenario name="Scenario 1: Logging Integrity Verification Before Critical Operations">
-            <description>An application must verify logging integrity by checking the current signature counter state before performing critical operations. The application retrieves the current logging counter values to establish a baseline. If ErrorGetCurrentSignatureCounterFailed is raised, the application cannot verify logging integrity and must conservatively reject critical operations to ensure audit trail security.</description>
-            <relatedFunctions>getCurrentLoggingSignatureCounters, configureLogging, deleteLogMessages</relatedFunctions>
-            <errorContext>Signature counter state cannot be verified due to unavailable counter information</errorContext>
-        </scenario>
-        <scenario name="Scenario 2: Logging State Consistency Verification and Diagnostics">
-            <description>An audit system monitors logging subsystem health by periodically querying signature counter values. The system uses counter values to verify that logging is operating correctly and counters are advancing as expected with each logged event. If ErrorGetCurrentSignatureCounterFailed is raised, the system logs this as a critical diagnostic indicator of potential logging subsystem compromise or hardware failure.</description>
-            <relatedFunctions>getCurrentLoggingSignatureCounters, configureLogging, exportLoggingMessages</relatedFunctions>
-            <errorContext>Signature counter values unavailable for logging health monitoring and consistency verification</errorContext>
-        </scenario>
-        <scenario name="Scenario 3: Counter State Validation During Log Export Operations">
-            <description>Before exporting logged events, an application retrieves current counter values to document the logging state at export time. This creates a checkpoint showing what portion of the audit trail is being exported. If ErrorGetCurrentSignatureCounterFailed is raised, the application cannot create this checkpoint and must either defer export or export without integrity metadata.</description>
-            <relatedFunctions>getCurrentLoggingSignatureCounters, exportLoggingMessages, exportLoggingCertificate</relatedFunctions>
-            <errorContext>Counter state checkpoint unavailable during logging export operation</errorContext>
-        </scenario>
-        <scenario name="Scenario 4: Multi-Device Logging Synchronization and Audit Trail Coordination">
-            <description>An enterprise system manages logging across multiple devices and must coordinate audit trails. The system queries getCurrentLoggingSignatureCounters on each device to create a synchronized view of logging state across the infrastructure. If ErrorGetCurrentSignatureCounterFailed is raised on one device, the system cannot synchronize logging state with that device and must flag it for investigation.</description>
-            <relatedFunctions>getCurrentLoggingSignatureCounters, configureLogging</relatedFunctions>
-            <errorContext>Signature counter values unavailable for multi-device logging synchronization</errorContext>
-        </scenario>
-    </usage>
-    <implementationContext>
-        <note>The getCurrentLoggingSignatureCounters function retrieves signature counter values maintained by the Secure Element's logging subsystem</note>
-        <note>Signature counters track the sequence of logged events and are used cryptographically to validate the integrity and authenticity of the logging audit trail</note>
-        <note>Different logging configurations and cryptographic variants may maintain different numbers of signature counters (per-key counters, global counters, application-specific counters)</note>
-        <note>The current signature counter values are essential for validating that logged events have not been tampered with and for verifying the complete sequence of audit trail events</note>
-        <note>Logging counter maintenance is part of the configured logging variant (determined by configureLogging) - counter state depends on logging configuration and key management</note>
-        <note>If counter value retrieval fails but logging operations continue successfully (new events are logged, export operations work), the issue is specific to counter query mechanism, not to logging functionality itself</note>
-        <note>Counter storage corruption or counter calculation errors in the logging subsystem represent critical integrity threats to the audit trail and require immediate investigation</note>
-        <note>Counter retrieval is a read-only query; ErrorGetCurrentSignatureCounterFailed does not indicate state corruption requiring state recovery - it indicates the counter information source is temporarily unavailable</note>
-    </implementationContext>
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorGetCurrentSignatureCounterFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+  <name>ErrorGetCurrentSignatureCounterFailed</name>
+  <description>This exception is thrown if the SE API function getCurrentLoggingSignatureCounters fails to obtain the current signature counter values from the Secure Element's logging subsystem. The function attempts to retrieve the current state of cryptographic signature counters used for logging operations, but the retrieval process fails before the counter values can be determined and returned.</description>
+  <category>Logging - Signature Counter Management</category>
+  <severity>High</severity>
+  <javadoc>
+    <summary>This class defines the exception ErrorGetCurrentSignatureCounterFailed that is thrown if the SE API function getCurrentLoggingSignatureCounters fails to obtain the current signature counter values.</summary>
+    <description>This exception is thrown when the getCurrentLoggingSignatureCounters function cannot retrieve the current signature counter values from the Secure Element's logging subsystem. Signature counters are critical components of the logging infrastructure that track and validate the sequence and integrity of logged events. ErrorGetCurrentSignatureCounterFailed indicates that the Secure Element cannot provide the current counter state due to hardware failure, storage corruption, internal logging system errors, communication failures, or Secure Element state restrictions. When this exception occurs, no counter data is returned and applications cannot verify logging integrity or determine current counter state. Recovery typically involves device verification, logging subsystem diagnostics, potential counter reinitialization, and possible hardware diagnosis if the failure persists.</description>
+    <constructors>
+      <constructor>
+        <signature>ErrorGetCurrentSignatureCounterFailed()</signature>
+        <description>Constructs a new ErrorGetCurrentSignatureCounterFailed exception with null as the value for its detail message</description>
+      </constructor>
+      <constructor>
+        <signature>ErrorGetCurrentSignatureCounterFailed(String message)</signature>
+        <description>Constructs a new ErrorGetCurrentSignatureCounterFailed exception whereby its detail message is initialized with the passed value</description>
+        <parameter name="message">value for the detail message of the exception, typically describing the signature counter retrieval failure</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorGetCurrentSignatureCounterFailed(String message, Throwable cause)</signature>
+        <description>Constructs a new ErrorGetCurrentSignatureCounterFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorGetCurrentSignatureCounterFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+        <description>Constructs a new ErrorGetCurrentSignatureCounterFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+      </constructor>
+    </constructors>
+  </javadoc>
+  <specification>
+    <source>BSI TR-03151-1</source>
+    <section>3.2.6 Logging - getCurrentLoggingSignatureCounters</section>
+    <requirement>The function getCurrentLoggingSignatureCounters SHALL retrieve the current signature counter values maintained by the Secure Element's logging subsystem. If the Secure Element cannot provide or return the required counter information, the function SHALL raise the exception ErrorGetCurrentSignatureCounterFailed and exit without returning any counter data. The signature counter retrieval failure indicates the Secure Element's logging counter query functionality could not complete successfully.</requirement>
+    <applicability>Logging operations - getCurrentLoggingSignatureCounters function only</applicability>
+    <reference>getCurrentLoggingSignatureCounters – Function (3.2.6)</reference>
+  </specification>
+  <thrownBy>
+    <function>getCurrentLoggingSignatureCounters</function>
+  </thrownBy>
+  <triggerConditions>
+    <condition>
+      <scenario>Signature counter storage hardware failure</scenario>
+      <description>The Secure Element's counter storage hardware malfunctions or becomes inaccessible, preventing counter value retrieval</description>
+      <trigger>The Secure Element's counter storage hardware fails or experiences read errors. When getCurrentLoggingSignatureCounters is called, the counter retrieval query is sent to the Secure Element, but the hardware cannot provide valid counter data. The function receives a failure status from the Secure Element, triggering ErrorGetCurrentSignatureCounterFailed.</trigger>
+    </condition>
+    <condition>
+      <scenario>Logging subsystem counter storage corruption</scenario>
+      <description>The Secure Element's logging subsystem counter storage becomes corrupted or data is lost</description>
+      <trigger>The Secure Element's memory containing counter data or logging state tables becomes corrupted, experiences data loss, or is marked as inaccessible due to storage errors. When getCurrentLoggingSignatureCounters attempts to read counter values from storage, the data cannot be reliably retrieved, triggering ErrorGetCurrentSignatureCounterFailed.</trigger>
+    </condition>
+    <condition>
+      <scenario>Logging subsystem internal error in counter calculation</scenario>
+      <description>The Secure Element's logging subsystem encounters critical errors that prevent counter value calculation or retrieval</description>
+      <trigger>The Secure Element's logging management subsystem (responsible for maintaining counter values, updating counters on log events, and providing counter state) encounters an internal error, deadlock, or exception. When getCurrentLoggingSignatureCounters is called, the logging subsystem cannot process the counter query, triggering ErrorGetCurrentSignatureCounterFailed.</trigger>
+    </condition>
+    <condition>
+      <scenario>Device-to-Secure Element communication failure during counter query</scenario>
+      <description>The communication channel between device and Secure Element is disrupted during signature counter retrieval</description>
+      <trigger>A communication failure occurs while getCurrentLoggingSignatureCounters transmits the counter query to the Secure Element or while receiving the counter response. The command may be corrupted, the response may be incomplete, or the communication link may be temporarily unavailable. The function receives a communication error status, triggering ErrorGetCurrentSignatureCounterFailed.</trigger>
+    </condition>
+    <condition>
+      <scenario>Secure Element in restricted or error state prohibiting counter access</scenario>
+      <description>The Secure Element is in a locked, restricted, or error state that prevents external queries for counter information</description>
+      <trigger>The Secure Element enters a state where logging operations or logging counter access is not permitted. When getCurrentLoggingSignatureCounters is called and the Secure Element's state prohibits counter access, the function receives a state-related rejection, triggering ErrorGetCurrentSignatureCounterFailed.</trigger>
+    </condition>
+  </triggerConditions>
+  <executionSequence>
+    <step number="1">User/application calls getCurrentLoggingSignatureCounters function on device</step>
+    <step number="2">Function validates input parameters and checks authentication status (if required by referencing guideline)</step>
+    <step number="3">Function checks authorization for counter information access (if required by referencing guideline)</step>
+    <step number="4">Function verifies device is properly initialized and logging subsystem is operational</step>
+    <step number="5">Function initiates communication channel to Secure Element and prepares counter query command</step>
+    <step number="6">Function transmits counter query command to Secure Element requesting current signature counter values</step>
+    <step number="6a">If Secure Element responds with failure status (storage error, counter calculation error, subsystem error) → ErrorGetCurrentSignatureCounterFailed raised, function exits without counter data</step>
+    <step number="6b">If communication failure occurs during query transmission or response reception → ErrorGetCurrentSignatureCounterFailed raised, function exits</step>
+    <step number="7">If successful, function receives counter values from Secure Element</step>
+    <step number="8">Function validates counter values for correctness (format, sequence, logical consistency)</step>
+    <step number="9">Function closes Secure Element communication channel</step>
+    <step number="10">Function returns valid counter values to caller</step>
+  </executionSequence>
+  <recovery>
+    <step>Verify device operational status - confirm device is initialized, responding to other operations, and not in an error state</step>
+    <step>Verify Secure Element accessibility - confirm device can communicate with Secure Element through diagnostic commands</step>
+    <step>Check device initialization - ensure device has been properly initialized with initDevice before attempting getCurrentLoggingSignatureCounters</step>
+    <step>Check logging subsystem status - verify logging is enabled and configured before querying counter values</step>
+    <step>Retry getCurrentLoggingSignatureCounters operation - attempt the function call again as the failure may be transient</step>
+    <step>Review device diagnostics for logging subsystem health - query device for diagnostic information about Secure Element logging counter status</step>
+    <step>Verify counter storage integrity through device manufacturer diagnostics - check if counter storage is accessible and uncorrupted</step>
+    <step>Attempt counter reinitialization if supported - if available, reinitialize logging counters to restore counter access</step>
+    <step>Implement comprehensive error logging and monitoring - log this failure consistently to identify patterns (transient vs. persistent, correlation with logging operations)</step>
+    <step>If failure is persistent and suspected hardware issue, contact device manufacturer or consider device replacement - repeated counter retrieval failures indicate serious logging subsystem hardware problems</step>
+  </recovery>
+  <relatedExceptions>
+    <exception>ErrorFunctionFailed</exception>
+    <exception>ErrorDeviceNotInitialized</exception>
+    <exception>ErrorConfigureLoggingFailed</exception>
+    <exception>ErrorExportLoggingCertificateFailed</exception>
+    <exception>ErrorDeleteLogMessagesFailed</exception>
+  </relatedExceptions>
+  <postconditionality>
+    <state name="Device Operational State">Device remains fully operational and unmodified. The failure to retrieve counter values does not affect device initialization state, logging operations, internal memory, stored data, or the ability to perform other operations. All device components remain in their pre-call state.</state>
+    <state name="Counter Data Return Status">No counter values are returned to the caller. The function exits without providing any counter information. Applications must not assume default or cached counter values; they must handle the exception as indicating counter information is unavailable.</state>
+    <state name="Secure Element Logging State">Secure Element logging subsystem remains unchanged by the failed counter query. No state modifications, counter updates, or logging configuration changes occur. Logging operations continue internally in the Secure Element regardless of the retrieval failure.</state>
+    <state name="Counter Advancement Continuity">Secure Element's signature counters continue to advance as logging events occur. The failure to retrieve counter values does not stop or pause counter tracking. Subsequent attempts to query counters or perform logging operations may succeed once the underlying issue is resolved.</state>
+    <state name="No Cascading State Effects">No cascading state inconsistencies or secondary failures occur as a result of the counter retrieval failure. Device internal consistency is maintained. Other SE API functions and logging operations continue normally without state corruption.</state>
+    <state name="Recovery Preconditions Met">The device state after exception is consistent and allows for recovery operations. The underlying issue (storage error, communication error, subsystem error) remains present, but the device is stable enough to accept diagnostic queries or recovery attempts.</state>
+  </postconditionality>
+  <notes>
+    <note>ErrorGetCurrentSignatureCounterFailed is thrown ONLY by the getCurrentLoggingSignatureCounters function - it is the most specific and precise exception for Secure Element logging counter retrieval failures</note>
+    <note>This exception indicates a failure in the Secure Element's ability to report its current logging signature counter values. It is a critical logging integrity issue, not a general operational failure</note>
+    <note>Critical distinction from ErrorFunctionFailed: ErrorGetCurrentSignatureCounterFailed specifically indicates counter information is unavailable at the logging subsystem level, while ErrorFunctionFailed indicates broader unspecified critical failures</note>
+    <note>Exception is raised during the counter retrieval phase (steps 6-7), after device initialization and authentication checks have passed</note>
+    <note>After this exception, the Secure Element logging subsystem remains unchanged and continues to advance counters as logging events occur. Counter queries can be retried once the underlying issue is resolved</note>
+    <note>This exception has High severity because it prevents users from querying logging counter state (critical for logging integrity verification) and indicates potential logging subsystem compromise</note>
+    <note>Signature counters are essential for cryptographic validation of logged events and for detecting tampering with the logging audit trail</note>
+    <note>The exception indicates counter data cannot be reliably obtained; applications must not implement workarounds using system-level counters without explicit validation</note>
+    <note>Failure scenarios range from transient (temporary communication issues, temporary state) to persistent (storage corruption, hardware failure, firmware error)</note>
+    <note>If this exception occurs frequently or persistently, it indicates serious issues with Secure Element logging subsystem hardware, firmware, or counter storage that require diagnostic investigation or device replacement</note>
+    <note>Counter retrieval is a read-only query; failure does not modify any Secure Element logging state, so recovery typically requires only retrying the query once underlying issue is resolved</note>
+    <note>Different device models and firmware versions may maintain different numbers of signature counters (per-key counters, global counters, etc.) - consult device specifications</note>
+    <note>Signature counter values are essential for validating the integrity of logged events and detecting tampering with the logging audit trail</note>
+    <note>Applications must implement appropriate error handling and monitoring for counter retrieval failures, especially in security-critical or audit-sensitive deployments</note>
+    <note>Repeated counter retrieval failures may indicate device needs firmware update, logging subsystem reset, or hardware service - manufacturer support should be engaged for persistent issues</note>
+  </notes>
+  <usage>
+    <scenario name="Scenario 1: Logging Integrity Verification Before Critical Operations">
+      <description>An application must verify logging integrity by checking the current signature counter state before performing critical operations. The application retrieves the current logging counter values to establish a baseline. If ErrorGetCurrentSignatureCounterFailed is raised, the application cannot verify logging integrity and must conservatively reject critical operations to ensure audit trail security.</description>
+      <relatedFunctions>getCurrentLoggingSignatureCounters, configureLogging, deleteLogMessages</relatedFunctions>
+      <errorContext>Signature counter state cannot be verified due to unavailable counter information</errorContext>
+    </scenario>
+    <scenario name="Scenario 2: Logging State Consistency Verification and Diagnostics">
+      <description>An audit system monitors logging subsystem health by periodically querying signature counter values. The system uses counter values to verify that logging is operating correctly and counters are advancing as expected with each logged event. If ErrorGetCurrentSignatureCounterFailed is raised, the system logs this as a critical diagnostic indicator of potential logging subsystem compromise or hardware failure.</description>
+      <relatedFunctions>getCurrentLoggingSignatureCounters, configureLogging, exportLoggingMessages</relatedFunctions>
+      <errorContext>Signature counter values unavailable for logging health monitoring and consistency verification</errorContext>
+    </scenario>
+    <scenario name="Scenario 3: Counter State Validation During Log Export Operations">
+      <description>Before exporting logged events, an application retrieves current counter values to document the logging state at export time. This creates a checkpoint showing what portion of the audit trail is being exported. If ErrorGetCurrentSignatureCounterFailed is raised, the application cannot create this checkpoint and must either defer export or export without integrity metadata.</description>
+      <relatedFunctions>getCurrentLoggingSignatureCounters, exportLoggingMessages, exportLoggingCertificate</relatedFunctions>
+      <errorContext>Counter state checkpoint unavailable during logging export operation</errorContext>
+    </scenario>
+    <scenario name="Scenario 4: Multi-Device Logging Synchronization and Audit Trail Coordination">
+      <description>An enterprise system manages logging across multiple devices and must coordinate audit trails. The system queries getCurrentLoggingSignatureCounters on each device to create a synchronized view of logging state across the infrastructure. If ErrorGetCurrentSignatureCounterFailed is raised on one device, the system cannot synchronize logging state with that device and must flag it for investigation.</description>
+      <relatedFunctions>getCurrentLoggingSignatureCounters, configureLogging</relatedFunctions>
+      <errorContext>Signature counter values unavailable for multi-device logging synchronization</errorContext>
+    </scenario>
+  </usage>
+  <implementationContext>
+    <note>The getCurrentLoggingSignatureCounters function retrieves signature counter values maintained by the Secure Element's logging subsystem</note>
+    <note>Signature counters track the sequence of logged events and are used cryptographically to validate the integrity and authenticity of the logging audit trail</note>
+    <note>Different logging configurations and cryptographic variants may maintain different numbers of signature counters (per-key counters, global counters, application-specific counters)</note>
+    <note>The current signature counter values are essential for validating that logged events have not been tampered with and for verifying the complete sequence of audit trail events</note>
+    <note>Logging counter maintenance is part of the configured logging variant (determined by configureLogging) - counter state depends on logging configuration and key management</note>
+    <note>If counter value retrieval fails but logging operations continue successfully (new events are logged, export operations work), the issue is specific to counter query mechanism, not to logging functionality itself</note>
+    <note>Counter storage corruption or counter calculation errors in the logging subsystem represent critical integrity threats to the audit trail and require immediate investigation</note>
+    <note>Counter retrieval is a read-only query; ErrorGetCurrentSignatureCounterFailed does not indicate state corruption requiring state recovery - it indicates the counter information source is temporarily unavailable</note>
+  </implementationContext>
 </exception>

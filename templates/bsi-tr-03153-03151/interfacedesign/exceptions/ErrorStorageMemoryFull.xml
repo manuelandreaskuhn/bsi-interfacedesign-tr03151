@@ -1,169 +1,182 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<exception id="ErrorStorageMemoryFull" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
-    <name>ErrorStorageMemoryFull</name>
-    <description>This exception is thrown if the storage memory of the device is full and cannot accommodate new data. The Secure Element uses storage for device configuration, transaction logs, user data, and audit trail information. When storage reaches capacity, no new data can be written until storage is freed by deleting or exporting logs. ErrorStorageMemoryFull indicates the device storage is exhausted and write operations must be blocked. Common causes include: excessive transaction volume, accumulation of log messages, inadequate storage capacity for workload, or logs not being regularly exported/archived. ErrorStorageMemoryFull is a Critical condition that prevents new transactions and data storage operations until storage space is freed.</description>
-    <category>Storage - Storage Capacity - Memory Full</category>
-    <severity>Critical</severity>
-    <javadoc>
-        <summary>This class defines the exception ErrorStorageMemoryFull that is thrown if the storage memory is full.</summary>
-        <description>This exception is thrown when the device storage capacity is exhausted and no additional data can be written. The device storage holds configuration, transaction logs, user data, and audit trail information. ErrorStorageMemoryFull indicates the storage has reached full capacity and write operations cannot proceed. Common causes include: accumulation of transaction logs, excessive transaction volume, inadequate storage capacity for application workload, or logs not regularly exported or archived. ErrorStorageMemoryFull is a Critical severity exception because it blocks new transactions and prevents critical operations that require storage writes. The device cannot accept new transactions when storage is full. Recovery requires freeing storage space by exporting and deleting logs, or implementing archive procedures to manage storage utilization.</description>
-        <constructors>
-            <constructor>
-                <signature>ErrorStorageMemoryFull()</signature>
-                <description>Constructs a new ErrorStorageMemoryFull exception with null as the value for its detail message</description>
-            </constructor>
-            <constructor>
-                <signature>ErrorStorageMemoryFull(String message)</signature>
-                <description>Constructs a new ErrorStorageMemoryFull exception whereby its detail message is initialized with the passed value</description>
-                <parameter name="message">value for the detail message of the exception, typically describing the storage full condition</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorStorageMemoryFull(String message, Throwable cause)</signature>
-                <description>Constructs a new ErrorStorageMemoryFull exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorStorageMemoryFull(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-                <description>Constructs a new ErrorStorageMemoryFull exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-            </constructor>
-        </constructors>
-    </javadoc>
-    <specification>
-        <source>BSI TR-03151-1</source>
-        <section>3.2 Secure Element Storage Capacity and 3.3 SE API Functions - Storage Write Requirements</section>
-        <requirement>The Secure Element storage has finite capacity for holding configuration, transaction logs, and audit trail data. When storage reaches full capacity, the device cannot accept new write operations. Any SE API function that requires writing to storage SHALL raise ErrorStorageMemoryFull if storage is full. Write operations that cannot proceed due to full storage include: transaction logging, configuration updates, log restoration, and data storage. The device must not silently drop data if storage is full. Storage management operations (export, delete) can free space to enable new writes. Adequate storage capacity planning is essential for system operation.</requirement>
-        <applicability>Storage write operations: setDescription, startTransaction, updateTransaction, finishTransaction, restoreLogsFromBackup</applicability>
-        <reference>Secure Element Storage Capacity (3.2), SE API Functions (3.3)</reference>
-    </specification>
-    <thrownBy>
-        <function>setDescription</function>
-        <function>startTransaction</function>
-        <function>updateTransaction</function>
-        <function>finishTransaction</function>
-        <function>restoreLogsFromBackup</function>
-    </thrownBy>
-    <triggerConditions>
-        <condition>
-            <scenario>Storage capacity exhausted by transaction logs</scenario>
-            <description>Transaction log accumulation has filled available storage</description>
-            <trigger>A finishTransaction call attempts to write transaction log but storage is full. The device detects full storage and raises ErrorStorageMemoryFull.</trigger>
-        </condition>
-        <condition>
-            <scenario>Inadequate storage for application workload</scenario>
-            <description>Storage capacity is insufficient for the application's transaction volume</description>
-            <trigger>After many transactions, a startTransaction call attempts to create new transaction but storage is full. The device has insufficient storage for the workload and ErrorStorageMemoryFull is raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Logs not regularly exported or archived</scenario>
-            <description>Storage fills because logs are not being managed through export/deletion</description>
-            <trigger>An updateTransaction call reaches storage full condition. Analysis reveals logs have accumulated without regular export/deletion and storage is exhausted.</trigger>
-        </condition>
-        <condition>
-            <scenario>Configuration or user data consuming storage</scenario>
-            <description>Device configuration or user data has consumed available storage space</description>
-            <trigger>A setDescription call attempts to update description but storage is full. Storage capacity is exhausted by accumulated data.</trigger>
-        </condition>
-        <condition>
-            <scenario>Log restoration attempt when storage is full</scenario>
-            <description>Attempting to restore logs from backup when storage is already full</description>
-            <trigger>A restoreLogsFromBackup call attempts to restore logs but storage is full. The restore cannot proceed and ErrorStorageMemoryFull is raised.</trigger>
-        </condition>
-    </triggerConditions>
-    <executionSequence>
-        <step number="1">User/application calls an SE API function that requires storage write (e.g., finishTransaction)</step>
-        <step number="2">Function validates input parameters</step>
-        <step number="3">Function initiates communication with Secure Element</step>
-        <step number="4">Secure Element receives request</step>
-        <step number="5">Secure Element checks storage capacity and available free space</step>
-        <step number="5a">If storage is full and cannot accommodate new data → ErrorStorageMemoryFull raised, operation aborted</step>
-        <step number="5b">If storage has available space → proceed to step 6</step>
-        <step number="6">Secure Element performs requested storage write operation</step>
-        <step number="6a">If storage fills during write → ErrorStorageMemoryFull raised, write may be rolled back</step>
-        <step number="6b">If storage write succeeds → proceed to step 7</step>
-        <step number="7">Secure Element confirms write completion</step>
-        <step number="8">Secure Element returns result to function</step>
-        <step number="9">Function processes result and returns to caller</step>
-    </executionSequence>
-    <recovery>
-        <step>Review error message - understand the storage full condition</step>
-        <step>Check storage status - query device to determine current storage utilization</step>
-        <step>Query available free space - determine how much free storage is available</step>
-        <step>Export transaction logs - export accumulated logs to external storage for archival</step>
-        <step>Delete exported logs - delete transaction logs from device after successful export</step>
-        <step>Verify free space restored - query device to confirm storage space is now available</step>
-        <step>Retry the operation - attempt the original operation again after freeing storage</step>
-        <step>Implement storage management - establish regular log export/deletion procedures</step>
-        <step>Consider storage upgrade - if storage fills regularly, upgrade device with larger storage capacity</step>
-        <step>Review storage planning - verify storage capacity is adequate for application workload</step>
-    </recovery>
-    <relatedExceptions>
-        <exception>ErrorFunctionFailed</exception>
-        <exception>ErrorNoDataAvailable</exception>
-        <exception>ErrorLimitOfSimultaneousOpenTransactionsReached</exception>
-        <exception>ErrorStorageMediumDisconnected</exception>
-    </relatedExceptions>
-    <postconditionality>
-        <state name="Storage Write Not Performed">The requested storage write operation is not completed.</state>
-        <state name="Data Not Stored">New data is not stored on the device.</state>
-        <state name="Transaction Not Recorded">Transaction logs are not recorded when storage is full.</state>
-        <state name="Storage Capacity Unchanged">Storage remains full - no free space is created.</state>
-        <state name="Configuration Not Updated">Configuration changes cannot be stored when storage is full.</state>
-        <state name="Manual Intervention Required">Storage management (export, delete) is needed to free space.</state>
-    </postconditionality>
-    <notes>
-        <note>ErrorStorageMemoryFull is thrown by 5 functions that require storage writes</note>
-        <note>This exception indicates storage capacity exhaustion, not hardware failure</note>
-        <note>The exception has Critical severity because it blocks transaction processing</note>
-        <note>Storage is used for transaction logs, configuration, and audit trail data</note>
-        <note>Storage capacity should be adequate for expected transaction volume</note>
-        <note>Regular log export and deletion procedures maintain available storage space</note>
-        <note>Proactive storage monitoring can warn before storage becomes full</note>
-        <note>Storage utilization should be tracked and forecasted for capacity planning</note>
-        <note>Error messages should indicate current storage utilization and free space</note>
-        <note>Device should prevent critical data loss by rejecting writes when storage is full</note>
-        <note>Archive procedures should automate log export to maintain storage availability</note>
-        <note>Storage sizing should account for transaction volume and retention requirements</note>
-        <note>Storage monitoring and alerting should provide early warning of approaching full capacity</note>
-        <note>Tiered storage strategies can use on-device storage for current logs and external storage for archives</note>
-        <note>Business continuity plans should account for storage full scenarios</note>
-    </notes>
-    <usage>
-        <scenario name="Scenario 1: Storage Full During Peak Transaction Load">
-            <description>A high-volume transaction system reaches storage full during peak load. A finishTransaction call raises ErrorStorageMemoryFull. Emergency storage cleanup procedures export and delete old logs, freeing space. Operations resume after storage cleanup.</description>
-            <relatedFunctions>finishTransaction, startTransaction, exportLogMessages, deleteLogMessages</relatedFunctions>
-            <errorContext>Production transaction processing blocked by full storage during peak load</errorContext>
-        </scenario>
-        <scenario name="Scenario 2: Proactive Storage Management">
-            <description>A monitoring system tracks storage utilization. When storage reaches 80% capacity, the system automatically exports logs and deletes archived entries. This proactive approach prevents ErrorStorageMemoryFull during operations.</description>
-            <relatedFunctions>getTotalMemory, getUsedMemory, getFreeMemory, exportLogMessages, deleteLogMessages</relatedFunctions>
-            <errorContext>Proactive storage management prevents storage full conditions</errorContext>
-        </scenario>
-        <scenario name="Scenario 3: Storage Capacity Upgrade Triggered">
-            <description>A system experiences ErrorStorageMemoryFull frequently despite regular log export. Analysis shows storage capacity is inadequate for the transaction workload. Device is upgraded with larger storage or storage management is improved.</description>
-            <relatedFunctions>startTransaction, getTotalMemory</relatedFunctions>
-            <errorContext>Repeated storage full errors trigger storage capacity upgrade decision</errorContext>
-        </scenario>
-        <scenario name="Scenario 4: Log Restoration Blocked by Full Storage">
-            <description>A restoreLogsFromBackup call to restore archived logs fails because storage is already full. The system must first export and delete current logs to free space, then retry the restore operation.</description>
-            <relatedFunctions>restoreLogsFromBackup, exportLogMessages, deleteLogMessages</relatedFunctions>
-            <errorContext>Log restoration requires storage space to be freed first</errorContext>
-        </scenario>
-    </usage>
-    <implementationContext>
-        <note>Storage capacity should be checked before accepting write operations</note>
-        <note>Device should verify sufficient free space exists for the write operation</note>
-        <note>Storage utilization monitoring should provide visibility into capacity status</note>
-        <note>Error messages should indicate current utilization and available free space</note>
-        <note>Device should not silently drop or truncate data when storage is full</note>
-        <note>Write operations should be atomic - either fully commit or fully rollback if space unavailable</note>
-        <note>Storage management APIs should provide capacity information and deletion capabilities</note>
-        <note>Archive procedures should regularly export logs to maintain available storage space</note>
-        <note>Storage capacity should be designed with margin above peak expected usage</note>
-        <note>Capacity planning should account for log growth, retention requirements, and transaction volume</note>
-    </implementationContext>
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorStorageMemoryFull" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+  <name>ErrorStorageMemoryFull</name>
+  <description>This exception is thrown if the storage memory of the device is full and cannot accommodate new data. The Secure Element uses storage for device configuration, transaction logs, user data, and audit trail information. When storage reaches capacity, no new data can be written until storage is freed by deleting or exporting logs. ErrorStorageMemoryFull indicates the device storage is exhausted and write operations must be blocked. Common causes include: excessive transaction volume, accumulation of log messages, inadequate storage capacity for workload, or logs not being regularly exported/archived. ErrorStorageMemoryFull is a Critical condition that prevents new transactions and data storage operations until storage space is freed.</description>
+  <category>Storage - Storage Capacity - Memory Full</category>
+  <severity>Critical</severity>
+  <thrownBy>
+    <function>authenticateUser</function>
+    <function>configureLogging</function>
+    <function>deregisterClient</function>
+    <function>disableSecureElement</function>
+    <function>finishTransaction</function>
+    <function>initialize</function>
+    <function>lockTransactionLogging</function>
+    <function>logOut</function>
+    <function>registerClient</function>
+    <function>restoreLogsFromBackup</function>
+    <function>selfTest</function>
+    <function>setDescription</function>
+    <function>startTransaction</function>
+    <function>unblockPin</function>
+    <function>unlockTransactionLogging</function>
+    <function>updateDevice</function>
+    <function>updateTime</function>
+    <function>updateTransaction</function>
+  </thrownBy>
+  <javadoc>
+    <summary>This class defines the exception ErrorStorageMemoryFull that is thrown if the storage memory is full.</summary>
+    <description>This exception is thrown when the device storage capacity is exhausted and no additional data can be written. The device storage holds configuration, transaction logs, user data, and audit trail information. ErrorStorageMemoryFull indicates the storage has reached full capacity and write operations cannot proceed. Common causes include: accumulation of transaction logs, excessive transaction volume, inadequate storage capacity for application workload, or logs not regularly exported or archived. ErrorStorageMemoryFull is a Critical severity exception because it blocks new transactions and prevents critical operations that require storage writes. The device cannot accept new transactions when storage is full. Recovery requires freeing storage space by exporting and deleting logs, or implementing archive procedures to manage storage utilization.</description>
+    <constructors>
+      <constructor>
+        <signature>ErrorStorageMemoryFull()</signature>
+        <description>Constructs a new ErrorStorageMemoryFull exception with null as the value for its detail message</description>
+      </constructor>
+      <constructor>
+        <signature>ErrorStorageMemoryFull(String message)</signature>
+        <description>Constructs a new ErrorStorageMemoryFull exception whereby its detail message is initialized with the passed value</description>
+        <parameter name="message">value for the detail message of the exception, typically describing the storage full condition</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorStorageMemoryFull(String message, Throwable cause)</signature>
+        <description>Constructs a new ErrorStorageMemoryFull exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorStorageMemoryFull(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+        <description>Constructs a new ErrorStorageMemoryFull exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+      </constructor>
+    </constructors>
+  </javadoc>
+  <specification>
+    <source>BSI TR-03151-1</source>
+    <section>3.2 Secure Element Storage Capacity and 3.3 SE API Functions - Storage Write Requirements</section>
+    <requirement>The Secure Element storage has finite capacity for holding configuration, transaction logs, and audit trail data. When storage reaches full capacity, the device cannot accept new write operations. Any SE API function that requires writing to storage SHALL raise ErrorStorageMemoryFull if storage is full. Write operations that cannot proceed due to full storage include: transaction logging, configuration updates, log restoration, and data storage. The device must not silently drop data if storage is full. Storage management operations (export, delete) can free space to enable new writes. Adequate storage capacity planning is essential for system operation.</requirement>
+    <applicability>Storage write operations: setDescription, startTransaction, updateTransaction, finishTransaction, restoreLogsFromBackup</applicability>
+    <reference>Secure Element Storage Capacity (3.2), SE API Functions (3.3)</reference>
+  </specification>
+  <triggerConditions>
+    <condition>
+      <scenario>Storage capacity exhausted by transaction logs</scenario>
+      <description>Transaction log accumulation has filled available storage</description>
+      <trigger>A finishTransaction call attempts to write transaction log but storage is full. The device detects full storage and raises ErrorStorageMemoryFull.</trigger>
+    </condition>
+    <condition>
+      <scenario>Inadequate storage for application workload</scenario>
+      <description>Storage capacity is insufficient for the application's transaction volume</description>
+      <trigger>After many transactions, a startTransaction call attempts to create new transaction but storage is full. The device has insufficient storage for the workload and ErrorStorageMemoryFull is raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Logs not regularly exported or archived</scenario>
+      <description>Storage fills because logs are not being managed through export/deletion</description>
+      <trigger>An updateTransaction call reaches storage full condition. Analysis reveals logs have accumulated without regular export/deletion and storage is exhausted.</trigger>
+    </condition>
+    <condition>
+      <scenario>Configuration or user data consuming storage</scenario>
+      <description>Device configuration or user data has consumed available storage space</description>
+      <trigger>A setDescription call attempts to update description but storage is full. Storage capacity is exhausted by accumulated data.</trigger>
+    </condition>
+    <condition>
+      <scenario>Log restoration attempt when storage is full</scenario>
+      <description>Attempting to restore logs from backup when storage is already full</description>
+      <trigger>A restoreLogsFromBackup call attempts to restore logs but storage is full. The restore cannot proceed and ErrorStorageMemoryFull is raised.</trigger>
+    </condition>
+  </triggerConditions>
+  <executionSequence>
+    <step number="1">User/application calls an SE API function that requires storage write (e.g., finishTransaction)</step>
+    <step number="2">Function validates input parameters</step>
+    <step number="3">Function initiates communication with Secure Element</step>
+    <step number="4">Secure Element receives request</step>
+    <step number="5">Secure Element checks storage capacity and available free space</step>
+    <step number="5a">If storage is full and cannot accommodate new data → ErrorStorageMemoryFull raised, operation aborted</step>
+    <step number="5b">If storage has available space → proceed to step 6</step>
+    <step number="6">Secure Element performs requested storage write operation</step>
+    <step number="6a">If storage fills during write → ErrorStorageMemoryFull raised, write may be rolled back</step>
+    <step number="6b">If storage write succeeds → proceed to step 7</step>
+    <step number="7">Secure Element confirms write completion</step>
+    <step number="8">Secure Element returns result to function</step>
+    <step number="9">Function processes result and returns to caller</step>
+  </executionSequence>
+  <recovery>
+    <step>Review error message - understand the storage full condition</step>
+    <step>Check storage status - query device to determine current storage utilization</step>
+    <step>Query available free space - determine how much free storage is available</step>
+    <step>Export transaction logs - export accumulated logs to external storage for archival</step>
+    <step>Delete exported logs - delete transaction logs from device after successful export</step>
+    <step>Verify free space restored - query device to confirm storage space is now available</step>
+    <step>Retry the operation - attempt the original operation again after freeing storage</step>
+    <step>Implement storage management - establish regular log export/deletion procedures</step>
+    <step>Consider storage upgrade - if storage fills regularly, upgrade device with larger storage capacity</step>
+    <step>Review storage planning - verify storage capacity is adequate for application workload</step>
+  </recovery>
+  <relatedExceptions>
+    <exception>ErrorFunctionFailed</exception>
+    <exception>ErrorNoDataAvailable</exception>
+    <exception>ErrorLimitOfSimultaneousOpenTransactionsReached</exception>
+    <exception>ErrorStorageMediumDisconnected</exception>
+  </relatedExceptions>
+  <postconditionality>
+    <state name="Storage Write Not Performed">The requested storage write operation is not completed.</state>
+    <state name="Data Not Stored">New data is not stored on the device.</state>
+    <state name="Transaction Not Recorded">Transaction logs are not recorded when storage is full.</state>
+    <state name="Storage Capacity Unchanged">Storage remains full - no free space is created.</state>
+    <state name="Configuration Not Updated">Configuration changes cannot be stored when storage is full.</state>
+    <state name="Manual Intervention Required">Storage management (export, delete) is needed to free space.</state>
+  </postconditionality>
+  <notes>
+    <note>ErrorStorageMemoryFull is thrown by 5 functions that require storage writes</note>
+    <note>This exception indicates storage capacity exhaustion, not hardware failure</note>
+    <note>The exception has Critical severity because it blocks transaction processing</note>
+    <note>Storage is used for transaction logs, configuration, and audit trail data</note>
+    <note>Storage capacity should be adequate for expected transaction volume</note>
+    <note>Regular log export and deletion procedures maintain available storage space</note>
+    <note>Proactive storage monitoring can warn before storage becomes full</note>
+    <note>Storage utilization should be tracked and forecasted for capacity planning</note>
+    <note>Error messages should indicate current storage utilization and free space</note>
+    <note>Device should prevent critical data loss by rejecting writes when storage is full</note>
+    <note>Archive procedures should automate log export to maintain storage availability</note>
+    <note>Storage sizing should account for transaction volume and retention requirements</note>
+    <note>Storage monitoring and alerting should provide early warning of approaching full capacity</note>
+    <note>Tiered storage strategies can use on-device storage for current logs and external storage for archives</note>
+    <note>Business continuity plans should account for storage full scenarios</note>
+  </notes>
+  <usage>
+    <scenario name="Scenario 1: Storage Full During Peak Transaction Load">
+      <description>A high-volume transaction system reaches storage full during peak load. A finishTransaction call raises ErrorStorageMemoryFull. Emergency storage cleanup procedures export and delete old logs, freeing space. Operations resume after storage cleanup.</description>
+      <relatedFunctions>finishTransaction, startTransaction, exportLogMessages, deleteLogMessages</relatedFunctions>
+      <errorContext>Production transaction processing blocked by full storage during peak load</errorContext>
+    </scenario>
+    <scenario name="Scenario 2: Proactive Storage Management">
+      <description>A monitoring system tracks storage utilization. When storage reaches 80% capacity, the system automatically exports logs and deletes archived entries. This proactive approach prevents ErrorStorageMemoryFull during operations.</description>
+      <relatedFunctions>getTotalMemory, getUsedMemory, getFreeMemory, exportLogMessages, deleteLogMessages</relatedFunctions>
+      <errorContext>Proactive storage management prevents storage full conditions</errorContext>
+    </scenario>
+    <scenario name="Scenario 3: Storage Capacity Upgrade Triggered">
+      <description>A system experiences ErrorStorageMemoryFull frequently despite regular log export. Analysis shows storage capacity is inadequate for the transaction workload. Device is upgraded with larger storage or storage management is improved.</description>
+      <relatedFunctions>startTransaction, getTotalMemory</relatedFunctions>
+      <errorContext>Repeated storage full errors trigger storage capacity upgrade decision</errorContext>
+    </scenario>
+    <scenario name="Scenario 4: Log Restoration Blocked by Full Storage">
+      <description>A restoreLogsFromBackup call to restore archived logs fails because storage is already full. The system must first export and delete current logs to free space, then retry the restore operation.</description>
+      <relatedFunctions>restoreLogsFromBackup, exportLogMessages, deleteLogMessages</relatedFunctions>
+      <errorContext>Log restoration requires storage space to be freed first</errorContext>
+    </scenario>
+  </usage>
+  <implementationContext>
+    <note>Storage capacity should be checked before accepting write operations</note>
+    <note>Device should verify sufficient free space exists for the write operation</note>
+    <note>Storage utilization monitoring should provide visibility into capacity status</note>
+    <note>Error messages should indicate current utilization and available free space</note>
+    <note>Device should not silently drop or truncate data when storage is full</note>
+    <note>Write operations should be atomic - either fully commit or fully rollback if space unavailable</note>
+    <note>Storage management APIs should provide capacity information and deletion capabilities</note>
+    <note>Archive procedures should regularly export logs to maintain available storage space</note>
+    <note>Storage capacity should be designed with margin above peak expected usage</note>
+    <note>Capacity planning should account for log growth, retention requirements, and transaction volume</note>
+  </implementationContext>
 </exception>

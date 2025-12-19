@@ -1,163 +1,163 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<exception id="ErrorGetTransactionStateFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
-    <name>ErrorGetTransactionStateFailed</name>
-    <description>This exception is thrown if the SE API function getTransactionState fails to retrieve the current state of a specific transaction. The function attempts to determine the operational state of an active transaction, but the retrieval process fails before the transaction state can be determined and returned.</description>
-    <category>Transaction Management - Transaction State Query</category>
-    <severity>High</severity>
-    <javadoc>
-        <summary>This class defines the exception ErrorGetTransactionStateFailed that is thrown if the determination of the transaction state failed.</summary>
-        <description>This exception is thrown when the getTransactionState function cannot retrieve the current state of a specific transaction from the Secure Element. Transaction state information describes the operational status of an active transaction (active, pending completion, suspended, etc.). ErrorGetTransactionStateFailed indicates that the Secure Element cannot provide the transaction state due to hardware failure, transaction state storage corruption, internal transaction management system errors, communication failures, or Secure Element state restrictions. When this exception occurs, no transaction state value is returned and applications cannot determine the operational status of the requested transaction. Recovery typically involves transaction diagnostics, transaction management subsystem verification, and state recovery if the failure persists.</description>
-        <constructors>
-            <constructor>
-                <signature>ErrorGetTransactionStateFailed()</signature>
-                <description>Constructs a new ErrorGetTransactionStateFailed exception with null as the value for its detail message</description>
-            </constructor>
-            <constructor>
-                <signature>ErrorGetTransactionStateFailed(String message)</signature>
-                <description>Constructs a new ErrorGetTransactionStateFailed exception whereby its detail message is initialized with the passed value</description>
-                <parameter name="message">value for the detail message of the exception, typically describing the transaction state retrieval failure</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorGetTransactionStateFailed(String message, Throwable cause)</signature>
-                <description>Constructs a new ErrorGetTransactionStateFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorGetTransactionStateFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-                <description>Constructs a new ErrorGetTransactionStateFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-            </constructor>
-        </constructors>
-    </javadoc>
-    <specification>
-        <source>BSI TR-03151-1</source>
-        <section>3.1.5 Transaction Management - getTransactionState</section>
-        <requirement>The function getTransactionState SHALL query the Secure Element to determine the current state of a specific transaction. If the Secure Element cannot provide or return the required transaction state information, the function SHALL raise the exception ErrorGetTransactionStateFailed and exit without returning any state data. The transaction state retrieval failure indicates the Secure Element's transaction management query functionality could not complete successfully.</requirement>
-        <applicability>Transaction management operations - getTransactionState function only</applicability>
-        <reference>getTransactionState – Function (3.1.5)</reference>
-    </specification>
-    <thrownBy>
-        <function>getTransactionState</function>
-    </thrownBy>
-    <triggerConditions>
-        <condition>
-            <scenario>Transaction management hardware failure</scenario>
-            <description>The Secure Element's transaction management hardware malfunctions or becomes inaccessible, preventing transaction state retrieval</description>
-            <trigger>The Secure Element's transaction registry or transaction management hardware malfunctions or experiences read errors. When getTransactionState is called, the transaction state query is sent to the Secure Element, but the hardware cannot provide valid state information. The function receives a failure status from the Secure Element, triggering ErrorGetTransactionStateFailed.</trigger>
-        </condition>
-        <condition>
-            <scenario>Transaction state data corruption</scenario>
-            <description>The Secure Element's transaction registry or transaction state tracking data becomes corrupted or is lost</description>
-            <trigger>The Secure Element's memory containing transaction state information, transaction tracking tables, or transaction metadata becomes corrupted, experiences data loss, or is marked as inaccessible due to storage errors. When getTransactionState attempts to read the transaction state, the data cannot be reliably retrieved, triggering ErrorGetTransactionStateFailed.</trigger>
-        </condition>
-        <condition>
-            <scenario>Transaction management subsystem internal error</scenario>
-            <description>The Secure Element's transaction management subsystem encounters critical errors that prevent transaction state retrieval</description>
-            <trigger>The Secure Element's transaction management subsystem (responsible for managing transactions and providing transaction state) encounters an internal error, deadlock, or exception. When getTransactionState is called, the transaction management system cannot process the state query, triggering ErrorGetTransactionStateFailed.</trigger>
-        </condition>
-        <condition>
-            <scenario>Device-to-Secure Element communication failure during state query</scenario>
-            <description>The communication channel between device and Secure Element is disrupted during transaction state retrieval</description>
-            <trigger>A communication failure occurs while getTransactionState transmits the state query to the Secure Element or while receiving the transaction state response. The command may be corrupted, the response may be incomplete, or the communication link may be temporarily unavailable. The function receives a communication error status, triggering ErrorGetTransactionStateFailed.</trigger>
-        </condition>
-        <condition>
-            <scenario>Secure Element in restricted or error state prohibiting transaction access</scenario>
-            <description>The Secure Element is in a locked, restricted, or error state that prevents external queries for transaction information</description>
-            <trigger>The Secure Element enters a state where transaction queries or transaction state access is not permitted. When getTransactionState is called and the Secure Element's state prohibits transaction access, the function receives a state-related rejection, triggering ErrorGetTransactionStateFailed.</trigger>
-        </condition>
-    </triggerConditions>
-    <executionSequence>
-        <step number="1">User/application calls getTransactionState function with transaction ID parameter on device</step>
-        <step number="2">Function validates input parameters (transaction ID validity) and checks authentication status (if required by referencing guideline)</step>
-        <step number="3">Function checks authorization for transaction information access (if required by referencing guideline)</step>
-        <step number="4">Function verifies device is properly initialized and transaction management is operational</step>
-        <step number="5">Function initiates communication channel to Secure Element and prepares transaction state query command with transaction ID</step>
-        <step number="6">Function transmits state query command to Secure Element requesting the current state of the specified transaction</step>
-        <step number="6a">If Secure Element responds with failure status (transaction error, state error, management error) → ErrorGetTransactionStateFailed raised, function exits without state value</step>
-        <step number="6b">If communication failure occurs during query transmission or response reception → ErrorGetTransactionStateFailed raised, function exits</step>
-        <step number="7">If successful, function receives transaction state value from Secure Element</step>
-        <step number="8">Function validates transaction state value for correctness (format, state validity, transaction existence verification)</step>
-        <step number="9">Function closes Secure Element communication channel</step>
-        <step number="10">Function returns valid transaction state value to caller</step>
-    </executionSequence>
-    <recovery>
-        <step>Verify device operational status - confirm device is initialized, responding to other operations, and not in an error state</step>
-        <step>Verify Secure Element accessibility - confirm device can communicate with Secure Element through diagnostic commands</step>
-        <step>Check device initialization - ensure device has been properly initialized with initDevice before attempting getTransactionState</step>
-        <step>Verify transaction ID validity - confirm the requested transaction ID exists and corresponds to an active or recent transaction</step>
-        <step>Retry getTransactionState operation - attempt the function call again as the failure may be transient</step>
-        <step>Review device diagnostics for transaction management system health - query device for diagnostic information about Secure Element transaction management subsystem status</step>
-        <step>Test other transaction queries - attempt retrieving open transactions or transaction counter to verify general transaction access capability</step>
-        <step>Implement comprehensive error logging and monitoring - log this failure consistently to identify patterns (transient vs. persistent, correlation with transaction operations)</step>
-        <step>If failure is persistent, attempt device firmware update if available - may resolve transaction management subsystem errors or transaction state recovery</step>
-        <step>If failure persists and suspected state corruption, contact device manufacturer or consider device reset - repeated transaction state retrieval failures indicate serious transaction management issues</step>
-    </recovery>
-    <relatedExceptions>
-        <exception>ErrorFunctionFailed</exception>
-        <exception>ErrorDeviceNotInitialized</exception>
-        <exception>ErrorTransactionNotFound</exception>
-        <exception>ErrorGetOpenTransactionsFailed</exception>
-        <exception>ErrorGetCurrentTransactionCounterFailed</exception>
-    </relatedExceptions>
-    <postconditionality>
-        <state name="Device Operational State">Device remains fully operational and unmodified. The failure to retrieve transaction state does not affect device initialization state, transaction management operations, internal memory, stored data, or the ability to perform other operations. All device components remain in their pre-call state.</state>
-        <state name="Transaction State Return Status">No transaction state value is returned to the caller. The function exits without providing transaction operational status. Applications must not assume default transaction states or cached information; they must handle the exception as indicating transaction state information is unavailable.</state>
-        <state name="Secure Element Transaction Management State">Secure Element transaction management subsystem remains unchanged by the failed query. No state modifications, transaction state changes, or transaction management configuration changes occur. Transaction management operations continue normally regardless of the retrieval failure.</state>
-        <state name="Transaction Continuity">The specified transaction continues to be maintained internally in the Secure Element. The failure to retrieve the transaction state does not affect the transaction or transaction management operations. State queries can be retried once the underlying issue is resolved.</state>
-        <state name="No Cascading State Effects">No cascading state inconsistencies or secondary failures occur as a result of the state query failure. Device internal consistency is maintained. Other SE API functions and transaction management operations continue normally without state corruption.</state>
-        <state name="Recovery Preconditions Met">The device state after exception is consistent and allows for recovery operations. The underlying issue (hardware error, communication error, management system error) remains present, but the device is stable enough to accept diagnostic queries or recovery attempts.</state>
-    </postconditionality>
-    <notes>
-        <note>ErrorGetTransactionStateFailed is thrown ONLY by the getTransactionState function - it is the most specific and precise exception for Secure Element transaction state retrieval failures</note>
-        <note>This exception indicates a failure in the Secure Element's ability to retrieve the state of a specific transaction</note>
-        <note>Critical distinction from ErrorFunctionFailed: ErrorGetTransactionStateFailed specifically indicates transaction state query is unavailable at the transaction management subsystem level, while ErrorFunctionFailed indicates broader unspecified critical failures</note>
-        <note>Exception is raised during the transaction state query phase (steps 6-7), after device initialization and authentication checks have passed</note>
-        <note>After this exception, the Secure Element remains unchanged and the transaction continues to be maintained internally. State queries can be retried once the underlying issue is resolved</note>
-        <note>This exception has High severity because it prevents users from determining transaction operational status (critical for transaction monitoring and state management)</note>
-        <note>Transaction state describes the current operational state of an active transaction (active, pending completion, suspended, error, etc.)</note>
-        <note>The exception indicates transaction state cannot be reliably determined; applications must not implement workarounds using external transaction state tracking without explicit validation</note>
-        <note>Failure scenarios range from transient (temporary communication issues, temporary state) to persistent (transaction state corruption, hardware failure, firmware error)</note>
-        <note>If this exception occurs frequently or persistently, it indicates serious issues with Secure Element transaction management hardware, firmware, or transaction state storage that require diagnostic investigation</note>
-        <note>Transaction state query is a read-only query; failure does not modify any transaction state, so recovery typically requires only retrying the query once underlying issue is resolved</note>
-        <note>Transaction state information is essential for transaction monitoring, diagnostic, and operational state verification</note>
-        <note>Applications must implement appropriate error handling for transaction state retrieval failures, especially in transaction monitoring and diagnostics</note>
-        <note>Repeated transaction state retrieval failures may indicate device needs firmware update, transaction state reset, or hardware service - manufacturer support should be engaged</note>
-        <note>Different device models may track different transaction state values - consult device specifications for supported transaction states</note>
-    </notes>
-    <usage>
-        <scenario name="Scenario 1: Transaction Monitoring and Operational State Tracking">
-            <description>A transaction monitoring system tracks the operational state of active transactions to ensure proper transaction lifecycle. The system periodically calls getTransactionState to monitor the state of specific transactions. If ErrorGetTransactionStateFailed is raised, the monitoring system cannot assess transaction operational status.</description>
-            <relatedFunctions>getTransactionState, getOpenTransactions, getCurrentTransactionCounter</relatedFunctions>
-            <errorContext>Transaction state unavailable for transaction monitoring and operational tracking</errorContext>
-        </scenario>
-        <scenario name="Scenario 2: Transaction Diagnostics and Health Assessment">
-            <description>A diagnostic system collects detailed transaction diagnostics to assess transaction health and identify issues. The system calls getTransactionState to obtain transaction operational status as part of the diagnostic assessment. If ErrorGetTransactionStateFailed is raised, the diagnostic cannot verify transaction state.</description>
-            <relatedFunctions>getTransactionState, getOpenTransactions, getCurrentTransactionCounter</relatedFunctions>
-            <errorContext>Transaction state unavailable for transaction diagnostics and health assessment</errorContext>
-        </scenario>
-        <scenario name="Scenario 3: Transaction State Validation and Completion Verification">
-            <description>A transaction completion verification system validates that expected transactions have reached appropriate completion states. The system calls getTransactionState to verify the state of each transaction. If ErrorGetTransactionStateFailed is raised, the system cannot verify transaction completion state.</description>
-            <relatedFunctions>getTransactionState, getOpenTransactions</relatedFunctions>
-            <errorContext>Transaction state unavailable for transaction completion verification</errorContext>
-        </scenario>
-        <scenario name="Scenario 4: Multi-Transaction State Inspection and Batch Monitoring">
-            <description>An enterprise system manages multiple transactions and needs to inspect their states for operational purposes. The system calls getTransactionState on multiple transactions to assess the overall transaction workload and state distribution. If ErrorGetTransactionStateFailed is raised on any transaction, that transaction's state cannot be included in the workload assessment.</description>
-            <relatedFunctions>getTransactionState, getOpenTransactions, getCurrentTransactionCounter</relatedFunctions>
-            <errorContext>Transaction state unavailable for multi-transaction inspection</errorContext>
-        </scenario>
-    </usage>
-    <implementationContext>
-        <note>The getTransactionState function retrieves the current operational state of a specific transaction identified by transaction ID</note>
-        <note>Transaction state describes the current phase or condition of a transaction (active, pending, suspended, completed, error, etc.)</note>
-        <note>Transaction state information is used to track transaction lifecycle and operational status</note>
-        <note>Different device models and configurations may report different transaction state values - consult device specifications for supported transaction states</note>
-        <note>Transaction state information is essential for transaction monitoring, diagnostics, and operational state verification</note>
-        <note>If transaction state retrieval fails but other transaction queries succeed (open transactions, transaction counter), the issue is specific to individual transaction state queries, not to general transaction management access</note>
-        <note>Transaction state errors or retrieval failures represent critical issues in transaction management that should be investigated immediately</note>
-        <note>Transaction state query is a read-only query; ErrorGetTransactionStateFailed does not indicate transaction state corruption requiring state recovery - it indicates the state information source is unavailable</note>
-    </implementationContext>
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorGetTransactionStateFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+  <name>ErrorGetTransactionStateFailed</name>
+  <description>This exception is thrown if the SE API function getTransactionState fails to retrieve the current state of a specific transaction. The function attempts to determine the operational state of an active transaction, but the retrieval process fails before the transaction state can be determined and returned.</description>
+  <category>Transaction Management - Transaction State Query</category>
+  <severity>High</severity>
+  <javadoc>
+    <summary>This class defines the exception ErrorGetTransactionStateFailed that is thrown if the determination of the transaction state failed.</summary>
+    <description>This exception is thrown when the getTransactionState function cannot retrieve the current state of a specific transaction from the Secure Element. Transaction state information describes the operational status of an active transaction (active, pending completion, suspended, etc.). ErrorGetTransactionStateFailed indicates that the Secure Element cannot provide the transaction state due to hardware failure, transaction state storage corruption, internal transaction management system errors, communication failures, or Secure Element state restrictions. When this exception occurs, no transaction state value is returned and applications cannot determine the operational status of the requested transaction. Recovery typically involves transaction diagnostics, transaction management subsystem verification, and state recovery if the failure persists.</description>
+    <constructors>
+      <constructor>
+        <signature>ErrorGetTransactionStateFailed()</signature>
+        <description>Constructs a new ErrorGetTransactionStateFailed exception with null as the value for its detail message</description>
+      </constructor>
+      <constructor>
+        <signature>ErrorGetTransactionStateFailed(String message)</signature>
+        <description>Constructs a new ErrorGetTransactionStateFailed exception whereby its detail message is initialized with the passed value</description>
+        <parameter name="message">value for the detail message of the exception, typically describing the transaction state retrieval failure</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorGetTransactionStateFailed(String message, Throwable cause)</signature>
+        <description>Constructs a new ErrorGetTransactionStateFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorGetTransactionStateFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+        <description>Constructs a new ErrorGetTransactionStateFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+      </constructor>
+    </constructors>
+  </javadoc>
+  <specification>
+    <source>BSI TR-03151-1</source>
+    <section>3.1.5 Transaction Management - getTransactionState</section>
+    <requirement>The function getTransactionState SHALL query the Secure Element to determine the current state of a specific transaction. If the Secure Element cannot provide or return the required transaction state information, the function SHALL raise the exception ErrorGetTransactionStateFailed and exit without returning any state data. The transaction state retrieval failure indicates the Secure Element's transaction management query functionality could not complete successfully.</requirement>
+    <applicability>Transaction management operations - getTransactionState function only</applicability>
+    <reference>getTransactionState – Function (3.1.5)</reference>
+  </specification>
+  <thrownBy>
+    <function>getTransactionState</function>
+  </thrownBy>
+  <triggerConditions>
+    <condition>
+      <scenario>Transaction management hardware failure</scenario>
+      <description>The Secure Element's transaction management hardware malfunctions or becomes inaccessible, preventing transaction state retrieval</description>
+      <trigger>The Secure Element's transaction registry or transaction management hardware malfunctions or experiences read errors. When getTransactionState is called, the transaction state query is sent to the Secure Element, but the hardware cannot provide valid state information. The function receives a failure status from the Secure Element, triggering ErrorGetTransactionStateFailed.</trigger>
+    </condition>
+    <condition>
+      <scenario>Transaction state data corruption</scenario>
+      <description>The Secure Element's transaction registry or transaction state tracking data becomes corrupted or is lost</description>
+      <trigger>The Secure Element's memory containing transaction state information, transaction tracking tables, or transaction metadata becomes corrupted, experiences data loss, or is marked as inaccessible due to storage errors. When getTransactionState attempts to read the transaction state, the data cannot be reliably retrieved, triggering ErrorGetTransactionStateFailed.</trigger>
+    </condition>
+    <condition>
+      <scenario>Transaction management subsystem internal error</scenario>
+      <description>The Secure Element's transaction management subsystem encounters critical errors that prevent transaction state retrieval</description>
+      <trigger>The Secure Element's transaction management subsystem (responsible for managing transactions and providing transaction state) encounters an internal error, deadlock, or exception. When getTransactionState is called, the transaction management system cannot process the state query, triggering ErrorGetTransactionStateFailed.</trigger>
+    </condition>
+    <condition>
+      <scenario>Device-to-Secure Element communication failure during state query</scenario>
+      <description>The communication channel between device and Secure Element is disrupted during transaction state retrieval</description>
+      <trigger>A communication failure occurs while getTransactionState transmits the state query to the Secure Element or while receiving the transaction state response. The command may be corrupted, the response may be incomplete, or the communication link may be temporarily unavailable. The function receives a communication error status, triggering ErrorGetTransactionStateFailed.</trigger>
+    </condition>
+    <condition>
+      <scenario>Secure Element in restricted or error state prohibiting transaction access</scenario>
+      <description>The Secure Element is in a locked, restricted, or error state that prevents external queries for transaction information</description>
+      <trigger>The Secure Element enters a state where transaction queries or transaction state access is not permitted. When getTransactionState is called and the Secure Element's state prohibits transaction access, the function receives a state-related rejection, triggering ErrorGetTransactionStateFailed.</trigger>
+    </condition>
+  </triggerConditions>
+  <executionSequence>
+    <step number="1">User/application calls getTransactionState function with transaction ID parameter on device</step>
+    <step number="2">Function validates input parameters (transaction ID validity) and checks authentication status (if required by referencing guideline)</step>
+    <step number="3">Function checks authorization for transaction information access (if required by referencing guideline)</step>
+    <step number="4">Function verifies device is properly initialized and transaction management is operational</step>
+    <step number="5">Function initiates communication channel to Secure Element and prepares transaction state query command with transaction ID</step>
+    <step number="6">Function transmits state query command to Secure Element requesting the current state of the specified transaction</step>
+    <step number="6a">If Secure Element responds with failure status (transaction error, state error, management error) → ErrorGetTransactionStateFailed raised, function exits without state value</step>
+    <step number="6b">If communication failure occurs during query transmission or response reception → ErrorGetTransactionStateFailed raised, function exits</step>
+    <step number="7">If successful, function receives transaction state value from Secure Element</step>
+    <step number="8">Function validates transaction state value for correctness (format, state validity, transaction existence verification)</step>
+    <step number="9">Function closes Secure Element communication channel</step>
+    <step number="10">Function returns valid transaction state value to caller</step>
+  </executionSequence>
+  <recovery>
+    <step>Verify device operational status - confirm device is initialized, responding to other operations, and not in an error state</step>
+    <step>Verify Secure Element accessibility - confirm device can communicate with Secure Element through diagnostic commands</step>
+    <step>Check device initialization - ensure device has been properly initialized with initDevice before attempting getTransactionState</step>
+    <step>Verify transaction ID validity - confirm the requested transaction ID exists and corresponds to an active or recent transaction</step>
+    <step>Retry getTransactionState operation - attempt the function call again as the failure may be transient</step>
+    <step>Review device diagnostics for transaction management system health - query device for diagnostic information about Secure Element transaction management subsystem status</step>
+    <step>Test other transaction queries - attempt retrieving open transactions or transaction counter to verify general transaction access capability</step>
+    <step>Implement comprehensive error logging and monitoring - log this failure consistently to identify patterns (transient vs. persistent, correlation with transaction operations)</step>
+    <step>If failure is persistent, attempt device firmware update if available - may resolve transaction management subsystem errors or transaction state recovery</step>
+    <step>If failure persists and suspected state corruption, contact device manufacturer or consider device reset - repeated transaction state retrieval failures indicate serious transaction management issues</step>
+  </recovery>
+  <relatedExceptions>
+    <exception>ErrorFunctionFailed</exception>
+    <exception>ErrorDeviceNotInitialized</exception>
+    <exception>ErrorTransactionNotFound</exception>
+    <exception>ErrorGetOpenTransactionsFailed</exception>
+    <exception>ErrorGetCurrentTransactionCounterFailed</exception>
+  </relatedExceptions>
+  <postconditionality>
+    <state name="Device Operational State">Device remains fully operational and unmodified. The failure to retrieve transaction state does not affect device initialization state, transaction management operations, internal memory, stored data, or the ability to perform other operations. All device components remain in their pre-call state.</state>
+    <state name="Transaction State Return Status">No transaction state value is returned to the caller. The function exits without providing transaction operational status. Applications must not assume default transaction states or cached information; they must handle the exception as indicating transaction state information is unavailable.</state>
+    <state name="Secure Element Transaction Management State">Secure Element transaction management subsystem remains unchanged by the failed query. No state modifications, transaction state changes, or transaction management configuration changes occur. Transaction management operations continue normally regardless of the retrieval failure.</state>
+    <state name="Transaction Continuity">The specified transaction continues to be maintained internally in the Secure Element. The failure to retrieve the transaction state does not affect the transaction or transaction management operations. State queries can be retried once the underlying issue is resolved.</state>
+    <state name="No Cascading State Effects">No cascading state inconsistencies or secondary failures occur as a result of the state query failure. Device internal consistency is maintained. Other SE API functions and transaction management operations continue normally without state corruption.</state>
+    <state name="Recovery Preconditions Met">The device state after exception is consistent and allows for recovery operations. The underlying issue (hardware error, communication error, management system error) remains present, but the device is stable enough to accept diagnostic queries or recovery attempts.</state>
+  </postconditionality>
+  <notes>
+    <note>ErrorGetTransactionStateFailed is thrown ONLY by the getTransactionState function - it is the most specific and precise exception for Secure Element transaction state retrieval failures</note>
+    <note>This exception indicates a failure in the Secure Element's ability to retrieve the state of a specific transaction</note>
+    <note>Critical distinction from ErrorFunctionFailed: ErrorGetTransactionStateFailed specifically indicates transaction state query is unavailable at the transaction management subsystem level, while ErrorFunctionFailed indicates broader unspecified critical failures</note>
+    <note>Exception is raised during the transaction state query phase (steps 6-7), after device initialization and authentication checks have passed</note>
+    <note>After this exception, the Secure Element remains unchanged and the transaction continues to be maintained internally. State queries can be retried once the underlying issue is resolved</note>
+    <note>This exception has High severity because it prevents users from determining transaction operational status (critical for transaction monitoring and state management)</note>
+    <note>Transaction state describes the current operational state of an active transaction (active, pending completion, suspended, error, etc.)</note>
+    <note>The exception indicates transaction state cannot be reliably determined; applications must not implement workarounds using external transaction state tracking without explicit validation</note>
+    <note>Failure scenarios range from transient (temporary communication issues, temporary state) to persistent (transaction state corruption, hardware failure, firmware error)</note>
+    <note>If this exception occurs frequently or persistently, it indicates serious issues with Secure Element transaction management hardware, firmware, or transaction state storage that require diagnostic investigation</note>
+    <note>Transaction state query is a read-only query; failure does not modify any transaction state, so recovery typically requires only retrying the query once underlying issue is resolved</note>
+    <note>Transaction state information is essential for transaction monitoring, diagnostic, and operational state verification</note>
+    <note>Applications must implement appropriate error handling for transaction state retrieval failures, especially in transaction monitoring and diagnostics</note>
+    <note>Repeated transaction state retrieval failures may indicate device needs firmware update, transaction state reset, or hardware service - manufacturer support should be engaged</note>
+    <note>Different device models may track different transaction state values - consult device specifications for supported transaction states</note>
+  </notes>
+  <usage>
+    <scenario name="Scenario 1: Transaction Monitoring and Operational State Tracking">
+      <description>A transaction monitoring system tracks the operational state of active transactions to ensure proper transaction lifecycle. The system periodically calls getTransactionState to monitor the state of specific transactions. If ErrorGetTransactionStateFailed is raised, the monitoring system cannot assess transaction operational status.</description>
+      <relatedFunctions>getTransactionState, getOpenTransactions, getCurrentTransactionCounter</relatedFunctions>
+      <errorContext>Transaction state unavailable for transaction monitoring and operational tracking</errorContext>
+    </scenario>
+    <scenario name="Scenario 2: Transaction Diagnostics and Health Assessment">
+      <description>A diagnostic system collects detailed transaction diagnostics to assess transaction health and identify issues. The system calls getTransactionState to obtain transaction operational status as part of the diagnostic assessment. If ErrorGetTransactionStateFailed is raised, the diagnostic cannot verify transaction state.</description>
+      <relatedFunctions>getTransactionState, getOpenTransactions, getCurrentTransactionCounter</relatedFunctions>
+      <errorContext>Transaction state unavailable for transaction diagnostics and health assessment</errorContext>
+    </scenario>
+    <scenario name="Scenario 3: Transaction State Validation and Completion Verification">
+      <description>A transaction completion verification system validates that expected transactions have reached appropriate completion states. The system calls getTransactionState to verify the state of each transaction. If ErrorGetTransactionStateFailed is raised, the system cannot verify transaction completion state.</description>
+      <relatedFunctions>getTransactionState, getOpenTransactions</relatedFunctions>
+      <errorContext>Transaction state unavailable for transaction completion verification</errorContext>
+    </scenario>
+    <scenario name="Scenario 4: Multi-Transaction State Inspection and Batch Monitoring">
+      <description>An enterprise system manages multiple transactions and needs to inspect their states for operational purposes. The system calls getTransactionState on multiple transactions to assess the overall transaction workload and state distribution. If ErrorGetTransactionStateFailed is raised on any transaction, that transaction's state cannot be included in the workload assessment.</description>
+      <relatedFunctions>getTransactionState, getOpenTransactions, getCurrentTransactionCounter</relatedFunctions>
+      <errorContext>Transaction state unavailable for multi-transaction inspection</errorContext>
+    </scenario>
+  </usage>
+  <implementationContext>
+    <note>The getTransactionState function retrieves the current operational state of a specific transaction identified by transaction ID</note>
+    <note>Transaction state describes the current phase or condition of a transaction (active, pending, suspended, completed, error, etc.)</note>
+    <note>Transaction state information is used to track transaction lifecycle and operational status</note>
+    <note>Different device models and configurations may report different transaction state values - consult device specifications for supported transaction states</note>
+    <note>Transaction state information is essential for transaction monitoring, diagnostics, and operational state verification</note>
+    <note>If transaction state retrieval fails but other transaction queries succeed (open transactions, transaction counter), the issue is specific to individual transaction state queries, not to general transaction management access</note>
+    <note>Transaction state errors or retrieval failures represent critical issues in transaction management that should be investigated immediately</note>
+    <note>Transaction state query is a read-only query; ErrorGetTransactionStateFailed does not indicate transaction state corruption requiring state recovery - it indicates the state information source is unavailable</note>
+  </implementationContext>
 </exception>

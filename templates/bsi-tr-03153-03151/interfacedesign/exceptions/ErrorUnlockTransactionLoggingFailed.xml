@@ -1,173 +1,173 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<exception id="ErrorUnlockTransactionLoggingFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
-    <name>ErrorUnlockTransactionLoggingFailed</name>
-    <description>This exception is thrown by the unlockTransactionLogging function when the operation fails to unlock transaction logging functionality. Transaction logging provides lock/unlock control to manage when transactions can be recorded. The unlockTransactionLogging function re-enables transaction recording after logging has been locked for maintenance or audit purposes. ErrorUnlockTransactionLoggingFailed is raised when the unlock operation cannot be completed successfully, which may occur due to authorization failures, hardware errors, device state issues, or other operational failures. ErrorUnlockTransactionLoggingFailed is a High severity exception because it prevents restoration of transaction recording capability.</description>
-    <category>Transaction Management - Logging Control Failure</category>
-    <severity>High</severity>
-    <javadoc>
-        <summary>This class defines the exception ErrorUnlockTransactionLoggingFailed that is thrown by the unlockTransactionLogging function when the unlock operation fails.</summary>
-        <description>This exception is thrown when the unlockTransactionLogging function fails to unlock transaction logging functionality. Transaction logging can be locked administratively or by security policy for maintenance or audit purposes. The unlockTransactionLogging function re-enables transaction recording. If unlock verification fails, authorization is denied, hardware errors occur, or device issues prevent completion, ErrorUnlockTransactionLoggingFailed is raised. This indicates the unlock operation could not be successfully completed. Transaction logging remains locked and operations cannot be recorded. ErrorUnlockTransactionLoggingFailed is a High severity exception because transaction recording capability is unavailable. Recovery requires investigating failure cause and retrying with appropriate authorization or device corrections.</description>
-        <constructors>
-            <constructor>
-                <signature>ErrorUnlockTransactionLoggingFailed()</signature>
-                <description>Constructs a new ErrorUnlockTransactionLoggingFailed exception with null as the value for its detail message</description>
-            </constructor>
-            <constructor>
-                <signature>ErrorUnlockTransactionLoggingFailed(String message)</signature>
-                <description>Constructs a new ErrorUnlockTransactionLoggingFailed exception whereby its detail message is initialized with the passed value</description>
-                <parameter name="message">value for the detail message of the exception, typically describing reason for unlock failure</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorUnlockTransactionLoggingFailed(String message, Throwable cause)</signature>
-                <description>Constructs a new ErrorUnlockTransactionLoggingFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorUnlockTransactionLoggingFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-                <description>Constructs a new ErrorUnlockTransactionLoggingFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-            </constructor>
-        </constructors>
-    </javadoc>
-    <specification>
-        <source>BSI TR-03151-1</source>
-        <section>3.2.2 Transaction Management - Logging Control Functions</section>
-        <requirement>The unlockTransactionLogging function re-enables transaction recording after logging has been locked. This function is used to exit lock states initiated by lockTransactionLogging or by security policy. If the unlock operation fails due to authorization denial, credential verification failure, hardware errors, or device state issues, the Secure Element SHALL raise ErrorUnlockTransactionLoggingFailed. This indicates the unlock operation could not be successfully completed and transaction logging remains locked. ErrorUnlockTransactionLoggingFailed is a High severity exception because transaction recording capability remains unavailable. Recovery requires investigating the failure cause and retrying with appropriate authorization or after correcting device state issues.</requirement>
-        <applicability>Logging unlock operations: unlockTransactionLogging</applicability>
-        <reference>Transaction Management (3.2.2), Logging Control Functions (3.2.2), unlockTransactionLogging – Function (3.2.2)</reference>
-    </specification>
-    <thrownBy>
-        <function>unlockTransactionLogging</function>
-    </thrownBy>
-    <triggerConditions>
-        <condition>
-            <scenario>Unlock authorization verification fails</scenario>
-            <description>Authorization credentials or verification for unlock operation invalid</description>
-            <trigger>Administrator calls unlockTransactionLogging but lacks authorization. Device verifies authorization, finds insufficient privileges. ErrorUnlockTransactionLoggingFailed raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Hardware failure during unlock operation</scenario>
-            <description>Hardware error prevents proper unlock processing</description>
-            <trigger>unlockTransactionLogging operation encounters hardware error accessing logging control. Device cannot complete unlock due to hardware issue. ErrorUnlockTransactionLoggingFailed raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Device state incompatible with unlock operation</scenario>
-            <description>Device is in state that prevents unlock (not initialized, in diagnostics, etc.)</description>
-            <trigger>Administrator attempts unlockTransactionLogging but device is in diagnostic mode or secure element disabled. Device rejects unlock operation. ErrorUnlockTransactionLoggingFailed raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Secure element communication failure during unlock</scenario>
-            <description>Communication with Secure Element fails during unlock processing</description>
-            <trigger>unlockTransactionLogging operation experiences communication timeout or protocol error with Secure Element. Operation cannot complete. ErrorUnlockTransactionLoggingFailed raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Storage or persistence failure for lock state update</scenario>
-            <description>Device cannot update lock state in persistent storage</description>
-            <trigger>Unlock verification succeeds but device fails to update persistent lock state. Device rolls back operation. ErrorUnlockTransactionLoggingFailed raised.</trigger>
-        </condition>
-    </triggerConditions>
-    <executionSequence>
-        <step number="1">User/application calls unlockTransactionLogging function</step>
-        <step number="2">Function validates input parameters</step>
-        <step number="3">Function initiates communication with Secure Element</step>
-        <step number="4">Secure Element receives unlock transaction logging request</step>
-        <step number="5">Secure Element checks authorization for unlock operation</step>
-        <step number="5a">If authorization invalid → ErrorUnlockTransactionLoggingFailed raised</step>
-        <step number="5b">If authorization valid → proceed to step 6</step>
-        <step number="6">Secure Element verifies unlock credential/password if required</step>
-        <step number="6a">If credential verification fails → ErrorUnlockTransactionLoggingFailed raised</step>
-        <step number="6b">If credential valid → proceed to step 7</step>
-        <step number="7">Secure Element checks device state compatibility</step>
-        <step number="7a">If device state incompatible → ErrorUnlockTransactionLoggingFailed raised</step>
-        <step number="7b">If device state compatible → proceed to step 8</step>
-        <step number="8">Secure Element updates logging lock state in storage</step>
-        <step number="8a">If storage update fails → ErrorUnlockTransactionLoggingFailed raised, rollback</step>
-        <step number="8b">If storage update succeeds → proceed to step 9</step>
-        <step number="9">Secure Element clears logging lock flag</step>
-        <step number="10">Secure Element logs unlock event for audit trail</step>
-        <step number="11">Secure Element returns success to function</step>
-        <step number="12">Function returns to caller indicating logging successfully unlocked</step>
-    </executionSequence>
-    <recovery>
-        <step>Review error message - understand logging unlock failed for specific reason</step>
-        <step>Check authorization - verify caller has authorization for unlock</step>
-        <step>Verify credentials - if unlock password/credential required, verify provided</step>
-        <step>Check device state - verify device is initialized and operational</step>
-        <step>Check lock status - verify logging is actually locked (not already unlocked)</step>
-        <step>Retry unlock - attempt unlockTransactionLogging again with verified authorization</step>
-        <step>Check hardware - if repeated failures, verify device hardware is operational</step>
-        <step>Run diagnostics - execute device diagnostics to verify logging control health</step>
-        <step>Contact support - if unlock repeatedly fails, contact device support</step>
-        <step>Check secure element - verify Secure Element communication is functional</step>
-        <step>Attempt device reset - if device state issue, may try graceful reset</step>
-    </recovery>
-    <relatedExceptions>
-        <exception>ErrorTransactionLoggingNotLocked</exception>
-        <exception>ErrorParameterMismatch</exception>
-        <exception>ErrorFunctionFailed</exception>
-        <exception>ErrorDeviceNotInitialized</exception>
-    </relatedExceptions>
-    <postconditionality>
-        <state name="Logging Remains Locked">Transaction logging is not unlocked - remains locked.</state>
-        <state name="Unlock Operation Not Completed">Unlock operation does not complete successfully.</state>
-        <state name="Lock State Unchanged">Logging lock state remains unchanged - locked persists.</state>
-        <state name="Transactions Cannot Be Recorded">Transaction operations cannot record transactions.</state>
-        <state name="High Exception Returned">Function returns ErrorUnlockTransactionLoggingFailed High exception to caller.</state>
-        <state name="Transaction Recording Remains Blocked">Transaction recording capability remains unavailable.</state>
-    </postconditionality>
-    <notes>
-        <note>ErrorUnlockTransactionLoggingFailed is thrown by 1 function: unlockTransactionLogging</note>
-        <note>This is a High severity exception blocking transaction recording restoration</note>
-        <note>Unlock requires appropriate authorization to prevent unauthorized re-enablement</note>
-        <note>Authorization checks must occur before lock state modification</note>
-        <note>Lock state must be persisted for persistence across device operations</note>
-        <note>Hardware errors can prevent unlock even with correct authorization</note>
-        <note>Device state issues may prevent unlock in certain modes</note>
-        <note>Unlock failure keeps logging locked - transactions cannot be recorded</note>
-        <note>Unlock operations should be logged for audit trail</note>
-        <note>Lock state recovery should persist lock across restarts if policy-based</note>
-        <note>Unlock failure may indicate security issue requiring investigation</note>
-        <note>Repeated failures should be escalated to support/service</note>
-        <note>Device diagnostics can help identify persistent unlock issues</note>
-        <note>Communication with Secure Element must be reliable for unlock</note>
-        <note>Authorization requirements should be enforced consistently</note>
-    </notes>
-    <usage>
-        <scenario name="Scenario 1: Authorization Denial for Unlock">
-            <description>Administrator attempts to unlock transaction logging but lacks required authorization. Calls unlockTransactionLogging. Device verifies authorization, finds insufficient privileges. ErrorUnlockTransactionLoggingFailed raised. Administrator contacts management to request authorization upgrade, retries after obtaining necessary privileges.</description>
-            <relatedFunctions>unlockTransactionLogging, lockTransactionLogging</relatedFunctions>
-            <errorContext>Authorization verification failed - insufficient privileges for unlock</errorContext>
-        </scenario>
-        <scenario name="Scenario 2: Hardware Error During Unlock">
-            <description>Administrator attempts to unlock logging with correct authorization. Device begins unlock operation. Hardware error occurs accessing logging control structures. Device cannot complete operation. ErrorUnlockTransactionLoggingFailed raised. Administrator contacts support for hardware investigation.</description>
-            <relatedFunctions>unlockTransactionLogging</relatedFunctions>
-            <errorContext>Hardware failure prevented unlock completion - device service needed</errorContext>
-        </scenario>
-        <scenario name="Scenario 3: Device State Prevents Unlock">
-            <description>Device is in maintenance/diagnostic mode. Administrator attempts unlockTransactionLogging. Device detects incompatible state for logging control operations. ErrorUnlockTransactionLoggingFailed raised. Administrator waits for maintenance completion, retries unlock after device returns to normal state.</description>
-            <relatedFunctions>unlockTransactionLogging</relatedFunctions>
-            <errorContext>Device state incompatible with unlock operation - retry after state change</errorContext>
-        </scenario>
-        <scenario name="Scenario 4: Secure Element Communication Failure">
-            <description>Unlock procedure initiates but Secure Element communication fails during operation. Device detects protocol error. ErrorUnlockTransactionLoggingFailed raised. Administrator waits for Secure Element recovery and retries unlock operation.</description>
-            <relatedFunctions>unlockTransactionLogging</relatedFunctions>
-            <errorContext>Secure Element communication failure - retry after recovery</errorContext>
-        </scenario>
-    </usage>
-    <implementationContext>
-        <note>Unlock operation must verify authorization before proceeding</note>
-        <note>Authorization verification should be cryptographically secure</note>
-        <note>Lock state update must be atomic to prevent partial state</note>
-        <note>Lock state must be persisted in reliable storage</note>
-        <note>Unlock operation should log event with timestamp and result for audit</note>
-        <note>Hardware error detection should catch failures during unlock</note>
-        <note>Device state validation should occur before unlock operation</note>
-        <note>Communication with Secure Element should include error handling</note>
-        <note>Unlock failure should not leave device in inconsistent state</note>
-        <note>Authorization requirements should be consistent across unlock operations</note>
-    </implementationContext>
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorUnlockTransactionLoggingFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+  <name>ErrorUnlockTransactionLoggingFailed</name>
+  <description>This exception is thrown by the unlockTransactionLogging function when the operation fails to unlock transaction logging functionality. Transaction logging provides lock/unlock control to manage when transactions can be recorded. The unlockTransactionLogging function re-enables transaction recording after logging has been locked for maintenance or audit purposes. ErrorUnlockTransactionLoggingFailed is raised when the unlock operation cannot be completed successfully, which may occur due to authorization failures, hardware errors, device state issues, or other operational failures. ErrorUnlockTransactionLoggingFailed is a High severity exception because it prevents restoration of transaction recording capability.</description>
+  <category>Transaction Management - Logging Control Failure</category>
+  <severity>High</severity>
+  <javadoc>
+    <summary>This class defines the exception ErrorUnlockTransactionLoggingFailed that is thrown by the unlockTransactionLogging function when the unlock operation fails.</summary>
+    <description>This exception is thrown when the unlockTransactionLogging function fails to unlock transaction logging functionality. Transaction logging can be locked administratively or by security policy for maintenance or audit purposes. The unlockTransactionLogging function re-enables transaction recording. If unlock verification fails, authorization is denied, hardware errors occur, or device issues prevent completion, ErrorUnlockTransactionLoggingFailed is raised. This indicates the unlock operation could not be successfully completed. Transaction logging remains locked and operations cannot be recorded. ErrorUnlockTransactionLoggingFailed is a High severity exception because transaction recording capability is unavailable. Recovery requires investigating failure cause and retrying with appropriate authorization or device corrections.</description>
+    <constructors>
+      <constructor>
+        <signature>ErrorUnlockTransactionLoggingFailed()</signature>
+        <description>Constructs a new ErrorUnlockTransactionLoggingFailed exception with null as the value for its detail message</description>
+      </constructor>
+      <constructor>
+        <signature>ErrorUnlockTransactionLoggingFailed(String message)</signature>
+        <description>Constructs a new ErrorUnlockTransactionLoggingFailed exception whereby its detail message is initialized with the passed value</description>
+        <parameter name="message">value for the detail message of the exception, typically describing reason for unlock failure</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorUnlockTransactionLoggingFailed(String message, Throwable cause)</signature>
+        <description>Constructs a new ErrorUnlockTransactionLoggingFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorUnlockTransactionLoggingFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+        <description>Constructs a new ErrorUnlockTransactionLoggingFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+      </constructor>
+    </constructors>
+  </javadoc>
+  <specification>
+    <source>BSI TR-03151-1</source>
+    <section>3.2.2 Transaction Management - Logging Control Functions</section>
+    <requirement>The unlockTransactionLogging function re-enables transaction recording after logging has been locked. This function is used to exit lock states initiated by lockTransactionLogging or by security policy. If the unlock operation fails due to authorization denial, credential verification failure, hardware errors, or device state issues, the Secure Element SHALL raise ErrorUnlockTransactionLoggingFailed. This indicates the unlock operation could not be successfully completed and transaction logging remains locked. ErrorUnlockTransactionLoggingFailed is a High severity exception because transaction recording capability remains unavailable. Recovery requires investigating the failure cause and retrying with appropriate authorization or after correcting device state issues.</requirement>
+    <applicability>Logging unlock operations: unlockTransactionLogging</applicability>
+    <reference>Transaction Management (3.2.2), Logging Control Functions (3.2.2), unlockTransactionLogging – Function (3.2.2)</reference>
+  </specification>
+  <thrownBy>
+    <function>unlockTransactionLogging</function>
+  </thrownBy>
+  <triggerConditions>
+    <condition>
+      <scenario>Unlock authorization verification fails</scenario>
+      <description>Authorization credentials or verification for unlock operation invalid</description>
+      <trigger>Administrator calls unlockTransactionLogging but lacks authorization. Device verifies authorization, finds insufficient privileges. ErrorUnlockTransactionLoggingFailed raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Hardware failure during unlock operation</scenario>
+      <description>Hardware error prevents proper unlock processing</description>
+      <trigger>unlockTransactionLogging operation encounters hardware error accessing logging control. Device cannot complete unlock due to hardware issue. ErrorUnlockTransactionLoggingFailed raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Device state incompatible with unlock operation</scenario>
+      <description>Device is in state that prevents unlock (not initialized, in diagnostics, etc.)</description>
+      <trigger>Administrator attempts unlockTransactionLogging but device is in diagnostic mode or secure element disabled. Device rejects unlock operation. ErrorUnlockTransactionLoggingFailed raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Secure element communication failure during unlock</scenario>
+      <description>Communication with Secure Element fails during unlock processing</description>
+      <trigger>unlockTransactionLogging operation experiences communication timeout or protocol error with Secure Element. Operation cannot complete. ErrorUnlockTransactionLoggingFailed raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Storage or persistence failure for lock state update</scenario>
+      <description>Device cannot update lock state in persistent storage</description>
+      <trigger>Unlock verification succeeds but device fails to update persistent lock state. Device rolls back operation. ErrorUnlockTransactionLoggingFailed raised.</trigger>
+    </condition>
+  </triggerConditions>
+  <executionSequence>
+    <step number="1">User/application calls unlockTransactionLogging function</step>
+    <step number="2">Function validates input parameters</step>
+    <step number="3">Function initiates communication with Secure Element</step>
+    <step number="4">Secure Element receives unlock transaction logging request</step>
+    <step number="5">Secure Element checks authorization for unlock operation</step>
+    <step number="5a">If authorization invalid → ErrorUnlockTransactionLoggingFailed raised</step>
+    <step number="5b">If authorization valid → proceed to step 6</step>
+    <step number="6">Secure Element verifies unlock credential/password if required</step>
+    <step number="6a">If credential verification fails → ErrorUnlockTransactionLoggingFailed raised</step>
+    <step number="6b">If credential valid → proceed to step 7</step>
+    <step number="7">Secure Element checks device state compatibility</step>
+    <step number="7a">If device state incompatible → ErrorUnlockTransactionLoggingFailed raised</step>
+    <step number="7b">If device state compatible → proceed to step 8</step>
+    <step number="8">Secure Element updates logging lock state in storage</step>
+    <step number="8a">If storage update fails → ErrorUnlockTransactionLoggingFailed raised, rollback</step>
+    <step number="8b">If storage update succeeds → proceed to step 9</step>
+    <step number="9">Secure Element clears logging lock flag</step>
+    <step number="10">Secure Element logs unlock event for audit trail</step>
+    <step number="11">Secure Element returns success to function</step>
+    <step number="12">Function returns to caller indicating logging successfully unlocked</step>
+  </executionSequence>
+  <recovery>
+    <step>Review error message - understand logging unlock failed for specific reason</step>
+    <step>Check authorization - verify caller has authorization for unlock</step>
+    <step>Verify credentials - if unlock password/credential required, verify provided</step>
+    <step>Check device state - verify device is initialized and operational</step>
+    <step>Check lock status - verify logging is actually locked (not already unlocked)</step>
+    <step>Retry unlock - attempt unlockTransactionLogging again with verified authorization</step>
+    <step>Check hardware - if repeated failures, verify device hardware is operational</step>
+    <step>Run diagnostics - execute device diagnostics to verify logging control health</step>
+    <step>Contact support - if unlock repeatedly fails, contact device support</step>
+    <step>Check secure element - verify Secure Element communication is functional</step>
+    <step>Attempt device reset - if device state issue, may try graceful reset</step>
+  </recovery>
+  <relatedExceptions>
+    <exception>ErrorTransactionLoggingNotLocked</exception>
+    <exception>ErrorParameterMismatch</exception>
+    <exception>ErrorFunctionFailed</exception>
+    <exception>ErrorDeviceNotInitialized</exception>
+  </relatedExceptions>
+  <postconditionality>
+    <state name="Logging Remains Locked">Transaction logging is not unlocked - remains locked.</state>
+    <state name="Unlock Operation Not Completed">Unlock operation does not complete successfully.</state>
+    <state name="Lock State Unchanged">Logging lock state remains unchanged - locked persists.</state>
+    <state name="Transactions Cannot Be Recorded">Transaction operations cannot record transactions.</state>
+    <state name="High Exception Returned">Function returns ErrorUnlockTransactionLoggingFailed High exception to caller.</state>
+    <state name="Transaction Recording Remains Blocked">Transaction recording capability remains unavailable.</state>
+  </postconditionality>
+  <notes>
+    <note>ErrorUnlockTransactionLoggingFailed is thrown by 1 function: unlockTransactionLogging</note>
+    <note>This is a High severity exception blocking transaction recording restoration</note>
+    <note>Unlock requires appropriate authorization to prevent unauthorized re-enablement</note>
+    <note>Authorization checks must occur before lock state modification</note>
+    <note>Lock state must be persisted for persistence across device operations</note>
+    <note>Hardware errors can prevent unlock even with correct authorization</note>
+    <note>Device state issues may prevent unlock in certain modes</note>
+    <note>Unlock failure keeps logging locked - transactions cannot be recorded</note>
+    <note>Unlock operations should be logged for audit trail</note>
+    <note>Lock state recovery should persist lock across restarts if policy-based</note>
+    <note>Unlock failure may indicate security issue requiring investigation</note>
+    <note>Repeated failures should be escalated to support/service</note>
+    <note>Device diagnostics can help identify persistent unlock issues</note>
+    <note>Communication with Secure Element must be reliable for unlock</note>
+    <note>Authorization requirements should be enforced consistently</note>
+  </notes>
+  <usage>
+    <scenario name="Scenario 1: Authorization Denial for Unlock">
+      <description>Administrator attempts to unlock transaction logging but lacks required authorization. Calls unlockTransactionLogging. Device verifies authorization, finds insufficient privileges. ErrorUnlockTransactionLoggingFailed raised. Administrator contacts management to request authorization upgrade, retries after obtaining necessary privileges.</description>
+      <relatedFunctions>unlockTransactionLogging, lockTransactionLogging</relatedFunctions>
+      <errorContext>Authorization verification failed - insufficient privileges for unlock</errorContext>
+    </scenario>
+    <scenario name="Scenario 2: Hardware Error During Unlock">
+      <description>Administrator attempts to unlock logging with correct authorization. Device begins unlock operation. Hardware error occurs accessing logging control structures. Device cannot complete operation. ErrorUnlockTransactionLoggingFailed raised. Administrator contacts support for hardware investigation.</description>
+      <relatedFunctions>unlockTransactionLogging</relatedFunctions>
+      <errorContext>Hardware failure prevented unlock completion - device service needed</errorContext>
+    </scenario>
+    <scenario name="Scenario 3: Device State Prevents Unlock">
+      <description>Device is in maintenance/diagnostic mode. Administrator attempts unlockTransactionLogging. Device detects incompatible state for logging control operations. ErrorUnlockTransactionLoggingFailed raised. Administrator waits for maintenance completion, retries unlock after device returns to normal state.</description>
+      <relatedFunctions>unlockTransactionLogging</relatedFunctions>
+      <errorContext>Device state incompatible with unlock operation - retry after state change</errorContext>
+    </scenario>
+    <scenario name="Scenario 4: Secure Element Communication Failure">
+      <description>Unlock procedure initiates but Secure Element communication fails during operation. Device detects protocol error. ErrorUnlockTransactionLoggingFailed raised. Administrator waits for Secure Element recovery and retries unlock operation.</description>
+      <relatedFunctions>unlockTransactionLogging</relatedFunctions>
+      <errorContext>Secure Element communication failure - retry after recovery</errorContext>
+    </scenario>
+  </usage>
+  <implementationContext>
+    <note>Unlock operation must verify authorization before proceeding</note>
+    <note>Authorization verification should be cryptographically secure</note>
+    <note>Lock state update must be atomic to prevent partial state</note>
+    <note>Lock state must be persisted in reliable storage</note>
+    <note>Unlock operation should log event with timestamp and result for audit</note>
+    <note>Hardware error detection should catch failures during unlock</note>
+    <note>Device state validation should occur before unlock operation</note>
+    <note>Communication with Secure Element should include error handling</note>
+    <note>Unlock failure should not leave device in inconsistent state</note>
+    <note>Authorization requirements should be consistent across unlock operations</note>
+  </implementationContext>
 </exception>

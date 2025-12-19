@@ -1,163 +1,163 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<exception id="ErrorGetDeviceHealthFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
-    <name>ErrorGetDeviceHealthFailed</name>
-    <description>This exception is thrown if the SE API function getDeviceHealth fails to retrieve device health status information from the Secure Element. The function attempts to obtain detailed health information about the device's operational state, component status, and diagnostic metrics, but the retrieval process fails before the health data can be determined and returned.</description>
-    <category>Device Management - Health Status Retrieval</category>
-    <severity>Medium</severity>
-    <javadoc>
-        <summary>This class defines the exception ErrorGetDeviceHealthFailed that is thrown if the SE API function getDeviceHealth fails to determine health information about the device.</summary>
-        <description>This exception is thrown when the getDeviceHealth function cannot retrieve the device's health status information from the Secure Element. Device health information provides diagnostic details about the device's operational state, component functionality, error conditions, and resource availability. ErrorGetDeviceHealthFailed indicates that the Secure Element cannot provide health status data due to hardware failure, diagnostic subsystem errors, internal health monitoring system failures, communication failures, or Secure Element state restrictions. When this exception occurs, no health data is returned and applications cannot assess device operational status or identify potential problems. Recovery typically involves device verification, health monitoring subsystem diagnostics, and possible hardware diagnosis if the failure persists.</description>
-        <constructors>
-            <constructor>
-                <signature>ErrorGetDeviceHealthFailed()</signature>
-                <description>Constructs a new ErrorGetDeviceHealthFailed exception with null as the value for its detail message</description>
-            </constructor>
-            <constructor>
-                <signature>ErrorGetDeviceHealthFailed(String message)</signature>
-                <description>Constructs a new ErrorGetDeviceHealthFailed exception whereby its detail message is initialized with the passed value</description>
-                <parameter name="message">value for the detail message of the exception, typically describing the device health retrieval failure</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorGetDeviceHealthFailed(String message, Throwable cause)</signature>
-                <description>Constructs a new ErrorGetDeviceHealthFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorGetDeviceHealthFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-                <description>Constructs a new ErrorGetDeviceHealthFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-            </constructor>
-        </constructors>
-    </javadoc>
-    <specification>
-        <source>BSI TR-03151-1</source>
-        <section>3.1.4 Device Information - getDeviceHealth</section>
-        <requirement>The function getDeviceHealth SHALL retrieve comprehensive device health status information from the Secure Element, including operational state, component status, and diagnostic metrics. If the Secure Element cannot provide or return the required health information, the function SHALL raise the exception ErrorGetDeviceHealthFailed and exit without returning any health data. The device health retrieval failure indicates the Secure Element's health monitoring and diagnostics functionality could not complete successfully.</requirement>
-        <applicability>Device management operations - getDeviceHealth function only</applicability>
-        <reference>getDeviceHealth – Function (3.1.4)</reference>
-    </specification>
-    <thrownBy>
-        <function>getDeviceHealth</function>
-    </thrownBy>
-    <triggerConditions>
-        <condition>
-            <scenario>Device health monitoring hardware failure</scenario>
-            <description>The Secure Element's health monitoring hardware or sensors malfunction or become inaccessible, preventing health status retrieval</description>
-            <trigger>The Secure Element's health monitoring hardware fails or sensors cannot be read. When getDeviceHealth is called, the health status query is sent to the Secure Element, but the hardware cannot provide valid health data. The function receives a failure status from the Secure Element, triggering ErrorGetDeviceHealthFailed.</trigger>
-        </condition>
-        <condition>
-            <scenario>Device health information storage corruption</scenario>
-            <description>The Secure Element's health information storage becomes corrupted or diagnostic data is lost</description>
-            <trigger>The Secure Element's memory containing health status data or diagnostic information becomes corrupted, experiences data loss, or is marked as inaccessible due to storage errors. When getDeviceHealth attempts to read health information from storage, the data cannot be reliably retrieved, triggering ErrorGetDeviceHealthFailed.</trigger>
-        </condition>
-        <condition>
-            <scenario>Health monitoring subsystem internal error</scenario>
-            <description>The Secure Element's health monitoring subsystem encounters critical errors that prevent health status evaluation or retrieval</description>
-            <trigger>The Secure Element's health monitoring and diagnostics subsystem (responsible for collecting health metrics, evaluating device state, and providing health status) encounters an internal error, deadlock, or exception. When getDeviceHealth is called, the health monitoring subsystem cannot process the health query, triggering ErrorGetDeviceHealthFailed.</trigger>
-        </condition>
-        <condition>
-            <scenario>Device-to-Secure Element communication failure during health query</scenario>
-            <description>The communication channel between device and Secure Element is disrupted during device health status retrieval</description>
-            <trigger>A communication failure occurs while getDeviceHealth transmits the health query to the Secure Element or while receiving the health response. The command may be corrupted, the response may be incomplete, or the communication link may be temporarily unavailable. The function receives a communication error status, triggering ErrorGetDeviceHealthFailed.</trigger>
-        </condition>
-        <condition>
-            <scenario>Secure Element in restricted or error state prohibiting health access</scenario>
-            <description>The Secure Element is in a locked, restricted, or error state that prevents external queries for health status information</description>
-            <trigger>The Secure Element enters a state where health diagnostics or health status queries are not permitted. When getDeviceHealth is called and the Secure Element's state prohibits health access, the function receives a state-related rejection, triggering ErrorGetDeviceHealthFailed.</trigger>
-        </condition>
-    </triggerConditions>
-    <executionSequence>
-        <step number="1">User/application calls getDeviceHealth function on device</step>
-        <step number="2">Function validates input parameters and checks authentication status (if required by referencing guideline)</step>
-        <step number="3">Function checks authorization for device health information access (if required by referencing guideline)</step>
-        <step number="4">Function verifies device is properly initialized and accessible</step>
-        <step number="5">Function initiates communication channel to Secure Element and prepares health status query command</step>
-        <step number="6">Function transmits health query command to Secure Element requesting device health status information</step>
-        <step number="6a">If Secure Element responds with failure status (hardware error, health monitoring error, subsystem error) → ErrorGetDeviceHealthFailed raised, function exits without health data</step>
-        <step number="6b">If communication failure occurs during query transmission or response reception → ErrorGetDeviceHealthFailed raised, function exits</step>
-        <step number="7">If successful, function receives health status information from Secure Element</step>
-        <step number="8">Function validates health information for correctness (format, component status values, metric ranges)</step>
-        <step number="9">Function closes Secure Element communication channel</step>
-        <step number="10">Function returns valid health status information to caller</step>
-    </executionSequence>
-    <recovery>
-        <step>Verify device operational status - confirm device is initialized, responding to other operations, and not in an error state</step>
-        <step>Verify Secure Element accessibility - confirm device can communicate with Secure Element through diagnostic commands</step>
-        <step>Check device initialization - ensure device has been properly initialized with initDevice before attempting getDeviceHealth</step>
-        <step>Retry getDeviceHealth operation - attempt the function call again as the failure may be transient</step>
-        <step>Review device system logs and events - check if health monitoring system has logged errors or warnings</step>
-        <step>Verify health monitoring subsystem status through device manufacturer diagnostics - check if health monitoring is enabled and operational</step>
-        <step>Test other information queries - attempt retrieving other device information to verify general information access capability</step>
-        <step>Implement comprehensive error logging and monitoring - log this failure consistently to identify patterns (transient vs. persistent, correlation with device state changes)</step>
-        <step>If failure is persistent, attempt device firmware update if available - may resolve health monitoring subsystem errors</step>
-        <step>If failure persists and suspected hardware issue, contact device manufacturer or consider device replacement - repeated health retrieval failures indicate serious device monitoring hardware problems</step>
-    </recovery>
-    <relatedExceptions>
-        <exception>ErrorFunctionFailed</exception>
-        <exception>ErrorDeviceNotInitialized</exception>
-        <exception>ErrorGetVersionFailed</exception>
-        <exception>ErrorGetSerialNumberFailed</exception>
-        <exception>ErrorGetComponentVersionsFailed</exception>
-    </relatedExceptions>
-    <postconditionality>
-        <state name="Device Operational State">Device remains fully operational and unmodified. The failure to retrieve health information does not affect device initialization state, internal memory, stored data, or the ability to perform other operations. All device components remain in their pre-call state.</state>
-        <state name="Health Data Return Status">No health status information is returned to the caller. The function exits without providing any device health data. Applications must not assume default health states or cached health values; they must handle the exception as indicating health information is unavailable.</state>
-        <state name="Secure Element State">Secure Element remains unchanged by the failed health query. No state modifications, health monitoring resets, or device configuration changes occur. Health monitoring continues internally in the Secure Element regardless of the retrieval failure.</state>
-        <state name="Health Monitoring Continuity">The Secure Element continues to collect health metrics and monitor device status internally. The failure to retrieve health data does not affect the underlying health monitoring mechanisms. Health queries can be retried once the underlying issue is resolved.</state>
-        <state name="No Cascading State Effects">No cascading state inconsistencies or secondary failures occur as a result of the health retrieval failure. Device internal consistency is maintained. Other SE API functions and device operations continue normally without state corruption.</state>
-        <state name="Recovery Preconditions Met">The device state after exception is consistent and allows for recovery operations. The underlying issue (hardware error, communication error, monitoring system error) remains present, but the device is stable enough to accept diagnostic queries or recovery attempts.</state>
-    </postconditionality>
-    <notes>
-        <note>ErrorGetDeviceHealthFailed is thrown ONLY by the getDeviceHealth function - it is the most specific and precise exception for Secure Element device health status retrieval failures</note>
-        <note>This exception indicates a failure in the Secure Element's ability to report its health status. It is an informational failure, not a critical operational failure, though it prevents health monitoring</note>
-        <note>Critical distinction from ErrorFunctionFailed: ErrorGetDeviceHealthFailed specifically indicates health status information is unavailable at the monitoring subsystem level, while ErrorFunctionFailed indicates broader unspecified critical failures</note>
-        <note>Exception is raised during the health information retrieval phase (steps 6-7), after device initialization and authentication checks have passed</note>
-        <note>After this exception, the Secure Element remains unchanged and continues to collect health metrics internally. Health queries can be retried once the underlying issue is resolved</note>
-        <note>This exception has Medium severity because it prevents users from assessing device health and diagnostic state, but does not immediately prevent device operation or other SE API functions</note>
-        <note>Device health information is critical for proactive monitoring, diagnostics, and predictive maintenance in operational device deployments</note>
-        <note>The exception indicates health status cannot be reliably obtained; applications must not implement workarounds using external monitoring without explicit validation</note>
-        <note>Failure scenarios range from transient (temporary communication issues, temporary health monitoring state) to persistent (hardware sensor failure, health monitoring subsystem corruption)</note>
-        <note>If this exception occurs frequently or persistently, it indicates serious issues with Secure Element health monitoring hardware, firmware, or diagnostic subsystem that require investigation</note>
-        <note>Health retrieval is a read-only query; failure does not modify any Secure Element state, so recovery typically requires only retrying the query once underlying issue is resolved</note>
-        <note>Device health status may include operational state, component functionality, error conditions, resource availability, temperature, power status, and other diagnostic metrics</note>
-        <note>Health information is essential for understanding device state and identifying potential problems before they impact critical operations</note>
-        <note>Applications must implement appropriate error handling for health retrieval failures, especially in monitored or managed device deployments</note>
-        <note>Repeated health retrieval failures may indicate device needs firmware update, health monitoring subsystem reset, or hardware service - manufacturer support should be engaged</note>
-    </notes>
-    <usage>
-        <scenario name="Scenario 1: Proactive Device Health Monitoring and Diagnostics">
-            <description>A system management application continuously monitors device health status to detect problems early and perform preventive maintenance. The application periodically calls getDeviceHealth to retrieve health metrics and diagnostic information. If ErrorGetDeviceHealthFailed is raised, the application cannot assess device health and must alert operators to the monitoring failure.</description>
-            <relatedFunctions>getDeviceHealth, getVersion, getSerialNumber</relatedFunctions>
-            <errorContext>Device health status unavailable for health monitoring and diagnostic assessment</errorContext>
-        </scenario>
-        <scenario name="Scenario 2: Health-Based Resource Allocation and Load Distribution">
-            <description>An enterprise application distributes workload across multiple devices, considering device health status to avoid devices with degraded health or resource constraints. The application queries getDeviceHealth on each device to assess availability and health. If ErrorGetDeviceHealthFailed is raised on one device, the application cannot determine that device's health and conservatively excludes it from load distribution.</description>
-            <relatedFunctions>getDeviceHealth, getCurrentNumberOfTransactions, getCurrentNumberOfClients</relatedFunctions>
-            <errorContext>Device health status unavailable for health-based load distribution decisions</errorContext>
-        </scenario>
-        <scenario name="Scenario 3: Device Health Reporting and Status Dashboard">
-            <description>An operations dashboard displays health status of all managed devices, showing component status, resource utilization, error conditions, and diagnostic metrics. The dashboard retrieves health information for each device using getDeviceHealth. If ErrorGetDeviceHealthFailed is raised on a device, the dashboard cannot display that device's health information and must show an error indicator.</description>
-            <relatedFunctions>getDeviceHealth, getVersion, getSerialNumber, getComponentVersions</relatedFunctions>
-            <errorContext>Device health information unavailable for operations dashboard display</errorContext>
-        </scenario>
-        <scenario name="Scenario 4: Device Problem Detection and Support Escalation">
-            <description>A support automation system detects device problems by monitoring health status. When a device reports unhealthy status (error conditions, degraded components), the system automatically escalates to support staff and collects detailed diagnostics. If ErrorGetDeviceHealthFailed is raised, the system cannot determine device health status and must escalate as a potential device monitoring failure.</description>
-            <relatedFunctions>getDeviceHealth, getVersion, getSerialNumber</relatedFunctions>
-            <errorContext>Device health status unavailable for problem detection and support escalation</errorContext>
-        </scenario>
-    </usage>
-    <implementationContext>
-        <note>The getDeviceHealth function retrieves comprehensive health status information maintained by the Secure Element's health monitoring subsystem</note>
-        <note>Device health information includes operational state, component functionality status, error conditions, resource availability, and other diagnostic metrics</note>
-        <note>Health information is collected and maintained internally by the Secure Element's health monitoring subsystem, tracking device state continuously</note>
-        <note>Different device models and firmware versions may report different health status fields and metrics - consult device specifications for expected health information structure</note>
-        <note>Health monitoring is critical for proactive device management, predictive maintenance, and early problem detection in operational deployments</note>
-        <note>If health retrieval fails but other device information queries succeed (version, serial number), the issue is specific to health monitoring subsystem, not to general device information access</note>
-        <note>Health monitoring hardware or subsystem failure should be treated seriously as it prevents visibility into device operational state and potential problems</note>
-        <note>Health retrieval is a read-only query; ErrorGetDeviceHealthFailed does not indicate state corruption requiring state recovery - it indicates the health monitoring information source is unavailable</note>
-    </implementationContext>
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorGetDeviceHealthFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+  <name>ErrorGetDeviceHealthFailed</name>
+  <description>This exception is thrown if the SE API function getDeviceHealth fails to retrieve device health status information from the Secure Element. The function attempts to obtain detailed health information about the device's operational state, component status, and diagnostic metrics, but the retrieval process fails before the health data can be determined and returned.</description>
+  <category>Device Management - Health Status Retrieval</category>
+  <severity>Medium</severity>
+  <javadoc>
+    <summary>This class defines the exception ErrorGetDeviceHealthFailed that is thrown if the SE API function getDeviceHealth fails to determine health information about the device.</summary>
+    <description>This exception is thrown when the getDeviceHealth function cannot retrieve the device's health status information from the Secure Element. Device health information provides diagnostic details about the device's operational state, component functionality, error conditions, and resource availability. ErrorGetDeviceHealthFailed indicates that the Secure Element cannot provide health status data due to hardware failure, diagnostic subsystem errors, internal health monitoring system failures, communication failures, or Secure Element state restrictions. When this exception occurs, no health data is returned and applications cannot assess device operational status or identify potential problems. Recovery typically involves device verification, health monitoring subsystem diagnostics, and possible hardware diagnosis if the failure persists.</description>
+    <constructors>
+      <constructor>
+        <signature>ErrorGetDeviceHealthFailed()</signature>
+        <description>Constructs a new ErrorGetDeviceHealthFailed exception with null as the value for its detail message</description>
+      </constructor>
+      <constructor>
+        <signature>ErrorGetDeviceHealthFailed(String message)</signature>
+        <description>Constructs a new ErrorGetDeviceHealthFailed exception whereby its detail message is initialized with the passed value</description>
+        <parameter name="message">value for the detail message of the exception, typically describing the device health retrieval failure</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorGetDeviceHealthFailed(String message, Throwable cause)</signature>
+        <description>Constructs a new ErrorGetDeviceHealthFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorGetDeviceHealthFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+        <description>Constructs a new ErrorGetDeviceHealthFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+      </constructor>
+    </constructors>
+  </javadoc>
+  <specification>
+    <source>BSI TR-03151-1</source>
+    <section>3.1.4 Device Information - getDeviceHealth</section>
+    <requirement>The function getDeviceHealth SHALL retrieve comprehensive device health status information from the Secure Element, including operational state, component status, and diagnostic metrics. If the Secure Element cannot provide or return the required health information, the function SHALL raise the exception ErrorGetDeviceHealthFailed and exit without returning any health data. The device health retrieval failure indicates the Secure Element's health monitoring and diagnostics functionality could not complete successfully.</requirement>
+    <applicability>Device management operations - getDeviceHealth function only</applicability>
+    <reference>getDeviceHealth – Function (3.1.4)</reference>
+  </specification>
+  <thrownBy>
+    <function>getDeviceHealth</function>
+  </thrownBy>
+  <triggerConditions>
+    <condition>
+      <scenario>Device health monitoring hardware failure</scenario>
+      <description>The Secure Element's health monitoring hardware or sensors malfunction or become inaccessible, preventing health status retrieval</description>
+      <trigger>The Secure Element's health monitoring hardware fails or sensors cannot be read. When getDeviceHealth is called, the health status query is sent to the Secure Element, but the hardware cannot provide valid health data. The function receives a failure status from the Secure Element, triggering ErrorGetDeviceHealthFailed.</trigger>
+    </condition>
+    <condition>
+      <scenario>Device health information storage corruption</scenario>
+      <description>The Secure Element's health information storage becomes corrupted or diagnostic data is lost</description>
+      <trigger>The Secure Element's memory containing health status data or diagnostic information becomes corrupted, experiences data loss, or is marked as inaccessible due to storage errors. When getDeviceHealth attempts to read health information from storage, the data cannot be reliably retrieved, triggering ErrorGetDeviceHealthFailed.</trigger>
+    </condition>
+    <condition>
+      <scenario>Health monitoring subsystem internal error</scenario>
+      <description>The Secure Element's health monitoring subsystem encounters critical errors that prevent health status evaluation or retrieval</description>
+      <trigger>The Secure Element's health monitoring and diagnostics subsystem (responsible for collecting health metrics, evaluating device state, and providing health status) encounters an internal error, deadlock, or exception. When getDeviceHealth is called, the health monitoring subsystem cannot process the health query, triggering ErrorGetDeviceHealthFailed.</trigger>
+    </condition>
+    <condition>
+      <scenario>Device-to-Secure Element communication failure during health query</scenario>
+      <description>The communication channel between device and Secure Element is disrupted during device health status retrieval</description>
+      <trigger>A communication failure occurs while getDeviceHealth transmits the health query to the Secure Element or while receiving the health response. The command may be corrupted, the response may be incomplete, or the communication link may be temporarily unavailable. The function receives a communication error status, triggering ErrorGetDeviceHealthFailed.</trigger>
+    </condition>
+    <condition>
+      <scenario>Secure Element in restricted or error state prohibiting health access</scenario>
+      <description>The Secure Element is in a locked, restricted, or error state that prevents external queries for health status information</description>
+      <trigger>The Secure Element enters a state where health diagnostics or health status queries are not permitted. When getDeviceHealth is called and the Secure Element's state prohibits health access, the function receives a state-related rejection, triggering ErrorGetDeviceHealthFailed.</trigger>
+    </condition>
+  </triggerConditions>
+  <executionSequence>
+    <step number="1">User/application calls getDeviceHealth function on device</step>
+    <step number="2">Function validates input parameters and checks authentication status (if required by referencing guideline)</step>
+    <step number="3">Function checks authorization for device health information access (if required by referencing guideline)</step>
+    <step number="4">Function verifies device is properly initialized and accessible</step>
+    <step number="5">Function initiates communication channel to Secure Element and prepares health status query command</step>
+    <step number="6">Function transmits health query command to Secure Element requesting device health status information</step>
+    <step number="6a">If Secure Element responds with failure status (hardware error, health monitoring error, subsystem error) → ErrorGetDeviceHealthFailed raised, function exits without health data</step>
+    <step number="6b">If communication failure occurs during query transmission or response reception → ErrorGetDeviceHealthFailed raised, function exits</step>
+    <step number="7">If successful, function receives health status information from Secure Element</step>
+    <step number="8">Function validates health information for correctness (format, component status values, metric ranges)</step>
+    <step number="9">Function closes Secure Element communication channel</step>
+    <step number="10">Function returns valid health status information to caller</step>
+  </executionSequence>
+  <recovery>
+    <step>Verify device operational status - confirm device is initialized, responding to other operations, and not in an error state</step>
+    <step>Verify Secure Element accessibility - confirm device can communicate with Secure Element through diagnostic commands</step>
+    <step>Check device initialization - ensure device has been properly initialized with initDevice before attempting getDeviceHealth</step>
+    <step>Retry getDeviceHealth operation - attempt the function call again as the failure may be transient</step>
+    <step>Review device system logs and events - check if health monitoring system has logged errors or warnings</step>
+    <step>Verify health monitoring subsystem status through device manufacturer diagnostics - check if health monitoring is enabled and operational</step>
+    <step>Test other information queries - attempt retrieving other device information to verify general information access capability</step>
+    <step>Implement comprehensive error logging and monitoring - log this failure consistently to identify patterns (transient vs. persistent, correlation with device state changes)</step>
+    <step>If failure is persistent, attempt device firmware update if available - may resolve health monitoring subsystem errors</step>
+    <step>If failure persists and suspected hardware issue, contact device manufacturer or consider device replacement - repeated health retrieval failures indicate serious device monitoring hardware problems</step>
+  </recovery>
+  <relatedExceptions>
+    <exception>ErrorFunctionFailed</exception>
+    <exception>ErrorDeviceNotInitialized</exception>
+    <exception>ErrorGetVersionFailed</exception>
+    <exception>ErrorGetSerialNumberFailed</exception>
+    <exception>ErrorGetComponentVersionsFailed</exception>
+  </relatedExceptions>
+  <postconditionality>
+    <state name="Device Operational State">Device remains fully operational and unmodified. The failure to retrieve health information does not affect device initialization state, internal memory, stored data, or the ability to perform other operations. All device components remain in their pre-call state.</state>
+    <state name="Health Data Return Status">No health status information is returned to the caller. The function exits without providing any device health data. Applications must not assume default health states or cached health values; they must handle the exception as indicating health information is unavailable.</state>
+    <state name="Secure Element State">Secure Element remains unchanged by the failed health query. No state modifications, health monitoring resets, or device configuration changes occur. Health monitoring continues internally in the Secure Element regardless of the retrieval failure.</state>
+    <state name="Health Monitoring Continuity">The Secure Element continues to collect health metrics and monitor device status internally. The failure to retrieve health data does not affect the underlying health monitoring mechanisms. Health queries can be retried once the underlying issue is resolved.</state>
+    <state name="No Cascading State Effects">No cascading state inconsistencies or secondary failures occur as a result of the health retrieval failure. Device internal consistency is maintained. Other SE API functions and device operations continue normally without state corruption.</state>
+    <state name="Recovery Preconditions Met">The device state after exception is consistent and allows for recovery operations. The underlying issue (hardware error, communication error, monitoring system error) remains present, but the device is stable enough to accept diagnostic queries or recovery attempts.</state>
+  </postconditionality>
+  <notes>
+    <note>ErrorGetDeviceHealthFailed is thrown ONLY by the getDeviceHealth function - it is the most specific and precise exception for Secure Element device health status retrieval failures</note>
+    <note>This exception indicates a failure in the Secure Element's ability to report its health status. It is an informational failure, not a critical operational failure, though it prevents health monitoring</note>
+    <note>Critical distinction from ErrorFunctionFailed: ErrorGetDeviceHealthFailed specifically indicates health status information is unavailable at the monitoring subsystem level, while ErrorFunctionFailed indicates broader unspecified critical failures</note>
+    <note>Exception is raised during the health information retrieval phase (steps 6-7), after device initialization and authentication checks have passed</note>
+    <note>After this exception, the Secure Element remains unchanged and continues to collect health metrics internally. Health queries can be retried once the underlying issue is resolved</note>
+    <note>This exception has Medium severity because it prevents users from assessing device health and diagnostic state, but does not immediately prevent device operation or other SE API functions</note>
+    <note>Device health information is critical for proactive monitoring, diagnostics, and predictive maintenance in operational device deployments</note>
+    <note>The exception indicates health status cannot be reliably obtained; applications must not implement workarounds using external monitoring without explicit validation</note>
+    <note>Failure scenarios range from transient (temporary communication issues, temporary health monitoring state) to persistent (hardware sensor failure, health monitoring subsystem corruption)</note>
+    <note>If this exception occurs frequently or persistently, it indicates serious issues with Secure Element health monitoring hardware, firmware, or diagnostic subsystem that require investigation</note>
+    <note>Health retrieval is a read-only query; failure does not modify any Secure Element state, so recovery typically requires only retrying the query once underlying issue is resolved</note>
+    <note>Device health status may include operational state, component functionality, error conditions, resource availability, temperature, power status, and other diagnostic metrics</note>
+    <note>Health information is essential for understanding device state and identifying potential problems before they impact critical operations</note>
+    <note>Applications must implement appropriate error handling for health retrieval failures, especially in monitored or managed device deployments</note>
+    <note>Repeated health retrieval failures may indicate device needs firmware update, health monitoring subsystem reset, or hardware service - manufacturer support should be engaged</note>
+  </notes>
+  <usage>
+    <scenario name="Scenario 1: Proactive Device Health Monitoring and Diagnostics">
+      <description>A system management application continuously monitors device health status to detect problems early and perform preventive maintenance. The application periodically calls getDeviceHealth to retrieve health metrics and diagnostic information. If ErrorGetDeviceHealthFailed is raised, the application cannot assess device health and must alert operators to the monitoring failure.</description>
+      <relatedFunctions>getDeviceHealth, getVersion, getSerialNumber</relatedFunctions>
+      <errorContext>Device health status unavailable for health monitoring and diagnostic assessment</errorContext>
+    </scenario>
+    <scenario name="Scenario 2: Health-Based Resource Allocation and Load Distribution">
+      <description>An enterprise application distributes workload across multiple devices, considering device health status to avoid devices with degraded health or resource constraints. The application queries getDeviceHealth on each device to assess availability and health. If ErrorGetDeviceHealthFailed is raised on one device, the application cannot determine that device's health and conservatively excludes it from load distribution.</description>
+      <relatedFunctions>getDeviceHealth, getCurrentNumberOfTransactions, getCurrentNumberOfClients</relatedFunctions>
+      <errorContext>Device health status unavailable for health-based load distribution decisions</errorContext>
+    </scenario>
+    <scenario name="Scenario 3: Device Health Reporting and Status Dashboard">
+      <description>An operations dashboard displays health status of all managed devices, showing component status, resource utilization, error conditions, and diagnostic metrics. The dashboard retrieves health information for each device using getDeviceHealth. If ErrorGetDeviceHealthFailed is raised on a device, the dashboard cannot display that device's health information and must show an error indicator.</description>
+      <relatedFunctions>getDeviceHealth, getVersion, getSerialNumber, getComponentVersions</relatedFunctions>
+      <errorContext>Device health information unavailable for operations dashboard display</errorContext>
+    </scenario>
+    <scenario name="Scenario 4: Device Problem Detection and Support Escalation">
+      <description>A support automation system detects device problems by monitoring health status. When a device reports unhealthy status (error conditions, degraded components), the system automatically escalates to support staff and collects detailed diagnostics. If ErrorGetDeviceHealthFailed is raised, the system cannot determine device health status and must escalate as a potential device monitoring failure.</description>
+      <relatedFunctions>getDeviceHealth, getVersion, getSerialNumber</relatedFunctions>
+      <errorContext>Device health status unavailable for problem detection and support escalation</errorContext>
+    </scenario>
+  </usage>
+  <implementationContext>
+    <note>The getDeviceHealth function retrieves comprehensive health status information maintained by the Secure Element's health monitoring subsystem</note>
+    <note>Device health information includes operational state, component functionality status, error conditions, resource availability, and other diagnostic metrics</note>
+    <note>Health information is collected and maintained internally by the Secure Element's health monitoring subsystem, tracking device state continuously</note>
+    <note>Different device models and firmware versions may report different health status fields and metrics - consult device specifications for expected health information structure</note>
+    <note>Health monitoring is critical for proactive device management, predictive maintenance, and early problem detection in operational deployments</note>
+    <note>If health retrieval fails but other device information queries succeed (version, serial number), the issue is specific to health monitoring subsystem, not to general device information access</note>
+    <note>Health monitoring hardware or subsystem failure should be treated seriously as it prevents visibility into device operational state and potential problems</note>
+    <note>Health retrieval is a read-only query; ErrorGetDeviceHealthFailed does not indicate state corruption requiring state recovery - it indicates the health monitoring information source is unavailable</note>
+  </implementationContext>
 </exception>

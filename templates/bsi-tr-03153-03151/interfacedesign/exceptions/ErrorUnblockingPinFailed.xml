@@ -1,174 +1,174 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<exception id="ErrorUnblockingPinFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
-    <name>ErrorUnblockingPinFailed</name>
-    <description>This exception is thrown if the unblockPin function fails to unblock a PIN. The unblockPin function is used to restore PIN functionality after too many incorrect attempts have caused the PIN to be locked. Unblocking requires providing the correct unblock PIN (PUK - Personal Unblock Key) to verify authorization. ErrorUnblockingPinFailed is raised when the unblock operation cannot be completed successfully, which may occur due to invalid unblock PIN, hardware errors, device state issues, or other failures. ErrorUnblockingPinFailed is a High severity exception because it prevents restoration of PIN functionality. Users remain locked out of PIN-protected operations until the unblock succeeds.</description>
-    <category>Authentication - PIN Management Failure</category>
-    <severity>High</severity>
-    <javadoc>
-        <summary>This class defines the exception ErrorUnblockingPinFailed that is thrown if the unblockPin function fails to unblock a PIN.</summary>
-        <description>This exception is thrown when the unblockPin function fails to unblock a locked PIN. PINs can be locked after too many incorrect authentication attempts. The unblockPin function restores PIN functionality by verifying the correct unblock PIN (PUK). If unblock verification fails, hardware errors occur, or device issues prevent completion, ErrorUnblockingPinFailed is raised. This indicates the unblock operation could not be successfully completed. The PIN remains locked and inaccessible. ErrorUnblockingPinFailed is a High severity exception because PIN-protected operations remain unavailable until unblocking succeeds. Recovery requires retrying unblock with correct PUK or investigating device state issues.</description>
-        <constructors>
-            <constructor>
-                <signature>ErrorUnblockingPinFailed()</signature>
-                <description>Constructs a new ErrorUnblockingPinFailed exception with null as the value for its detail message</description>
-            </constructor>
-            <constructor>
-                <signature>ErrorUnblockingPinFailed(String message)</signature>
-                <description>Constructs a new ErrorUnblockingPinFailed exception whereby its detail message is initialized with the passed value</description>
-                <parameter name="message">value for the detail message of the exception, typically describing reason for unblock failure</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorUnblockingPinFailed(String message, Throwable cause)</signature>
-                <description>Constructs a new ErrorUnblockingPinFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorUnblockingPinFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-                <description>Constructs a new ErrorUnblockingPinFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-            </constructor>
-        </constructors>
-    </javadoc>
-    <specification>
-        <source>BSI TR-03151-1</source>
-        <section>3.5.1 Authentication - PIN Management and Unblock Operations</section>
-        <requirement>The unblockPin function restores PIN functionality after the PIN has been locked due to too many incorrect authentication attempts. Unblocking requires providing the correct unblock PIN (PUK - Personal Unblock Key) and optionally setting a new PIN. If the unblock operation fails due to incorrect PUK, hardware errors, device state issues, or other factors, the Secure Element SHALL raise ErrorUnblockingPinFailed. The exception indicates the unblock operation could not be completed and the PIN remains locked. ErrorUnblockingPinFailed is a High severity exception because PIN-protected operations remain unavailable until unblocking succeeds. The caller must retry with correct credentials or investigate device state issues.</requirement>
-        <applicability>PIN unblock operations: unblockPin</applicability>
-        <reference>Authentication (3.5.1), PIN Management (3.5.1), Unblock Operations (3.5.1), unblockPin – Function (3.5.1)</reference>
-    </specification>
-    <thrownBy>
-        <function>unblockPin</function>
-    </thrownBy>
-    <triggerConditions>
-        <condition>
-            <scenario>Unblock PIN (PUK) verification fails</scenario>
-            <description>Provided unblock PIN does not match stored unblock credential</description>
-            <trigger>User calls unblockPin with incorrect PUK. Device verifies PUK against stored value, finds mismatch. ErrorUnblockingPinFailed raised because unblock verification failed.</trigger>
-        </condition>
-        <condition>
-            <scenario>Hardware failure during unblock operation</scenario>
-            <description>Hardware error prevents proper unblock processing</description>
-            <trigger>unblockPin operation encounters hardware error accessing PIN storage or crypto hardware. Device cannot complete unblock due to hardware issue. ErrorUnblockingPinFailed raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Device state incompatible with unblock operation</scenario>
-            <description>Device is in state that prevents unblock (not initialized, locked, etc.)</description>
-            <trigger>User attempts unblockPin but device is in diagnostic mode or secure element is disabled. Device rejects unblock operation. ErrorUnblockingPinFailed raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>New PIN parameters invalid or incompatible</scenario>
-            <description>Provided new PIN parameters fail validation</description>
-            <trigger>unblockPin called with new PIN that violates security policy (too short, weak format, etc.). Device rejects new PIN. ErrorUnblockingPinFailed raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Secure element communication failure during unblock</scenario>
-            <description>Communication with Secure Element fails during unblock processing</description>
-            <trigger>unblockPin operation experiences communication timeout or protocol error with Secure Element. Operation cannot complete. ErrorUnblockingPinFailed raised.</trigger>
-        </condition>
-    </triggerConditions>
-    <executionSequence>
-        <step number="1">User/application calls unblockPin function with PUK and optional new PIN parameter</step>
-        <step number="2">Function validates input parameters including PUK format and new PIN (if provided)</step>
-        <step number="2a">If parameters invalid → may raise ErrorParameterSyntax or ErrorParameterMismatch</step>
-        <step number="2b">If parameters valid → proceed to step 3</step>
-        <step number="3">Function validates PIN is actually locked (not already operational)</step>
-        <step number="3a">If PIN not locked → may raise different exception</step>
-        <step number="3b">If PIN locked → proceed to step 4</step>
-        <step number="4">Function initiates communication with Secure Element</step>
-        <step number="5">Secure Element receives unblock request with PUK and new PIN</step>
-        <step number="6">Secure Element verifies PUK against stored unblock credential</step>
-        <step number="6a">If PUK incorrect → ErrorUnblockingPinFailed raised, operation aborted</step>
-        <step number="6b">If PUK correct → proceed to step 7</step>
-        <step number="7">Secure Element validates new PIN (if provided) against security policy</step>
-        <step number="7a">If new PIN invalid → ErrorUnblockingPinFailed raised</step>
-        <step number="7b">If new PIN valid or not provided → proceed to step 8</step>
-        <step number="8">Secure Element updates PIN storage: clears lock flag, sets new PIN if provided</step>
-        <step number="8a">If storage update fails → ErrorUnblockingPinFailed raised</step>
-        <step number="8b">If storage update succeeds → proceed to step 9</step>
-        <step number="9">Secure Element logs unblock event for audit trail</step>
-        <step number="10">Secure Element returns success to function</step>
-        <step number="11">Function returns to caller indicating PIN successfully unblocked</step>
-    </executionSequence>
-    <recovery>
-        <step>Review error message - understand PIN unblock failed for specific reason</step>
-        <step>Check PUK - verify PUK provided is correct</step>
-        <step>Verify new PIN format - if new PIN provided, verify format meets requirements</step>
-        <step>Check device state - verify device is initialized and operational</step>
-        <step>Check PIN lock status - confirm PIN is actually locked (not operational)</step>
-        <step>Retry unblock - attempt unblockPin again with verified credentials</step>
-        <step>Check hardware - if repeated failures, verify device hardware is operational</step>
-        <step>Run diagnostics - execute device diagnostics to verify PIN storage health</step>
-        <step>Contact support - if unblock repeatedly fails, contact device support</step>
-        <step>Attempt device reset - if device state issue, may try graceful reset</step>
-        <step>Document failure - record failure for compliance and audit purposes</step>
-    </recovery>
-    <relatedExceptions>
-        <exception>ErrorPinBlocked</exception>
-        <exception>ErrorParameterSyntax</exception>
-        <exception>ErrorParameterMismatch</exception>
-        <exception>ErrorFunctionFailed</exception>
-    </relatedExceptions>
-    <postconditionality>
-        <state name="PIN Remains Locked">PIN is not unblocked - remains locked and inaccessible.</state>
-        <state name="Unblock Operation Not Completed">Unblock operation does not complete successfully.</state>
-        <state name="PIN Credentials Unchanged">PIN credentials remain unchanged - old PIN (or locked state) persists.</state>
-        <state name="New PIN Not Set">If new PIN was requested, it is not applied due to failure.</state>
-        <state name="High Exception Returned">Function returns ErrorUnblockingPinFailed High exception to caller.</state>
-        <state name="PIN-Protected Operations Remain Blocked">Operations requiring PIN remain unavailable.</state>
-    </postconditionality>
-    <notes>
-        <note>ErrorUnblockingPinFailed is thrown by 1 function: unblockPin</note>
-        <note>This is a High severity exception blocking PIN restoration</note>
-        <note>PIN unblock requires correct unblock PIN (PUK) for verification</note>
-        <note>PUK is a separate, distinct credential from regular PIN</note>
-        <note>Unblock failure keeps PIN locked - users cannot access PIN-protected functions</note>
-        <note>Multiple unblock failures may trigger additional security responses</note>
-        <note>Hardware errors can prevent unblock even with correct PUK</note>
-        <note>Device state issues may prevent unblock in certain modes</note>
-        <note>New PIN must meet security policy requirements if being set</note>
-        <note>Unblock operations should be logged for audit trail</note>
-        <note>PUK itself may be protected to prevent unauthorized unblocking</note>
-        <note>Unblock failure may indicate compromised device requiring investigation</note>
-        <note>Repeated failures should be escalated to support/service</note>
-        <note>Device diagnostics can help identify persistent unblock issues</note>
-        <note>New PIN format validation occurs during unblock (not separate call)</note>
-    </notes>
-    <usage>
-        <scenario name="Scenario 1: Incorrect Unblock PIN Provided">
-            <description>User accidentally enters PIN too many times, locking it. User attempts recovery via unblockPin with PUK. User provides incorrect PUK value. Device verifies PUK, finds mismatch. ErrorUnblockingPinFailed raised. User retries unblock with correct PUK.</description>
-            <relatedFunctions>unblockPin, verifyPin</relatedFunctions>
-            <errorContext>PUK verification failed - unblock unsuccessful</errorContext>
-        </scenario>
-        <scenario name="Scenario 2: Hardware Error During Unblock">
-            <description>User attempts to unblock PIN with correct PUK and new PIN. Device begins unblock operation. Hardware error occurs accessing PIN storage. Device cannot complete operation. ErrorUnblockingPinFailed raised. User contacts support for hardware investigation.</description>
-            <relatedFunctions>unblockPin</relatedFunctions>
-            <errorContext>Hardware failure prevented unblock completion - device service needed</errorContext>
-        </scenario>
-        <scenario name="Scenario 3: New PIN Fails Security Policy Validation">
-            <description>User provides correct PUK to unblock PIN. User also provides new PIN that violates security policy (too weak, violates format rules). Device validates new PIN, finds policy violation. ErrorUnblockingPinFailed raised due to invalid new PIN. User retries with compliant new PIN.</description>
-            <relatedFunctions>unblockPin, verifyPin</relatedFunctions>
-            <errorContext>New PIN security policy validation failed - retry with valid PIN</errorContext>
-        </scenario>
-        <scenario name="Scenario 4: Device State Prevents Unblock">
-            <description>Device is in maintenance/diagnostic mode. User attempts unblockPin during this period. Device detects incompatible state for PIN operations. ErrorUnblockingPinFailed raised. User waits for maintenance completion, retries unblock after device returns to normal state.</description>
-            <relatedFunctions>unblockPin</relatedFunctions>
-            <errorContext>Device state incompatible with unblock operation - retry after state change</errorContext>
-        </scenario>
-    </usage>
-    <implementationContext>
-        <note>Unblock operation must verify PUK before proceeding with PIN update</note>
-        <note>PUK verification should be cryptographically secure against brute force</note>
-        <note>New PIN validation should check against security policy requirements</note>
-        <note>PIN storage update must be atomic to prevent partial state</note>
-        <note>Unblock operation should log event with timestamp and result for audit</note>
-        <note>Hardware error detection should catch failures during PIN operations</note>
-        <note>Device state validation should occur before unblock operation</note>
-        <note>Communication with Secure Element should include error handling</note>
-        <note>Unblock failure should not leave device in inconsistent state</note>
-        <note>Repeated failures should trigger escalation logic or additional security responses</note>
-    </implementationContext>
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorUnblockingPinFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+  <name>ErrorUnblockingPinFailed</name>
+  <description>This exception is thrown if the unblockPin function fails to unblock a PIN. The unblockPin function is used to restore PIN functionality after too many incorrect attempts have caused the PIN to be locked. Unblocking requires providing the correct unblock PIN (PUK - Personal Unblock Key) to verify authorization. ErrorUnblockingPinFailed is raised when the unblock operation cannot be completed successfully, which may occur due to invalid unblock PIN, hardware errors, device state issues, or other failures. ErrorUnblockingPinFailed is a High severity exception because it prevents restoration of PIN functionality. Users remain locked out of PIN-protected operations until the unblock succeeds.</description>
+  <category>Authentication - PIN Management Failure</category>
+  <severity>High</severity>
+  <javadoc>
+    <summary>This class defines the exception ErrorUnblockingPinFailed that is thrown if the unblockPin function fails to unblock a PIN.</summary>
+    <description>This exception is thrown when the unblockPin function fails to unblock a locked PIN. PINs can be locked after too many incorrect authentication attempts. The unblockPin function restores PIN functionality by verifying the correct unblock PIN (PUK). If unblock verification fails, hardware errors occur, or device issues prevent completion, ErrorUnblockingPinFailed is raised. This indicates the unblock operation could not be successfully completed. The PIN remains locked and inaccessible. ErrorUnblockingPinFailed is a High severity exception because PIN-protected operations remain unavailable until unblocking succeeds. Recovery requires retrying unblock with correct PUK or investigating device state issues.</description>
+    <constructors>
+      <constructor>
+        <signature>ErrorUnblockingPinFailed()</signature>
+        <description>Constructs a new ErrorUnblockingPinFailed exception with null as the value for its detail message</description>
+      </constructor>
+      <constructor>
+        <signature>ErrorUnblockingPinFailed(String message)</signature>
+        <description>Constructs a new ErrorUnblockingPinFailed exception whereby its detail message is initialized with the passed value</description>
+        <parameter name="message">value for the detail message of the exception, typically describing reason for unblock failure</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorUnblockingPinFailed(String message, Throwable cause)</signature>
+        <description>Constructs a new ErrorUnblockingPinFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorUnblockingPinFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+        <description>Constructs a new ErrorUnblockingPinFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+      </constructor>
+    </constructors>
+  </javadoc>
+  <specification>
+    <source>BSI TR-03151-1</source>
+    <section>3.5.1 Authentication - PIN Management and Unblock Operations</section>
+    <requirement>The unblockPin function restores PIN functionality after the PIN has been locked due to too many incorrect authentication attempts. Unblocking requires providing the correct unblock PIN (PUK - Personal Unblock Key) and optionally setting a new PIN. If the unblock operation fails due to incorrect PUK, hardware errors, device state issues, or other factors, the Secure Element SHALL raise ErrorUnblockingPinFailed. The exception indicates the unblock operation could not be completed and the PIN remains locked. ErrorUnblockingPinFailed is a High severity exception because PIN-protected operations remain unavailable until unblocking succeeds. The caller must retry with correct credentials or investigate device state issues.</requirement>
+    <applicability>PIN unblock operations: unblockPin</applicability>
+    <reference>Authentication (3.5.1), PIN Management (3.5.1), Unblock Operations (3.5.1), unblockPin – Function (3.5.1)</reference>
+  </specification>
+  <thrownBy>
+    <function>unblockPin</function>
+  </thrownBy>
+  <triggerConditions>
+    <condition>
+      <scenario>Unblock PIN (PUK) verification fails</scenario>
+      <description>Provided unblock PIN does not match stored unblock credential</description>
+      <trigger>User calls unblockPin with incorrect PUK. Device verifies PUK against stored value, finds mismatch. ErrorUnblockingPinFailed raised because unblock verification failed.</trigger>
+    </condition>
+    <condition>
+      <scenario>Hardware failure during unblock operation</scenario>
+      <description>Hardware error prevents proper unblock processing</description>
+      <trigger>unblockPin operation encounters hardware error accessing PIN storage or crypto hardware. Device cannot complete unblock due to hardware issue. ErrorUnblockingPinFailed raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Device state incompatible with unblock operation</scenario>
+      <description>Device is in state that prevents unblock (not initialized, locked, etc.)</description>
+      <trigger>User attempts unblockPin but device is in diagnostic mode or secure element is disabled. Device rejects unblock operation. ErrorUnblockingPinFailed raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>New PIN parameters invalid or incompatible</scenario>
+      <description>Provided new PIN parameters fail validation</description>
+      <trigger>unblockPin called with new PIN that violates security policy (too short, weak format, etc.). Device rejects new PIN. ErrorUnblockingPinFailed raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Secure element communication failure during unblock</scenario>
+      <description>Communication with Secure Element fails during unblock processing</description>
+      <trigger>unblockPin operation experiences communication timeout or protocol error with Secure Element. Operation cannot complete. ErrorUnblockingPinFailed raised.</trigger>
+    </condition>
+  </triggerConditions>
+  <executionSequence>
+    <step number="1">User/application calls unblockPin function with PUK and optional new PIN parameter</step>
+    <step number="2">Function validates input parameters including PUK format and new PIN (if provided)</step>
+    <step number="2a">If parameters invalid → may raise ErrorParameterSyntax or ErrorParameterMismatch</step>
+    <step number="2b">If parameters valid → proceed to step 3</step>
+    <step number="3">Function validates PIN is actually locked (not already operational)</step>
+    <step number="3a">If PIN not locked → may raise different exception</step>
+    <step number="3b">If PIN locked → proceed to step 4</step>
+    <step number="4">Function initiates communication with Secure Element</step>
+    <step number="5">Secure Element receives unblock request with PUK and new PIN</step>
+    <step number="6">Secure Element verifies PUK against stored unblock credential</step>
+    <step number="6a">If PUK incorrect → ErrorUnblockingPinFailed raised, operation aborted</step>
+    <step number="6b">If PUK correct → proceed to step 7</step>
+    <step number="7">Secure Element validates new PIN (if provided) against security policy</step>
+    <step number="7a">If new PIN invalid → ErrorUnblockingPinFailed raised</step>
+    <step number="7b">If new PIN valid or not provided → proceed to step 8</step>
+    <step number="8">Secure Element updates PIN storage: clears lock flag, sets new PIN if provided</step>
+    <step number="8a">If storage update fails → ErrorUnblockingPinFailed raised</step>
+    <step number="8b">If storage update succeeds → proceed to step 9</step>
+    <step number="9">Secure Element logs unblock event for audit trail</step>
+    <step number="10">Secure Element returns success to function</step>
+    <step number="11">Function returns to caller indicating PIN successfully unblocked</step>
+  </executionSequence>
+  <recovery>
+    <step>Review error message - understand PIN unblock failed for specific reason</step>
+    <step>Check PUK - verify PUK provided is correct</step>
+    <step>Verify new PIN format - if new PIN provided, verify format meets requirements</step>
+    <step>Check device state - verify device is initialized and operational</step>
+    <step>Check PIN lock status - confirm PIN is actually locked (not operational)</step>
+    <step>Retry unblock - attempt unblockPin again with verified credentials</step>
+    <step>Check hardware - if repeated failures, verify device hardware is operational</step>
+    <step>Run diagnostics - execute device diagnostics to verify PIN storage health</step>
+    <step>Contact support - if unblock repeatedly fails, contact device support</step>
+    <step>Attempt device reset - if device state issue, may try graceful reset</step>
+    <step>Document failure - record failure for compliance and audit purposes</step>
+  </recovery>
+  <relatedExceptions>
+    <exception>ErrorPinBlocked</exception>
+    <exception>ErrorParameterSyntax</exception>
+    <exception>ErrorParameterMismatch</exception>
+    <exception>ErrorFunctionFailed</exception>
+  </relatedExceptions>
+  <postconditionality>
+    <state name="PIN Remains Locked">PIN is not unblocked - remains locked and inaccessible.</state>
+    <state name="Unblock Operation Not Completed">Unblock operation does not complete successfully.</state>
+    <state name="PIN Credentials Unchanged">PIN credentials remain unchanged - old PIN (or locked state) persists.</state>
+    <state name="New PIN Not Set">If new PIN was requested, it is not applied due to failure.</state>
+    <state name="High Exception Returned">Function returns ErrorUnblockingPinFailed High exception to caller.</state>
+    <state name="PIN-Protected Operations Remain Blocked">Operations requiring PIN remain unavailable.</state>
+  </postconditionality>
+  <notes>
+    <note>ErrorUnblockingPinFailed is thrown by 1 function: unblockPin</note>
+    <note>This is a High severity exception blocking PIN restoration</note>
+    <note>PIN unblock requires correct unblock PIN (PUK) for verification</note>
+    <note>PUK is a separate, distinct credential from regular PIN</note>
+    <note>Unblock failure keeps PIN locked - users cannot access PIN-protected functions</note>
+    <note>Multiple unblock failures may trigger additional security responses</note>
+    <note>Hardware errors can prevent unblock even with correct PUK</note>
+    <note>Device state issues may prevent unblock in certain modes</note>
+    <note>New PIN must meet security policy requirements if being set</note>
+    <note>Unblock operations should be logged for audit trail</note>
+    <note>PUK itself may be protected to prevent unauthorized unblocking</note>
+    <note>Unblock failure may indicate compromised device requiring investigation</note>
+    <note>Repeated failures should be escalated to support/service</note>
+    <note>Device diagnostics can help identify persistent unblock issues</note>
+    <note>New PIN format validation occurs during unblock (not separate call)</note>
+  </notes>
+  <usage>
+    <scenario name="Scenario 1: Incorrect Unblock PIN Provided">
+      <description>User accidentally enters PIN too many times, locking it. User attempts recovery via unblockPin with PUK. User provides incorrect PUK value. Device verifies PUK, finds mismatch. ErrorUnblockingPinFailed raised. User retries unblock with correct PUK.</description>
+      <relatedFunctions>unblockPin, verifyPin</relatedFunctions>
+      <errorContext>PUK verification failed - unblock unsuccessful</errorContext>
+    </scenario>
+    <scenario name="Scenario 2: Hardware Error During Unblock">
+      <description>User attempts to unblock PIN with correct PUK and new PIN. Device begins unblock operation. Hardware error occurs accessing PIN storage. Device cannot complete operation. ErrorUnblockingPinFailed raised. User contacts support for hardware investigation.</description>
+      <relatedFunctions>unblockPin</relatedFunctions>
+      <errorContext>Hardware failure prevented unblock completion - device service needed</errorContext>
+    </scenario>
+    <scenario name="Scenario 3: New PIN Fails Security Policy Validation">
+      <description>User provides correct PUK to unblock PIN. User also provides new PIN that violates security policy (too weak, violates format rules). Device validates new PIN, finds policy violation. ErrorUnblockingPinFailed raised due to invalid new PIN. User retries with compliant new PIN.</description>
+      <relatedFunctions>unblockPin, verifyPin</relatedFunctions>
+      <errorContext>New PIN security policy validation failed - retry with valid PIN</errorContext>
+    </scenario>
+    <scenario name="Scenario 4: Device State Prevents Unblock">
+      <description>Device is in maintenance/diagnostic mode. User attempts unblockPin during this period. Device detects incompatible state for PIN operations. ErrorUnblockingPinFailed raised. User waits for maintenance completion, retries unblock after device returns to normal state.</description>
+      <relatedFunctions>unblockPin</relatedFunctions>
+      <errorContext>Device state incompatible with unblock operation - retry after state change</errorContext>
+    </scenario>
+  </usage>
+  <implementationContext>
+    <note>Unblock operation must verify PUK before proceeding with PIN update</note>
+    <note>PUK verification should be cryptographically secure against brute force</note>
+    <note>New PIN validation should check against security policy requirements</note>
+    <note>PIN storage update must be atomic to prevent partial state</note>
+    <note>Unblock operation should log event with timestamp and result for audit</note>
+    <note>Hardware error detection should catch failures during PIN operations</note>
+    <note>Device state validation should occur before unblock operation</note>
+    <note>Communication with Secure Element should include error handling</note>
+    <note>Unblock failure should not leave device in inconsistent state</note>
+    <note>Repeated failures should trigger escalation logic or additional security responses</note>
+  </implementationContext>
 </exception>

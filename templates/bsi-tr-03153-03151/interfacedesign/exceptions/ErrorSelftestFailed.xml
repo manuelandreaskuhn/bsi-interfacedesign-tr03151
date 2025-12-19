@@ -1,173 +1,171 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<exception id="ErrorSelftestFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
-    <name>ErrorSelftestFailed</name>
-    <description>This exception is thrown if the execution of the self-tests of the Secure Element components fails. The selfTest function performs comprehensive integrity checks of device components, cryptographic modules, storage subsystems, communication interfaces, and security functions to verify the device is operating correctly. If any self-test check fails or reports a failure condition, the device indicates a potential integrity issue or malfunction. ErrorSelftestFailed indicates that the device may not be trustworthy for security operations. Common causes include: component failures, cryptographic test failures, memory errors, communication issues, configuration problems, or manufacturing defects. The device should not be used for critical operations until the self-test failure is investigated and resolved.</description>
-    <category>Device Management - Self-Test Failure</category>
-    <severity>Critical</severity>
-    <javadoc>
-        <summary>This class defines the exception ErrorSelftestFailed that is thrown if device self-test execution fails.</summary>
-        <description>This exception is thrown when the selfTest function attempts to verify the integrity and correct operation of Secure Element components but encounters a failure. Self-test is a critical diagnostic function that validates cryptographic modules, storage integrity, communication interfaces, security processor functionality, and overall device health. ErrorSelftestFailed indicates that one or more self-test checks have failed, revealing potential device malfunctions or integrity issues. Common causes include: component hardware failures, cryptographic module errors, memory corruption, communication subsystem issues, configuration errors, or manufacturing defects. ErrorSelftestFailed is a Critical severity exception because it indicates the device may not be trustworthy for security operations. Failed self-tests suggest the device should not be used for sensitive transactions. Recovery requires investigating the specific test failure, potential hardware repair, or device replacement. The device manufacturer should provide detailed self-test failure analysis capabilities.</description>
-        <constructors>
-            <constructor>
-                <signature>ErrorSelftestFailed()</signature>
-                <description>Constructs a new ErrorSelftestFailed exception with null as the value for its detail message</description>
-            </constructor>
-            <constructor>
-                <signature>ErrorSelftestFailed(String message)</signature>
-                <description>Constructs a new ErrorSelftestFailed exception whereby its detail message is initialized with the passed value</description>
-                <parameter name="message">value for the detail message of the exception, typically identifying which self-test check failed</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorSelftestFailed(String message, Throwable cause)</signature>
-                <description>Constructs a new ErrorSelftestFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorSelftestFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-                <description>Constructs a new ErrorSelftestFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-            </constructor>
-        </constructors>
-    </javadoc>
-    <specification>
-        <source>BSI TR-03151-1</source>
-        <section>3.2.8 Device Diagnostic Operations - selfTest</section>
-        <requirement>The function selfTest SHALL execute comprehensive self-tests of all critical Secure Element components including cryptographic modules, storage subsystems, communication interfaces, security processors, and firmware. If any self-test check fails or detects a component malfunction, the function SHALL raise ErrorSelftestFailed. Self-tests are used to verify device integrity and correct operation. Self-test is typically invoked during device initialization, periodically during operation, or when device issues are suspected. If self-test fails, the device may not be trustworthy for security operations and should not be used until the failure is investigated and resolved.</requirement>
-        <applicability>Device diagnostic self-test operations - selfTest function only</applicability>
-        <reference>selfTest – Function (3.2.8)</reference>
-    </specification>
-    <thrownBy>
-        <function>selfTest</function>
-    </thrownBy>
-    <triggerConditions>
-        <condition>
-            <scenario>Cryptographic module test failure</scenario>
-            <description>Self-test of cryptographic algorithms or operations fails</description>
-            <trigger>selfTest function executes cryptographic test vectors and detects failures in cryptographic operations. The test fails and ErrorSelftestFailed is raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Memory integrity check failure</scenario>
-            <description>Self-test detects memory corruption, errors, or integrity issues</description>
-            <trigger>selfTest function performs memory integrity checks (checksums, parity checks) and detects errors. Memory failure is reported and ErrorSelftestFailed is raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Component communication failure during test</scenario>
-            <description>Self-test detects failures in component-to-component communication</description>
-            <trigger>selfTest function attempts to communicate with device components and communication fails. Component failure is detected and ErrorSelftestFailed is raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Security processor or firmware failure</scenario>
-            <description>Self-test detects failures in security processor functionality or firmware operation</description>
-            <trigger>selfTest function tests security processor functionality and detects failures or anomalies. Processor malfunction is reported and ErrorSelftestFailed is raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Manufacturing defect or configuration error</scenario>
-            <description>Self-test detects manufacturing defects or incorrect device configuration</description>
-            <trigger>selfTest function performs configuration and initialization checks and detects defects or errors. Configuration failure is reported and ErrorSelftestFailed is raised.</trigger>
-        </condition>
-    </triggerConditions>
-    <executionSequence>
-        <step number="1">User/application calls selfTest function</step>
-        <step number="2">Function initializes self-test execution environment</step>
-        <step number="3">Function initiates communication with Secure Element for testing</step>
-        <step number="4">Function executes cryptographic test vectors</step>
-        <step number="4a">If cryptographic tests fail → ErrorSelftestFailed raised, function exits</step>
-        <step number="4b">If cryptographic tests pass → proceed to step 5</step>
-        <step number="5">Function performs memory integrity checks</step>
-        <step number="5a">If memory errors detected → ErrorSelftestFailed raised, function exits</step>
-        <step number="5b">If memory checks pass → proceed to step 6</step>
-        <step number="6">Function tests component communication and connectivity</step>
-        <step number="6a">If component communication fails → ErrorSelftestFailed raised, function exits</step>
-        <step number="6b">If component tests pass → proceed to step 7</step>
-        <step number="7">Function tests security processor functionality</step>
-        <step number="7a">If security processor tests fail → ErrorSelftestFailed raised, function exits</step>
-        <step number="7b">If security processor tests pass → proceed to step 8</step>
-        <step number="8">Function performs device configuration validation</step>
-        <step number="8a">If configuration errors detected → ErrorSelftestFailed raised, function exits</step>
-        <step number="8b">If configuration valid → proceed to step 9</step>
-        <step number="9">Function executes extended diagnostics (if available)</step>
-        <step number="10">All tests completed successfully</step>
-        <step number="11">Function returns self-test results indicating success</step>
-    </executionSequence>
-    <recovery>
-        <step>Review error message - examine the error message to identify which self-test check failed</step>
-        <step>Review device logs - examine device logs for additional diagnostic information about the failure</step>
-        <step>Check device status - query device status to verify overall functionality despite test failure</step>
-        <step>Retry self-test - attempt selfTest again to determine if failure is persistent or intermittent</step>
-        <step>Check device power - ensure device has stable power supply (unstable power can cause intermittent failures)</step>
-        <step>Check device temperature - verify device is operating within acceptable temperature range</step>
-        <step>Check device communication - verify clean communication channel with device</step>
-        <step>Device reset - power cycle the device and retry self-test</step>
-        <step>Manufacturer diagnostics - use device manufacturer's diagnostic tools to identify specific failure</step>
-        <step>If persistent, contact manufacturer - device may require repair or replacement if self-test consistently fails</step>
-    </recovery>
-    <relatedExceptions>
-        <exception>ErrorDeviceInitializationFailed</exception>
-        <exception>ErrorSecureElementNotInitialized</exception>
-        <exception>ErrorFunctionFailed</exception>
-        <exception>ErrorSecureElementPartsDisconnected</exception>
-    </relatedExceptions>
-    <postconditionality>
-        <state name="Self-Test Not Completed">The comprehensive self-test is not completed due to test failure.</state>
-        <state name="Device Integrity Unverified">The device integrity cannot be verified due to failed self-test checks.</state>
-        <state name="Caller Receives Exception">The function returns ErrorSelftestFailed exception with diagnostic information.</state>
-        <state name="Device State Uncertain">The device state is uncertain after self-test failure - device may be degraded or malfunctioning.</state>
-        <state name="Device Trustworthiness Questionable">The device should not be trusted for security operations until test passes.</state>
-        <state name="Diagnostic Information Available">Error message and logs contain information about which test failed.</state>
-    </postconditionality>
-    <notes>
-        <note>ErrorSelftestFailed is thrown only by the selfTest function - specific to device diagnostics</note>
-        <note>This exception indicates device component failure or integrity issue</note>
-        <note>The exception has Critical severity because self-test failure indicates device may not be trustworthy</note>
-        <note>Self-test is typically invoked during device initialization to verify operational readiness</note>
-        <note>Self-test can be invoked periodically to monitor device health during operation</note>
-        <note>Self-test results should be logged for compliance and audit purposes</note>
-        <note>Persistent self-test failures indicate hardware problems requiring maintenance</note>
-        <note>Intermittent self-test failures may indicate environmental issues (power, temperature) or component degradation</note>
-        <note>Device should not be used for critical operations if self-test fails</note>
-        <note>Self-test comprehensive checks include cryptography, memory, communication, and security functions</note>
-        <note>Error messages should identify the specific test that failed (cryptographic, memory, communication, etc.)</note>
-        <note>Device manufacturers should provide detailed self-test failure analysis and diagnostic information</note>
-        <note>Self-test execution time may be significant - plan for test duration in system design</note>
-        <note>Some devices may support abbreviated self-test for faster operation verification</note>
-        <note>Business continuity plans should account for device failure due to self-test failure</note>
-    </notes>
-    <usage>
-        <scenario name="Scenario 1: Device Initialization Self-Test Verification">
-            <description>A device initialization procedure calls selfTest to verify the device is operational before entering production. When ErrorSelftestFailed is raised, the initialization aborts and the device is not brought online. The failure is logged and IT is notified.</description>
-            <relatedFunctions>selfTest, initialize</relatedFunctions>
-            <errorContext>Device initialization blocked by self-test failure</errorContext>
-        </scenario>
-        <scenario name="Scenario 2: Periodic Health Monitoring with Self-Test">
-            <description>A system periodically calls selfTest to verify device health and detect component degradation. When ErrorSelftestFailed is raised, it indicates a component has failed. The system alerts administrators to schedule device maintenance or replacement.</description>
-            <relatedFunctions>selfTest, getDeviceInfo</relatedFunctions>
-            <errorContext>Periodic health monitoring detects device component failure</errorContext>
-        </scenario>
-        <scenario name="Scenario 3: Troubleshooting Device Issues with Self-Test">
-            <description>When a user reports transaction failures or unexpected device behavior, the support team calls selfTest to diagnose the issue. ErrorSelftestFailed reveals which component is malfunctioning and directs the troubleshooting effort.</description>
-            <relatedFunctions>selfTest, getDeviceInfo, getDescription</relatedFunctions>
-            <errorContext>Device troubleshooting identifies component failure via self-test</errorContext>
-        </scenario>
-        <scenario name="Scenario 4: Manufacturing Quality Assurance Test">
-            <description>During manufacturing and quality assurance, selfTest is called on each device to verify it meets specifications. When ErrorSelftestFailed is raised on a device, the device fails QA and is returned to manufacturing for repair or replacement.</description>
-            <relatedFunctions>selfTest, initialize</relatedFunctions>
-            <errorContext>Manufacturing QA rejects device due to self-test failure</errorContext>
-        </scenario>
-    </usage>
-    <implementationContext>
-        <note>The selfTest function must execute comprehensive test suites covering all critical device components</note>
-        <note>Self-test should include cryptographic test vectors with known test data</note>
-        <note>Self-test should include memory integrity checks using checksums or parity verification</note>
-        <note>Self-test should verify component-to-component communication and connectivity</note>
-        <note>Self-test should validate security processor functionality and firmware integrity</note>
-        <note>Self-test should detect manufacturing defects and configuration errors</note>
-        <note>Error messages should clearly identify which specific test failed</note>
-        <note>Detailed diagnostic information should be logged for troubleshooting and root cause analysis</note>
-        <note>Self-test execution should be atomic - all tests complete or fail cleanly with no partial state</note>
-        <note>Device should recover gracefully from self-test failure without corrupting state</note>
-    </implementationContext>
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorSelftestFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+  <name>ErrorSelftestFailed</name>
+  <description>This exception is thrown if the execution of the self-tests of the Secure Element components fails. The selfTest function performs comprehensive integrity checks of device components, cryptographic modules, storage subsystems, communication interfaces, and security functions to verify the device is operating correctly. If any self-test check fails or reports a failure condition, the device indicates a potential integrity issue or malfunction. ErrorSelftestFailed indicates that the device may not be trustworthy for security operations. Common causes include: component failures, cryptographic test failures, memory errors, communication issues, configuration problems, or manufacturing defects. The device should not be used for critical operations until the self-test failure is investigated and resolved.</description>
+  <category>Device Management - Self-Test Failure</category>
+  <severity>Critical</severity>
+  <thrownBy/>
+  <javadoc>
+    <summary>This class defines the exception ErrorSelftestFailed that is thrown if device self-test execution fails.</summary>
+    <description>This exception is thrown when the selfTest function attempts to verify the integrity and correct operation of Secure Element components but encounters a failure. Self-test is a critical diagnostic function that validates cryptographic modules, storage integrity, communication interfaces, security processor functionality, and overall device health. ErrorSelftestFailed indicates that one or more self-test checks have failed, revealing potential device malfunctions or integrity issues. Common causes include: component hardware failures, cryptographic module errors, memory corruption, communication subsystem issues, configuration errors, or manufacturing defects. ErrorSelftestFailed is a Critical severity exception because it indicates the device may not be trustworthy for security operations. Failed self-tests suggest the device should not be used for sensitive transactions. Recovery requires investigating the specific test failure, potential hardware repair, or device replacement. The device manufacturer should provide detailed self-test failure analysis capabilities.</description>
+    <constructors>
+      <constructor>
+        <signature>ErrorSelftestFailed()</signature>
+        <description>Constructs a new ErrorSelftestFailed exception with null as the value for its detail message</description>
+      </constructor>
+      <constructor>
+        <signature>ErrorSelftestFailed(String message)</signature>
+        <description>Constructs a new ErrorSelftestFailed exception whereby its detail message is initialized with the passed value</description>
+        <parameter name="message">value for the detail message of the exception, typically identifying which self-test check failed</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorSelftestFailed(String message, Throwable cause)</signature>
+        <description>Constructs a new ErrorSelftestFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorSelftestFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+        <description>Constructs a new ErrorSelftestFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+      </constructor>
+    </constructors>
+  </javadoc>
+  <specification>
+    <source>BSI TR-03151-1</source>
+    <section>3.2.8 Device Diagnostic Operations - selfTest</section>
+    <requirement>The function selfTest SHALL execute comprehensive self-tests of all critical Secure Element components including cryptographic modules, storage subsystems, communication interfaces, security processors, and firmware. If any self-test check fails or detects a component malfunction, the function SHALL raise ErrorSelftestFailed. Self-tests are used to verify device integrity and correct operation. Self-test is typically invoked during device initialization, periodically during operation, or when device issues are suspected. If self-test fails, the device may not be trustworthy for security operations and should not be used until the failure is investigated and resolved.</requirement>
+    <applicability>Device diagnostic self-test operations - selfTest function only</applicability>
+    <reference>selfTest – Function (3.2.8)</reference>
+  </specification>
+  <triggerConditions>
+    <condition>
+      <scenario>Cryptographic module test failure</scenario>
+      <description>Self-test of cryptographic algorithms or operations fails</description>
+      <trigger>selfTest function executes cryptographic test vectors and detects failures in cryptographic operations. The test fails and ErrorSelftestFailed is raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Memory integrity check failure</scenario>
+      <description>Self-test detects memory corruption, errors, or integrity issues</description>
+      <trigger>selfTest function performs memory integrity checks (checksums, parity checks) and detects errors. Memory failure is reported and ErrorSelftestFailed is raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Component communication failure during test</scenario>
+      <description>Self-test detects failures in component-to-component communication</description>
+      <trigger>selfTest function attempts to communicate with device components and communication fails. Component failure is detected and ErrorSelftestFailed is raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Security processor or firmware failure</scenario>
+      <description>Self-test detects failures in security processor functionality or firmware operation</description>
+      <trigger>selfTest function tests security processor functionality and detects failures or anomalies. Processor malfunction is reported and ErrorSelftestFailed is raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Manufacturing defect or configuration error</scenario>
+      <description>Self-test detects manufacturing defects or incorrect device configuration</description>
+      <trigger>selfTest function performs configuration and initialization checks and detects defects or errors. Configuration failure is reported and ErrorSelftestFailed is raised.</trigger>
+    </condition>
+  </triggerConditions>
+  <executionSequence>
+    <step number="1">User/application calls selfTest function</step>
+    <step number="2">Function initializes self-test execution environment</step>
+    <step number="3">Function initiates communication with Secure Element for testing</step>
+    <step number="4">Function executes cryptographic test vectors</step>
+    <step number="4a">If cryptographic tests fail → ErrorSelftestFailed raised, function exits</step>
+    <step number="4b">If cryptographic tests pass → proceed to step 5</step>
+    <step number="5">Function performs memory integrity checks</step>
+    <step number="5a">If memory errors detected → ErrorSelftestFailed raised, function exits</step>
+    <step number="5b">If memory checks pass → proceed to step 6</step>
+    <step number="6">Function tests component communication and connectivity</step>
+    <step number="6a">If component communication fails → ErrorSelftestFailed raised, function exits</step>
+    <step number="6b">If component tests pass → proceed to step 7</step>
+    <step number="7">Function tests security processor functionality</step>
+    <step number="7a">If security processor tests fail → ErrorSelftestFailed raised, function exits</step>
+    <step number="7b">If security processor tests pass → proceed to step 8</step>
+    <step number="8">Function performs device configuration validation</step>
+    <step number="8a">If configuration errors detected → ErrorSelftestFailed raised, function exits</step>
+    <step number="8b">If configuration valid → proceed to step 9</step>
+    <step number="9">Function executes extended diagnostics (if available)</step>
+    <step number="10">All tests completed successfully</step>
+    <step number="11">Function returns self-test results indicating success</step>
+  </executionSequence>
+  <recovery>
+    <step>Review error message - examine the error message to identify which self-test check failed</step>
+    <step>Review device logs - examine device logs for additional diagnostic information about the failure</step>
+    <step>Check device status - query device status to verify overall functionality despite test failure</step>
+    <step>Retry self-test - attempt selfTest again to determine if failure is persistent or intermittent</step>
+    <step>Check device power - ensure device has stable power supply (unstable power can cause intermittent failures)</step>
+    <step>Check device temperature - verify device is operating within acceptable temperature range</step>
+    <step>Check device communication - verify clean communication channel with device</step>
+    <step>Device reset - power cycle the device and retry self-test</step>
+    <step>Manufacturer diagnostics - use device manufacturer's diagnostic tools to identify specific failure</step>
+    <step>If persistent, contact manufacturer - device may require repair or replacement if self-test consistently fails</step>
+  </recovery>
+  <relatedExceptions>
+    <exception>ErrorDeviceInitializationFailed</exception>
+    <exception>ErrorSecureElementNotInitialized</exception>
+    <exception>ErrorFunctionFailed</exception>
+    <exception>ErrorSecureElementPartsDisconnected</exception>
+  </relatedExceptions>
+  <postconditionality>
+    <state name="Self-Test Not Completed">The comprehensive self-test is not completed due to test failure.</state>
+    <state name="Device Integrity Unverified">The device integrity cannot be verified due to failed self-test checks.</state>
+    <state name="Caller Receives Exception">The function returns ErrorSelftestFailed exception with diagnostic information.</state>
+    <state name="Device State Uncertain">The device state is uncertain after self-test failure - device may be degraded or malfunctioning.</state>
+    <state name="Device Trustworthiness Questionable">The device should not be trusted for security operations until test passes.</state>
+    <state name="Diagnostic Information Available">Error message and logs contain information about which test failed.</state>
+  </postconditionality>
+  <notes>
+    <note>ErrorSelftestFailed is thrown only by the selfTest function - specific to device diagnostics</note>
+    <note>This exception indicates device component failure or integrity issue</note>
+    <note>The exception has Critical severity because self-test failure indicates device may not be trustworthy</note>
+    <note>Self-test is typically invoked during device initialization to verify operational readiness</note>
+    <note>Self-test can be invoked periodically to monitor device health during operation</note>
+    <note>Self-test results should be logged for compliance and audit purposes</note>
+    <note>Persistent self-test failures indicate hardware problems requiring maintenance</note>
+    <note>Intermittent self-test failures may indicate environmental issues (power, temperature) or component degradation</note>
+    <note>Device should not be used for critical operations if self-test fails</note>
+    <note>Self-test comprehensive checks include cryptography, memory, communication, and security functions</note>
+    <note>Error messages should identify the specific test that failed (cryptographic, memory, communication, etc.)</note>
+    <note>Device manufacturers should provide detailed self-test failure analysis and diagnostic information</note>
+    <note>Self-test execution time may be significant - plan for test duration in system design</note>
+    <note>Some devices may support abbreviated self-test for faster operation verification</note>
+    <note>Business continuity plans should account for device failure due to self-test failure</note>
+  </notes>
+  <usage>
+    <scenario name="Scenario 1: Device Initialization Self-Test Verification">
+      <description>A device initialization procedure calls selfTest to verify the device is operational before entering production. When ErrorSelftestFailed is raised, the initialization aborts and the device is not brought online. The failure is logged and IT is notified.</description>
+      <relatedFunctions>selfTest, initialize</relatedFunctions>
+      <errorContext>Device initialization blocked by self-test failure</errorContext>
+    </scenario>
+    <scenario name="Scenario 2: Periodic Health Monitoring with Self-Test">
+      <description>A system periodically calls selfTest to verify device health and detect component degradation. When ErrorSelftestFailed is raised, it indicates a component has failed. The system alerts administrators to schedule device maintenance or replacement.</description>
+      <relatedFunctions>selfTest, getDeviceInfo</relatedFunctions>
+      <errorContext>Periodic health monitoring detects device component failure</errorContext>
+    </scenario>
+    <scenario name="Scenario 3: Troubleshooting Device Issues with Self-Test">
+      <description>When a user reports transaction failures or unexpected device behavior, the support team calls selfTest to diagnose the issue. ErrorSelftestFailed reveals which component is malfunctioning and directs the troubleshooting effort.</description>
+      <relatedFunctions>selfTest, getDeviceInfo, getDescription</relatedFunctions>
+      <errorContext>Device troubleshooting identifies component failure via self-test</errorContext>
+    </scenario>
+    <scenario name="Scenario 4: Manufacturing Quality Assurance Test">
+      <description>During manufacturing and quality assurance, selfTest is called on each device to verify it meets specifications. When ErrorSelftestFailed is raised on a device, the device fails QA and is returned to manufacturing for repair or replacement.</description>
+      <relatedFunctions>selfTest, initialize</relatedFunctions>
+      <errorContext>Manufacturing QA rejects device due to self-test failure</errorContext>
+    </scenario>
+  </usage>
+  <implementationContext>
+    <note>The selfTest function must execute comprehensive test suites covering all critical device components</note>
+    <note>Self-test should include cryptographic test vectors with known test data</note>
+    <note>Self-test should include memory integrity checks using checksums or parity verification</note>
+    <note>Self-test should verify component-to-component communication and connectivity</note>
+    <note>Self-test should validate security processor functionality and firmware integrity</note>
+    <note>Self-test should detect manufacturing defects and configuration errors</note>
+    <note>Error messages should clearly identify which specific test failed</note>
+    <note>Detailed diagnostic information should be logged for troubleshooting and root cause analysis</note>
+    <note>Self-test execution should be atomic - all tests complete or fail cleanly with no partial state</note>
+    <note>Device should recover gracefully from self-test failure without corrupting state</note>
+  </implementationContext>
 </exception>

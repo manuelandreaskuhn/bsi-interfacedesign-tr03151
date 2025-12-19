@@ -1,166 +1,175 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<exception id="ErrorTimeNotSet" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
-    <name>ErrorTimeNotSet</name>
-    <description>This exception is thrown if a time-dependent SE API function is invoked but the time in the Secure Element has not been properly set. The Secure Element maintains an internal time that is used to timestamp transactions and log messages for audit trail integrity. After device initialization or after a period of power loss or absence of current to the Secure Element, the internal time must be explicitly set via updateTime before time-dependent operations can proceed. ErrorTimeNotSet indicates the device time is not synchronized or has not been initialized. Common causes include: time not set after device initialization, device time reset due to power loss, or time synchronization required after long offline period. Time-dependent operations cannot proceed safely without accurate time.</description>
-    <category>Time Synchronization - Time Not Initialized</category>
-    <severity>High</severity>
-    <javadoc>
-        <summary>This class defines the exception ErrorTimeNotSet that is thrown if time-dependent operations are invoked without time being set.</summary>
-        <description>This exception is thrown when a time-dependent SE API function (such as transaction operations) is invoked but the Secure Element's internal time has not been properly initialized or synchronized. The Secure Element maintains an internal clock that is used to timestamp transactions, log messages, and audit trail events. After device initialization or after a period of power loss or disconnection, the internal time must be explicitly set via the updateTime function before time-dependent operations can proceed. ErrorTimeNotSet indicates the internal time is not set or not synchronized. Common causes include: time not initialized after device startup, device time lost due to power failure or battery discharge, or time synchronization required before transaction processing. ErrorTimeNotSet is a High severity exception because operations requiring accurate timestamps cannot proceed safely. Recovery requires using updateTime to set the device time synchronously with the current system time.</description>
-        <constructors>
-            <constructor>
-                <signature>ErrorTimeNotSet()</signature>
-                <description>Constructs a new ErrorTimeNotSet exception with null as the value for its detail message</description>
-            </constructor>
-            <constructor>
-                <signature>ErrorTimeNotSet(String message)</signature>
-                <description>Constructs a new ErrorTimeNotSet exception whereby its detail message is initialized with the passed value</description>
-                <parameter name="message">value for the detail message of the exception, typically indicating time not set or out of sync</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorTimeNotSet(String message, Throwable cause)</signature>
-                <description>Constructs a new ErrorTimeNotSet exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorTimeNotSet(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-                <description>Constructs a new ErrorTimeNotSet exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-            </constructor>
-        </constructors>
-    </javadoc>
-    <specification>
-        <source>BSI TR-03151-1</source>
-        <section>3.2.7 Time Management - updateTime and 3.3.2 Transaction Operations - Time Requirement</section>
-        <requirement>The Secure Element maintains an internal time that is used to timestamp transactions and log messages. After device initialization or after a period of power loss, the internal time must be explicitly synchronized via the updateTime function. All time-dependent operations (startTransaction, updateTransaction, finishTransaction) require that the Secure Element time has been properly set and synchronized. If time has not been set or is out of sync, the function SHALL raise ErrorTimeNotSet. Time accuracy is essential for audit trail integrity and compliance. Operations cannot proceed safely without accurate time to prevent timestamp manipulation.</requirement>
-        <applicability>Time-dependent transaction operations: startTransaction, updateTransaction, finishTransaction. Also requires updateTime to be called first during initialization.</applicability>
-        <reference>Time Management (3.2.7), updateTime – Function (3.2.7), Transaction Operations (3.3.2)</reference>
-    </specification>
-    <thrownBy>
-        <function>startTransaction</function>
-        <function>updateTransaction</function>
-        <function>finishTransaction</function>
-    </thrownBy>
-    <triggerConditions>
-        <condition>
-            <scenario>Time not initialized after device startup</scenario>
-            <description>Device time has not been set after initial initialization</description>
-            <trigger>A startTransaction call is made but device time has not been initialized. The device checks time validity and raises ErrorTimeNotSet.</trigger>
-        </condition>
-        <condition>
-            <scenario>Time lost due to power failure or battery discharge</scenario>
-            <description>Device loses time information after power loss or long offline period</description>
-            <trigger>Device experiences power loss. After power restoration, a finishTransaction call is made but device time is invalid. ErrorTimeNotSet is raised requiring time resynchronization.</trigger>
-        </condition>
-        <condition>
-            <scenario>Time synchronization required after offline period</scenario>
-            <description>Device has been offline for extended period and time needs resynchronization</description>
-            <trigger>A device offline for weeks is brought online. An updateTransaction call is made but device time is out of sync and too old. ErrorTimeNotSet is raised requiring time update.</trigger>
-        </condition>
-        <condition>
-            <scenario>Time not set in initialization sequence</scenario>
-            <description>Initialization sequence did not include time setup via updateTime</description>
-            <trigger>Device initialization completed but updateTime was not called to set time. A startTransaction call detects time is not set and raises ErrorTimeNotSet.</trigger>
-        </condition>
-        <condition>
-            <scenario>Time validity check fails</scenario>
-            <description>Device determines internal time is invalid or uninitialized</description>
-            <trigger>A finishTransaction call checks device time validity but determines time is not set (null, zero, or invalid value). ErrorTimeNotSet is raised.</trigger>
-        </condition>
-    </triggerConditions>
-    <executionSequence>
-        <step number="1">User/application calls a time-dependent transaction operation (e.g., startTransaction)</step>
-        <step number="2">Function validates input parameters and transaction context</step>
-        <step number="3">Function initiates communication with Secure Element</step>
-        <step number="4">Secure Element receives transaction request</step>
-        <step number="5">Secure Element checks internal time validity and synchronization</step>
-        <step number="5a">If time not set or invalid → ErrorTimeNotSet raised, operation aborted</step>
-        <step number="5b">If time valid and synchronized → proceed to step 6</step>
-        <step number="6">Secure Element creates transaction with current timestamp</step>
-        <step number="7">Secure Element processes transaction operation</step>
-        <step number="8">Secure Element creates digitally signed log message with timestamp</step>
-        <step number="9">Secure Element stores transaction in audit trail with timestamp</step>
-        <step number="10">Secure Element returns result to function</step>
-        <step number="11">Function returns successfully</step>
-    </executionSequence>
-    <recovery>
-        <step>Review error message - understand that time needs to be set</step>
-        <step>Get current system time - obtain accurate current time from system or time server</step>
-        <step>Call updateTime - synchronize device time with current time using updateTime function</step>
-        <step>Verify time updated - confirm device time is now set and valid</step>
-        <step>Retry the operation - attempt the transaction operation again</step>
-        <step>Establish time sync procedure - implement regular time synchronization in startup sequence</step>
-        <step>Consider device clock - if device frequently loses time, check battery or power supply</step>
-        <step>Monitor time drift - track device time accuracy over time to detect issues</step>
-        <step>Check system time source - verify system clock used for updateTime is accurate</step>
-        <step>Document time sync requirement - ensure system startup includes time synchronization step</step>
-    </recovery>
-    <relatedExceptions>
-        <exception>ErrorTimeUpdateFailed</exception>
-        <exception>ErrorFunctionFailed</exception>
-        <exception>ErrorDeviceNotInitialized</exception>
-    </relatedExceptions>
-    <postconditionality>
-        <state name="Transaction Not Created">The transaction is not created because time is not available for timestamping.</state>
-        <state name="Timestamp Not Generated">Transaction timestamp is not generated due to invalid time.</state>
-        <state name="Operation Not Completed">The transaction operation is not completed due to time requirement.</state>
-        <state name="Audit Trail Not Updated">The transaction is not recorded in the audit trail without valid timestamp.</state>
-        <state name="Device Time Still Not Set">The device time remains unset until updateTime is called.</state>
-        <state name="Manual Time Synchronization Required">The user must call updateTime to set device time before operations can proceed.</state>
-    </postconditionality>
-    <notes>
-        <note>ErrorTimeNotSet is thrown by 3 transaction functions that require valid timestamps</note>
-        <note>This exception indicates device time is not initialized or synchronized</note>
-        <note>The exception has High severity because accurate timestamps are essential for audit trail</note>
-        <note>Device time must be explicitly set via updateTime after initialization</note>
-        <note>Device may lose time after power loss or long offline period</note>
-        <note>Time accuracy is critical for transaction timestamp integrity</note>
-        <note>Timestamp manipulation prevention requires accurate time initialization</note>
-        <note>Time synchronization should be part of normal startup procedures</note>
-        <note>Regular time synchronization maintains device time accuracy</note>
-        <note>Error messages should clearly indicate time needs to be set</note>
-        <note>System clock source for updateTime must be accurate and reliable</note>
-        <note>Time drift can be detected by monitoring timestamp sequences</note>
-        <note>Device should store time persistently to survive short power disruptions</note>
-        <note>Long offline periods may require time resynchronization before operations</note>
-        <note>Audit trail integrity depends on accurate and non-decreasing timestamps</note>
-    </notes>
-    <usage>
-        <scenario name="Scenario 1: Device Initialization with Time Setup">
-            <description>Device initialization sequence includes calling updateTime to set device time. If startTransaction is called before updateTime, ErrorTimeNotSet is raised. After updateTime sets the time, transactions proceed normally.</description>
-            <relatedFunctions>initialize, updateTime, startTransaction</relatedFunctions>
-            <errorContext>Transaction blocked until device time is set via updateTime</errorContext>
-        </scenario>
-        <scenario name="Scenario 2: Power Loss Requires Time Resynchronization">
-            <description>Device loses power and internal time is reset. After power restoration, a finishTransaction call receives ErrorTimeNotSet. System calls updateTime to resynchronize time, then transactions resume.</description>
-            <relatedFunctions>updateTime, startTransaction, finishTransaction</relatedFunctions>
-            <errorContext>Power loss requires time resynchronization before transactions can proceed</errorContext>
-        </scenario>
-        <scenario name="Scenario 3: Long Offline Period Requires Time Update">
-            <description>Device has been offline for weeks without power. When brought online for operation, an updateTransaction call raises ErrorTimeNotSet. System updates device time to current value and retries transaction.</description>
-            <relatedFunctions>updateTime, updateTransaction</relatedFunctions>
-            <errorContext>Long offline period requires time synchronization before transactions resume</errorContext>
-        </scenario>
-        <scenario name="Scenario 4: Time Synchronization Monitoring">
-            <description>System monitors device time and periodically calls updateTime to maintain synchronization. This prevents ErrorTimeNotSet even after power disruptions or time drift.</description>
-            <relatedFunctions>updateTime, getCurrentSeTime, startTransaction</relatedFunctions>
-            <errorContext>Proactive time synchronization prevents time-related operation failures</errorContext>
-        </scenario>
-    </usage>
-    <implementationContext>
-        <note>Device must check time validity before allowing time-dependent operations</note>
-        <note>Time must be explicitly set via updateTime after initialization</note>
-        <note>Time should be persisted in device to survive short power disruptions</note>
-        <note>Time accuracy should be verified regularly during operation</note>
-        <note>Error messages should clearly indicate time needs to be updated</note>
-        <note>System startup sequence should include time synchronization via updateTime</note>
-        <note>Time synchronization should use accurate and reliable system clock source</note>
-        <note>Timestamp sequences should be monitored for non-decreasing values</note>
-        <note>Time drift should be detected and corrected periodically</note>
-        <note>Device time should not allow backward time adjustments without safeguards</note>
-    </implementationContext>
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorTimeNotSet" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+  <name>ErrorTimeNotSet</name>
+  <description>This exception is thrown if a time-dependent SE API function is invoked but the time in the Secure Element has not been properly set. The Secure Element maintains an internal time that is used to timestamp transactions and log messages for audit trail integrity. After device initialization or after a period of power loss or absence of current to the Secure Element, the internal time must be explicitly set via updateTime before time-dependent operations can proceed. ErrorTimeNotSet indicates the device time is not synchronized or has not been initialized. Common causes include: time not set after device initialization, device time reset due to power loss, or time synchronization required after long offline period. Time-dependent operations cannot proceed safely without accurate time.</description>
+  <category>Time Synchronization - Time Not Initialized</category>
+  <severity>High</severity>
+  <thrownBy>
+    <function>deleteLogMessages</function>
+    <function>deregisterClient</function>
+    <function>disableSecureElement</function>
+    <function>finishTransaction</function>
+    <function>getCurrentSeTime</function>
+    <function>lockTransactionLogging</function>
+    <function>registerClient</function>
+    <function>setDescription</function>
+    <function>startTransaction</function>
+    <function>unlockTransactionLogging</function>
+    <function>updateDevice</function>
+    <function>updateTransaction</function>
+  </thrownBy>
+  <javadoc>
+    <summary>This class defines the exception ErrorTimeNotSet that is thrown if time-dependent operations are invoked without time being set.</summary>
+    <description>This exception is thrown when a time-dependent SE API function (such as transaction operations) is invoked but the Secure Element's internal time has not been properly initialized or synchronized. The Secure Element maintains an internal clock that is used to timestamp transactions, log messages, and audit trail events. After device initialization or after a period of power loss or disconnection, the internal time must be explicitly set via the updateTime function before time-dependent operations can proceed. ErrorTimeNotSet indicates the internal time is not set or not synchronized. Common causes include: time not initialized after device startup, device time lost due to power failure or battery discharge, or time synchronization required before transaction processing. ErrorTimeNotSet is a High severity exception because operations requiring accurate timestamps cannot proceed safely. Recovery requires using updateTime to set the device time synchronously with the current system time.</description>
+    <constructors>
+      <constructor>
+        <signature>ErrorTimeNotSet()</signature>
+        <description>Constructs a new ErrorTimeNotSet exception with null as the value for its detail message</description>
+      </constructor>
+      <constructor>
+        <signature>ErrorTimeNotSet(String message)</signature>
+        <description>Constructs a new ErrorTimeNotSet exception whereby its detail message is initialized with the passed value</description>
+        <parameter name="message">value for the detail message of the exception, typically indicating time not set or out of sync</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorTimeNotSet(String message, Throwable cause)</signature>
+        <description>Constructs a new ErrorTimeNotSet exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorTimeNotSet(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+        <description>Constructs a new ErrorTimeNotSet exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+      </constructor>
+    </constructors>
+  </javadoc>
+  <specification>
+    <source>BSI TR-03151-1</source>
+    <section>3.2.7 Time Management - updateTime and 3.3.2 Transaction Operations - Time Requirement</section>
+    <requirement>The Secure Element maintains an internal time that is used to timestamp transactions and log messages. After device initialization or after a period of power loss, the internal time must be explicitly synchronized via the updateTime function. All time-dependent operations (startTransaction, updateTransaction, finishTransaction) require that the Secure Element time has been properly set and synchronized. If time has not been set or is out of sync, the function SHALL raise ErrorTimeNotSet. Time accuracy is essential for audit trail integrity and compliance. Operations cannot proceed safely without accurate time to prevent timestamp manipulation.</requirement>
+    <applicability>Time-dependent transaction operations: startTransaction, updateTransaction, finishTransaction. Also requires updateTime to be called first during initialization.</applicability>
+    <reference>Time Management (3.2.7), updateTime – Function (3.2.7), Transaction Operations (3.3.2)</reference>
+  </specification>
+  <triggerConditions>
+    <condition>
+      <scenario>Time not initialized after device startup</scenario>
+      <description>Device time has not been set after initial initialization</description>
+      <trigger>A startTransaction call is made but device time has not been initialized. The device checks time validity and raises ErrorTimeNotSet.</trigger>
+    </condition>
+    <condition>
+      <scenario>Time lost due to power failure or battery discharge</scenario>
+      <description>Device loses time information after power loss or long offline period</description>
+      <trigger>Device experiences power loss. After power restoration, a finishTransaction call is made but device time is invalid. ErrorTimeNotSet is raised requiring time resynchronization.</trigger>
+    </condition>
+    <condition>
+      <scenario>Time synchronization required after offline period</scenario>
+      <description>Device has been offline for extended period and time needs resynchronization</description>
+      <trigger>A device offline for weeks is brought online. An updateTransaction call is made but device time is out of sync and too old. ErrorTimeNotSet is raised requiring time update.</trigger>
+    </condition>
+    <condition>
+      <scenario>Time not set in initialization sequence</scenario>
+      <description>Initialization sequence did not include time setup via updateTime</description>
+      <trigger>Device initialization completed but updateTime was not called to set time. A startTransaction call detects time is not set and raises ErrorTimeNotSet.</trigger>
+    </condition>
+    <condition>
+      <scenario>Time validity check fails</scenario>
+      <description>Device determines internal time is invalid or uninitialized</description>
+      <trigger>A finishTransaction call checks device time validity but determines time is not set (null, zero, or invalid value). ErrorTimeNotSet is raised.</trigger>
+    </condition>
+  </triggerConditions>
+  <executionSequence>
+    <step number="1">User/application calls a time-dependent transaction operation (e.g., startTransaction)</step>
+    <step number="2">Function validates input parameters and transaction context</step>
+    <step number="3">Function initiates communication with Secure Element</step>
+    <step number="4">Secure Element receives transaction request</step>
+    <step number="5">Secure Element checks internal time validity and synchronization</step>
+    <step number="5a">If time not set or invalid → ErrorTimeNotSet raised, operation aborted</step>
+    <step number="5b">If time valid and synchronized → proceed to step 6</step>
+    <step number="6">Secure Element creates transaction with current timestamp</step>
+    <step number="7">Secure Element processes transaction operation</step>
+    <step number="8">Secure Element creates digitally signed log message with timestamp</step>
+    <step number="9">Secure Element stores transaction in audit trail with timestamp</step>
+    <step number="10">Secure Element returns result to function</step>
+    <step number="11">Function returns successfully</step>
+  </executionSequence>
+  <recovery>
+    <step>Review error message - understand that time needs to be set</step>
+    <step>Get current system time - obtain accurate current time from system or time server</step>
+    <step>Call updateTime - synchronize device time with current time using updateTime function</step>
+    <step>Verify time updated - confirm device time is now set and valid</step>
+    <step>Retry the operation - attempt the transaction operation again</step>
+    <step>Establish time sync procedure - implement regular time synchronization in startup sequence</step>
+    <step>Consider device clock - if device frequently loses time, check battery or power supply</step>
+    <step>Monitor time drift - track device time accuracy over time to detect issues</step>
+    <step>Check system time source - verify system clock used for updateTime is accurate</step>
+    <step>Document time sync requirement - ensure system startup includes time synchronization step</step>
+  </recovery>
+  <relatedExceptions>
+    <exception>ErrorTimeUpdateFailed</exception>
+    <exception>ErrorFunctionFailed</exception>
+    <exception>ErrorDeviceNotInitialized</exception>
+  </relatedExceptions>
+  <postconditionality>
+    <state name="Transaction Not Created">The transaction is not created because time is not available for timestamping.</state>
+    <state name="Timestamp Not Generated">Transaction timestamp is not generated due to invalid time.</state>
+    <state name="Operation Not Completed">The transaction operation is not completed due to time requirement.</state>
+    <state name="Audit Trail Not Updated">The transaction is not recorded in the audit trail without valid timestamp.</state>
+    <state name="Device Time Still Not Set">The device time remains unset until updateTime is called.</state>
+    <state name="Manual Time Synchronization Required">The user must call updateTime to set device time before operations can proceed.</state>
+  </postconditionality>
+  <notes>
+    <note>ErrorTimeNotSet is thrown by 3 transaction functions that require valid timestamps</note>
+    <note>This exception indicates device time is not initialized or synchronized</note>
+    <note>The exception has High severity because accurate timestamps are essential for audit trail</note>
+    <note>Device time must be explicitly set via updateTime after initialization</note>
+    <note>Device may lose time after power loss or long offline period</note>
+    <note>Time accuracy is critical for transaction timestamp integrity</note>
+    <note>Timestamp manipulation prevention requires accurate time initialization</note>
+    <note>Time synchronization should be part of normal startup procedures</note>
+    <note>Regular time synchronization maintains device time accuracy</note>
+    <note>Error messages should clearly indicate time needs to be set</note>
+    <note>System clock source for updateTime must be accurate and reliable</note>
+    <note>Time drift can be detected by monitoring timestamp sequences</note>
+    <note>Device should store time persistently to survive short power disruptions</note>
+    <note>Long offline periods may require time resynchronization before operations</note>
+    <note>Audit trail integrity depends on accurate and non-decreasing timestamps</note>
+  </notes>
+  <usage>
+    <scenario name="Scenario 1: Device Initialization with Time Setup">
+      <description>Device initialization sequence includes calling updateTime to set device time. If startTransaction is called before updateTime, ErrorTimeNotSet is raised. After updateTime sets the time, transactions proceed normally.</description>
+      <relatedFunctions>initialize, updateTime, startTransaction</relatedFunctions>
+      <errorContext>Transaction blocked until device time is set via updateTime</errorContext>
+    </scenario>
+    <scenario name="Scenario 2: Power Loss Requires Time Resynchronization">
+      <description>Device loses power and internal time is reset. After power restoration, a finishTransaction call receives ErrorTimeNotSet. System calls updateTime to resynchronize time, then transactions resume.</description>
+      <relatedFunctions>updateTime, startTransaction, finishTransaction</relatedFunctions>
+      <errorContext>Power loss requires time resynchronization before transactions can proceed</errorContext>
+    </scenario>
+    <scenario name="Scenario 3: Long Offline Period Requires Time Update">
+      <description>Device has been offline for weeks without power. When brought online for operation, an updateTransaction call raises ErrorTimeNotSet. System updates device time to current value and retries transaction.</description>
+      <relatedFunctions>updateTime, updateTransaction</relatedFunctions>
+      <errorContext>Long offline period requires time synchronization before transactions resume</errorContext>
+    </scenario>
+    <scenario name="Scenario 4: Time Synchronization Monitoring">
+      <description>System monitors device time and periodically calls updateTime to maintain synchronization. This prevents ErrorTimeNotSet even after power disruptions or time drift.</description>
+      <relatedFunctions>updateTime, getCurrentSeTime, startTransaction</relatedFunctions>
+      <errorContext>Proactive time synchronization prevents time-related operation failures</errorContext>
+    </scenario>
+  </usage>
+  <implementationContext>
+    <note>Device must check time validity before allowing time-dependent operations</note>
+    <note>Time must be explicitly set via updateTime after initialization</note>
+    <note>Time should be persisted in device to survive short power disruptions</note>
+    <note>Time accuracy should be verified regularly during operation</note>
+    <note>Error messages should clearly indicate time needs to be updated</note>
+    <note>System startup sequence should include time synchronization via updateTime</note>
+    <note>Time synchronization should use accurate and reliable system clock source</note>
+    <note>Timestamp sequences should be monitored for non-decreasing values</note>
+    <note>Time drift should be detected and corrected periodically</note>
+    <note>Device time should not allow backward time adjustments without safeguards</note>
+  </implementationContext>
 </exception>

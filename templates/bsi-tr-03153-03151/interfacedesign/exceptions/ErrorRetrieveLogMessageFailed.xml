@@ -1,180 +1,196 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<exception id="ErrorRetrieveLogMessageFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
-    <name>ErrorRetrieveLogMessageFailed</name>
-    <description>This exception is thrown if the SE API functions getLastLogMessage or getLastTransactionLogMessage fail to retrieve the most recently created log message from the Secure Element. The function attempts to read the latest log message data that was previously recorded during SE API operations, but the retrieval fails due to device communication errors, storage read errors, log data corruption, or other failure conditions. ErrorRetrieveLogMessageFailed indicates that the log message could not be successfully retrieved from the device's logging storage and the audit trail information is inaccessible. This exception is distinct from ErrorNoLogMessageFound which indicates no log messages exist; ErrorRetrieveLogMessageFailed indicates that messages exist but cannot be accessed.</description>
-    <category>Logging - Log Message Retrieval Failure</category>
-    <severity>High</severity>
-    <javadoc>
-        <summary>This class defines the exception ErrorRetrieveLogMessageFailed that is thrown if log message retrieval fails.</summary>
-        <description>This exception is thrown when the getLastLogMessage or getLastTransactionLogMessage functions attempt to retrieve the most recently created log message from the Secure Element but encounter a failure. Log message retrieval is essential for audit trail access, compliance verification, and transaction history review. ErrorRetrieveLogMessageFailed indicates that log message retrieval cannot be completed successfully. Common causes include: device communication failures, log storage read errors, corrupted log data, device internal errors, or temporary device issues. ErrorRetrieveLogMessageFailed is a High severity exception because it prevents access to critical audit trail information. Unlike ErrorNoLogMessageFound which indicates no log messages exist, ErrorRetrieveLogMessageFailed indicates that log messages exist but cannot be accessed. Recovery requires investigating the device state, communication connectivity, and log storage integrity.</description>
-        <constructors>
-            <constructor>
-                <signature>ErrorRetrieveLogMessageFailed()</signature>
-                <description>Constructs a new ErrorRetrieveLogMessageFailed exception with null as the value for its detail message</description>
-            </constructor>
-            <constructor>
-                <signature>ErrorRetrieveLogMessageFailed(String message)</signature>
-                <description>Constructs a new ErrorRetrieveLogMessageFailed exception whereby its detail message is initialized with the passed value</description>
-                <parameter name="message">value for the detail message of the exception, typically describing the log retrieval failure reason</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorRetrieveLogMessageFailed(String message, Throwable cause)</signature>
-                <description>Constructs a new ErrorRetrieveLogMessageFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorRetrieveLogMessageFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-                <description>Constructs a new ErrorRetrieveLogMessageFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-            </constructor>
-        </constructors>
-    </javadoc>
-    <specification>
-        <source>BSI TR-03151-1</source>
-        <section>3.3.3 Logging Operations - getLastLogMessage and getLastTransactionLogMessage</section>
-        <requirement>The functions getLastLogMessage and getLastTransactionLogMessage SHALL retrieve the most recently created log message from the Secure Element's logging storage. If the retrieval cannot be completed successfully due to device communication failure, storage read error, corrupted log data, or other device-level error, the function SHALL raise the exception ErrorRetrieveLogMessageFailed. The retrieved log message contains the transaction context, timestamp, and status information. If retrieval fails, the log message data remains in the device's storage but is inaccessible to the caller.</requirement>
-        <applicability>Log message retrieval operations - getLastLogMessage and getLastTransactionLogMessage functions only</applicability>
-        <reference>getLastLogMessage – Function (3.3.3), getLastTransactionLogMessage – Function (3.3.3)</reference>
-    </specification>
-    <thrownBy>
-        <function>getLastLogMessage</function>
-        <function>getLastTransactionLogMessage</function>
-    </thrownBy>
-    <triggerConditions>
-        <condition>
-            <scenario>Device communication failure during retrieval</scenario>
-            <description>Communication with the Secure Element is lost or interrupted during log message retrieval</description>
-            <trigger>A getLastLogMessage or getLastTransactionLogMessage call initiates communication but loses connection before receiving the log data. The retrieval cannot be completed and ErrorRetrieveLogMessageFailed is raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Device storage read error</scenario>
-            <description>The device encounters read errors when accessing log storage</description>
-            <trigger>A getLastLogMessage call begins but the device encounters I/O errors while reading log data from storage (hardware error, sector failure, etc.). The read fails and ErrorRetrieveLogMessageFailed is raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Corrupted log message data</scenario>
-            <description>The log message data is corrupted or invalid and cannot be retrieved successfully</description>
-            <trigger>A getLastLogMessage call attempts to read log data but the data is corrupted (checksum failure, invalid structure). The device detects corruption and raises ErrorRetrieveLogMessageFailed.</trigger>
-        </condition>
-        <condition>
-            <scenario>Device internal error during retrieval</scenario>
-            <description>The Secure Element encounters an internal error during the retrieval operation</description>
-            <trigger>A getLastTransactionLogMessage call is processed by the device but an internal processing error occurs. The device aborts the retrieval and raises ErrorRetrieveLogMessageFailed.</trigger>
-        </condition>
-        <condition>
-            <scenario>Device not in correct state for retrieval</scenario>
-            <description>The device state is not appropriate for log message retrieval (e.g., device not initialized or in error state)</description>
-            <trigger>A getLastLogMessage call is made but the device is not initialized or not operational. The device rejects the operation and raises ErrorRetrieveLogMessageFailed.</trigger>
-        </condition>
-    </triggerConditions>
-    <executionSequence>
-        <step number="1">User/application calls getLastLogMessage or getLastTransactionLogMessage function</step>
-        <step number="2">Function validates input parameters</step>
-        <step number="3">Function checks device state (initialized, operational)</step>
-        <step number="3a">If device not ready → ErrorRetrieveLogMessageFailed raised, function exits</step>
-        <step number="3b">If device ready → proceed to step 4</step>
-        <step number="4">Function initiates communication with Secure Element</step>
-        <step number="5">Function sends log retrieval request to Secure Element</step>
-        <step number="5a">If communication fails → ErrorRetrieveLogMessageFailed raised, function exits</step>
-        <step number="5b">If communication succeeds → proceed to step 6</step>
-        <step number="6">Secure Element processes log retrieval request</step>
-        <step number="7">Secure Element locates most recently created log message</step>
-        <step number="7a">If log message not found (separate from ErrorNoLogMessageFound) → may indicate corruption, proceed to step 8</step>
-        <step number="7b">If log message found → proceed to step 8</step>
-        <step number="8">Secure Element reads log message data from storage</step>
-        <step number="8a">If storage read error → ErrorRetrieveLogMessageFailed raised, function exits</step>
-        <step number="8b">If storage read succeeds → proceed to step 9</step>
-        <step number="9">Secure Element validates log message data structure and integrity</step>
-        <step number="9a">If log data corrupted → ErrorRetrieveLogMessageFailed raised, function exits</step>
-        <step number="9b">If log data valid → proceed to step 10</step>
-        <step number="10">Secure Element transmits log message data to calling function</step>
-        <step number="10a">If transmission fails → ErrorRetrieveLogMessageFailed raised, function exits</step>
-        <step number="10b">If transmission succeeds → proceed to step 11</step>
-        <step number="11">Function receives log message data from Secure Element</step>
-        <step number="12">Function parses and validates received log message</step>
-        <step number="13">Function closes communication channel with Secure Element</step>
-        <step number="14">Function returns successfully with log message data</step>
-    </executionSequence>
-    <recovery>
-        <step>Review error message - examine the error message to understand the retrieval failure reason</step>
-        <step>Verify device connectivity - ensure Secure Element is accessible and responsive</step>
-        <step>Check device state - query device to verify it is initialized and operational</step>
-        <step>Check device storage - query device to verify storage is accessible</step>
-        <step>Verify device communication - establish clean communication channel with Secure Element</step>
-        <step>Check log message existence - verify log messages exist using available query mechanisms</step>
-        <step>Retry the retrieval - attempt getLastLogMessage or getLastTransactionLogMessage again</step>
-        <step>Try alternative retrieval - if getLastLogMessage fails, try getLastTransactionLogMessage or vice versa</step>
-        <step>Query log history - if latest message inaccessible, attempt to query older messages</step>
-        <step>If persistent, contact manufacturer - repeated retrieval failures may indicate device or storage issue</step>
-    </recovery>
-    <relatedExceptions>
-        <exception>ErrorReadingLogMessage</exception>
-        <exception>ErrorNoLogMessageFound</exception>
-        <exception>ErrorDeviceNotInitialized</exception>
-        <exception>ErrorFunctionFailed</exception>
-        <exception>ErrorConfigureLoggingFailed</exception>
-    </relatedExceptions>
-    <postconditionality>
-        <state name="Log Message Not Retrieved">The log message is not retrieved. The most recent log data remains in the device's storage but is inaccessible to the caller.</state>
-        <state name="Caller Receives No Data">The function returns exception instead of log message data. The caller cannot access the audit trail information.</state>
-        <state name="Device State Unchanged">The device's state remains unchanged by the failed retrieval attempt. The log message is not modified or deleted.</state>
-        <state name="Log Storage Intact">The log storage remains intact and uncorrupted. The log message remains available for future retrieval attempts.</state>
-        <state name="Audit Trail Inaccessible">The audit trail information represented by the log message is temporarily inaccessible due to the retrieval failure.</state>
-        <state name="Retry Possible">The retrieval operation can be retried after addressing the underlying cause of the failure.</state>
-    </postconditionality>
-    <notes>
-        <note>ErrorRetrieveLogMessageFailed is thrown by getLastLogMessage and getLastTransactionLogMessage functions - specific to log message retrieval</note>
-        <note>This exception indicates a log retrieval failure - the message exists but cannot be accessed</note>
-        <note>This exception is distinct from ErrorNoLogMessageFound which indicates no log messages exist</note>
-        <note>This exception is distinct from ErrorReadingLogMessage which indicates generic log read failure in export context</note>
-        <note>The exception has High severity because it prevents access to audit trail information</note>
-        <note>Communication failures during retrieval are a common cause - connection reliability is important</note>
-        <note>Log message data should be validated after retrieval to ensure integrity</note>
-        <note>Device storage integrity is critical for successful log retrieval</note>
-        <note>Log messages are immutable once created - failed retrieval does not indicate data loss</note>
-        <note>Retry strategies should include communication reset and device re-initialization attempts</note>
-        <note>Error messages should distinguish between "no log messages exist" vs. "cannot retrieve log messages"</note>
-        <note>Monitoring log retrieval failures can indicate device issues requiring maintenance</note>
-        <note>Backup/export mechanisms can provide alternative access to audit trails if retrieval fails</note>
-        <note>The most recent log message is important for transaction verification and audit trail continuity</note>
-        <note>Successful retrieval confirms both device connectivity and log storage accessibility</note>
-    </notes>
-    <usage>
-        <scenario name="Scenario 1: Transaction Verification with Log Message Retrieval">
-            <description>An application performs a transaction and immediately retrieves the log message to verify the transaction was recorded correctly. When ErrorRetrieveLogMessageFailed is raised, the application retries retrieval or queries the device state.</description>
-            <relatedFunctions>getLastLogMessage, executeTransaction</relatedFunctions>
-            <errorContext>Transaction completed but log message cannot be retrieved for verification</errorContext>
-        </scenario>
-        <scenario name="Scenario 2: Audit Trail Access with Failure Recovery">
-            <description>A compliance application retrieves the most recent transaction log message as part of audit trail review. When ErrorRetrieveLogMessageFailed is raised, it alerts the administrator and triggers investigation into device connectivity or storage issues.</description>
-            <relatedFunctions>getLastLogMessage, exportLogMessages</relatedFunctions>
-            <errorContext>Audit trail access blocked by retrieval failure</errorContext>
-        </scenario>
-        <scenario name="Scenario 3: Transaction History Review with Alternative Access">
-            <description>A user attempts to review the last transaction by calling getLastTransactionLogMessage. If ErrorRetrieveLogMessageFailed is raised, the system attempts to export all available log messages as an alternative way to access transaction history.</description>
-            <relatedFunctions>getLastTransactionLogMessage, exportLogMessages</relatedFunctions>
-            <errorContext>Direct log retrieval fails - alternative export mechanism attempted</errorContext>
-        </scenario>
-        <scenario name="Scenario 4: Device Diagnostics with Log Message Access">
-            <description>A device diagnostics procedure attempts to retrieve the latest log message to verify device logging is functioning. When ErrorRetrieveLogMessageFailed is raised, it indicates a device issue - communication or storage problems.</description>
-            <relatedFunctions>getLastLogMessage, getDeviceInfo</relatedFunctions>
-            <errorContext>Device diagnostics identify log retrieval failure as indicator of device issues</errorContext>
-        </scenario>
-    </usage>
-    <implementationContext>
-        <note>The getLastLogMessage and getLastTransactionLogMessage functions must establish reliable communication with the Secure Element</note>
-        <note>Communication should include error detection and retry mechanisms for robustness</note>
-        <note>Device state should be verified before attempting log message retrieval</note>
-        <note>Retrieved log data must be validated for structure and integrity before returning to caller</note>
-        <note>Distinction must be made between "no log messages exist" and "cannot retrieve log messages"</note>
-        <note>Error messages should indicate the specific retrieval failure (communication, storage, corruption, etc.)</note>
-        <note>Log message data should be treated as immutable - retrieval does not affect stored data</note>
-        <note>Timeout mechanisms should be implemented for communication-based retrieval</note>
-        <note>Retry strategies should be implemented with appropriate delays and limits</note>
-        <note>Device manufacturers should document log message structure and retrieval specifications</note>
-    </implementationContext>
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorRetrieveLogMessageFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+  <name>ErrorRetrieveLogMessageFailed</name>
+  <description>This exception is thrown if the SE API functions getLastLogMessage or getLastTransactionLogMessage fail to retrieve the most recently created log message from the Secure Element. The function attempts to read the latest log message data that was previously recorded during SE API operations, but the retrieval fails due to device communication errors, storage read errors, log data corruption, or other failure conditions. ErrorRetrieveLogMessageFailed indicates that the log message could not be successfully retrieved from the device's logging storage and the audit trail information is inaccessible. This exception is distinct from ErrorNoLogMessageFound which indicates no log messages exist; ErrorRetrieveLogMessageFailed indicates that messages exist but cannot be accessed.</description>
+  <category>Logging - Log Message Retrieval Failure</category>
+  <severity>High</severity>
+  <thrownBy>
+    <function>authenticateUser</function>
+    <function>configureLogging</function>
+    <function>deleteLogMessages</function>
+    <function>deregisterClient</function>
+    <function>disableSecureElement</function>
+    <function>finishTransaction</function>
+    <function>initialize</function>
+    <function>lockTransactionLogging</function>
+    <function>logOut</function>
+    <function>registerClient</function>
+    <function>selfTest</function>
+    <function>setDescription</function>
+    <function>startTransaction</function>
+    <function>unblockPin</function>
+    <function>unlockTransactionLogging</function>
+    <function>updateDevice</function>
+    <function>updateTime</function>
+    <function>updateTransaction</function>
+  </thrownBy>
+  <javadoc>
+    <summary>This class defines the exception ErrorRetrieveLogMessageFailed that is thrown if log message retrieval fails.</summary>
+    <description>This exception is thrown when the getLastLogMessage or getLastTransactionLogMessage functions attempt to retrieve the most recently created log message from the Secure Element but encounter a failure. Log message retrieval is essential for audit trail access, compliance verification, and transaction history review. ErrorRetrieveLogMessageFailed indicates that log message retrieval cannot be completed successfully. Common causes include: device communication failures, log storage read errors, corrupted log data, device internal errors, or temporary device issues. ErrorRetrieveLogMessageFailed is a High severity exception because it prevents access to critical audit trail information. Unlike ErrorNoLogMessageFound which indicates no log messages exist, ErrorRetrieveLogMessageFailed indicates that log messages exist but cannot be accessed. Recovery requires investigating the device state, communication connectivity, and log storage integrity.</description>
+    <constructors>
+      <constructor>
+        <signature>ErrorRetrieveLogMessageFailed()</signature>
+        <description>Constructs a new ErrorRetrieveLogMessageFailed exception with null as the value for its detail message</description>
+      </constructor>
+      <constructor>
+        <signature>ErrorRetrieveLogMessageFailed(String message)</signature>
+        <description>Constructs a new ErrorRetrieveLogMessageFailed exception whereby its detail message is initialized with the passed value</description>
+        <parameter name="message">value for the detail message of the exception, typically describing the log retrieval failure reason</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorRetrieveLogMessageFailed(String message, Throwable cause)</signature>
+        <description>Constructs a new ErrorRetrieveLogMessageFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorRetrieveLogMessageFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+        <description>Constructs a new ErrorRetrieveLogMessageFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+      </constructor>
+    </constructors>
+  </javadoc>
+  <specification>
+    <source>BSI TR-03151-1</source>
+    <section>3.3.3 Logging Operations - getLastLogMessage and getLastTransactionLogMessage</section>
+    <requirement>The functions getLastLogMessage and getLastTransactionLogMessage SHALL retrieve the most recently created log message from the Secure Element's logging storage. If the retrieval cannot be completed successfully due to device communication failure, storage read error, corrupted log data, or other device-level error, the function SHALL raise the exception ErrorRetrieveLogMessageFailed. The retrieved log message contains the transaction context, timestamp, and status information. If retrieval fails, the log message data remains in the device's storage but is inaccessible to the caller.</requirement>
+    <applicability>Log message retrieval operations - getLastLogMessage and getLastTransactionLogMessage functions only</applicability>
+    <reference>getLastLogMessage – Function (3.3.3), getLastTransactionLogMessage – Function (3.3.3)</reference>
+  </specification>
+  <triggerConditions>
+    <condition>
+      <scenario>Device communication failure during retrieval</scenario>
+      <description>Communication with the Secure Element is lost or interrupted during log message retrieval</description>
+      <trigger>A getLastLogMessage or getLastTransactionLogMessage call initiates communication but loses connection before receiving the log data. The retrieval cannot be completed and ErrorRetrieveLogMessageFailed is raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Device storage read error</scenario>
+      <description>The device encounters read errors when accessing log storage</description>
+      <trigger>A getLastLogMessage call begins but the device encounters I/O errors while reading log data from storage (hardware error, sector failure, etc.). The read fails and ErrorRetrieveLogMessageFailed is raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Corrupted log message data</scenario>
+      <description>The log message data is corrupted or invalid and cannot be retrieved successfully</description>
+      <trigger>A getLastLogMessage call attempts to read log data but the data is corrupted (checksum failure, invalid structure). The device detects corruption and raises ErrorRetrieveLogMessageFailed.</trigger>
+    </condition>
+    <condition>
+      <scenario>Device internal error during retrieval</scenario>
+      <description>The Secure Element encounters an internal error during the retrieval operation</description>
+      <trigger>A getLastTransactionLogMessage call is processed by the device but an internal processing error occurs. The device aborts the retrieval and raises ErrorRetrieveLogMessageFailed.</trigger>
+    </condition>
+    <condition>
+      <scenario>Device not in correct state for retrieval</scenario>
+      <description>The device state is not appropriate for log message retrieval (e.g., device not initialized or in error state)</description>
+      <trigger>A getLastLogMessage call is made but the device is not initialized or not operational. The device rejects the operation and raises ErrorRetrieveLogMessageFailed.</trigger>
+    </condition>
+  </triggerConditions>
+  <executionSequence>
+    <step number="1">User/application calls getLastLogMessage or getLastTransactionLogMessage function</step>
+    <step number="2">Function validates input parameters</step>
+    <step number="3">Function checks device state (initialized, operational)</step>
+    <step number="3a">If device not ready → ErrorRetrieveLogMessageFailed raised, function exits</step>
+    <step number="3b">If device ready → proceed to step 4</step>
+    <step number="4">Function initiates communication with Secure Element</step>
+    <step number="5">Function sends log retrieval request to Secure Element</step>
+    <step number="5a">If communication fails → ErrorRetrieveLogMessageFailed raised, function exits</step>
+    <step number="5b">If communication succeeds → proceed to step 6</step>
+    <step number="6">Secure Element processes log retrieval request</step>
+    <step number="7">Secure Element locates most recently created log message</step>
+    <step number="7a">If log message not found (separate from ErrorNoLogMessageFound) → may indicate corruption, proceed to step 8</step>
+    <step number="7b">If log message found → proceed to step 8</step>
+    <step number="8">Secure Element reads log message data from storage</step>
+    <step number="8a">If storage read error → ErrorRetrieveLogMessageFailed raised, function exits</step>
+    <step number="8b">If storage read succeeds → proceed to step 9</step>
+    <step number="9">Secure Element validates log message data structure and integrity</step>
+    <step number="9a">If log data corrupted → ErrorRetrieveLogMessageFailed raised, function exits</step>
+    <step number="9b">If log data valid → proceed to step 10</step>
+    <step number="10">Secure Element transmits log message data to calling function</step>
+    <step number="10a">If transmission fails → ErrorRetrieveLogMessageFailed raised, function exits</step>
+    <step number="10b">If transmission succeeds → proceed to step 11</step>
+    <step number="11">Function receives log message data from Secure Element</step>
+    <step number="12">Function parses and validates received log message</step>
+    <step number="13">Function closes communication channel with Secure Element</step>
+    <step number="14">Function returns successfully with log message data</step>
+  </executionSequence>
+  <recovery>
+    <step>Review error message - examine the error message to understand the retrieval failure reason</step>
+    <step>Verify device connectivity - ensure Secure Element is accessible and responsive</step>
+    <step>Check device state - query device to verify it is initialized and operational</step>
+    <step>Check device storage - query device to verify storage is accessible</step>
+    <step>Verify device communication - establish clean communication channel with Secure Element</step>
+    <step>Check log message existence - verify log messages exist using available query mechanisms</step>
+    <step>Retry the retrieval - attempt getLastLogMessage or getLastTransactionLogMessage again</step>
+    <step>Try alternative retrieval - if getLastLogMessage fails, try getLastTransactionLogMessage or vice versa</step>
+    <step>Query log history - if latest message inaccessible, attempt to query older messages</step>
+    <step>If persistent, contact manufacturer - repeated retrieval failures may indicate device or storage issue</step>
+  </recovery>
+  <relatedExceptions>
+    <exception>ErrorReadingLogMessage</exception>
+    <exception>ErrorNoLogMessageFound</exception>
+    <exception>ErrorDeviceNotInitialized</exception>
+    <exception>ErrorFunctionFailed</exception>
+    <exception>ErrorConfigureLoggingFailed</exception>
+  </relatedExceptions>
+  <postconditionality>
+    <state name="Log Message Not Retrieved">The log message is not retrieved. The most recent log data remains in the device's storage but is inaccessible to the caller.</state>
+    <state name="Caller Receives No Data">The function returns exception instead of log message data. The caller cannot access the audit trail information.</state>
+    <state name="Device State Unchanged">The device's state remains unchanged by the failed retrieval attempt. The log message is not modified or deleted.</state>
+    <state name="Log Storage Intact">The log storage remains intact and uncorrupted. The log message remains available for future retrieval attempts.</state>
+    <state name="Audit Trail Inaccessible">The audit trail information represented by the log message is temporarily inaccessible due to the retrieval failure.</state>
+    <state name="Retry Possible">The retrieval operation can be retried after addressing the underlying cause of the failure.</state>
+  </postconditionality>
+  <notes>
+    <note>ErrorRetrieveLogMessageFailed is thrown by getLastLogMessage and getLastTransactionLogMessage functions - specific to log message retrieval</note>
+    <note>This exception indicates a log retrieval failure - the message exists but cannot be accessed</note>
+    <note>This exception is distinct from ErrorNoLogMessageFound which indicates no log messages exist</note>
+    <note>This exception is distinct from ErrorReadingLogMessage which indicates generic log read failure in export context</note>
+    <note>The exception has High severity because it prevents access to audit trail information</note>
+    <note>Communication failures during retrieval are a common cause - connection reliability is important</note>
+    <note>Log message data should be validated after retrieval to ensure integrity</note>
+    <note>Device storage integrity is critical for successful log retrieval</note>
+    <note>Log messages are immutable once created - failed retrieval does not indicate data loss</note>
+    <note>Retry strategies should include communication reset and device re-initialization attempts</note>
+    <note>Error messages should distinguish between "no log messages exist" vs. "cannot retrieve log messages"</note>
+    <note>Monitoring log retrieval failures can indicate device issues requiring maintenance</note>
+    <note>Backup/export mechanisms can provide alternative access to audit trails if retrieval fails</note>
+    <note>The most recent log message is important for transaction verification and audit trail continuity</note>
+    <note>Successful retrieval confirms both device connectivity and log storage accessibility</note>
+  </notes>
+  <usage>
+    <scenario name="Scenario 1: Transaction Verification with Log Message Retrieval">
+      <description>An application performs a transaction and immediately retrieves the log message to verify the transaction was recorded correctly. When ErrorRetrieveLogMessageFailed is raised, the application retries retrieval or queries the device state.</description>
+      <relatedFunctions>getLastLogMessage, executeTransaction</relatedFunctions>
+      <errorContext>Transaction completed but log message cannot be retrieved for verification</errorContext>
+    </scenario>
+    <scenario name="Scenario 2: Audit Trail Access with Failure Recovery">
+      <description>A compliance application retrieves the most recent transaction log message as part of audit trail review. When ErrorRetrieveLogMessageFailed is raised, it alerts the administrator and triggers investigation into device connectivity or storage issues.</description>
+      <relatedFunctions>getLastLogMessage, exportLogMessages</relatedFunctions>
+      <errorContext>Audit trail access blocked by retrieval failure</errorContext>
+    </scenario>
+    <scenario name="Scenario 3: Transaction History Review with Alternative Access">
+      <description>A user attempts to review the last transaction by calling getLastTransactionLogMessage. If ErrorRetrieveLogMessageFailed is raised, the system attempts to export all available log messages as an alternative way to access transaction history.</description>
+      <relatedFunctions>getLastTransactionLogMessage, exportLogMessages</relatedFunctions>
+      <errorContext>Direct log retrieval fails - alternative export mechanism attempted</errorContext>
+    </scenario>
+    <scenario name="Scenario 4: Device Diagnostics with Log Message Access">
+      <description>A device diagnostics procedure attempts to retrieve the latest log message to verify device logging is functioning. When ErrorRetrieveLogMessageFailed is raised, it indicates a device issue - communication or storage problems.</description>
+      <relatedFunctions>getLastLogMessage, getDeviceInfo</relatedFunctions>
+      <errorContext>Device diagnostics identify log retrieval failure as indicator of device issues</errorContext>
+    </scenario>
+  </usage>
+  <implementationContext>
+    <note>The getLastLogMessage and getLastTransactionLogMessage functions must establish reliable communication with the Secure Element</note>
+    <note>Communication should include error detection and retry mechanisms for robustness</note>
+    <note>Device state should be verified before attempting log message retrieval</note>
+    <note>Retrieved log data must be validated for structure and integrity before returning to caller</note>
+    <note>Distinction must be made between "no log messages exist" and "cannot retrieve log messages"</note>
+    <note>Error messages should indicate the specific retrieval failure (communication, storage, corruption, etc.)</note>
+    <note>Log message data should be treated as immutable - retrieval does not affect stored data</note>
+    <note>Timeout mechanisms should be implemented for communication-based retrieval</note>
+    <note>Retry strategies should be implemented with appropriate delays and limits</note>
+    <note>Device manufacturers should document log message structure and retrieval specifications</note>
+  </implementationContext>
 </exception>

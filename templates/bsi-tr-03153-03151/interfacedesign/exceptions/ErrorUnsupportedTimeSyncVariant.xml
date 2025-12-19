@@ -1,171 +1,171 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<exception id="ErrorUnsupportedTimeSyncVariant" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
-    <name>ErrorUnsupportedTimeSyncVariant</name>
-    <description>This exception is thrown if the updateTime function is called with a time synchronization variant that is not supported by the device. The updateTime function allows time synchronization using different variant methods (e.g., absolute time update, relative time correction, NTP sync). Different devices may support different time synchronization variants based on their capabilities and configuration. ErrorUnsupportedTimeSyncVariant is raised when the caller requests a variant that the device does not support. ErrorUnsupportedTimeSyncVariant is a Medium severity exception because the operation is invalid but not a device failure. Recovery requires using a supported variant or checking device capabilities to determine available time synchronization methods.</description>
-    <category>Time Management - Synchronization Variants</category>
-    <severity>Medium</severity>
-    <javadoc>
-        <summary>This class defines the exception ErrorUnsupportedTimeSyncVariant that is thrown if the updateTime function is called with an unsupported time synchronization variant.</summary>
-        <description>This exception is thrown when updateTime is called with a time synchronization variant that the device does not support. The updateTime function supports multiple time synchronization methods (variants) to accommodate different system architectures and requirements. Different devices may support different variants based on their capabilities and configuration. When an unsupported variant is specified, ErrorUnsupportedTimeSyncVariant is raised. This indicates the requested time synchronization method is not available. ErrorUnsupportedTimeSyncVariant is a Medium severity exception because the operation is invalid but not a failure. Recovery requires using a supported variant that the device implements.</description>
-        <constructors>
-            <constructor>
-                <signature>ErrorUnsupportedTimeSyncVariant()</signature>
-                <description>Constructs a new ErrorUnsupportedTimeSyncVariant exception with null as the value for its detail message</description>
-            </constructor>
-            <constructor>
-                <signature>ErrorUnsupportedTimeSyncVariant(String message)</signature>
-                <description>Constructs a new ErrorUnsupportedTimeSyncVariant exception whereby its detail message is initialized with the passed value</description>
-                <parameter name="message">value for the detail message of the exception, typically describing which variant is not supported</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorUnsupportedTimeSyncVariant(String message, Throwable cause)</signature>
-                <description>Constructs a new ErrorUnsupportedTimeSyncVariant exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorUnsupportedTimeSyncVariant(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-                <description>Constructs a new ErrorUnsupportedTimeSyncVariant exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-            </constructor>
-        </constructors>
-    </javadoc>
-    <specification>
-        <source>BSI TR-03151-1</source>
-        <section>3.6.2 Time Management - Time Synchronization Variants</section>
-        <requirement>The updateTime function supports multiple time synchronization variants to accommodate different system requirements and capabilities. Different devices may support different variants based on their implementation and configuration. Supported variants typically include absolute time update, relative time correction, and external time synchronization methods. If updateTime is called with a variant parameter that the device does not support, the Secure Element SHALL raise ErrorUnsupportedTimeSyncVariant. This indicates the requested synchronization method is not available on this device. ErrorUnsupportedTimeSyncVariant is a Medium severity exception because the operation is invalid but not a device failure. The caller must use a supported variant or query device capabilities to determine available time synchronization methods.</requirement>
-        <applicability>Time synchronization operations with variant selection: updateTime</applicability>
-        <reference>Time Management (3.6.2), Time Synchronization (3.6.2), Time Sync Variants (3.6.2), updateTime – Function (3.6.2)</reference>
-    </specification>
-    <thrownBy>
-        <function>updateTime</function>
-    </thrownBy>
-    <triggerConditions>
-        <condition>
-            <scenario>updateTime called with unsupported variant parameter</scenario>
-            <description>Variant parameter specifies method not implemented on device</description>
-            <trigger>Application calls updateTime with variant=NTP_SYNC but device only supports absolute time and relative correction. Device rejects unsupported variant. ErrorUnsupportedTimeSyncVariant raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Variant not recognized or unknown to device</scenario>
-            <description>Variant parameter value is not recognized</description>
-            <trigger>Application provides variant identifier that device doesn't recognize. Device validates variant parameter, finds it unknown. ErrorUnsupportedTimeSyncVariant raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Device configuration disables particular variant</scenario>
-            <description>Variant supported by hardware but disabled in configuration</description>
-            <trigger>Device supports NTP sync but current configuration disables it. Application attempts updateTime with NTP variant. Device finds variant disabled. ErrorUnsupportedTimeSyncVariant raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Variant requires capabilities device lacks</scenario>
-            <description>Variant needs capabilities not present in device</description>
-            <trigger>Application requests time sync variant requiring external network access. Device lacks network interface. ErrorUnsupportedTimeSyncVariant raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Firmware version doesn't support particular variant</scenario>
-            <description>Variant supported by newer firmware but not in current version</description>
-            <trigger>New time sync variant implemented in firmware v2.0. Device running v1.0 receives updateTime with new variant. ErrorUnsupportedTimeSyncVariant raised.</trigger>
-        </condition>
-    </triggerConditions>
-    <executionSequence>
-        <step number="1">User/application calls updateTime function with variant parameter and time data</step>
-        <step number="2">Function validates input parameters including variant parameter</step>
-        <step number="2a">If variant parameter format invalid → may raise ErrorParameterSyntax</step>
-        <step number="2b">If variant parameter format valid → proceed to step 3</step>
-        <step number="3">Function checks if variant is supported on this device</step>
-        <step number="3a">If variant not supported → ErrorUnsupportedTimeSyncVariant raised, operation aborted</step>
-        <step number="3b">If variant supported → proceed to step 4</step>
-        <step number="4">Function validates time data format for specific variant</step>
-        <step number="4a">If time data invalid for variant → may raise ErrorParameterMismatch</step>
-        <step number="4b">If time data valid → proceed to step 5</step>
-        <step number="5">Function initiates communication with Secure Element</step>
-        <step number="6">Secure Element receives time sync request with variant</step>
-        <step number="7">Secure Element validates variant is supported</step>
-        <step number="7a">If variant not supported → ErrorUnsupportedTimeSyncVariant raised</step>
-        <step number="7b">If variant supported → proceed to step 8</step>
-        <step number="8">Secure Element processes time update using specified variant</step>
-        <step number="9">Secure Element updates device time</step>
-        <step number="10">Secure Element returns success to function</step>
-        <step number="11">Function returns to caller indicating time successfully updated</step>
-    </executionSequence>
-    <recovery>
-        <step>Review error message - understand variant is not supported</step>
-        <step>Check variant - verify variant parameter provided is correct</step>
-        <step>Query capabilities - determine which time sync variants are supported</step>
-        <step>Review device documentation - check available variants for device type</step>
-        <step>Check firmware version - verify device firmware supports requested variant</step>
-        <step>Check configuration - verify requested variant is not disabled in config</step>
-        <step>Select alternative variant - use supported variant available on device</step>
-        <step>Verify alternatives - confirm selected alternative variant is available</step>
-        <step>Retry time sync - attempt updateTime with supported variant</step>
-        <step>Update firmware - if new variant required, upgrade device firmware</step>
-    </recovery>
-    <relatedExceptions>
-        <exception>ErrorTimeNotSet</exception>
-        <exception>ErrorParameterSyntax</exception>
-        <exception>ErrorParameterMismatch</exception>
-        <exception>ErrorFunctionFailed</exception>
-    </relatedExceptions>
-    <postconditionality>
-        <state name="Time Update Not Performed">Time is not updated using requested variant.</state>
-        <state name="Time Not Synchronized">Device time remains unchanged - not synchronized.</state>
-        <state name="Operation Not Executed">Time sync operation does not proceed with unsupported variant.</state>
-        <state name="Medium Exception Returned">Function returns ErrorUnsupportedTimeSyncVariant Medium exception to caller.</state>
-        <state name="Caller Must Select Supported Variant">Caller must use supported time synchronization variant.</state>
-        <state name="Alternative Variant Required">Different time sync approach must be selected.</state>
-    </postconditionality>
-    <notes>
-        <note>ErrorUnsupportedTimeSyncVariant is thrown by 1 function: updateTime</note>
-        <note>This is a Medium severity exception - operation is invalid</note>
-        <note>Device capabilities determine which time sync variants are supported</note>
-        <note>Variants may include absolute time, relative correction, external sync</note>
-        <note>Different devices may support different variant combinations</note>
-        <note>Variant support depends on device configuration and capabilities</note>
-        <note>Firmware version may affect variant availability</note>
-        <note>Device capability query should list supported variants</note>
-        <note>Error messages should indicate which variant is not supported</note>
-        <note>Error messages should suggest available alternatives</note>
-        <note>Variant validation should occur early in processing</note>
-        <note>Variant support may be affected by device configuration</note>
-        <note>Device capabilities should be documented for integrators</note>
-        <note>Firmware upgrades may enable additional variants</note>
-        <note>Configuration management should control variant availability</note>
-    </notes>
-    <usage>
-        <scenario name="Scenario 1: Unsupported External Sync Variant">
-            <description>Application attempts to synchronize time via NTP variant by calling updateTime with variant=EXTERNAL_NTP. Device only supports absolute time and relative correction variants. Device detects unsupported variant. ErrorUnsupportedTimeSyncVariant raised. Application switches to absolute time variant and retries time sync successfully.</description>
-            <relatedFunctions>updateTime, getDeviceInfo</relatedFunctions>
-            <errorContext>External sync variant not implemented - switch to basic time update</errorContext>
-        </scenario>
-        <scenario name="Scenario 2: Variant Unknown to Device Firmware">
-            <description>Integrator develops application for new device with extended time sync capabilities. Application calls updateTime with new variant code. Device running older firmware doesn't recognize variant. ErrorUnsupportedTimeSyncVariant raised. Integrator upgrades device firmware to version supporting new variant.</description>
-            <relatedFunctions>updateTime</relatedFunctions>
-            <errorContext>New variant not supported in current firmware - upgrade required</errorContext>
-        </scenario>
-        <scenario name="Scenario 3: Configuration Disables Time Sync Variant">
-            <description>Device supports multiple time sync variants. Security configuration disables external variant due to network restrictions. Application attempts updateTime with external variant. Device checks configuration, finds variant disabled. ErrorUnsupportedTimeSyncVariant raised. Application uses internal absolute time variant instead.</description>
-            <relatedFunctions>updateTime</relatedFunctions>
-            <errorContext>Variant disabled by security configuration - use alternative</errorContext>
-        </scenario>
-        <scenario name="Scenario 4: Query Capabilities Before Time Sync">
-            <description>Application calls device capability query to determine supported time sync variants before attempting update. Query returns list of supported variants. Application selects supported variant and calls updateTime. Time sync succeeds without ErrorUnsupportedTimeSyncVariant exception.</description>
-            <relatedFunctions>updateTime, getDeviceInfo</relatedFunctions>
-            <errorContext>Proactive capability check prevents unsupported variant exception</errorContext>
-        </scenario>
-    </usage>
-    <implementationContext>
-        <note>Variant support must be checked before time sync operation</note>
-        <note>Supported variants should be queryable via capability interface</note>
-        <note>Variant parameter validation should occur early in processing</note>
-        <note>Variant support may depend on device configuration</note>
-        <note>Firmware version should be checked for variant compatibility</note>
-        <note>Error messages should clearly indicate unsupported variant</note>
-        <note>Error messages should suggest available alternative variants</note>
-        <note>Variant support should be documented in device specification</note>
-        <note>Device capabilities should list all supported variants</note>
-        <note>Configuration management should control variant availability</note>
-    </implementationContext>
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorUnsupportedTimeSyncVariant" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+  <name>ErrorUnsupportedTimeSyncVariant</name>
+  <description>This exception is thrown if the updateTime function is called with a time synchronization variant that is not supported by the device. The updateTime function allows time synchronization using different variant methods (e.g., absolute time update, relative time correction, NTP sync). Different devices may support different time synchronization variants based on their capabilities and configuration. ErrorUnsupportedTimeSyncVariant is raised when the caller requests a variant that the device does not support. ErrorUnsupportedTimeSyncVariant is a Medium severity exception because the operation is invalid but not a device failure. Recovery requires using a supported variant or checking device capabilities to determine available time synchronization methods.</description>
+  <category>Time Management - Synchronization Variants</category>
+  <severity>Medium</severity>
+  <javadoc>
+    <summary>This class defines the exception ErrorUnsupportedTimeSyncVariant that is thrown if the updateTime function is called with an unsupported time synchronization variant.</summary>
+    <description>This exception is thrown when updateTime is called with a time synchronization variant that the device does not support. The updateTime function supports multiple time synchronization methods (variants) to accommodate different system architectures and requirements. Different devices may support different variants based on their capabilities and configuration. When an unsupported variant is specified, ErrorUnsupportedTimeSyncVariant is raised. This indicates the requested time synchronization method is not available. ErrorUnsupportedTimeSyncVariant is a Medium severity exception because the operation is invalid but not a failure. Recovery requires using a supported variant that the device implements.</description>
+    <constructors>
+      <constructor>
+        <signature>ErrorUnsupportedTimeSyncVariant()</signature>
+        <description>Constructs a new ErrorUnsupportedTimeSyncVariant exception with null as the value for its detail message</description>
+      </constructor>
+      <constructor>
+        <signature>ErrorUnsupportedTimeSyncVariant(String message)</signature>
+        <description>Constructs a new ErrorUnsupportedTimeSyncVariant exception whereby its detail message is initialized with the passed value</description>
+        <parameter name="message">value for the detail message of the exception, typically describing which variant is not supported</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorUnsupportedTimeSyncVariant(String message, Throwable cause)</signature>
+        <description>Constructs a new ErrorUnsupportedTimeSyncVariant exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorUnsupportedTimeSyncVariant(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+        <description>Constructs a new ErrorUnsupportedTimeSyncVariant exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+      </constructor>
+    </constructors>
+  </javadoc>
+  <specification>
+    <source>BSI TR-03151-1</source>
+    <section>3.6.2 Time Management - Time Synchronization Variants</section>
+    <requirement>The updateTime function supports multiple time synchronization variants to accommodate different system requirements and capabilities. Different devices may support different variants based on their implementation and configuration. Supported variants typically include absolute time update, relative time correction, and external time synchronization methods. If updateTime is called with a variant parameter that the device does not support, the Secure Element SHALL raise ErrorUnsupportedTimeSyncVariant. This indicates the requested synchronization method is not available on this device. ErrorUnsupportedTimeSyncVariant is a Medium severity exception because the operation is invalid but not a device failure. The caller must use a supported variant or query device capabilities to determine available time synchronization methods.</requirement>
+    <applicability>Time synchronization operations with variant selection: updateTime</applicability>
+    <reference>Time Management (3.6.2), Time Synchronization (3.6.2), Time Sync Variants (3.6.2), updateTime – Function (3.6.2)</reference>
+  </specification>
+  <thrownBy>
+    <function>updateTime</function>
+  </thrownBy>
+  <triggerConditions>
+    <condition>
+      <scenario>updateTime called with unsupported variant parameter</scenario>
+      <description>Variant parameter specifies method not implemented on device</description>
+      <trigger>Application calls updateTime with variant=NTP_SYNC but device only supports absolute time and relative correction. Device rejects unsupported variant. ErrorUnsupportedTimeSyncVariant raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Variant not recognized or unknown to device</scenario>
+      <description>Variant parameter value is not recognized</description>
+      <trigger>Application provides variant identifier that device doesn't recognize. Device validates variant parameter, finds it unknown. ErrorUnsupportedTimeSyncVariant raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Device configuration disables particular variant</scenario>
+      <description>Variant supported by hardware but disabled in configuration</description>
+      <trigger>Device supports NTP sync but current configuration disables it. Application attempts updateTime with NTP variant. Device finds variant disabled. ErrorUnsupportedTimeSyncVariant raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Variant requires capabilities device lacks</scenario>
+      <description>Variant needs capabilities not present in device</description>
+      <trigger>Application requests time sync variant requiring external network access. Device lacks network interface. ErrorUnsupportedTimeSyncVariant raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Firmware version doesn't support particular variant</scenario>
+      <description>Variant supported by newer firmware but not in current version</description>
+      <trigger>New time sync variant implemented in firmware v2.0. Device running v1.0 receives updateTime with new variant. ErrorUnsupportedTimeSyncVariant raised.</trigger>
+    </condition>
+  </triggerConditions>
+  <executionSequence>
+    <step number="1">User/application calls updateTime function with variant parameter and time data</step>
+    <step number="2">Function validates input parameters including variant parameter</step>
+    <step number="2a">If variant parameter format invalid → may raise ErrorParameterSyntax</step>
+    <step number="2b">If variant parameter format valid → proceed to step 3</step>
+    <step number="3">Function checks if variant is supported on this device</step>
+    <step number="3a">If variant not supported → ErrorUnsupportedTimeSyncVariant raised, operation aborted</step>
+    <step number="3b">If variant supported → proceed to step 4</step>
+    <step number="4">Function validates time data format for specific variant</step>
+    <step number="4a">If time data invalid for variant → may raise ErrorParameterMismatch</step>
+    <step number="4b">If time data valid → proceed to step 5</step>
+    <step number="5">Function initiates communication with Secure Element</step>
+    <step number="6">Secure Element receives time sync request with variant</step>
+    <step number="7">Secure Element validates variant is supported</step>
+    <step number="7a">If variant not supported → ErrorUnsupportedTimeSyncVariant raised</step>
+    <step number="7b">If variant supported → proceed to step 8</step>
+    <step number="8">Secure Element processes time update using specified variant</step>
+    <step number="9">Secure Element updates device time</step>
+    <step number="10">Secure Element returns success to function</step>
+    <step number="11">Function returns to caller indicating time successfully updated</step>
+  </executionSequence>
+  <recovery>
+    <step>Review error message - understand variant is not supported</step>
+    <step>Check variant - verify variant parameter provided is correct</step>
+    <step>Query capabilities - determine which time sync variants are supported</step>
+    <step>Review device documentation - check available variants for device type</step>
+    <step>Check firmware version - verify device firmware supports requested variant</step>
+    <step>Check configuration - verify requested variant is not disabled in config</step>
+    <step>Select alternative variant - use supported variant available on device</step>
+    <step>Verify alternatives - confirm selected alternative variant is available</step>
+    <step>Retry time sync - attempt updateTime with supported variant</step>
+    <step>Update firmware - if new variant required, upgrade device firmware</step>
+  </recovery>
+  <relatedExceptions>
+    <exception>ErrorTimeNotSet</exception>
+    <exception>ErrorParameterSyntax</exception>
+    <exception>ErrorParameterMismatch</exception>
+    <exception>ErrorFunctionFailed</exception>
+  </relatedExceptions>
+  <postconditionality>
+    <state name="Time Update Not Performed">Time is not updated using requested variant.</state>
+    <state name="Time Not Synchronized">Device time remains unchanged - not synchronized.</state>
+    <state name="Operation Not Executed">Time sync operation does not proceed with unsupported variant.</state>
+    <state name="Medium Exception Returned">Function returns ErrorUnsupportedTimeSyncVariant Medium exception to caller.</state>
+    <state name="Caller Must Select Supported Variant">Caller must use supported time synchronization variant.</state>
+    <state name="Alternative Variant Required">Different time sync approach must be selected.</state>
+  </postconditionality>
+  <notes>
+    <note>ErrorUnsupportedTimeSyncVariant is thrown by 1 function: updateTime</note>
+    <note>This is a Medium severity exception - operation is invalid</note>
+    <note>Device capabilities determine which time sync variants are supported</note>
+    <note>Variants may include absolute time, relative correction, external sync</note>
+    <note>Different devices may support different variant combinations</note>
+    <note>Variant support depends on device configuration and capabilities</note>
+    <note>Firmware version may affect variant availability</note>
+    <note>Device capability query should list supported variants</note>
+    <note>Error messages should indicate which variant is not supported</note>
+    <note>Error messages should suggest available alternatives</note>
+    <note>Variant validation should occur early in processing</note>
+    <note>Variant support may be affected by device configuration</note>
+    <note>Device capabilities should be documented for integrators</note>
+    <note>Firmware upgrades may enable additional variants</note>
+    <note>Configuration management should control variant availability</note>
+  </notes>
+  <usage>
+    <scenario name="Scenario 1: Unsupported External Sync Variant">
+      <description>Application attempts to synchronize time via NTP variant by calling updateTime with variant=EXTERNAL_NTP. Device only supports absolute time and relative correction variants. Device detects unsupported variant. ErrorUnsupportedTimeSyncVariant raised. Application switches to absolute time variant and retries time sync successfully.</description>
+      <relatedFunctions>updateTime, getDeviceInfo</relatedFunctions>
+      <errorContext>External sync variant not implemented - switch to basic time update</errorContext>
+    </scenario>
+    <scenario name="Scenario 2: Variant Unknown to Device Firmware">
+      <description>Integrator develops application for new device with extended time sync capabilities. Application calls updateTime with new variant code. Device running older firmware doesn't recognize variant. ErrorUnsupportedTimeSyncVariant raised. Integrator upgrades device firmware to version supporting new variant.</description>
+      <relatedFunctions>updateTime</relatedFunctions>
+      <errorContext>New variant not supported in current firmware - upgrade required</errorContext>
+    </scenario>
+    <scenario name="Scenario 3: Configuration Disables Time Sync Variant">
+      <description>Device supports multiple time sync variants. Security configuration disables external variant due to network restrictions. Application attempts updateTime with external variant. Device checks configuration, finds variant disabled. ErrorUnsupportedTimeSyncVariant raised. Application uses internal absolute time variant instead.</description>
+      <relatedFunctions>updateTime</relatedFunctions>
+      <errorContext>Variant disabled by security configuration - use alternative</errorContext>
+    </scenario>
+    <scenario name="Scenario 4: Query Capabilities Before Time Sync">
+      <description>Application calls device capability query to determine supported time sync variants before attempting update. Query returns list of supported variants. Application selects supported variant and calls updateTime. Time sync succeeds without ErrorUnsupportedTimeSyncVariant exception.</description>
+      <relatedFunctions>updateTime, getDeviceInfo</relatedFunctions>
+      <errorContext>Proactive capability check prevents unsupported variant exception</errorContext>
+    </scenario>
+  </usage>
+  <implementationContext>
+    <note>Variant support must be checked before time sync operation</note>
+    <note>Supported variants should be queryable via capability interface</note>
+    <note>Variant parameter validation should occur early in processing</note>
+    <note>Variant support may depend on device configuration</note>
+    <note>Firmware version should be checked for variant compatibility</note>
+    <note>Error messages should clearly indicate unsupported variant</note>
+    <note>Error messages should suggest available alternative variants</note>
+    <note>Variant support should be documented in device specification</note>
+    <note>Device capabilities should list all supported variants</note>
+    <note>Configuration management should control variant availability</note>
+  </implementationContext>
 </exception>

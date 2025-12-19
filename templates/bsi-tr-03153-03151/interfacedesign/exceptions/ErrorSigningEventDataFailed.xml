@@ -1,173 +1,188 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<exception id="ErrorSigningEventDataFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
-    <name>ErrorSigningEventDataFailed</name>
-    <description>This exception is thrown if the Secure Element fails to create the log message parts and digital signature for event data during transaction processing. The Secure Element signs transaction event data to create a tamper-proof audit trail where signatures prove the integrity and authenticity of recorded transactions. The signing process includes formatting event data, computing digital signatures, and creating log message parts. If the signing operation fails, ErrorSigningEventDataFailed indicates the event data could not be signed and no tamper-proof record of the transaction was created. Common causes include: cryptographic operation failures, device processing errors, invalid event data, insufficient device resources, or communication failures. ErrorSigningEventDataFailed indicates a critical audit trail failure and the transaction may not have been properly recorded.</description>
-    <category>Logging - Event Signing - Signature Creation Failure</category>
-    <severity>Critical</severity>
-    <javadoc>
-        <summary>This class defines the exception ErrorSigningEventDataFailed that is thrown if Secure Element signing of event data fails.</summary>
-        <description>This exception is thrown when the Secure Element fails to create log message parts and digital signatures for transaction event data. Digital signatures on transaction data create a cryptographic proof of transaction integrity and authenticity, preventing tampering and providing audit trail protection. ErrorSigningEventDataFailed indicates that the signing operation could not be completed. Common causes include: cryptographic operation failures (signature generation, key operations), device processing errors, invalid or corrupted event data, insufficient device resources, communication failures, or cryptographic key issues. ErrorSigningEventDataFailed is a Critical severity exception because it indicates the audit trail cannot be reliably maintained for the transaction. Without successful signing, the transaction is not protected by cryptographic proof of integrity. Recovery requires investigating the cryptographic failure and potentially retrying the operation or checking device state.</description>
-        <constructors>
-            <constructor>
-                <signature>ErrorSigningEventDataFailed()</signature>
-                <description>Constructs a new ErrorSigningEventDataFailed exception with null as the value for its detail message</description>
-            </constructor>
-            <constructor>
-                <signature>ErrorSigningEventDataFailed(String message)</signature>
-                <description>Constructs a new ErrorSigningEventDataFailed exception whereby its detail message is initialized with the passed value</description>
-                <parameter name="message">value for the detail message of the exception, typically describing the event signing failure reason</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorSigningEventDataFailed(String message, Throwable cause)</signature>
-                <description>Constructs a new ErrorSigningEventDataFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorSigningEventDataFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-                <description>Constructs a new ErrorSigningEventDataFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-            </constructor>
-        </constructors>
-    </javadoc>
-    <specification>
-        <source>BSI TR-03151-1</source>
-        <section>3.3.2 Transaction Operations - Digital Signatures for Event Data</section>
-        <requirement>During transaction processing (startTransaction, updateTransaction, finishTransaction), the Secure Element SHALL create digital signatures over transaction event data to establish cryptographic proof of transaction integrity and authenticity. The signing process includes formatting event data, computing digital signatures using cryptographic keys, and generating log message parts containing the signature and metadata. If the signing operation fails at any step (data formatting, signature computation, or log message generation), the function SHALL raise ErrorSigningEventDataFailed. The transaction may not have been properly recorded if signing fails. Event data signing is essential for audit trail integrity and must not be bypassed.</requirement>
-        <applicability>Transaction operations requiring event data signing: startTransaction, updateTransaction, finishTransaction</applicability>
-        <reference>Transaction Operations (3.3.2), Digital Signature Generation</reference>
-    </specification>
-    <thrownBy>
-        <function>startTransaction</function>
-        <function>updateTransaction</function>
-        <function>finishTransaction</function>
-    </thrownBy>
-    <triggerConditions>
-        <condition>
-            <scenario>Cryptographic signature generation failure</scenario>
-            <description>The cryptographic operation to generate the signature fails</description>
-            <trigger>A startTransaction call formats event data and attempts signature generation but the cryptographic operation fails (key issue, algorithm failure). ErrorSigningEventDataFailed is raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Invalid or corrupted event data for signing</scenario>
-            <description>The event data to be signed is invalid or corrupted</description>
-            <trigger>An updateTransaction call attempts to sign event data but the data is invalid or corrupted. The device detects the invalid data and raises ErrorSigningEventDataFailed.</trigger>
-        </condition>
-        <condition>
-            <scenario>Device cryptographic processor failure</scenario>
-            <description>The device cryptographic processor fails during signing operation</description>
-            <trigger>A finishTransaction call initiates signing but the device cryptographic processor fails or becomes unavailable. ErrorSigningEventDataFailed is raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Insufficient device resources for signing</scenario>
-            <description>The device lacks sufficient resources to complete signing operation</description>
-            <trigger>A startTransaction call attempts signing but the device runs out of memory or processing capacity. The signing operation cannot complete and ErrorSigningEventDataFailed is raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Communication failure during signature generation</scenario>
-            <description>Communication with the device fails during the signing operation</description>
-            <trigger>An updateTransaction call transmits event data for signing but communication is interrupted before signature is returned. ErrorSigningEventDataFailed is raised.</trigger>
-        </condition>
-    </triggerConditions>
-    <executionSequence>
-        <step number="1">User/application calls transaction operation that requires event signing (e.g., finishTransaction)</step>
-        <step number="2">Function validates input parameters and transaction context</step>
-        <step number="3">Function initiates communication with Secure Element</step>
-        <step number="4">Secure Element receives transaction event data</step>
-        <step number="5">Secure Element validates and formats event data for signing</step>
-        <step number="5a">If event data invalid → ErrorSigningEventDataFailed raised, operation aborted</step>
-        <step number="5b">If event data valid → proceed to step 6</step>
-        <step number="6">Secure Element retrieves cryptographic signing key</step>
-        <step number="6a">If key retrieval fails → ErrorSigningEventDataFailed raised, operation aborted</step>
-        <step number="6b">If key retrieved successfully → proceed to step 7</step>
-        <step number="7">Secure Element computes digital signature over event data</step>
-        <step number="7a">If signature computation fails → ErrorSigningEventDataFailed raised, operation aborted</step>
-        <step number="7b">If signature computation succeeds → proceed to step 8</step>
-        <step number="8">Secure Element constructs log message parts including signature and metadata</step>
-        <step number="8a">If log message construction fails → ErrorSigningEventDataFailed raised, operation aborted</step>
-        <step number="8b">If log message construction succeeds → proceed to step 9</step>
-        <step number="9">Secure Element stores log message parts in audit trail</step>
-        <step number="10">Secure Element returns signed event data and log message parts to function</step>
-        <step number="11">Function processes result and returns to caller</step>
-    </executionSequence>
-    <recovery>
-        <step>Review error message - examine the error message to understand the signing failure reason</step>
-        <step>Check device state - query device to verify it is operational and responsive</step>
-        <step>Check cryptographic resources - verify device cryptographic processor is functioning</step>
-        <step>Verify device connectivity - ensure clean communication channel with Secure Element</step>
-        <step>Check event data validity - verify the transaction event data is valid and well-formed</step>
-        <step>Verify cryptographic keys - ensure signing keys are properly initialized on device</step>
-        <step>Check device storage - verify device has sufficient storage for log messages</step>
-        <step>Retry the operation - attempt the transaction operation again after addressing issues</step>
-        <step>Perform self-test - call selfTest to verify device cryptographic functionality</step>
-        <step>If persistent, contact manufacturer - device may have cryptographic or storage issues</step>
-    </recovery>
-    <relatedExceptions>
-        <exception>ErrorFunctionFailed</exception>
-        <exception>ErrorDeviceInitializationFailed</exception>
-        <exception>ErrorConfigureLoggingFailed</exception>
-        <exception>ErrorSecureElementPartsDisconnected</exception>
-    </relatedExceptions>
-    <postconditionality>
-        <state name="Event Data Not Signed">The transaction event data is not signed by the device.</state>
-        <state name="Signature Not Created">The digital signature over event data is not created.</state>
-        <state name="Log Message Not Generated">The log message parts containing signature and metadata are not generated.</state>
-        <state name="Transaction Not Properly Recorded">The transaction may not have been properly recorded in the tamper-proof audit trail.</state>
-        <state name="Audit Trail Integrity Compromised">The transaction lacks cryptographic proof of integrity and authenticity.</state>
-        <state name="Transaction State Uncertain">The transaction state is uncertain - it may or may not have been processed.</state>
-    </postconditionality>
-    <notes>
-        <note>ErrorSigningEventDataFailed is thrown by 3 transaction functions: startTransaction, updateTransaction, finishTransaction</note>
-        <note>This exception indicates a critical cryptographic or device failure</note>
-        <note>The exception has Critical severity because event signing is essential for audit trail integrity</note>
-        <note>Digital signatures provide cryptographic proof of transaction authenticity and integrity</note>
-        <note>Failure to sign events means transactions are not protected by cryptographic proof</note>
-        <note>Event data must be carefully formatted before signing to ensure signature validity</note>
-        <note>Cryptographic signing requires proper keys and operational cryptographic processor</note>
-        <note>Communication reliability is critical during signature operations</note>
-        <note>Log message parts must be generated and stored atomically with signatures</note>
-        <note>Error messages should distinguish between event data issues vs. cryptographic issues</note>
-        <note>Device should not silently skip signature generation - signing failure must be reported</note>
-        <note>Cryptographic keys must be protected and properly initialized for signing</note>
-        <note>Event data should be validated before transmission to device for signing</note>
-        <note>Audit trail integrity depends on reliable event signing</note>
-        <note>Transactions without valid signatures may not be admissible in audit or legal proceedings</note>
-    </notes>
-    <usage>
-        <scenario name="Scenario 1: Transaction Signing with Cryptographic Failure">
-            <description>A finishTransaction call sends transaction event data to be signed. The device cryptographic processor fails during signature generation. ErrorSigningEventDataFailed is raised. The transaction is rolled back and the user is informed that the transaction could not be properly recorded.</description>
-            <relatedFunctions>finishTransaction, startTransaction, updateTransaction</relatedFunctions>
-            <errorContext>Transaction processing blocked by event signing failure</errorContext>
-        </scenario>
-        <scenario name="Scenario 2: Audit Trail Integrity Verification">
-            <description>A compliance audit queries transaction signatures to verify audit trail integrity. When transactions cannot be verified because they lack proper signatures (due to ErrorSigningEventDataFailed), the audit identifies gaps in the audit trail.</description>
-            <relatedFunctions>startTransaction, exportLogMessages</relatedFunctions>
-            <errorContext>Compliance audit detects unsigned transactions from signing failures</errorContext>
-        </scenario>
-        <scenario name="Scenario 3: High-Load System Signing Exhaustion">
-            <description>A high-volume transaction system experiences ErrorSigningEventDataFailed during peak load. Analysis reveals device cryptographic processor is resource-constrained. System load is reduced or device is upgraded to handle signature load.</description>
-            <relatedFunctions>startTransaction, finishTransaction</relatedFunctions>
-            <errorContext>High-load transaction system encounters cryptographic resource limits</errorContext>
-        </scenario>
-        <scenario name="Scenario 4: Event Data Validation Before Signing">
-            <description>Transaction processing validates event data before transmission to device for signing. When ErrorSigningEventDataFailed occurs, the system has data validation logs that help troubleshoot whether the failure was data-related or device-related.</description>
-            <relatedFunctions>startTransaction, updateTransaction, finishTransaction</relatedFunctions>
-            <errorContext>Event data validation helps distinguish between data and device issues in signing failures</errorContext>
-        </scenario>
-    </usage>
-    <implementationContext>
-        <note>Event data must be carefully validated and formatted before transmission to device for signing</note>
-        <note>Cryptographic signing keys must be properly initialized and protected on device</note>
-        <note>Digital signature algorithm must be cryptographically strong and compliant with security standards</note>
-        <note>Signature computation should be performed in secure processor environment</note>
-        <note>Communication during signature operations must be reliable with error checking</note>
-        <note>Log message parts must be generated atomically with signatures to ensure consistency</note>
-        <note>Device should provide clear error messages distinguishing event data issues vs. cryptographic issues</note>
-        <note>Cryptographic processor health should be monitored and diagnostic information provided</note>
-        <note>Event data should include all necessary context for complete transaction record</note>
-        <note>Signatures should be immediately stored in audit trail to prevent loss</note>
-    </implementationContext>
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorSigningEventDataFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+  <name>ErrorSigningEventDataFailed</name>
+  <description>This exception is thrown if the Secure Element fails to create the log message parts and digital signature for event data during transaction processing. The Secure Element signs transaction event data to create a tamper-proof audit trail where signatures prove the integrity and authenticity of recorded transactions. The signing process includes formatting event data, computing digital signatures, and creating log message parts. If the signing operation fails, ErrorSigningEventDataFailed indicates the event data could not be signed and no tamper-proof record of the transaction was created. Common causes include: cryptographic operation failures, device processing errors, invalid event data, insufficient device resources, or communication failures. ErrorSigningEventDataFailed indicates a critical audit trail failure and the transaction may not have been properly recorded.</description>
+  <category>Logging - Event Signing - Signature Creation Failure</category>
+  <severity>Critical</severity>
+  <thrownBy>
+    <function>authenticateUser</function>
+    <function>configureLogging</function>
+    <function>deleteLogMessages</function>
+    <function>deregisterClient</function>
+    <function>disableSecureElement</function>
+    <function>finishTransaction</function>
+    <function>initialize</function>
+    <function>lockTransactionLogging</function>
+    <function>logOut</function>
+    <function>registerClient</function>
+    <function>selfTest</function>
+    <function>setDescription</function>
+    <function>startTransaction</function>
+    <function>unblockPin</function>
+    <function>unlockTransactionLogging</function>
+    <function>updateDevice</function>
+    <function>updateTime</function>
+    <function>updateTransaction</function>
+  </thrownBy>
+  <javadoc>
+    <summary>This class defines the exception ErrorSigningEventDataFailed that is thrown if Secure Element signing of event data fails.</summary>
+    <description>This exception is thrown when the Secure Element fails to create log message parts and digital signatures for transaction event data. Digital signatures on transaction data create a cryptographic proof of transaction integrity and authenticity, preventing tampering and providing audit trail protection. ErrorSigningEventDataFailed indicates that the signing operation could not be completed. Common causes include: cryptographic operation failures (signature generation, key operations), device processing errors, invalid or corrupted event data, insufficient device resources, communication failures, or cryptographic key issues. ErrorSigningEventDataFailed is a Critical severity exception because it indicates the audit trail cannot be reliably maintained for the transaction. Without successful signing, the transaction is not protected by cryptographic proof of integrity. Recovery requires investigating the cryptographic failure and potentially retrying the operation or checking device state.</description>
+    <constructors>
+      <constructor>
+        <signature>ErrorSigningEventDataFailed()</signature>
+        <description>Constructs a new ErrorSigningEventDataFailed exception with null as the value for its detail message</description>
+      </constructor>
+      <constructor>
+        <signature>ErrorSigningEventDataFailed(String message)</signature>
+        <description>Constructs a new ErrorSigningEventDataFailed exception whereby its detail message is initialized with the passed value</description>
+        <parameter name="message">value for the detail message of the exception, typically describing the event signing failure reason</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorSigningEventDataFailed(String message, Throwable cause)</signature>
+        <description>Constructs a new ErrorSigningEventDataFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorSigningEventDataFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+        <description>Constructs a new ErrorSigningEventDataFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+      </constructor>
+    </constructors>
+  </javadoc>
+  <specification>
+    <source>BSI TR-03151-1</source>
+    <section>3.3.2 Transaction Operations - Digital Signatures for Event Data</section>
+    <requirement>During transaction processing (startTransaction, updateTransaction, finishTransaction), the Secure Element SHALL create digital signatures over transaction event data to establish cryptographic proof of transaction integrity and authenticity. The signing process includes formatting event data, computing digital signatures using cryptographic keys, and generating log message parts containing the signature and metadata. If the signing operation fails at any step (data formatting, signature computation, or log message generation), the function SHALL raise ErrorSigningEventDataFailed. The transaction may not have been properly recorded if signing fails. Event data signing is essential for audit trail integrity and must not be bypassed.</requirement>
+    <applicability>Transaction operations requiring event data signing: startTransaction, updateTransaction, finishTransaction</applicability>
+    <reference>Transaction Operations (3.3.2), Digital Signature Generation</reference>
+  </specification>
+  <triggerConditions>
+    <condition>
+      <scenario>Cryptographic signature generation failure</scenario>
+      <description>The cryptographic operation to generate the signature fails</description>
+      <trigger>A startTransaction call formats event data and attempts signature generation but the cryptographic operation fails (key issue, algorithm failure). ErrorSigningEventDataFailed is raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Invalid or corrupted event data for signing</scenario>
+      <description>The event data to be signed is invalid or corrupted</description>
+      <trigger>An updateTransaction call attempts to sign event data but the data is invalid or corrupted. The device detects the invalid data and raises ErrorSigningEventDataFailed.</trigger>
+    </condition>
+    <condition>
+      <scenario>Device cryptographic processor failure</scenario>
+      <description>The device cryptographic processor fails during signing operation</description>
+      <trigger>A finishTransaction call initiates signing but the device cryptographic processor fails or becomes unavailable. ErrorSigningEventDataFailed is raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Insufficient device resources for signing</scenario>
+      <description>The device lacks sufficient resources to complete signing operation</description>
+      <trigger>A startTransaction call attempts signing but the device runs out of memory or processing capacity. The signing operation cannot complete and ErrorSigningEventDataFailed is raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Communication failure during signature generation</scenario>
+      <description>Communication with the device fails during the signing operation</description>
+      <trigger>An updateTransaction call transmits event data for signing but communication is interrupted before signature is returned. ErrorSigningEventDataFailed is raised.</trigger>
+    </condition>
+  </triggerConditions>
+  <executionSequence>
+    <step number="1">User/application calls transaction operation that requires event signing (e.g., finishTransaction)</step>
+    <step number="2">Function validates input parameters and transaction context</step>
+    <step number="3">Function initiates communication with Secure Element</step>
+    <step number="4">Secure Element receives transaction event data</step>
+    <step number="5">Secure Element validates and formats event data for signing</step>
+    <step number="5a">If event data invalid → ErrorSigningEventDataFailed raised, operation aborted</step>
+    <step number="5b">If event data valid → proceed to step 6</step>
+    <step number="6">Secure Element retrieves cryptographic signing key</step>
+    <step number="6a">If key retrieval fails → ErrorSigningEventDataFailed raised, operation aborted</step>
+    <step number="6b">If key retrieved successfully → proceed to step 7</step>
+    <step number="7">Secure Element computes digital signature over event data</step>
+    <step number="7a">If signature computation fails → ErrorSigningEventDataFailed raised, operation aborted</step>
+    <step number="7b">If signature computation succeeds → proceed to step 8</step>
+    <step number="8">Secure Element constructs log message parts including signature and metadata</step>
+    <step number="8a">If log message construction fails → ErrorSigningEventDataFailed raised, operation aborted</step>
+    <step number="8b">If log message construction succeeds → proceed to step 9</step>
+    <step number="9">Secure Element stores log message parts in audit trail</step>
+    <step number="10">Secure Element returns signed event data and log message parts to function</step>
+    <step number="11">Function processes result and returns to caller</step>
+  </executionSequence>
+  <recovery>
+    <step>Review error message - examine the error message to understand the signing failure reason</step>
+    <step>Check device state - query device to verify it is operational and responsive</step>
+    <step>Check cryptographic resources - verify device cryptographic processor is functioning</step>
+    <step>Verify device connectivity - ensure clean communication channel with Secure Element</step>
+    <step>Check event data validity - verify the transaction event data is valid and well-formed</step>
+    <step>Verify cryptographic keys - ensure signing keys are properly initialized on device</step>
+    <step>Check device storage - verify device has sufficient storage for log messages</step>
+    <step>Retry the operation - attempt the transaction operation again after addressing issues</step>
+    <step>Perform self-test - call selfTest to verify device cryptographic functionality</step>
+    <step>If persistent, contact manufacturer - device may have cryptographic or storage issues</step>
+  </recovery>
+  <relatedExceptions>
+    <exception>ErrorFunctionFailed</exception>
+    <exception>ErrorDeviceInitializationFailed</exception>
+    <exception>ErrorConfigureLoggingFailed</exception>
+    <exception>ErrorSecureElementPartsDisconnected</exception>
+  </relatedExceptions>
+  <postconditionality>
+    <state name="Event Data Not Signed">The transaction event data is not signed by the device.</state>
+    <state name="Signature Not Created">The digital signature over event data is not created.</state>
+    <state name="Log Message Not Generated">The log message parts containing signature and metadata are not generated.</state>
+    <state name="Transaction Not Properly Recorded">The transaction may not have been properly recorded in the tamper-proof audit trail.</state>
+    <state name="Audit Trail Integrity Compromised">The transaction lacks cryptographic proof of integrity and authenticity.</state>
+    <state name="Transaction State Uncertain">The transaction state is uncertain - it may or may not have been processed.</state>
+  </postconditionality>
+  <notes>
+    <note>ErrorSigningEventDataFailed is thrown by 3 transaction functions: startTransaction, updateTransaction, finishTransaction</note>
+    <note>This exception indicates a critical cryptographic or device failure</note>
+    <note>The exception has Critical severity because event signing is essential for audit trail integrity</note>
+    <note>Digital signatures provide cryptographic proof of transaction authenticity and integrity</note>
+    <note>Failure to sign events means transactions are not protected by cryptographic proof</note>
+    <note>Event data must be carefully formatted before signing to ensure signature validity</note>
+    <note>Cryptographic signing requires proper keys and operational cryptographic processor</note>
+    <note>Communication reliability is critical during signature operations</note>
+    <note>Log message parts must be generated and stored atomically with signatures</note>
+    <note>Error messages should distinguish between event data issues vs. cryptographic issues</note>
+    <note>Device should not silently skip signature generation - signing failure must be reported</note>
+    <note>Cryptographic keys must be protected and properly initialized for signing</note>
+    <note>Event data should be validated before transmission to device for signing</note>
+    <note>Audit trail integrity depends on reliable event signing</note>
+    <note>Transactions without valid signatures may not be admissible in audit or legal proceedings</note>
+  </notes>
+  <usage>
+    <scenario name="Scenario 1: Transaction Signing with Cryptographic Failure">
+      <description>A finishTransaction call sends transaction event data to be signed. The device cryptographic processor fails during signature generation. ErrorSigningEventDataFailed is raised. The transaction is rolled back and the user is informed that the transaction could not be properly recorded.</description>
+      <relatedFunctions>finishTransaction, startTransaction, updateTransaction</relatedFunctions>
+      <errorContext>Transaction processing blocked by event signing failure</errorContext>
+    </scenario>
+    <scenario name="Scenario 2: Audit Trail Integrity Verification">
+      <description>A compliance audit queries transaction signatures to verify audit trail integrity. When transactions cannot be verified because they lack proper signatures (due to ErrorSigningEventDataFailed), the audit identifies gaps in the audit trail.</description>
+      <relatedFunctions>startTransaction, exportLogMessages</relatedFunctions>
+      <errorContext>Compliance audit detects unsigned transactions from signing failures</errorContext>
+    </scenario>
+    <scenario name="Scenario 3: High-Load System Signing Exhaustion">
+      <description>A high-volume transaction system experiences ErrorSigningEventDataFailed during peak load. Analysis reveals device cryptographic processor is resource-constrained. System load is reduced or device is upgraded to handle signature load.</description>
+      <relatedFunctions>startTransaction, finishTransaction</relatedFunctions>
+      <errorContext>High-load transaction system encounters cryptographic resource limits</errorContext>
+    </scenario>
+    <scenario name="Scenario 4: Event Data Validation Before Signing">
+      <description>Transaction processing validates event data before transmission to device for signing. When ErrorSigningEventDataFailed occurs, the system has data validation logs that help troubleshoot whether the failure was data-related or device-related.</description>
+      <relatedFunctions>startTransaction, updateTransaction, finishTransaction</relatedFunctions>
+      <errorContext>Event data validation helps distinguish between data and device issues in signing failures</errorContext>
+    </scenario>
+  </usage>
+  <implementationContext>
+    <note>Event data must be carefully validated and formatted before transmission to device for signing</note>
+    <note>Cryptographic signing keys must be properly initialized and protected on device</note>
+    <note>Digital signature algorithm must be cryptographically strong and compliant with security standards</note>
+    <note>Signature computation should be performed in secure processor environment</note>
+    <note>Communication during signature operations must be reliable with error checking</note>
+    <note>Log message parts must be generated atomically with signatures to ensure consistency</note>
+    <note>Device should provide clear error messages distinguishing event data issues vs. cryptographic issues</note>
+    <note>Cryptographic processor health should be monitored and diagnostic information provided</note>
+    <note>Event data should include all necessary context for complete transaction record</note>
+    <note>Signatures should be immediately stored in audit trail to prevent loss</note>
+  </implementationContext>
 </exception>

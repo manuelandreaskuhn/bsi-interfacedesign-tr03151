@@ -1,172 +1,172 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<exception id="ErrorRegisterClientFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
-    <name>ErrorRegisterClientFailed</name>
-    <description>This exception is thrown if the SE API function registerClient fails to register a new client application with the Secure Element. The function attempts to add a new client to the device's registered client list, but the registration operation fails due to device error, resource limitations, capacity constraints, or other device-level failure conditions. ErrorRegisterClientFailed indicates that the client could not be registered and is not available for performing transactions on the device.</description>
-    <category>Client Management - Registration Failure</category>
-    <severity>High</severity>
-    <javadoc>
-        <summary>This class defines the exception ErrorRegisterClientFailed that is thrown if the client registration operation fails.</summary>
-        <description>This exception is thrown when the registerClient function cannot successfully register a new client application with the Secure Element. Client registration is the process by which a client application becomes known to the device and gains the ability to perform transactions and operations. ErrorRegisterClientFailed indicates that the registration process failed at some point during the registration sequence, preventing the client from being registered. Common causes include: device resource exhaustion, client capacity limit reached, device communication failure, client ID already registered, or device internal error. ErrorRegisterClientFailed is a High severity exception that prevents client registration and must be resolved before the client can perform operations. Recovery requires investigating the cause of the registration failure and taking appropriate corrective action.</description>
-        <constructors>
-            <constructor>
-                <signature>ErrorRegisterClientFailed()</signature>
-                <description>Constructs a new ErrorRegisterClientFailed exception with null as the value for its detail message</description>
-            </constructor>
-            <constructor>
-                <signature>ErrorRegisterClientFailed(String message)</signature>
-                <description>Constructs a new ErrorRegisterClientFailed exception whereby its detail message is initialized with the passed value</description>
-                <parameter name="message">value for the detail message of the exception, typically describing the client registration failure reason</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorRegisterClientFailed(String message, Throwable cause)</signature>
-                <description>Constructs a new ErrorRegisterClientFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorRegisterClientFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-                <description>Constructs a new ErrorRegisterClientFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-            </constructor>
-        </constructors>
-    </javadoc>
-    <specification>
-        <source>BSI TR-03151-1</source>
-        <section>3.2.3 Client Management - registerClient</section>
-        <requirement>The function registerClient SHALL register a new client application with the Secure Element, adding it to the device's client registry. If the registration operation cannot be completed successfully due to device error, resource limitation, capacity constraint, or other failure condition, the function SHALL raise the exception ErrorRegisterClientFailed. The client registration may fail due to: insufficient device resources, maximum client capacity reached, client ID already registered, device communication failure, or device internal error. When registration fails, the client is not added to the device's client list and is not available for subsequent operations.</requirement>
-        <applicability>Client registration operations - registerClient function only</applicability>
-        <reference>registerClient – Function (3.2.3)</reference>
-    </specification>
-    <thrownBy>
-        <function>registerClient</function>
-    </thrownBy>
-    <triggerConditions>
-        <condition>
-            <scenario>Device resource exhaustion prevents registration</scenario>
-            <description>The device lacks sufficient resources (memory, storage, etc.) to register the new client</description>
-            <trigger>A registerClient call is made when the device is low on memory or storage. The device cannot allocate resources for the new client registration. ErrorRegisterClientFailed is raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Maximum client capacity reached</scenario>
-            <description>The device has reached its maximum number of registered clients</description>
-            <trigger>A registerClient call is made when the device already has the maximum number of registered clients. The device cannot register additional clients until some clients are deregistered. ErrorRegisterClientFailed is raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Client ID already registered</scenario>
-            <description>The specified client ID is already registered on the device</description>
-            <trigger>A registerClient call is made with a client ID that is already registered. The device rejects duplicate client registration. ErrorRegisterClientFailed is raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Device communication failure during registration</scenario>
-            <description>Communication with the Secure Element is lost during the registration operation</description>
-            <trigger>A registerClient call begins but communication with the device is lost before the registration completes. The device cannot confirm registration completion. ErrorRegisterClientFailed is raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Device internal error during registration</scenario>
-            <description>The Secure Element reports an internal error during client registration</description>
-            <trigger>A registerClient call is transmitted to the device but the device encounters an internal error while processing the registration (e.g., storage write failure, verification error). The device reports the failure and ErrorRegisterClientFailed is raised.</trigger>
-        </condition>
-    </triggerConditions>
-    <executionSequence>
-        <step number="1">User/application calls registerClient function with client ID and other client parameters</step>
-        <step number="2">Function validates input parameters including client ID format and validity</step>
-        <step number="3">Function checks authorization and device state for client registration operations</step>
-        <step number="4">Function queries device to check current registered client count and capacity</step>
-        <step number="4a">If device has reached maximum client capacity → ErrorRegisterClientFailed raised, function exits</step>
-        <step number="4b">If device has available capacity → proceed to step 5</step>
-        <step number="5">Function checks if client ID is already registered</step>
-        <step number="5a">If client ID already registered → ErrorRegisterClientFailed raised, function exits</step>
-        <step number="5b">If client ID not registered → proceed to step 6</step>
-        <step number="6">Function verifies device has sufficient resources for registration</step>
-        <step number="6a">If insufficient resources → ErrorRegisterClientFailed raised, function exits</step>
-        <step number="6b">If sufficient resources → proceed to step 7</step>
-        <step number="7">Function initiates communication with Secure Element</step>
-        <step number="8">Function transmits client registration command with client parameters to Secure Element</step>
-        <step number="8a">If communication fails → ErrorRegisterClientFailed raised, function exits</step>
-        <step number="8b">If communication succeeds → proceed to step 9</step>
-        <step number="9">Function receives acknowledgment and client handle/ID from Secure Element</step>
-        <step number="10">Function closes communication channel with Secure Element</step>
-        <step number="11">Function returns successfully with client registered and client handle provided</step>
-    </executionSequence>
-    <recovery>
-        <step>Review error message - examine the error message to understand the specific registration failure reason</step>
-        <step>Check device client capacity - query the device to determine current registered client count and maximum capacity</step>
-        <step>Verify client ID is not duplicate - check if the client ID being registered is already registered on the device</step>
-        <step>Check device resources - verify the device has sufficient memory and storage for client registration</step>
-        <step>Verify device connectivity - ensure the Secure Element is accessible and communication channels are functional</step>
-        <step>Check client parameters - verify all client parameters (ID, description, etc.) are valid and within constraints</step>
-        <step>Deregister unused clients - if capacity limit reached, deregister unused or obsolete clients to free capacity</step>
-        <step>Clean up device - if resource exhaustion, perform device cleanup or reset to free resources</step>
-        <step>Retry the registration - attempt registerClient again after addressing the underlying cause</step>
-        <step>If persistent, contact device administrator - repeated registration failures may require device configuration or servicing</step>
-    </recovery>
-    <relatedExceptions>
-        <exception>ErrorClientAlreadyRegistered</exception>
-        <exception>ErrorClientLimitReached</exception>
-        <exception>ErrorDeregisterClientFailed</exception>
-        <exception>ErrorGetRegisteredClientsFailed</exception>
-        <exception>ErrorFunctionFailed</exception>
-    </relatedExceptions>
-    <postconditionality>
-        <state name="Client Not Registered">The new client is not registered on the device. The client is not in the registered client list.</state>
-        <state name="Registered Client Count Unchanged">The number of registered clients remains unchanged. The failed registration does not modify the client registry.</state>
-        <state name="Device Client Capacity Unchanged">The device's client capacity and maximum client limit remain unchanged.</state>
-        <state name="Device State Unmodified">The device's overall state remains unchanged by the failed registration attempt. No cascading side effects occur.</state>
-        <state name="Client Cannot Perform Operations">The unregistered client cannot perform transactions or other operations that require registration.</state>
-        <state name="Retry Possible">The registration operation can be retried after addressing the underlying cause of the failure.</state>
-    </postconditionality>
-    <notes>
-        <note>ErrorRegisterClientFailed is thrown ONLY by the registerClient function - it is the specific exception for client registration failures</note>
-        <note>This exception indicates a client registration operation failure - the client is not successfully added to the device</note>
-        <note>The exception has High severity because it prevents clients from being registered and performing operations</note>
-        <note>Client registration is typically the first step in a client's lifecycle - failed registration prevents subsequent operations</note>
-        <note>Device client capacity is finite - maximum capacity is typically configurable or a device characteristic</note>
-        <note>Client IDs must be unique - duplicate client IDs cannot be registered</note>
-        <note>Different failure reasons require different recovery actions (capacity vs. already registered vs. communication error)</note>
-        <note>Applications should check device capacity before attempting registration to anticipate capacity-based failures</note>
-        <note>Some devices may require deregistration of obsolete clients to free capacity for new clients</note>
-        <note>Client registration failures should be logged and reported to administrators or support</note>
-        <note>Retry strategies should be implemented with appropriate backoff to avoid overwhelming the device</note>
-        <note>Error messages should identify the specific cause of the registration failure (capacity, duplicate, communication, etc.)</note>
-        <note>Monitoring systems should track client registration success/failure rates as a health metric</note>
-        <note>Device should maintain consistent client registry - registration failures should not leave partial or corrupt state</note>
-        <note>Administrative tools should provide means to query and manage the client registry</note>
-    </notes>
-    <usage>
-        <scenario name="Scenario 1: Client Registration with Capacity Check">
-            <description>An application attempts to register a new client by calling registerClient. The function raises ErrorRegisterClientFailed because the device has reached its maximum client capacity. The application queries the device to check capacity, deregisters an unused client, and retries the registration.</description>
-            <relatedFunctions>registerClient, deregisterClient, getRegisteredClients</relatedFunctions>
-            <errorContext>Client registration fails due to device capacity limit</errorContext>
-        </scenario>
-        <scenario name="Scenario 2: Duplicate Client Registration Prevention">
-            <description>An application attempts to register a client with an ID that is already registered. The registerClient function raises ErrorRegisterClientFailed with a message indicating the client ID is already registered. The application handles this by either reusing the existing registration or choosing a different client ID.</description>
-            <relatedFunctions>registerClient, getRegisteredClients</relatedFunctions>
-            <errorContext>Client registration fails due to duplicate client ID</errorContext>
-        </scenario>
-        <scenario name="Scenario 3: Device Resource Management with Registration Retry">
-            <description>An application batch registers multiple clients on a device with limited resources. When ErrorRegisterClientFailed is raised due to resource exhaustion, the application implements a backoff strategy, waits for device resources to be freed, and retries the registration.</description>
-            <relatedFunctions>registerClient, deregisterClient</relatedFunctions>
-            <errorContext>Client registration fails due to insufficient device resources</errorContext>
-        </scenario>
-        <scenario name="Scenario 4: Multi-Device Client Management with Failover">
-            <description>An enterprise system manages clients across multiple Secure Element devices. When client registration fails on one device, the system detects the failure and attempts to register the client on an alternate device with available capacity.</description>
-            <relatedFunctions>registerClient, getRegisteredClients</relatedFunctions>
-            <errorContext>Registration failure triggers load balancing or failover to alternate device</errorContext>
-        </scenario>
-    </usage>
-    <implementationContext>
-        <note>The registerClient function must check client capacity and available resources before attempting registration</note>
-        <note>The function must verify that the client ID is not already registered before proceeding with registration</note>
-        <note>Device client capacity is typically a device characteristic that should be documented and queryable</note>
-        <note>Registration failures should provide specific error codes or messages indicating the cause (capacity, duplicate, etc.)</note>
-        <note>The function should handle communication failures gracefully and ensure no partial registration occurs</note>
-        <note>Device client registry should be consistent and recoverable - registration failures should not corrupt state</note>
-        <note>Applications should implement client registration error handling and retry strategies</note>
-        <note>Device capacity management tools should help administrators understand and optimize client registry usage</note>
-        <note>Different device models may have different client capacity limits - this should be documented</note>
-        <note>Monitoring systems should track client registration patterns to identify capacity issues early</note>
-    </implementationContext>
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorRegisterClientFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+  <name>ErrorRegisterClientFailed</name>
+  <description>This exception is thrown if the SE API function registerClient fails to register a new client application with the Secure Element. The function attempts to add a new client to the device's registered client list, but the registration operation fails due to device error, resource limitations, capacity constraints, or other device-level failure conditions. ErrorRegisterClientFailed indicates that the client could not be registered and is not available for performing transactions on the device.</description>
+  <category>Client Management - Registration Failure</category>
+  <severity>High</severity>
+  <javadoc>
+    <summary>This class defines the exception ErrorRegisterClientFailed that is thrown if the client registration operation fails.</summary>
+    <description>This exception is thrown when the registerClient function cannot successfully register a new client application with the Secure Element. Client registration is the process by which a client application becomes known to the device and gains the ability to perform transactions and operations. ErrorRegisterClientFailed indicates that the registration process failed at some point during the registration sequence, preventing the client from being registered. Common causes include: device resource exhaustion, client capacity limit reached, device communication failure, client ID already registered, or device internal error. ErrorRegisterClientFailed is a High severity exception that prevents client registration and must be resolved before the client can perform operations. Recovery requires investigating the cause of the registration failure and taking appropriate corrective action.</description>
+    <constructors>
+      <constructor>
+        <signature>ErrorRegisterClientFailed()</signature>
+        <description>Constructs a new ErrorRegisterClientFailed exception with null as the value for its detail message</description>
+      </constructor>
+      <constructor>
+        <signature>ErrorRegisterClientFailed(String message)</signature>
+        <description>Constructs a new ErrorRegisterClientFailed exception whereby its detail message is initialized with the passed value</description>
+        <parameter name="message">value for the detail message of the exception, typically describing the client registration failure reason</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorRegisterClientFailed(String message, Throwable cause)</signature>
+        <description>Constructs a new ErrorRegisterClientFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorRegisterClientFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+        <description>Constructs a new ErrorRegisterClientFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+      </constructor>
+    </constructors>
+  </javadoc>
+  <specification>
+    <source>BSI TR-03151-1</source>
+    <section>3.2.3 Client Management - registerClient</section>
+    <requirement>The function registerClient SHALL register a new client application with the Secure Element, adding it to the device's client registry. If the registration operation cannot be completed successfully due to device error, resource limitation, capacity constraint, or other failure condition, the function SHALL raise the exception ErrorRegisterClientFailed. The client registration may fail due to: insufficient device resources, maximum client capacity reached, client ID already registered, device communication failure, or device internal error. When registration fails, the client is not added to the device's client list and is not available for subsequent operations.</requirement>
+    <applicability>Client registration operations - registerClient function only</applicability>
+    <reference>registerClient – Function (3.2.3)</reference>
+  </specification>
+  <thrownBy>
+    <function>registerClient</function>
+  </thrownBy>
+  <triggerConditions>
+    <condition>
+      <scenario>Device resource exhaustion prevents registration</scenario>
+      <description>The device lacks sufficient resources (memory, storage, etc.) to register the new client</description>
+      <trigger>A registerClient call is made when the device is low on memory or storage. The device cannot allocate resources for the new client registration. ErrorRegisterClientFailed is raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Maximum client capacity reached</scenario>
+      <description>The device has reached its maximum number of registered clients</description>
+      <trigger>A registerClient call is made when the device already has the maximum number of registered clients. The device cannot register additional clients until some clients are deregistered. ErrorRegisterClientFailed is raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Client ID already registered</scenario>
+      <description>The specified client ID is already registered on the device</description>
+      <trigger>A registerClient call is made with a client ID that is already registered. The device rejects duplicate client registration. ErrorRegisterClientFailed is raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Device communication failure during registration</scenario>
+      <description>Communication with the Secure Element is lost during the registration operation</description>
+      <trigger>A registerClient call begins but communication with the device is lost before the registration completes. The device cannot confirm registration completion. ErrorRegisterClientFailed is raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Device internal error during registration</scenario>
+      <description>The Secure Element reports an internal error during client registration</description>
+      <trigger>A registerClient call is transmitted to the device but the device encounters an internal error while processing the registration (e.g., storage write failure, verification error). The device reports the failure and ErrorRegisterClientFailed is raised.</trigger>
+    </condition>
+  </triggerConditions>
+  <executionSequence>
+    <step number="1">User/application calls registerClient function with client ID and other client parameters</step>
+    <step number="2">Function validates input parameters including client ID format and validity</step>
+    <step number="3">Function checks authorization and device state for client registration operations</step>
+    <step number="4">Function queries device to check current registered client count and capacity</step>
+    <step number="4a">If device has reached maximum client capacity → ErrorRegisterClientFailed raised, function exits</step>
+    <step number="4b">If device has available capacity → proceed to step 5</step>
+    <step number="5">Function checks if client ID is already registered</step>
+    <step number="5a">If client ID already registered → ErrorRegisterClientFailed raised, function exits</step>
+    <step number="5b">If client ID not registered → proceed to step 6</step>
+    <step number="6">Function verifies device has sufficient resources for registration</step>
+    <step number="6a">If insufficient resources → ErrorRegisterClientFailed raised, function exits</step>
+    <step number="6b">If sufficient resources → proceed to step 7</step>
+    <step number="7">Function initiates communication with Secure Element</step>
+    <step number="8">Function transmits client registration command with client parameters to Secure Element</step>
+    <step number="8a">If communication fails → ErrorRegisterClientFailed raised, function exits</step>
+    <step number="8b">If communication succeeds → proceed to step 9</step>
+    <step number="9">Function receives acknowledgment and client handle/ID from Secure Element</step>
+    <step number="10">Function closes communication channel with Secure Element</step>
+    <step number="11">Function returns successfully with client registered and client handle provided</step>
+  </executionSequence>
+  <recovery>
+    <step>Review error message - examine the error message to understand the specific registration failure reason</step>
+    <step>Check device client capacity - query the device to determine current registered client count and maximum capacity</step>
+    <step>Verify client ID is not duplicate - check if the client ID being registered is already registered on the device</step>
+    <step>Check device resources - verify the device has sufficient memory and storage for client registration</step>
+    <step>Verify device connectivity - ensure the Secure Element is accessible and communication channels are functional</step>
+    <step>Check client parameters - verify all client parameters (ID, description, etc.) are valid and within constraints</step>
+    <step>Deregister unused clients - if capacity limit reached, deregister unused or obsolete clients to free capacity</step>
+    <step>Clean up device - if resource exhaustion, perform device cleanup or reset to free resources</step>
+    <step>Retry the registration - attempt registerClient again after addressing the underlying cause</step>
+    <step>If persistent, contact device administrator - repeated registration failures may require device configuration or servicing</step>
+  </recovery>
+  <relatedExceptions>
+    <exception>ErrorClientAlreadyRegistered</exception>
+    <exception>ErrorClientLimitReached</exception>
+    <exception>ErrorDeregisterClientFailed</exception>
+    <exception>ErrorGetRegisteredClientsFailed</exception>
+    <exception>ErrorFunctionFailed</exception>
+  </relatedExceptions>
+  <postconditionality>
+    <state name="Client Not Registered">The new client is not registered on the device. The client is not in the registered client list.</state>
+    <state name="Registered Client Count Unchanged">The number of registered clients remains unchanged. The failed registration does not modify the client registry.</state>
+    <state name="Device Client Capacity Unchanged">The device's client capacity and maximum client limit remain unchanged.</state>
+    <state name="Device State Unmodified">The device's overall state remains unchanged by the failed registration attempt. No cascading side effects occur.</state>
+    <state name="Client Cannot Perform Operations">The unregistered client cannot perform transactions or other operations that require registration.</state>
+    <state name="Retry Possible">The registration operation can be retried after addressing the underlying cause of the failure.</state>
+  </postconditionality>
+  <notes>
+    <note>ErrorRegisterClientFailed is thrown ONLY by the registerClient function - it is the specific exception for client registration failures</note>
+    <note>This exception indicates a client registration operation failure - the client is not successfully added to the device</note>
+    <note>The exception has High severity because it prevents clients from being registered and performing operations</note>
+    <note>Client registration is typically the first step in a client's lifecycle - failed registration prevents subsequent operations</note>
+    <note>Device client capacity is finite - maximum capacity is typically configurable or a device characteristic</note>
+    <note>Client IDs must be unique - duplicate client IDs cannot be registered</note>
+    <note>Different failure reasons require different recovery actions (capacity vs. already registered vs. communication error)</note>
+    <note>Applications should check device capacity before attempting registration to anticipate capacity-based failures</note>
+    <note>Some devices may require deregistration of obsolete clients to free capacity for new clients</note>
+    <note>Client registration failures should be logged and reported to administrators or support</note>
+    <note>Retry strategies should be implemented with appropriate backoff to avoid overwhelming the device</note>
+    <note>Error messages should identify the specific cause of the registration failure (capacity, duplicate, communication, etc.)</note>
+    <note>Monitoring systems should track client registration success/failure rates as a health metric</note>
+    <note>Device should maintain consistent client registry - registration failures should not leave partial or corrupt state</note>
+    <note>Administrative tools should provide means to query and manage the client registry</note>
+  </notes>
+  <usage>
+    <scenario name="Scenario 1: Client Registration with Capacity Check">
+      <description>An application attempts to register a new client by calling registerClient. The function raises ErrorRegisterClientFailed because the device has reached its maximum client capacity. The application queries the device to check capacity, deregisters an unused client, and retries the registration.</description>
+      <relatedFunctions>registerClient, deregisterClient, getRegisteredClients</relatedFunctions>
+      <errorContext>Client registration fails due to device capacity limit</errorContext>
+    </scenario>
+    <scenario name="Scenario 2: Duplicate Client Registration Prevention">
+      <description>An application attempts to register a client with an ID that is already registered. The registerClient function raises ErrorRegisterClientFailed with a message indicating the client ID is already registered. The application handles this by either reusing the existing registration or choosing a different client ID.</description>
+      <relatedFunctions>registerClient, getRegisteredClients</relatedFunctions>
+      <errorContext>Client registration fails due to duplicate client ID</errorContext>
+    </scenario>
+    <scenario name="Scenario 3: Device Resource Management with Registration Retry">
+      <description>An application batch registers multiple clients on a device with limited resources. When ErrorRegisterClientFailed is raised due to resource exhaustion, the application implements a backoff strategy, waits for device resources to be freed, and retries the registration.</description>
+      <relatedFunctions>registerClient, deregisterClient</relatedFunctions>
+      <errorContext>Client registration fails due to insufficient device resources</errorContext>
+    </scenario>
+    <scenario name="Scenario 4: Multi-Device Client Management with Failover">
+      <description>An enterprise system manages clients across multiple Secure Element devices. When client registration fails on one device, the system detects the failure and attempts to register the client on an alternate device with available capacity.</description>
+      <relatedFunctions>registerClient, getRegisteredClients</relatedFunctions>
+      <errorContext>Registration failure triggers load balancing or failover to alternate device</errorContext>
+    </scenario>
+  </usage>
+  <implementationContext>
+    <note>The registerClient function must check client capacity and available resources before attempting registration</note>
+    <note>The function must verify that the client ID is not already registered before proceeding with registration</note>
+    <note>Device client capacity is typically a device characteristic that should be documented and queryable</note>
+    <note>Registration failures should provide specific error codes or messages indicating the cause (capacity, duplicate, etc.)</note>
+    <note>The function should handle communication failures gracefully and ensure no partial registration occurs</note>
+    <note>Device client registry should be consistent and recoverable - registration failures should not corrupt state</note>
+    <note>Applications should implement client registration error handling and retry strategies</note>
+    <note>Device capacity management tools should help administrators understand and optimize client registry usage</note>
+    <note>Different device models may have different client capacity limits - this should be documented</note>
+    <note>Monitoring systems should track client registration patterns to identify capacity issues early</note>
+  </implementationContext>
 </exception>

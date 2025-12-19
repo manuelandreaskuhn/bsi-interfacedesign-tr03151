@@ -1,168 +1,168 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<exception id="ErrorPinBlocked" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
-    <name>ErrorPinBlocked</name>
-    <description>This exception is thrown if the SE API function authenticateUser fails because the user's PIN has been blocked due to excessive failed authentication attempts. The device tracks the number of consecutive failed PIN attempts and blocks the PIN after exceeding a configurable retry limit. Once blocked, the PIN cannot be used for authentication until it is unblocked via the unblockPin function using the correct PUK (PIN Unblock Key). ErrorPinBlocked indicates that user authentication is no longer possible with the current PIN and PIN unblocking is required.</description>
-    <category>Authentication - PIN Security Lock</category>
-    <severity>Critical</severity>
-    <javadoc>
-        <summary>This class defines the exception ErrorPinBlocked that is thrown if the PIN has been blocked after excessive failed authentication attempts.</summary>
-        <description>This exception is thrown when the authenticateUser function is called but the user's PIN is in a blocked state. The PIN blocking mechanism is a critical security feature that prevents brute-force attacks on user authentication. When a user makes several consecutive incorrect PIN entries (typically 3-5 attempts depending on device configuration), the device automatically blocks the PIN to protect account security. ErrorPinBlocked indicates that the PIN is blocked and authentication cannot proceed. The user must unblock the PIN by providing the correct PUK (PIN Unblock Key) via the unblockPin function before authentication can resume. This is a critical security event that requires proper handling and potentially user notification. Recovery requires either calling unblockPin with the correct PUK to unblock the PIN, or administratively resetting the PIN through alternative means if the PUK is lost.</description>
-        <constructors>
-            <constructor>
-                <signature>ErrorPinBlocked()</signature>
-                <description>Constructs a new ErrorPinBlocked exception with null as the value for its detail message</description>
-            </constructor>
-            <constructor>
-                <signature>ErrorPinBlocked(String message)</signature>
-                <description>Constructs a new ErrorPinBlocked exception whereby its detail message is initialized with the passed value</description>
-                <parameter name="message">value for the detail message of the exception, typically indicating PIN is blocked and must be unblocked</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorPinBlocked(String message, Throwable cause)</signature>
-                <description>Constructs a new ErrorPinBlocked exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorPinBlocked(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-                <description>Constructs a new ErrorPinBlocked exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-            </constructor>
-        </constructors>
-    </javadoc>
-    <specification>
-        <source>BSI TR-03151-1</source>
-        <section>3.1.1 User Authentication - authenticateUser</section>
-        <requirement>The function authenticateUser SHALL authenticate a user by verifying the provided PIN. The device maintains a retry counter for failed PIN authentication attempts. If a user provides an incorrect PIN, the retry counter is incremented. If the retry counter reaches or exceeds the maximum allowed failed attempts (typically 3, configurable per device), the device SHALL block the PIN to protect account security. Once the PIN is blocked, the authenticateUser function SHALL raise the exception ErrorPinBlocked for any authentication attempt with that user account. The blocked PIN state can only be cleared by providing the correct PUK via the unblockPin function or through administrative PIN reset procedures.</requirement>
-        <applicability>User authentication operations - authenticateUser function only, when PIN is in blocked state</applicability>
-        <reference>authenticateUser – Function (3.1.1); unblockPin – Function (3.1.2)</reference>
-    </specification>
-    <thrownBy>
-        <function>authenticateUser</function>
-    </thrownBy>
-    <triggerConditions>
-        <condition>
-            <scenario>Multiple incorrect PIN attempts exhaust retry limit</scenario>
-            <description>User provides incorrect PIN multiple times in succession, exhausting the device's retry limit</description>
-            <trigger>A user attempts to authenticate with an incorrect PIN three times. After the third failed attempt, the device blocks the PIN. The next call to authenticateUser raises ErrorPinBlocked.</trigger>
-        </condition>
-        <condition>
-            <scenario>Automatic PIN blocking after threshold</scenario>
-            <description>The PIN is automatically blocked when the device detects the specified number of consecutive failed attempts</description>
-            <trigger>An attacker or compromised application attempts to guess the PIN through repeated incorrect authentication attempts. After reaching the threshold (e.g., 5 failed attempts), the device automatically blocks the PIN. ErrorPinBlocked is raised on the next authentication attempt.</trigger>
-        </condition>
-        <condition>
-            <scenario>Persistent block after device restart</scenario>
-            <description>The PIN remains blocked even after device restart or power cycle</description>
-            <trigger>A PIN is blocked due to excessive failed attempts. The device is restarted. After restart, the PIN is still in blocked state. When authenticateUser is called, ErrorPinBlocked is raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Account compromise protection mechanism</scenario>
-            <description>The PIN blocking occurs as a security measure to protect accounts from brute-force attacks</description>
-            <trigger>Multiple rapid authentication attempts are detected (potential brute-force attack). The device proactively blocks the PIN to prevent further attack attempts. ErrorPinBlocked is raised to stop the attack.</trigger>
-        </condition>
-        <condition>
-            <scenario>Administrative PIN blocking</scenario>
-            <description>An administrator or management function has blocked the PIN</description>
-            <trigger>A device administrator calls a management function to block a PIN for security reasons. The next authentication attempt with this PIN results in ErrorPinBlocked.</trigger>
-        </condition>
-    </triggerConditions>
-    <executionSequence>
-        <step number="1">User/application calls authenticateUser function with user credentials and PIN</step>
-        <step number="2">Function validates input parameters including PIN format</step>
-        <step number="3">Function initiates communication with Secure Element</step>
-        <step number="4">Function transmits authentication command with PIN to Secure Element</step>
-        <step number="5">Secure Element checks if the user's PIN is in blocked state</step>
-        <step number="5a">If PIN is blocked → ErrorPinBlocked raised, function exits</step>
-        <step number="5b">If PIN is not blocked → proceed to step 6</step>
-        <step number="6">Secure Element verifies the provided PIN against the stored PIN</step>
-        <step number="6a">If PIN is correct → proceed to step 8</step>
-        <step number="6b">If PIN is incorrect → proceed to step 7</step>
-        <step number="7">Secure Element increments failed attempt counter and checks retry threshold</step>
-        <step number="7a">If retry threshold exceeded → blocks PIN and raises ErrorPinBlocked</step>
-        <step number="7b">If retry threshold not exceeded → raises ErrorIncorrectPin</step>
-        <step number="8">Function closes communication channel with Secure Element</step>
-        <step number="9">Function returns successfully with user authenticated</step>
-    </executionSequence>
-    <recovery>
-        <step>Confirm PIN is blocked - verify with ErrorPinBlocked exception message that PIN is in blocked state</step>
-        <step>Obtain PUK - retrieve the user's PIN Unblock Key (PUK) from secure storage or management system</step>
-        <step>Call unblockPin function - invoke unblockPin with the user ID and correct PUK to unblock the PIN</step>
-        <step>Set new PIN - after successful unblock, set a new PIN via appropriate function or management interface</step>
-        <step>Notify user - inform the user that their PIN was blocked and must be reset</step>
-        <step>Verify recovery - attempt authentication with the new PIN to verify the PIN is now unblocked</step>
-        <step>Check security logs - review device logs to understand why the PIN was blocked (user mistake vs. attack)</step>
-        <step>Implement rate limiting - consider implementing rate limiting or backoff strategies to prevent PIN blocking from user mistakes</step>
-        <step>If PUK is unknown - contact device administrator or manufacturer for administrative PIN reset procedures</step>
-        <step>Investigate failed attempts - if blocked due to attack, investigate the source of failed authentication attempts</step>
-    </recovery>
-    <relatedExceptions>
-        <exception>ErrorIncorrectPin</exception>
-        <exception>ErrorPukBlocked</exception>
-        <exception>ErrorUnblockPinFailed</exception>
-        <exception>ErrorAuthenticationFailed</exception>
-        <exception>ErrorFunctionFailed</exception>
-    </relatedExceptions>
-    <postconditionality>
-        <state name="Authentication Not Performed">User authentication is not completed. The function exits before verifying credentials.</state>
-        <state name="PIN Remains Blocked">The PIN remains in blocked state after the exception is raised. It does not become unblocked automatically.</state>
-        <state name="Retry Counter Preserved">The retry counter state is preserved. It may continue to increment if unblockPin is called with incorrect PUK.</state>
-        <state name="User Session Not Created">No user session is created or authenticated. The user is not logged in to the device.</state>
-        <state name="Device State Unmodified">The device's overall state remains unchanged except for the blocked PIN state.</state>
-        <state name="Unblock Required">PIN unblocking via unblockPin function is required before authentication can resume.</state>
-    </postconditionality>
-    <notes>
-        <note>ErrorPinBlocked is thrown ONLY by the authenticateUser function - it is specific to PIN authentication</note>
-        <note>This exception indicates a critical security lock state - the PIN must be unblocked before authentication can proceed</note>
-        <note>The exception has Critical severity because it completely prevents user authentication</note>
-        <note>PIN blocking is a security feature that protects accounts from brute-force attacks by limiting authentication attempts</note>
-        <note>The maximum number of failed PIN attempts before blocking is typically configurable (commonly 3-5)</note>
-        <note>Once blocked, the PIN can only be unblocked by providing the correct PUK via unblockPin function</note>
-        <note>PIN blocking is persistent across device restarts - blocked PINs remain blocked after power cycles</note>
-        <note>Different user accounts have independent PIN blocks - one user's blocked PIN does not affect other users</note>
-        <note>Failed PIN attempts should be logged for security auditing and attack detection</note>
-        <note>Rate limiting or backoff strategies can help prevent legitimate users from accidentally blocking their PINs</note>
-        <note>If the PUK is lost or unknown, administrative PIN reset procedures may be required</note>
-        <note>Applications should handle ErrorPinBlocked gracefully and guide users to the PIN unblocking process</note>
-        <note>User notification and clear error messages are important - users must understand why authentication failed</note>
-        <note>Security monitoring systems should alert on PIN blocking events, as they may indicate attacks</note>
-        <note>PUK management and recovery procedures must be documented for user support and administration</note>
-    </notes>
-    <usage>
-        <scenario name="Scenario 1: User Authentication with PIN Block Detection">
-            <description>An application calls authenticateUser to authenticate a user. When ErrorPinBlocked is raised, the application detects that the PIN is blocked. The application informs the user that their PIN is blocked and directs them to use the PIN unblocking process (providing PUK and receiving new PIN).</description>
-            <relatedFunctions>authenticateUser, unblockPin</relatedFunctions>
-            <errorContext>PIN is blocked due to excessive failed authentication attempts</errorContext>
-        </scenario>
-        <scenario name="Scenario 2: Brute-Force Attack Prevention via PIN Lock">
-            <description>An attacker or compromised system attempts multiple authentication attacks against a user account. After the configured number of failed attempts, the PIN is automatically blocked. When authenticateUser is called, ErrorPinBlocked is raised, stopping the attack. The security monitoring system detects the PIN block event and triggers an alert.</description>
-            <relatedFunctions>authenticateUser</relatedFunctions>
-            <errorContext>PIN blocked to prevent brute-force authentication attack</errorContext>
-        </scenario>
-        <scenario name="Scenario 3: PIN Recovery Process with PUK">
-            <description>A user has forgotten their PIN and accidentally locked it through repeated failed attempts. The user initiates the PIN recovery process by calling unblockPin with the correct PUK. After successful unblocking, the user sets a new PIN. The user can then authenticate normally with the new PIN.</description>
-            <relatedFunctions>authenticateUser, unblockPin</relatedFunctions>
-            <errorContext>PIN recovery requires PUK and PIN reset</errorContext>
-        </scenario>
-        <scenario name="Scenario 4: Security Logging and Incident Response">
-            <description>A security monitoring system logs all authentication events including PIN blocks. When ErrorPinBlocked exceptions are detected, the monitoring system analyzes whether they represent normal user mistakes or potential attacks. High rates of PIN blocking trigger incident response procedures.</description>
-            <relatedFunctions>authenticateUser</relatedFunctions>
-            <errorContext>PIN block events used for security monitoring and attack detection</errorContext>
-        </scenario>
-    </usage>
-    <implementationContext>
-        <note>The authenticateUser function must check PIN block state before verifying the PIN</note>
-        <note>The device must maintain persistent PIN block state across restarts and power cycles</note>
-        <note>Failed PIN attempt counters must be incremented for each incorrect PIN, not reset between authentication attempts</note>
-        <note>The threshold for PIN blocking (number of failed attempts) should be configurable during device initialization</note>
-        <note>Once the PIN block threshold is reached, the PIN should be blocked immediately without further warning</note>
-        <note>PIN block state can only be cleared by the unblockPin function or administrative procedures</note>
-        <note>Different user accounts must have independent PIN block states</note>
-        <note>Security logging should record all PIN block events with timestamps and user identifiers</note>
-        <note>Applications should implement rate limiting or backoff strategies to prevent legitimate PIN locking</note>
-        <note>User interface should provide clear guidance on PIN recovery when ErrorPinBlocked is encountered</note>
-    </implementationContext>
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorPinBlocked" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+  <name>ErrorPinBlocked</name>
+  <description>This exception is thrown if the SE API function authenticateUser fails because the user's PIN has been blocked due to excessive failed authentication attempts. The device tracks the number of consecutive failed PIN attempts and blocks the PIN after exceeding a configurable retry limit. Once blocked, the PIN cannot be used for authentication until it is unblocked via the unblockPin function using the correct PUK (PIN Unblock Key). ErrorPinBlocked indicates that user authentication is no longer possible with the current PIN and PIN unblocking is required.</description>
+  <category>Authentication - PIN Security Lock</category>
+  <severity>Critical</severity>
+  <javadoc>
+    <summary>This class defines the exception ErrorPinBlocked that is thrown if the PIN has been blocked after excessive failed authentication attempts.</summary>
+    <description>This exception is thrown when the authenticateUser function is called but the user's PIN is in a blocked state. The PIN blocking mechanism is a critical security feature that prevents brute-force attacks on user authentication. When a user makes several consecutive incorrect PIN entries (typically 3-5 attempts depending on device configuration), the device automatically blocks the PIN to protect account security. ErrorPinBlocked indicates that the PIN is blocked and authentication cannot proceed. The user must unblock the PIN by providing the correct PUK (PIN Unblock Key) via the unblockPin function before authentication can resume. This is a critical security event that requires proper handling and potentially user notification. Recovery requires either calling unblockPin with the correct PUK to unblock the PIN, or administratively resetting the PIN through alternative means if the PUK is lost.</description>
+    <constructors>
+      <constructor>
+        <signature>ErrorPinBlocked()</signature>
+        <description>Constructs a new ErrorPinBlocked exception with null as the value for its detail message</description>
+      </constructor>
+      <constructor>
+        <signature>ErrorPinBlocked(String message)</signature>
+        <description>Constructs a new ErrorPinBlocked exception whereby its detail message is initialized with the passed value</description>
+        <parameter name="message">value for the detail message of the exception, typically indicating PIN is blocked and must be unblocked</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorPinBlocked(String message, Throwable cause)</signature>
+        <description>Constructs a new ErrorPinBlocked exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorPinBlocked(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+        <description>Constructs a new ErrorPinBlocked exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+      </constructor>
+    </constructors>
+  </javadoc>
+  <specification>
+    <source>BSI TR-03151-1</source>
+    <section>3.1.1 User Authentication - authenticateUser</section>
+    <requirement>The function authenticateUser SHALL authenticate a user by verifying the provided PIN. The device maintains a retry counter for failed PIN authentication attempts. If a user provides an incorrect PIN, the retry counter is incremented. If the retry counter reaches or exceeds the maximum allowed failed attempts (typically 3, configurable per device), the device SHALL block the PIN to protect account security. Once the PIN is blocked, the authenticateUser function SHALL raise the exception ErrorPinBlocked for any authentication attempt with that user account. The blocked PIN state can only be cleared by providing the correct PUK via the unblockPin function or through administrative PIN reset procedures.</requirement>
+    <applicability>User authentication operations - authenticateUser function only, when PIN is in blocked state</applicability>
+    <reference>authenticateUser – Function (3.1.1); unblockPin – Function (3.1.2)</reference>
+  </specification>
+  <thrownBy>
+    <function>authenticateUser</function>
+  </thrownBy>
+  <triggerConditions>
+    <condition>
+      <scenario>Multiple incorrect PIN attempts exhaust retry limit</scenario>
+      <description>User provides incorrect PIN multiple times in succession, exhausting the device's retry limit</description>
+      <trigger>A user attempts to authenticate with an incorrect PIN three times. After the third failed attempt, the device blocks the PIN. The next call to authenticateUser raises ErrorPinBlocked.</trigger>
+    </condition>
+    <condition>
+      <scenario>Automatic PIN blocking after threshold</scenario>
+      <description>The PIN is automatically blocked when the device detects the specified number of consecutive failed attempts</description>
+      <trigger>An attacker or compromised application attempts to guess the PIN through repeated incorrect authentication attempts. After reaching the threshold (e.g., 5 failed attempts), the device automatically blocks the PIN. ErrorPinBlocked is raised on the next authentication attempt.</trigger>
+    </condition>
+    <condition>
+      <scenario>Persistent block after device restart</scenario>
+      <description>The PIN remains blocked even after device restart or power cycle</description>
+      <trigger>A PIN is blocked due to excessive failed attempts. The device is restarted. After restart, the PIN is still in blocked state. When authenticateUser is called, ErrorPinBlocked is raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Account compromise protection mechanism</scenario>
+      <description>The PIN blocking occurs as a security measure to protect accounts from brute-force attacks</description>
+      <trigger>Multiple rapid authentication attempts are detected (potential brute-force attack). The device proactively blocks the PIN to prevent further attack attempts. ErrorPinBlocked is raised to stop the attack.</trigger>
+    </condition>
+    <condition>
+      <scenario>Administrative PIN blocking</scenario>
+      <description>An administrator or management function has blocked the PIN</description>
+      <trigger>A device administrator calls a management function to block a PIN for security reasons. The next authentication attempt with this PIN results in ErrorPinBlocked.</trigger>
+    </condition>
+  </triggerConditions>
+  <executionSequence>
+    <step number="1">User/application calls authenticateUser function with user credentials and PIN</step>
+    <step number="2">Function validates input parameters including PIN format</step>
+    <step number="3">Function initiates communication with Secure Element</step>
+    <step number="4">Function transmits authentication command with PIN to Secure Element</step>
+    <step number="5">Secure Element checks if the user's PIN is in blocked state</step>
+    <step number="5a">If PIN is blocked → ErrorPinBlocked raised, function exits</step>
+    <step number="5b">If PIN is not blocked → proceed to step 6</step>
+    <step number="6">Secure Element verifies the provided PIN against the stored PIN</step>
+    <step number="6a">If PIN is correct → proceed to step 8</step>
+    <step number="6b">If PIN is incorrect → proceed to step 7</step>
+    <step number="7">Secure Element increments failed attempt counter and checks retry threshold</step>
+    <step number="7a">If retry threshold exceeded → blocks PIN and raises ErrorPinBlocked</step>
+    <step number="7b">If retry threshold not exceeded → raises ErrorIncorrectPin</step>
+    <step number="8">Function closes communication channel with Secure Element</step>
+    <step number="9">Function returns successfully with user authenticated</step>
+  </executionSequence>
+  <recovery>
+    <step>Confirm PIN is blocked - verify with ErrorPinBlocked exception message that PIN is in blocked state</step>
+    <step>Obtain PUK - retrieve the user's PIN Unblock Key (PUK) from secure storage or management system</step>
+    <step>Call unblockPin function - invoke unblockPin with the user ID and correct PUK to unblock the PIN</step>
+    <step>Set new PIN - after successful unblock, set a new PIN via appropriate function or management interface</step>
+    <step>Notify user - inform the user that their PIN was blocked and must be reset</step>
+    <step>Verify recovery - attempt authentication with the new PIN to verify the PIN is now unblocked</step>
+    <step>Check security logs - review device logs to understand why the PIN was blocked (user mistake vs. attack)</step>
+    <step>Implement rate limiting - consider implementing rate limiting or backoff strategies to prevent PIN blocking from user mistakes</step>
+    <step>If PUK is unknown - contact device administrator or manufacturer for administrative PIN reset procedures</step>
+    <step>Investigate failed attempts - if blocked due to attack, investigate the source of failed authentication attempts</step>
+  </recovery>
+  <relatedExceptions>
+    <exception>ErrorIncorrectPin</exception>
+    <exception>ErrorPukBlocked</exception>
+    <exception>ErrorUnblockPinFailed</exception>
+    <exception>ErrorAuthenticationFailed</exception>
+    <exception>ErrorFunctionFailed</exception>
+  </relatedExceptions>
+  <postconditionality>
+    <state name="Authentication Not Performed">User authentication is not completed. The function exits before verifying credentials.</state>
+    <state name="PIN Remains Blocked">The PIN remains in blocked state after the exception is raised. It does not become unblocked automatically.</state>
+    <state name="Retry Counter Preserved">The retry counter state is preserved. It may continue to increment if unblockPin is called with incorrect PUK.</state>
+    <state name="User Session Not Created">No user session is created or authenticated. The user is not logged in to the device.</state>
+    <state name="Device State Unmodified">The device's overall state remains unchanged except for the blocked PIN state.</state>
+    <state name="Unblock Required">PIN unblocking via unblockPin function is required before authentication can resume.</state>
+  </postconditionality>
+  <notes>
+    <note>ErrorPinBlocked is thrown ONLY by the authenticateUser function - it is specific to PIN authentication</note>
+    <note>This exception indicates a critical security lock state - the PIN must be unblocked before authentication can proceed</note>
+    <note>The exception has Critical severity because it completely prevents user authentication</note>
+    <note>PIN blocking is a security feature that protects accounts from brute-force attacks by limiting authentication attempts</note>
+    <note>The maximum number of failed PIN attempts before blocking is typically configurable (commonly 3-5)</note>
+    <note>Once blocked, the PIN can only be unblocked by providing the correct PUK via unblockPin function</note>
+    <note>PIN blocking is persistent across device restarts - blocked PINs remain blocked after power cycles</note>
+    <note>Different user accounts have independent PIN blocks - one user's blocked PIN does not affect other users</note>
+    <note>Failed PIN attempts should be logged for security auditing and attack detection</note>
+    <note>Rate limiting or backoff strategies can help prevent legitimate users from accidentally blocking their PINs</note>
+    <note>If the PUK is lost or unknown, administrative PIN reset procedures may be required</note>
+    <note>Applications should handle ErrorPinBlocked gracefully and guide users to the PIN unblocking process</note>
+    <note>User notification and clear error messages are important - users must understand why authentication failed</note>
+    <note>Security monitoring systems should alert on PIN blocking events, as they may indicate attacks</note>
+    <note>PUK management and recovery procedures must be documented for user support and administration</note>
+  </notes>
+  <usage>
+    <scenario name="Scenario 1: User Authentication with PIN Block Detection">
+      <description>An application calls authenticateUser to authenticate a user. When ErrorPinBlocked is raised, the application detects that the PIN is blocked. The application informs the user that their PIN is blocked and directs them to use the PIN unblocking process (providing PUK and receiving new PIN).</description>
+      <relatedFunctions>authenticateUser, unblockPin</relatedFunctions>
+      <errorContext>PIN is blocked due to excessive failed authentication attempts</errorContext>
+    </scenario>
+    <scenario name="Scenario 2: Brute-Force Attack Prevention via PIN Lock">
+      <description>An attacker or compromised system attempts multiple authentication attacks against a user account. After the configured number of failed attempts, the PIN is automatically blocked. When authenticateUser is called, ErrorPinBlocked is raised, stopping the attack. The security monitoring system detects the PIN block event and triggers an alert.</description>
+      <relatedFunctions>authenticateUser</relatedFunctions>
+      <errorContext>PIN blocked to prevent brute-force authentication attack</errorContext>
+    </scenario>
+    <scenario name="Scenario 3: PIN Recovery Process with PUK">
+      <description>A user has forgotten their PIN and accidentally locked it through repeated failed attempts. The user initiates the PIN recovery process by calling unblockPin with the correct PUK. After successful unblocking, the user sets a new PIN. The user can then authenticate normally with the new PIN.</description>
+      <relatedFunctions>authenticateUser, unblockPin</relatedFunctions>
+      <errorContext>PIN recovery requires PUK and PIN reset</errorContext>
+    </scenario>
+    <scenario name="Scenario 4: Security Logging and Incident Response">
+      <description>A security monitoring system logs all authentication events including PIN blocks. When ErrorPinBlocked exceptions are detected, the monitoring system analyzes whether they represent normal user mistakes or potential attacks. High rates of PIN blocking trigger incident response procedures.</description>
+      <relatedFunctions>authenticateUser</relatedFunctions>
+      <errorContext>PIN block events used for security monitoring and attack detection</errorContext>
+    </scenario>
+  </usage>
+  <implementationContext>
+    <note>The authenticateUser function must check PIN block state before verifying the PIN</note>
+    <note>The device must maintain persistent PIN block state across restarts and power cycles</note>
+    <note>Failed PIN attempt counters must be incremented for each incorrect PIN, not reset between authentication attempts</note>
+    <note>The threshold for PIN blocking (number of failed attempts) should be configurable during device initialization</note>
+    <note>Once the PIN block threshold is reached, the PIN should be blocked immediately without further warning</note>
+    <note>PIN block state can only be cleared by the unblockPin function or administrative procedures</note>
+    <note>Different user accounts must have independent PIN block states</note>
+    <note>Security logging should record all PIN block events with timestamps and user identifiers</note>
+    <note>Applications should implement rate limiting or backoff strategies to prevent legitimate PIN locking</note>
+    <note>User interface should provide clear guidance on PIN recovery when ErrorPinBlocked is encountered</note>
+  </implementationContext>
 </exception>

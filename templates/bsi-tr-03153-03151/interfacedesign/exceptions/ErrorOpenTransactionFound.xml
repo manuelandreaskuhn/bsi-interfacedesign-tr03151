@@ -1,168 +1,168 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<exception id="ErrorOpenTransactionFound" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
-    <name>ErrorOpenTransactionFound</name>
-    <description>This exception is thrown if the SE API functions disableSecureElement or updateDevice are called when there are open (unfinished) transactions on the device. The functions require that all transactions be in a completed state before they can execute. If one or more transactions are still in the open state when these operations are attempted, ErrorOpenTransactionFound is raised to prevent the operation from proceeding while transactions remain unfinished.</description>
-    <category>Transaction Management - Transaction State Prerequisites</category>
-    <severity>High</severity>
-    <javadoc>
-        <summary>This class defines the exception ErrorOpenTransactionFound that is thrown if there are open transactions when they must be closed.</summary>
-        <description>This exception is thrown when disableSecureElement or updateDevice functions cannot proceed because there are open (unfinished) transactions on the device. These operations have a prerequisite that all transactions must be in a completed state before they can execute. Open transactions represent active processing contexts that must be properly finalized before certain device-level operations can be safely performed. ErrorOpenTransactionFound indicates that the attempted operation was blocked because at least one transaction is still in the open state. Recovery requires completing (finishing) all open transactions via the finishTransaction function before retrying the blocked operation. This prevents device operations from occurring while transaction processing is incomplete, protecting data consistency and transaction integrity.</description>
-        <constructors>
-            <constructor>
-                <signature>ErrorOpenTransactionFound()</signature>
-                <description>Constructs a new ErrorOpenTransactionFound exception with null as the value for its detail message</description>
-            </constructor>
-            <constructor>
-                <signature>ErrorOpenTransactionFound(String message)</signature>
-                <description>Constructs a new ErrorOpenTransactionFound exception whereby its detail message is initialized with the passed value</description>
-                <parameter name="message">value for the detail message of the exception, typically identifying how many open transactions were found</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorOpenTransactionFound(String message, Throwable cause)</signature>
-                <description>Constructs a new ErrorOpenTransactionFound exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorOpenTransactionFound(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-                <description>Constructs a new ErrorOpenTransactionFound exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-            </constructor>
-        </constructors>
-    </javadoc>
-    <specification>
-        <source>BSI TR-03151-1</source>
-        <section>3.2.1 Device State Management - disableSecureElement and 3.2.2 Device Update Operations - updateDevice</section>
-        <requirement>The functions disableSecureElement and updateDevice require that all transactions be in a completed (finished) state before they can execute. These operations cannot proceed while open (unfinished) transactions exist on the device. If the device has any open transactions at the time these functions are called, they SHALL raise the exception ErrorOpenTransactionFound and reject the operation. The caller must complete all open transactions via finishTransaction before retrying these device-level operations.</requirement>
-        <applicability>Device-level operations - disableSecureElement and updateDevice functions only, when open transactions exist</applicability>
-        <reference>disableSecureElement – Function (3.2.1); updateDevice – Function (3.2.2)</reference>
-    </specification>
-    <thrownBy>
-        <function>disableSecureElement</function>
-        <function>updateDevice</function>
-    </thrownBy>
-    <triggerConditions>
-        <condition>
-            <scenario>Application calls disableSecureElement with unfinished transactions</scenario>
-            <description>The application attempts to disable the Secure Element while transactions are still open</description>
-            <trigger>The application calls startTransaction one or more times, creating open transactions, but never calls finishTransaction to complete them. Then the application calls disableSecureElement to shut down the device. The function detects the open transactions and raises ErrorOpenTransactionFound instead of proceeding with disablement.</trigger>
-        </condition>
-        <condition>
-            <scenario>Application calls updateDevice with incomplete transactions</scenario>
-            <description>The application attempts to update the device while transactions are still in progress</description>
-            <trigger>The application has created open transactions that are still being processed. The application calls updateDevice to perform a device firmware or configuration update. The function checks transaction state, finds open transactions, and raises ErrorOpenTransactionFound. Device update cannot proceed until transactions are completed.</trigger>
-        </condition>
-        <condition>
-            <scenario>Batch operation leaves transactions incomplete</scenario>
-            <description>A batch processing operation creates transactions but the final cleanup fails to close them</description>
-            <trigger>A batch operation creates multiple transactions and closes most of them but one remains open due to an error. When the application attempts to call disableSecureElement to finalize the batch process, the unclosed transaction is detected and ErrorOpenTransactionFound is raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Exception in transaction processing leaves transaction open</scenario>
-            <description>An exception or error during transaction processing leaves a transaction in the open state</description>
-            <trigger>An exception occurs during transaction processing, causing the normal transaction completion flow to be interrupted. The transaction remains open but the application continues and calls updateDevice. The open transaction is detected and ErrorOpenTransactionFound is raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Client crash or disconnection leaves orphaned transactions</scenario>
-            <description>The client application crashes or disconnects while transactions are open</description>
-            <trigger>A client application crashes while transactions are open, leaving them in an orphaned state on the device. When the client reconnects or when another operation attempts to call disableSecureElement or updateDevice, the orphaned open transactions are detected and ErrorOpenTransactionFound is raised.</trigger>
-        </condition>
-    </triggerConditions>
-    <executionSequence>
-        <step number="1">User/application calls disableSecureElement or updateDevice function</step>
-        <step number="2">Function validates input parameters and checks authorization</step>
-        <step number="3">Function checks device state and operational prerequisites</step>
-        <step number="4">Function queries the number of currently open transactions on the device</step>
-        <step number="5">Function evaluates transaction state</step>
-        <step number="5a">If NO open transactions exist → proceed to step 6</step>
-        <step number="5b">If open transactions exist → ErrorOpenTransactionFound raised, function exits</step>
-        <step number="6">Function performs pre-operation validation and preparation</step>
-        <step number="7">Function initiates communication with Secure Element</step>
-        <step number="8">Function transmits the operation command (disable or update) to Secure Element</step>
-        <step number="9">Function receives acknowledgment from Secure Element</step>
-        <step number="10">Function completes post-operation cleanup and state updates</step>
-        <step number="11">Function closes communication channel with Secure Element</step>
-        <step number="12">Function returns successfully with operation completed</step>
-    </executionSequence>
-    <recovery>
-        <step>Identify open transactions - query the device to determine how many transactions are currently open</step>
-        <step>List open transaction IDs - retrieve the IDs of all currently open transactions</step>
-        <step>Review transaction context - determine the current state and processing status of each open transaction</step>
-        <step>Complete pending operations - finish processing any incomplete operations associated with open transactions</step>
-        <step>Call finishTransaction for each open transaction - systematically close each open transaction</step>
-        <step>Verify all transactions closed - query the device again to confirm all transactions are now in closed state</step>
-        <step>Retry the operation - once all transactions are closed, retry the disableSecureElement or updateDevice call</step>
-        <step>Handle cascading dependencies - ensure that closing transactions does not trigger other exceptions or state issues</step>
-        <step>Implement cleanup procedures - design applications to ensure transactions are always properly closed, even in error paths</step>
-        <step>If transactions won't close, investigate - determine if transactions are stuck or if there's an underlying issue preventing their completion</step>
-    </recovery>
-    <relatedExceptions>
-        <exception>ErrorDisableSecureElementFailed</exception>
-        <exception>ErrorDeviceUpdateFailed</exception>
-        <exception>ErrorStartTransactionFailed</exception>
-        <exception>ErrorFinishTransactionFailed</exception>
-        <exception>ErrorGetOpenTransactionsFailed</exception>
-    </relatedExceptions>
-    <postconditionality>
-        <state name="Operation Not Performed">The requested operation (disable or update) is not performed. Device state remains unchanged by the failed operation attempt.</state>
-        <state name="Device Continues Normal Operation">The device remains in its current operational state. The failed prerequisite check does not affect normal device operations.</state>
-        <state name="Open Transactions Unchanged">The open transactions remain in their current state. The failed operation attempt does not affect transaction state.</state>
-        <state name="Device Fully Operational">All device functionality except the blocked operation remains available and operational.</state>
-        <state name="Recovery Action Required">The caller must take recovery action (close open transactions) before retrying the blocked operation.</state>
-        <state name="No Cascading Failures">The exception does not trigger cascading failures or secondary exceptions.</state>
-    </postconditionality>
-    <notes>
-        <note>ErrorOpenTransactionFound is thrown by disableSecureElement and updateDevice - both device-level operations requiring closed transaction state</note>
-        <note>This exception indicates a prerequisite violation - device operations have specific state requirements that must be met</note>
-        <note>The exception has High severity because it prevents critical device operations like disable and update</note>
-        <note>Open transactions represent incomplete processing contexts that must be properly finalized before device-level operations</note>
-        <note>Recovery requires systematically closing all open transactions via finishTransaction before retrying the blocked operation</note>
-        <note>Applications should implement transaction tracking to ensure all transactions are properly completed, even in error paths</note>
-        <note>The transaction state check occurs before the device-level operation begins - the operation is prevented from proceeding</note>
-        <note>Different transaction types or transaction states may have different completion requirements - consult device specifications</note>
-        <note>This exception protects data consistency by preventing device operations while transaction processing is incomplete</note>
-        <note>Some implementations may allow forced termination of open transactions before proceeding with disable or update - consult device capabilities</note>
-        <note>Orphaned transactions (from client crashes) may need special handling to prevent indefinite blocking of device operations</note>
-        <note>Monitoring and alerting on open transaction count can help prevent this exception by proactive transaction completion</note>
-        <note>Error handling in transaction processing should include cleanup code to ensure transactions are closed even when exceptions occur</note>
-        <note>Applications should validate transaction state before attempting device-level operations to anticipate this exception</note>
-        <note>The error message should ideally specify how many open transactions exist to help debugging</note>
-    </notes>
-    <usage>
-        <scenario name="Scenario 1: Device Shutdown with Transaction Cleanup">
-            <description>An application calls disableSecureElement to shut down a Secure Element device. When ErrorOpenTransactionFound is raised, it indicates there are unfinished transactions. The application retrieves the open transaction IDs, calls finishTransaction on each, and then retries disableSecureElement to complete the shutdown.</description>
-            <relatedFunctions>disableSecureElement, finishTransaction, getOpenTransactions</relatedFunctions>
-            <errorContext>Open transactions prevent device disablement - must close first</errorContext>
-        </scenario>
-        <scenario name="Scenario 2: Firmware Update with Transaction State Validation">
-            <description>An enterprise system performs a scheduled firmware update on Secure Elements by calling updateDevice. When ErrorOpenTransactionFound is raised on a device, it indicates active transactions are preventing the update. The system pauses the update, waits for or closes existing transactions, and then retries the update.</description>
-            <relatedFunctions>updateDevice, finishTransaction, getOpenTransactionsFailed</relatedFunctions>
-            <errorContext>Open transactions block device update - require transaction completion first</errorContext>
-        </scenario>
-        <scenario name="Scenario 3: Batch Processing with Transaction Lifecycle Management">
-            <description>A batch processing application creates multiple transactions, processes them, and should close them before finalizing. When ErrorOpenTransactionFound is raised during finalization, it indicates incomplete transaction cleanup. The application implements robust transaction tracking to ensure all transactions are properly closed before batch completion.</description>
-            <relatedFunctions>startTransaction, finishTransaction, disableSecureElement</relatedFunctions>
-            <errorContext>Incomplete transaction cleanup prevents batch finalization</errorContext>
-        </scenario>
-        <scenario name="Scenario 4: Exception Handling with Transaction Cleanup in Error Paths">
-            <description>An application must handle exceptions gracefully and ensure transactions are always closed. When an exception occurs during transaction processing, the exception handler ensures finishTransaction is called. This prevents open transactions from blocking subsequent device-level operations like disable or update.</description>
-            <relatedFunctions>startTransaction, finishTransaction, disableSecureElement, updateDevice</relatedFunctions>
-            <errorContext>Exception during transaction processing requires cleanup to prevent blocking device operations</errorContext>
-        </scenario>
-    </usage>
-    <implementationContext>
-        <note>The disableSecureElement and updateDevice functions must check that all transactions are closed before proceeding</note>
-        <note>Open transactions represent incomplete processing contexts - they must be properly finalized before device state changes</note>
-        <note>The transaction state check is a prerequisite validation that occurs before the operation begins</note>
-        <note>Applications should implement robust transaction lifecycle management to ensure all transactions are properly closed</note>
-        <note>Error handling should include cleanup code (finishTransaction) to prevent transactions from being left open when exceptions occur</note>
-        <note>Transaction tracking can help applications monitor and manage the transaction state to prevent this exception</note>
-        <note>Different device models may have different transaction management policies - consult device specifications</note>
-        <note>Orphaned transactions from client crashes may require special recovery procedures or device-level interventions</note>
-        <note>Monitoring systems should track open transaction count as a device health metric</note>
-        <note>The error message should ideally include details about which transactions are open to aid in debugging and recovery</note>
-    </implementationContext>
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorOpenTransactionFound" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+  <name>ErrorOpenTransactionFound</name>
+  <description>This exception is thrown if the SE API functions disableSecureElement or updateDevice are called when there are open (unfinished) transactions on the device. The functions require that all transactions be in a completed state before they can execute. If one or more transactions are still in the open state when these operations are attempted, ErrorOpenTransactionFound is raised to prevent the operation from proceeding while transactions remain unfinished.</description>
+  <category>Transaction Management - Transaction State Prerequisites</category>
+  <severity>High</severity>
+  <thrownBy>
+    <function>lockTransactionLogging</function>
+    <function>updateDevice</function>
+  </thrownBy>
+  <javadoc>
+    <summary>This class defines the exception ErrorOpenTransactionFound that is thrown if there are open transactions when they must be closed.</summary>
+    <description>This exception is thrown when disableSecureElement or updateDevice functions cannot proceed because there are open (unfinished) transactions on the device. These operations have a prerequisite that all transactions must be in a completed state before they can execute. Open transactions represent active processing contexts that must be properly finalized before certain device-level operations can be safely performed. ErrorOpenTransactionFound indicates that the attempted operation was blocked because at least one transaction is still in the open state. Recovery requires completing (finishing) all open transactions via the finishTransaction function before retrying the blocked operation. This prevents device operations from occurring while transaction processing is incomplete, protecting data consistency and transaction integrity.</description>
+    <constructors>
+      <constructor>
+        <signature>ErrorOpenTransactionFound()</signature>
+        <description>Constructs a new ErrorOpenTransactionFound exception with null as the value for its detail message</description>
+      </constructor>
+      <constructor>
+        <signature>ErrorOpenTransactionFound(String message)</signature>
+        <description>Constructs a new ErrorOpenTransactionFound exception whereby its detail message is initialized with the passed value</description>
+        <parameter name="message">value for the detail message of the exception, typically identifying how many open transactions were found</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorOpenTransactionFound(String message, Throwable cause)</signature>
+        <description>Constructs a new ErrorOpenTransactionFound exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorOpenTransactionFound(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+        <description>Constructs a new ErrorOpenTransactionFound exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+      </constructor>
+    </constructors>
+  </javadoc>
+  <specification>
+    <source>BSI TR-03151-1</source>
+    <section>3.2.1 Device State Management - disableSecureElement and 3.2.2 Device Update Operations - updateDevice</section>
+    <requirement>The functions disableSecureElement and updateDevice require that all transactions be in a completed (finished) state before they can execute. These operations cannot proceed while open (unfinished) transactions exist on the device. If the device has any open transactions at the time these functions are called, they SHALL raise the exception ErrorOpenTransactionFound and reject the operation. The caller must complete all open transactions via finishTransaction before retrying these device-level operations.</requirement>
+    <applicability>Device-level operations - disableSecureElement and updateDevice functions only, when open transactions exist</applicability>
+    <reference>disableSecureElement – Function (3.2.1); updateDevice – Function (3.2.2)</reference>
+  </specification>
+  <triggerConditions>
+    <condition>
+      <scenario>Application calls disableSecureElement with unfinished transactions</scenario>
+      <description>The application attempts to disable the Secure Element while transactions are still open</description>
+      <trigger>The application calls startTransaction one or more times, creating open transactions, but never calls finishTransaction to complete them. Then the application calls disableSecureElement to shut down the device. The function detects the open transactions and raises ErrorOpenTransactionFound instead of proceeding with disablement.</trigger>
+    </condition>
+    <condition>
+      <scenario>Application calls updateDevice with incomplete transactions</scenario>
+      <description>The application attempts to update the device while transactions are still in progress</description>
+      <trigger>The application has created open transactions that are still being processed. The application calls updateDevice to perform a device firmware or configuration update. The function checks transaction state, finds open transactions, and raises ErrorOpenTransactionFound. Device update cannot proceed until transactions are completed.</trigger>
+    </condition>
+    <condition>
+      <scenario>Batch operation leaves transactions incomplete</scenario>
+      <description>A batch processing operation creates transactions but the final cleanup fails to close them</description>
+      <trigger>A batch operation creates multiple transactions and closes most of them but one remains open due to an error. When the application attempts to call disableSecureElement to finalize the batch process, the unclosed transaction is detected and ErrorOpenTransactionFound is raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Exception in transaction processing leaves transaction open</scenario>
+      <description>An exception or error during transaction processing leaves a transaction in the open state</description>
+      <trigger>An exception occurs during transaction processing, causing the normal transaction completion flow to be interrupted. The transaction remains open but the application continues and calls updateDevice. The open transaction is detected and ErrorOpenTransactionFound is raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Client crash or disconnection leaves orphaned transactions</scenario>
+      <description>The client application crashes or disconnects while transactions are open</description>
+      <trigger>A client application crashes while transactions are open, leaving them in an orphaned state on the device. When the client reconnects or when another operation attempts to call disableSecureElement or updateDevice, the orphaned open transactions are detected and ErrorOpenTransactionFound is raised.</trigger>
+    </condition>
+  </triggerConditions>
+  <executionSequence>
+    <step number="1">User/application calls disableSecureElement or updateDevice function</step>
+    <step number="2">Function validates input parameters and checks authorization</step>
+    <step number="3">Function checks device state and operational prerequisites</step>
+    <step number="4">Function queries the number of currently open transactions on the device</step>
+    <step number="5">Function evaluates transaction state</step>
+    <step number="5a">If NO open transactions exist → proceed to step 6</step>
+    <step number="5b">If open transactions exist → ErrorOpenTransactionFound raised, function exits</step>
+    <step number="6">Function performs pre-operation validation and preparation</step>
+    <step number="7">Function initiates communication with Secure Element</step>
+    <step number="8">Function transmits the operation command (disable or update) to Secure Element</step>
+    <step number="9">Function receives acknowledgment from Secure Element</step>
+    <step number="10">Function completes post-operation cleanup and state updates</step>
+    <step number="11">Function closes communication channel with Secure Element</step>
+    <step number="12">Function returns successfully with operation completed</step>
+  </executionSequence>
+  <recovery>
+    <step>Identify open transactions - query the device to determine how many transactions are currently open</step>
+    <step>List open transaction IDs - retrieve the IDs of all currently open transactions</step>
+    <step>Review transaction context - determine the current state and processing status of each open transaction</step>
+    <step>Complete pending operations - finish processing any incomplete operations associated with open transactions</step>
+    <step>Call finishTransaction for each open transaction - systematically close each open transaction</step>
+    <step>Verify all transactions closed - query the device again to confirm all transactions are now in closed state</step>
+    <step>Retry the operation - once all transactions are closed, retry the disableSecureElement or updateDevice call</step>
+    <step>Handle cascading dependencies - ensure that closing transactions does not trigger other exceptions or state issues</step>
+    <step>Implement cleanup procedures - design applications to ensure transactions are always properly closed, even in error paths</step>
+    <step>If transactions won't close, investigate - determine if transactions are stuck or if there's an underlying issue preventing their completion</step>
+  </recovery>
+  <relatedExceptions>
+    <exception>ErrorDisableSecureElementFailed</exception>
+    <exception>ErrorDeviceUpdateFailed</exception>
+    <exception>ErrorStartTransactionFailed</exception>
+    <exception>ErrorFinishTransactionFailed</exception>
+    <exception>ErrorGetOpenTransactionsFailed</exception>
+  </relatedExceptions>
+  <postconditionality>
+    <state name="Operation Not Performed">The requested operation (disable or update) is not performed. Device state remains unchanged by the failed operation attempt.</state>
+    <state name="Device Continues Normal Operation">The device remains in its current operational state. The failed prerequisite check does not affect normal device operations.</state>
+    <state name="Open Transactions Unchanged">The open transactions remain in their current state. The failed operation attempt does not affect transaction state.</state>
+    <state name="Device Fully Operational">All device functionality except the blocked operation remains available and operational.</state>
+    <state name="Recovery Action Required">The caller must take recovery action (close open transactions) before retrying the blocked operation.</state>
+    <state name="No Cascading Failures">The exception does not trigger cascading failures or secondary exceptions.</state>
+  </postconditionality>
+  <notes>
+    <note>ErrorOpenTransactionFound is thrown by disableSecureElement and updateDevice - both device-level operations requiring closed transaction state</note>
+    <note>This exception indicates a prerequisite violation - device operations have specific state requirements that must be met</note>
+    <note>The exception has High severity because it prevents critical device operations like disable and update</note>
+    <note>Open transactions represent incomplete processing contexts that must be properly finalized before device-level operations</note>
+    <note>Recovery requires systematically closing all open transactions via finishTransaction before retrying the blocked operation</note>
+    <note>Applications should implement transaction tracking to ensure all transactions are properly completed, even in error paths</note>
+    <note>The transaction state check occurs before the device-level operation begins - the operation is prevented from proceeding</note>
+    <note>Different transaction types or transaction states may have different completion requirements - consult device specifications</note>
+    <note>This exception protects data consistency by preventing device operations while transaction processing is incomplete</note>
+    <note>Some implementations may allow forced termination of open transactions before proceeding with disable or update - consult device capabilities</note>
+    <note>Orphaned transactions (from client crashes) may need special handling to prevent indefinite blocking of device operations</note>
+    <note>Monitoring and alerting on open transaction count can help prevent this exception by proactive transaction completion</note>
+    <note>Error handling in transaction processing should include cleanup code to ensure transactions are closed even when exceptions occur</note>
+    <note>Applications should validate transaction state before attempting device-level operations to anticipate this exception</note>
+    <note>The error message should ideally specify how many open transactions exist to help debugging</note>
+  </notes>
+  <usage>
+    <scenario name="Scenario 1: Device Shutdown with Transaction Cleanup">
+      <description>An application calls disableSecureElement to shut down a Secure Element device. When ErrorOpenTransactionFound is raised, it indicates there are unfinished transactions. The application retrieves the open transaction IDs, calls finishTransaction on each, and then retries disableSecureElement to complete the shutdown.</description>
+      <relatedFunctions>disableSecureElement, finishTransaction, getOpenTransactions</relatedFunctions>
+      <errorContext>Open transactions prevent device disablement - must close first</errorContext>
+    </scenario>
+    <scenario name="Scenario 2: Firmware Update with Transaction State Validation">
+      <description>An enterprise system performs a scheduled firmware update on Secure Elements by calling updateDevice. When ErrorOpenTransactionFound is raised on a device, it indicates active transactions are preventing the update. The system pauses the update, waits for or closes existing transactions, and then retries the update.</description>
+      <relatedFunctions>updateDevice, finishTransaction, getOpenTransactionsFailed</relatedFunctions>
+      <errorContext>Open transactions block device update - require transaction completion first</errorContext>
+    </scenario>
+    <scenario name="Scenario 3: Batch Processing with Transaction Lifecycle Management">
+      <description>A batch processing application creates multiple transactions, processes them, and should close them before finalizing. When ErrorOpenTransactionFound is raised during finalization, it indicates incomplete transaction cleanup. The application implements robust transaction tracking to ensure all transactions are properly closed before batch completion.</description>
+      <relatedFunctions>startTransaction, finishTransaction, disableSecureElement</relatedFunctions>
+      <errorContext>Incomplete transaction cleanup prevents batch finalization</errorContext>
+    </scenario>
+    <scenario name="Scenario 4: Exception Handling with Transaction Cleanup in Error Paths">
+      <description>An application must handle exceptions gracefully and ensure transactions are always closed. When an exception occurs during transaction processing, the exception handler ensures finishTransaction is called. This prevents open transactions from blocking subsequent device-level operations like disable or update.</description>
+      <relatedFunctions>startTransaction, finishTransaction, disableSecureElement, updateDevice</relatedFunctions>
+      <errorContext>Exception during transaction processing requires cleanup to prevent blocking device operations</errorContext>
+    </scenario>
+  </usage>
+  <implementationContext>
+    <note>The disableSecureElement and updateDevice functions must check that all transactions are closed before proceeding</note>
+    <note>Open transactions represent incomplete processing contexts - they must be properly finalized before device state changes</note>
+    <note>The transaction state check is a prerequisite validation that occurs before the operation begins</note>
+    <note>Applications should implement robust transaction lifecycle management to ensure all transactions are properly closed</note>
+    <note>Error handling should include cleanup code (finishTransaction) to prevent transactions from being left open when exceptions occur</note>
+    <note>Transaction tracking can help applications monitor and manage the transaction state to prevent this exception</note>
+    <note>Different device models may have different transaction management policies - consult device specifications</note>
+    <note>Orphaned transactions from client crashes may require special recovery procedures or device-level interventions</note>
+    <note>Monitoring systems should track open transaction count as a device health metric</note>
+    <note>The error message should ideally include details about which transactions are open to aid in debugging and recovery</note>
+  </implementationContext>
 </exception>

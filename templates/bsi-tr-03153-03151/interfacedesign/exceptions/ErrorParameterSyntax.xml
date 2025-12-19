@@ -1,186 +1,207 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<exception id="ErrorParameterSyntax" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
-    <name>ErrorParameterSyntax</name>
-    <description>This exception is thrown by SE API functions when one or more parameters have invalid syntax, incorrect data type, malformed structure, or do not conform to the expected format for that parameter. ErrorParameterSyntax indicates that the parameter value cannot be interpreted or processed by the function because it does not match the required syntax or type specification. This is a common exception applicable to any SE API function that accepts parameters, raised during parameter validation when type mismatches or syntax violations are detected.</description>
-    <category>Input Validation - Parameter Type and Syntax</category>
-    <severity>Medium</severity>
-    <javadoc>
-        <summary>This class defines the exception ErrorParameterSyntax that is thrown by any SE API method when at least one parameter is of invalid type or syntax.</summary>
-        <description>This exception is thrown when any SE API function receives a parameter with invalid syntax, incorrect data type, or malformed structure. Every SE API function has specific type and format requirements for its parameters. ErrorParameterSyntax is raised when parameters do not conform to these requirements. Common causes include: string parameters with invalid characters or format, numeric parameters that are not numbers, boolean parameters with non-boolean values, complex objects with missing or invalid fields, or any parameter value that cannot be parsed or interpreted according to the function's specification. ErrorParameterSyntax is a common exception that can be raised by any SE API function that accepts parameters. Recovery requires correcting the parameter type or syntax according to the function's documentation and retrying the operation.</description>
-        <constructors>
-            <constructor>
-                <signature>ErrorParameterSyntax()</signature>
-                <description>Constructs a new ErrorParameterSyntax exception with null as the value for its detail message</description>
-            </constructor>
-            <constructor>
-                <signature>ErrorParameterSyntax(String message)</signature>
-                <description>Constructs a new ErrorParameterSyntax exception whereby its detail message is initialized with the passed value</description>
-                <parameter name="message">value for the detail message of the exception, typically identifying which parameter has the syntax error</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorParameterSyntax(String message, Throwable cause)</signature>
-                <description>Constructs a new ErrorParameterSyntax exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorParameterSyntax(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-                <description>Constructs a new ErrorParameterSyntax exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-            </constructor>
-        </constructors>
-    </javadoc>
-    <specification>
-        <source>BSI TR-03151-1</source>
-        <section>3.1 General Error Handling and Input Validation</section>
-        <requirement>All SE API functions SHALL validate input parameters for type correctness and syntax compliance. If any parameter is found to have invalid syntax, incorrect data type, or malformed structure that does not conform to the function's parameter specifications, the function SHALL raise the exception ErrorParameterSyntax. The function SHALL NOT attempt to process or interpret parameters with syntax or type errors. ErrorParameterSyntax is applicable to any SE API function that accepts parameters.</requirement>
-        <applicability>Input validation - applicable to all SE API functions with parameters</applicability>
-        <reference>General Error Handling (3.1)</reference>
-    </specification>
-    <thrownBy>
-        <function>authenticateUser</function>
-        <function>unblockPin</function>
-        <function>initialize</function>
-        <function>setDescription</function>
-        <function>updateDevice</function>
-        <function>updateTime</function>
-        <function>configureLogging</function>
-        <function>exportLogMessages</function>
-        <function>deleteLogMessages</function>
-        <function>restoreLogsFromBackup</function>
-        <function>registerClient</function>
-        <function>deregisterClient</function>
-        <function>startTransaction</function>
-        <function>updateTransaction</function>
-        <function>finishTransaction</function>
-        <function>exportFilteredTransactionLogs</function>
-        <function>getTransactionState</function>
-    </thrownBy>
-    <triggerConditions>
-        <condition>
-            <scenario>String parameter with invalid characters</scenario>
-            <description>A string parameter contains characters that are not allowed in that parameter</description>
-            <trigger>A function expects a clientId string containing only alphanumeric characters, but receives "client@123!" with special characters. The function's input validation detects the invalid characters and raises ErrorParameterSyntax.</trigger>
-        </condition>
-        <condition>
-            <scenario>Numeric parameter as string instead of number</scenario>
-            <description>A parameter that should be numeric is provided as a string that cannot be parsed as a number</description>
-            <trigger>A function expects an integer count parameter, but receives the string "abc" instead of a numeric value. The input validation detects the type mismatch and raises ErrorParameterSyntax.</trigger>
-        </condition>
-        <condition>
-            <scenario>Date/time parameter with invalid format</scenario>
-            <description>A date or time parameter does not conform to the expected format</description>
-            <trigger>A function expects a date parameter in ISO 8601 format (YYYY-MM-DD), but receives "25/12/2025" in a different format. The input validation detects the format mismatch and raises ErrorParameterSyntax.</trigger>
-        </condition>
-        <condition>
-            <scenario>Complex parameter object with missing required fields</scenario>
-            <description>A complex object parameter is missing required fields or has invalid structure</description>
-            <trigger>A function expects a configuration object with required fields {name, type, value}, but receives {name, type} without the value field. The validation detects the missing required field and raises ErrorParameterSyntax.</trigger>
-        </condition>
-        <condition>
-            <scenario>Parameter with out-of-range or invalid value</scenario>
-            <description>A parameter value is outside the acceptable range or violates type constraints</description>
-            <trigger>A function expects a port number between 1 and 65535, but receives 99999. The input validation detects the out-of-range value and raises ErrorParameterSyntax.</trigger>
-        </condition>
-    </triggerConditions>
-    <executionSequence>
-        <step number="1">User/application calls an SE API function with parameters</step>
-        <step number="2">Function receives the parameters</step>
-        <step number="3">Function performs type checking on each parameter</step>
-        <step number="3a">If all parameters have correct type → proceed to step 4</step>
-        <step number="3b">If any parameter has incorrect type → ErrorParameterSyntax raised, function exits</step>
-        <step number="4">Function performs syntax validation on each parameter</step>
-        <step number="4a">If all parameters have valid syntax → proceed to step 5</step>
-        <step number="4b">If any parameter has invalid syntax → ErrorParameterSyntax raised, function exits</step>
-        <step number="5">Function performs format validation on parameters (dates, strings, etc.)</step>
-        <step number="5a">If all parameters have valid format → proceed to step 6</step>
-        <step number="5b">If any parameter has invalid format → ErrorParameterSyntax raised, function exits</step>
-        <step number="6">Function performs range validation on numeric and constrained parameters</step>
-        <step number="6a">If all parameters are within valid ranges → proceed to step 7</step>
-        <step number="6b">If any parameter is out of range → ErrorParameterSyntax raised, function exits</step>
-        <step number="7">Function checks for required fields in complex parameters</step>
-        <step number="8">Function proceeds with normal operation logic</step>
-    </executionSequence>
-    <recovery>
-        <step>Review error message - examine the error message to identify which parameter has the syntax error</step>
-        <step>Check function documentation - consult the SE API documentation for the specific function's parameter requirements</step>
-        <step>Review parameter types - verify that each parameter has the correct data type (string, int, boolean, object, etc.)</step>
-        <step>Check string format - if string parameters, verify they conform to required format and allowed character sets</step>
-        <step>Validate date/time format - if date/time parameters, verify they conform to the required format specification</step>
-        <step>Check numeric ranges - if numeric parameters, verify they are within acceptable ranges (e.g., 1-65535 for ports)</step>
-        <step>Verify required fields - if complex object parameters, verify all required fields are present</step>
-        <step>Validate character encoding - ensure parameter values use correct character encoding</step>
-        <step>Review BSI TR-03151-1 specification - consult the official specification for detailed parameter requirements</step>
-        <step>Correct and retry - fix the parameter values to match the required syntax and type, then retry the function call</step>
-    </recovery>
-    <relatedExceptions>
-        <exception>ErrorParameterMismatch</exception>
-        <exception>ErrorInvalidClientIdCharacter</exception>
-        <exception>ErrorInvalidTime</exception>
-        <exception>ErrorInvalidEventType</exception>
-        <exception>ErrorFunctionFailed</exception>
-    </relatedExceptions>
-    <postconditionality>
-        <state name="Function Not Executed">The function does not execute its main operation logic. Input validation failure prevents operation execution.</state>
-        <state name="Device State Unchanged">The device's state remains completely unchanged. No device operations occur as a result of the parameter syntax error.</state>
-        <state name="No Side Effects">The exception does not cause any side effects or state changes on the device.</state>
-        <state name="Parameters Available for Inspection">The invalid parameters remain available for inspection to identify the specific syntax or type issue.</state>
-        <state name="Retry Possible with Corrected Parameters">The operation can be retried immediately after correcting the parameter syntax or type.</state>
-        <state name="No Data Loss">The exception does not result in data loss or corruption of any kind.</state>
-    </postconditionality>
-    <notes>
-        <note>ErrorParameterSyntax is a common exception applicable to any SE API function that accepts parameters</note>
-        <note>This exception indicates a parameter type or syntax error - the function does not attempt to process invalid parameters</note>
-        <note>The exception has Medium severity because it indicates invalid input, not a system failure</note>
-        <note>Input validation (type and syntax checks) occurs before the function's main operation logic begins</note>
-        <note>Each SE API function has specific parameter requirements documented in BSI TR-03151-1 and function-specific documentation</note>
-        <note>Applications should validate parameters before calling SE API functions to prevent ErrorParameterSyntax exceptions</note>
-        <note>Common syntax/type errors include: wrong data type, invalid string format, incorrect date format, out-of-range values</note>
-        <note>Error messages should identify which specific parameter has the syntax or type error for efficient debugging</note>
-        <note>Different functions may have different parameter requirements - always consult function-specific documentation</note>
-        <note>Complex parameters (objects, arrays) may have required fields that must be present and properly structured</note>
-        <note>String parameters may have character set restrictions or format requirements (e.g., alphanumeric only, no special characters)</note>
-        <note>Numeric parameters may have range restrictions (e.g., ports 1-65535, percentages 0-100)</note>
-        <note>Date/time parameters typically require specific formats (e.g., ISO 8601: YYYY-MM-DD)</note>
-        <note>Boolean parameters must be actual boolean values, not strings like "true" or "false"</note>
-        <note>Input validation reduces the chance of ErrorParameterSyntax - implement parameter validation utilities in client applications</note>
-    </notes>
-    <usage>
-        <scenario name="Scenario 1: Client ID Validation with Character Set Checking">
-            <description>An application calls registerClient with a client ID parameter. The application passes a client ID with invalid characters. The function detects the invalid syntax and raises ErrorParameterSyntax. The application corrects the client ID to contain only allowed characters and retries the registration.</description>
-            <relatedFunctions>registerClient, deregisterClient</relatedFunctions>
-            <errorContext>Client ID parameter contains invalid characters</errorContext>
-        </scenario>
-        <scenario name="Scenario 2: Date Parameter Format Validation">
-            <description>An application calls deleteLogMessages with date range parameters. The application provides dates in a different format than expected. The function's input validation detects the format mismatch and raises ErrorParameterSyntax. The application corrects the date format to match the required specification and retries.</description>
-            <relatedFunctions>deleteLogMessages, exportLogMessages</relatedFunctions>
-            <errorContext>Date parameter has incorrect format</errorContext>
-        </scenario>
-        <scenario name="Scenario 3: Parameter Type Validation with Type Checking">
-            <description>An application implements a configuration utility that calls various SE API functions with configuration parameters. The utility performs parameter type checking to ensure each parameter has the correct type (string, integer, boolean, etc.). By validating parameters before calling SE API functions, the utility prevents ErrorParameterSyntax exceptions.</description>
-            <relatedFunctions>initialize, configureLogging, updateDevice</relatedFunctions>
-            <errorContext>Preventive parameter type validation prevents syntax errors</errorContext>
-        </scenario>
-        <scenario name="Scenario 4: Complex Parameter Object Validation">
-            <description>An application calls a function with a complex parameter object. The application must ensure the object has all required fields with correct types. When ErrorParameterSyntax is raised due to missing or incorrectly typed fields, the application corrects the object structure and retries.</description>
-            <relatedFunctions>updateTransaction, startTransaction</relatedFunctions>
-            <errorContext>Complex parameter object has missing fields or invalid structure</errorContext>
-        </scenario>
-    </usage>
-    <implementationContext>
-        <note>All SE API functions must validate parameters for type correctness and syntax compliance</note>
-        <note>Input validation should occur early in function execution, before any device communication</note>
-        <note>Type checking should verify that each parameter has the correct data type (string, integer, boolean, object, array, etc.)</note>
-        <note>Syntax validation should verify that parameters conform to format specifications (character sets, formats, structure)</note>
-        <note>Error messages should identify which specific parameter has the error and what type/syntax is expected</note>
-        <note>Different functions may have different parameter requirements - each function should document its parameters fully</note>
-        <note>Complex parameters (objects, arrays) should validate required fields and data structure</note>
-        <note>String parameters should validate allowed character sets and format constraints</note>
-        <note>Numeric parameters should validate ranges and value constraints</note>
-        <note>Date/time parameters should validate format and temporal constraints</note>
-        <note>Client applications should implement parameter validation utilities to reduce parameter syntax errors</note>
-    </implementationContext>
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorParameterSyntax" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+  <name>ErrorParameterSyntax</name>
+  <description>This exception is thrown by SE API functions when one or more parameters have invalid syntax, incorrect data type, malformed structure, or do not conform to the expected format for that parameter. ErrorParameterSyntax indicates that the parameter value cannot be interpreted or processed by the function because it does not match the required syntax or type specification. This is a common exception applicable to any SE API function that accepts parameters, raised during parameter validation when type mismatches or syntax violations are detected.</description>
+  <category>Input Validation - Parameter Type and Syntax</category>
+  <severity>Medium</severity>
+  <thrownBy>
+    <function>authenticateUser</function>
+    <function>configureLogging</function>
+    <function>deregisterClient</function>
+    <function>exportFilteredTransactionLogs</function>
+    <function>exportLogMessages</function>
+    <function>exportLoggingCertificates</function>
+    <function>exportSerialNumbers</function>
+    <function>finishTransaction</function>
+    <function>getComponentVersions</function>
+    <function>getCurrentLoggingSignatureCounters</function>
+    <function>getCurrentNumberOfClients</function>
+    <function>getCurrentNumberOfTransactions</function>
+    <function>getCurrentSeTime</function>
+    <function>getCurrentTransactionCounter</function>
+    <function>getDescription</function>
+    <function>getDeviceHealth</function>
+    <function>getEndOfUsageDate</function>
+    <function>getFreeMemory</function>
+    <function>getLastLogMessage</function>
+    <function>getLastTransactionLogMessage</function>
+    <function>getMaxNumberOfClients</function>
+    <function>getMaxNumberOfTransactions</function>
+    <function>getOpenTransactions</function>
+    <function>getRegisteredClients</function>
+    <function>getSupportedTransactionUpdateVariants</function>
+    <function>getTimeSyncVariant</function>
+    <function>getTotalMemory</function>
+    <function>getTransactionState</function>
+    <function>getUsedMemory</function>
+    <function>registerClient</function>
+    <function>restoreLogsFromBackup</function>
+    <function>selfTest</function>
+    <function>setDescription</function>
+    <function>startTransaction</function>
+    <function>unblockPin</function>
+    <function>updateDevice</function>
+    <function>updateTime</function>
+    <function>updateTransaction</function>
+  </thrownBy>
+  <javadoc>
+    <summary>This class defines the exception ErrorParameterSyntax that is thrown by any SE API method when at least one parameter is of invalid type or syntax.</summary>
+    <description>This exception is thrown when any SE API function receives a parameter with invalid syntax, incorrect data type, or malformed structure. Every SE API function has specific type and format requirements for its parameters. ErrorParameterSyntax is raised when parameters do not conform to these requirements. Common causes include: string parameters with invalid characters or format, numeric parameters that are not numbers, boolean parameters with non-boolean values, complex objects with missing or invalid fields, or any parameter value that cannot be parsed or interpreted according to the function's specification. ErrorParameterSyntax is a common exception that can be raised by any SE API function that accepts parameters. Recovery requires correcting the parameter type or syntax according to the function's documentation and retrying the operation.</description>
+    <constructors>
+      <constructor>
+        <signature>ErrorParameterSyntax()</signature>
+        <description>Constructs a new ErrorParameterSyntax exception with null as the value for its detail message</description>
+      </constructor>
+      <constructor>
+        <signature>ErrorParameterSyntax(String message)</signature>
+        <description>Constructs a new ErrorParameterSyntax exception whereby its detail message is initialized with the passed value</description>
+        <parameter name="message">value for the detail message of the exception, typically identifying which parameter has the syntax error</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorParameterSyntax(String message, Throwable cause)</signature>
+        <description>Constructs a new ErrorParameterSyntax exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorParameterSyntax(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+        <description>Constructs a new ErrorParameterSyntax exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+      </constructor>
+    </constructors>
+  </javadoc>
+  <specification>
+    <source>BSI TR-03151-1</source>
+    <section>3.1 General Error Handling and Input Validation</section>
+    <requirement>All SE API functions SHALL validate input parameters for type correctness and syntax compliance. If any parameter is found to have invalid syntax, incorrect data type, or malformed structure that does not conform to the function's parameter specifications, the function SHALL raise the exception ErrorParameterSyntax. The function SHALL NOT attempt to process or interpret parameters with syntax or type errors. ErrorParameterSyntax is applicable to any SE API function that accepts parameters.</requirement>
+    <applicability>Input validation - applicable to all SE API functions with parameters</applicability>
+    <reference>General Error Handling (3.1)</reference>
+  </specification>
+  <triggerConditions>
+    <condition>
+      <scenario>String parameter with invalid characters</scenario>
+      <description>A string parameter contains characters that are not allowed in that parameter</description>
+      <trigger>A function expects a clientId string containing only alphanumeric characters, but receives "client@123!" with special characters. The function's input validation detects the invalid characters and raises ErrorParameterSyntax.</trigger>
+    </condition>
+    <condition>
+      <scenario>Numeric parameter as string instead of number</scenario>
+      <description>A parameter that should be numeric is provided as a string that cannot be parsed as a number</description>
+      <trigger>A function expects an integer count parameter, but receives the string "abc" instead of a numeric value. The input validation detects the type mismatch and raises ErrorParameterSyntax.</trigger>
+    </condition>
+    <condition>
+      <scenario>Date/time parameter with invalid format</scenario>
+      <description>A date or time parameter does not conform to the expected format</description>
+      <trigger>A function expects a date parameter in ISO 8601 format (YYYY-MM-DD), but receives "25/12/2025" in a different format. The input validation detects the format mismatch and raises ErrorParameterSyntax.</trigger>
+    </condition>
+    <condition>
+      <scenario>Complex parameter object with missing required fields</scenario>
+      <description>A complex object parameter is missing required fields or has invalid structure</description>
+      <trigger>A function expects a configuration object with required fields {name, type, value}, but receives {name, type} without the value field. The validation detects the missing required field and raises ErrorParameterSyntax.</trigger>
+    </condition>
+    <condition>
+      <scenario>Parameter with out-of-range or invalid value</scenario>
+      <description>A parameter value is outside the acceptable range or violates type constraints</description>
+      <trigger>A function expects a port number between 1 and 65535, but receives 99999. The input validation detects the out-of-range value and raises ErrorParameterSyntax.</trigger>
+    </condition>
+  </triggerConditions>
+  <executionSequence>
+    <step number="1">User/application calls an SE API function with parameters</step>
+    <step number="2">Function receives the parameters</step>
+    <step number="3">Function performs type checking on each parameter</step>
+    <step number="3a">If all parameters have correct type → proceed to step 4</step>
+    <step number="3b">If any parameter has incorrect type → ErrorParameterSyntax raised, function exits</step>
+    <step number="4">Function performs syntax validation on each parameter</step>
+    <step number="4a">If all parameters have valid syntax → proceed to step 5</step>
+    <step number="4b">If any parameter has invalid syntax → ErrorParameterSyntax raised, function exits</step>
+    <step number="5">Function performs format validation on parameters (dates, strings, etc.)</step>
+    <step number="5a">If all parameters have valid format → proceed to step 6</step>
+    <step number="5b">If any parameter has invalid format → ErrorParameterSyntax raised, function exits</step>
+    <step number="6">Function performs range validation on numeric and constrained parameters</step>
+    <step number="6a">If all parameters are within valid ranges → proceed to step 7</step>
+    <step number="6b">If any parameter is out of range → ErrorParameterSyntax raised, function exits</step>
+    <step number="7">Function checks for required fields in complex parameters</step>
+    <step number="8">Function proceeds with normal operation logic</step>
+  </executionSequence>
+  <recovery>
+    <step>Review error message - examine the error message to identify which parameter has the syntax error</step>
+    <step>Check function documentation - consult the SE API documentation for the specific function's parameter requirements</step>
+    <step>Review parameter types - verify that each parameter has the correct data type (string, int, boolean, object, etc.)</step>
+    <step>Check string format - if string parameters, verify they conform to required format and allowed character sets</step>
+    <step>Validate date/time format - if date/time parameters, verify they conform to the required format specification</step>
+    <step>Check numeric ranges - if numeric parameters, verify they are within acceptable ranges (e.g., 1-65535 for ports)</step>
+    <step>Verify required fields - if complex object parameters, verify all required fields are present</step>
+    <step>Validate character encoding - ensure parameter values use correct character encoding</step>
+    <step>Review BSI TR-03151-1 specification - consult the official specification for detailed parameter requirements</step>
+    <step>Correct and retry - fix the parameter values to match the required syntax and type, then retry the function call</step>
+  </recovery>
+  <relatedExceptions>
+    <exception>ErrorParameterMismatch</exception>
+    <exception>ErrorInvalidClientIdCharacter</exception>
+    <exception>ErrorInvalidTime</exception>
+    <exception>ErrorInvalidEventType</exception>
+    <exception>ErrorFunctionFailed</exception>
+  </relatedExceptions>
+  <postconditionality>
+    <state name="Function Not Executed">The function does not execute its main operation logic. Input validation failure prevents operation execution.</state>
+    <state name="Device State Unchanged">The device's state remains completely unchanged. No device operations occur as a result of the parameter syntax error.</state>
+    <state name="No Side Effects">The exception does not cause any side effects or state changes on the device.</state>
+    <state name="Parameters Available for Inspection">The invalid parameters remain available for inspection to identify the specific syntax or type issue.</state>
+    <state name="Retry Possible with Corrected Parameters">The operation can be retried immediately after correcting the parameter syntax or type.</state>
+    <state name="No Data Loss">The exception does not result in data loss or corruption of any kind.</state>
+  </postconditionality>
+  <notes>
+    <note>ErrorParameterSyntax is a common exception applicable to any SE API function that accepts parameters</note>
+    <note>This exception indicates a parameter type or syntax error - the function does not attempt to process invalid parameters</note>
+    <note>The exception has Medium severity because it indicates invalid input, not a system failure</note>
+    <note>Input validation (type and syntax checks) occurs before the function's main operation logic begins</note>
+    <note>Each SE API function has specific parameter requirements documented in BSI TR-03151-1 and function-specific documentation</note>
+    <note>Applications should validate parameters before calling SE API functions to prevent ErrorParameterSyntax exceptions</note>
+    <note>Common syntax/type errors include: wrong data type, invalid string format, incorrect date format, out-of-range values</note>
+    <note>Error messages should identify which specific parameter has the syntax or type error for efficient debugging</note>
+    <note>Different functions may have different parameter requirements - always consult function-specific documentation</note>
+    <note>Complex parameters (objects, arrays) may have required fields that must be present and properly structured</note>
+    <note>String parameters may have character set restrictions or format requirements (e.g., alphanumeric only, no special characters)</note>
+    <note>Numeric parameters may have range restrictions (e.g., ports 1-65535, percentages 0-100)</note>
+    <note>Date/time parameters typically require specific formats (e.g., ISO 8601: YYYY-MM-DD)</note>
+    <note>Boolean parameters must be actual boolean values, not strings like "true" or "false"</note>
+    <note>Input validation reduces the chance of ErrorParameterSyntax - implement parameter validation utilities in client applications</note>
+  </notes>
+  <usage>
+    <scenario name="Scenario 1: Client ID Validation with Character Set Checking">
+      <description>An application calls registerClient with a client ID parameter. The application passes a client ID with invalid characters. The function detects the invalid syntax and raises ErrorParameterSyntax. The application corrects the client ID to contain only allowed characters and retries the registration.</description>
+      <relatedFunctions>registerClient, deregisterClient</relatedFunctions>
+      <errorContext>Client ID parameter contains invalid characters</errorContext>
+    </scenario>
+    <scenario name="Scenario 2: Date Parameter Format Validation">
+      <description>An application calls deleteLogMessages with date range parameters. The application provides dates in a different format than expected. The function's input validation detects the format mismatch and raises ErrorParameterSyntax. The application corrects the date format to match the required specification and retries.</description>
+      <relatedFunctions>deleteLogMessages, exportLogMessages</relatedFunctions>
+      <errorContext>Date parameter has incorrect format</errorContext>
+    </scenario>
+    <scenario name="Scenario 3: Parameter Type Validation with Type Checking">
+      <description>An application implements a configuration utility that calls various SE API functions with configuration parameters. The utility performs parameter type checking to ensure each parameter has the correct type (string, integer, boolean, etc.). By validating parameters before calling SE API functions, the utility prevents ErrorParameterSyntax exceptions.</description>
+      <relatedFunctions>initialize, configureLogging, updateDevice</relatedFunctions>
+      <errorContext>Preventive parameter type validation prevents syntax errors</errorContext>
+    </scenario>
+    <scenario name="Scenario 4: Complex Parameter Object Validation">
+      <description>An application calls a function with a complex parameter object. The application must ensure the object has all required fields with correct types. When ErrorParameterSyntax is raised due to missing or incorrectly typed fields, the application corrects the object structure and retries.</description>
+      <relatedFunctions>updateTransaction, startTransaction</relatedFunctions>
+      <errorContext>Complex parameter object has missing fields or invalid structure</errorContext>
+    </scenario>
+  </usage>
+  <implementationContext>
+    <note>All SE API functions must validate parameters for type correctness and syntax compliance</note>
+    <note>Input validation should occur early in function execution, before any device communication</note>
+    <note>Type checking should verify that each parameter has the correct data type (string, integer, boolean, object, array, etc.)</note>
+    <note>Syntax validation should verify that parameters conform to format specifications (character sets, formats, structure)</note>
+    <note>Error messages should identify which specific parameter has the error and what type/syntax is expected</note>
+    <note>Different functions may have different parameter requirements - each function should document its parameters fully</note>
+    <note>Complex parameters (objects, arrays) should validate required fields and data structure</note>
+    <note>String parameters should validate allowed character sets and format constraints</note>
+    <note>Numeric parameters should validate ranges and value constraints</note>
+    <note>Date/time parameters should validate format and temporal constraints</note>
+    <note>Client applications should implement parameter validation utilities to reduce parameter syntax errors</note>
+  </implementationContext>
 </exception>

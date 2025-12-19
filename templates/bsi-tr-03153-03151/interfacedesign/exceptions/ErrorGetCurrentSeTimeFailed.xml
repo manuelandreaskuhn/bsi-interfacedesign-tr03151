@@ -1,162 +1,162 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<exception id="ErrorGetCurrentSeTimeFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
-    <name>ErrorGetCurrentSeTimeFailed</name>
-    <description>This exception is thrown if the SE API function getCurrentSeTime fails to obtain the current time of the Secure Element. The function attempts to retrieve the current time maintained by the Secure Element, but the retrieval process fails before the time value can be determined and returned.</description>
-    <category>Time Management - Information Retrieval</category>
-    <severity>Medium</severity>
-    <javadoc>
-        <summary>This class defines the exception ErrorGetCurrentSeTimeFailed that is thrown if the SE API function getCurrentSeTime fails to obtain the current time of the Secure Element.</summary>
-        <description>This exception is thrown when the getCurrentSeTime function cannot retrieve the current time value from the Secure Element's internal clock. The Secure Element maintains an independent time source that is used for transaction timestamps, event logging, certificate validity checking, and time-based access control decisions. ErrorGetCurrentSeTimeFailed indicates that the Secure Element cannot provide its current time due to hardware clock malfunction, internal time management system errors, storage corruption, communication failures, or Secure Element state restrictions. When this exception occurs, no time data is returned and applications cannot rely on Secure Element time for their operations. Recovery typically involves device verification, communication checks, potential device time synchronization, and possible hardware diagnosis if the failure persists.</description>
-        <constructors>
-            <constructor>
-                <signature>ErrorGetCurrentSeTimeFailed()</signature>
-                <description>Constructs a new ErrorGetCurrentSeTimeFailed exception with null as the value for its detail message</description>
-            </constructor>
-            <constructor>
-                <signature>ErrorGetCurrentSeTimeFailed(String message)</signature>
-                <description>Constructs a new ErrorGetCurrentSeTimeFailed exception whereby its detail message is initialized with the passed value</description>
-                <parameter name="message">value for the detail message of the exception, typically describing the Secure Element time retrieval failure</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorGetCurrentSeTimeFailed(String message, Throwable cause)</signature>
-                <description>Constructs a new ErrorGetCurrentSeTimeFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorGetCurrentSeTimeFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-                <description>Constructs a new ErrorGetCurrentSeTimeFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-            </constructor>
-        </constructors>
-    </javadoc>
-    <specification>
-        <source>BSI TR-03151-1</source>
-        <section>3.3.8 Time Management - getCurrentSeTime</section>
-        <requirement>The function getCurrentSeTime SHALL query the Secure Element to obtain its current internal time value. If the Secure Element cannot provide or return the required time information, the function SHALL raise the exception ErrorGetCurrentSeTimeFailed and exit without returning any time data. The Secure Element time retrieval failure indicates the Secure Element's time query functionality could not complete successfully.</requirement>
-        <applicability>Time management operations - getCurrentSeTime function only</applicability>
-        <reference>getCurrentSeTime – Function (3.3.8)</reference>
-    </specification>
-    <thrownBy>
-        <function>getCurrentSeTime</function>
-    </thrownBy>
-    <triggerConditions>
-        <condition>
-            <scenario>Secure Element clock/timer hardware failure</scenario>
-            <description>The Secure Element's internal clock hardware malfunctions or stops functioning, making time information unavailable from the device</description>
-            <trigger>The Secure Element's time management hardware fails, stops counting, or returns invalid time data. When getCurrentSeTime is called, the time retrieval query is sent to the Secure Element, but the hardware cannot provide a valid time response. The function receives a failure status from the Secure Element, triggering ErrorGetCurrentSeTimeFailed.</trigger>
-        </condition>
-        <condition>
-            <scenario>Secure Element time storage corruption</scenario>
-            <description>The Secure Element's internal time storage or time management data structures become corrupted or inaccessible</description>
-            <trigger>The Secure Element's memory containing time data or time management tables becomes corrupted, experiences data loss, or is marked as inaccessible due to storage errors. When getCurrentSeTime attempts to read the current time from storage, the data cannot be reliably retrieved, triggering ErrorGetCurrentSeTimeFailed.</trigger>
-        </condition>
-        <condition>
-            <scenario>Secure Element internal time management system error</scenario>
-            <description>The Secure Element's time management firmware, software, or internal processes encounter critical errors that prevent time value calculation or retrieval</description>
-            <trigger>The Secure Element's time management subsystem (responsible for maintaining time values, managing time updates, and tracking elapsed time) encounters an internal error, deadlock, or exception. When getCurrentSeTime is called, the time management system cannot process the request, triggering ErrorGetCurrentSeTimeFailed.</trigger>
-        </condition>
-        <condition>
-            <scenario>Device-to-Secure Element communication failure during time query</scenario>
-            <description>The communication channel between the device and Secure Element is disrupted, preventing successful transmission of the time query or retrieval of the time response</description>
-            <trigger>A communication failure occurs while getCurrentSeTime transmits the time query to the Secure Element or while receiving the time response. The command may be corrupted, the response may be incomplete, or the communication link may be temporarily unavailable. The function receives a communication error status, triggering ErrorGetCurrentSeTimeFailed.</trigger>
-        </condition>
-        <condition>
-            <scenario>Secure Element in restricted or error state prohibiting time access</scenario>
-            <description>The Secure Element is in a restricted operational state or error state that prevents external queries for time information</description>
-            <trigger>The Secure Element enters a locked, restricted, or error state where certain operations including time queries are not permitted. When getCurrentSeTime is called and the Secure Element's state prohibits time access, the function receives a state-related rejection, triggering ErrorGetCurrentSeTimeFailed.</trigger>
-        </condition>
-    </triggerConditions>
-    <executionSequence>
-        <step number="1">User/application calls getCurrentSeTime function on device</step>
-        <step number="2">Function validates input parameters and checks authentication status (if required by referencing guideline)</step>
-        <step number="3">Function checks authorization for time information access (if required by referencing guideline)</step>
-        <step number="4">Function verifies device is properly initialized and operational</step>
-        <step number="5">Function initiates communication channel to Secure Element and prepares time query command</step>
-        <step number="6">Function transmits time query command to Secure Element requesting current time value</step>
-        <step number="6a">If Secure Element responds with failure status (clock malfunction, storage error, internal error) → ErrorGetCurrentSeTimeFailed raised, function exits without time data</step>
-        <step number="6b">If communication failure occurs during query transmission or response reception → ErrorGetCurrentSeTimeFailed raised, function exits</step>
-        <step number="7">If successful, function receives time value from Secure Element</step>
-        <step number="8">Function validates time value for correctness (format, range, logical consistency)</step>
-        <step number="9">Function closes Secure Element communication channel</step>
-        <step number="10">Function returns valid time value to caller</step>
-    </executionSequence>
-    <recovery>
-        <step>Verify device operational status - confirm device is initialized, responding to other operations, and not in an error state</step>
-        <step>Verify Secure Element accessibility - confirm device can communicate with Secure Element through diagnostic commands</step>
-        <step>Check device initialization - ensure device has been properly initialized with initDevice before attempting getCurrentSeTime</step>
-        <step>Retry getCurrentSeTime operation - attempt the function call again as the failure may be transient</step>
-        <step>Review device diagnostics for time management subsystem health - query device for diagnostic information about Secure Element time status</step>
-        <step>Verify Secure Element clock status through device manufacturer diagnostics - check if hardware clock is functioning</step>
-        <step>Attempt device time synchronization with updateTime function - if supported, attempt to reinitialize Secure Element time management</step>
-        <step>Cross-validate time information from alternative sources - check if time can be embedded in cryptographic operations or obtained through other SE API functions</step>
-        <step>Implement comprehensive error logging and monitoring - log this failure consistently to identify patterns (transient vs. persistent, frequency, correlation with other failures)</step>
-        <step>If failure is persistent and suspected hardware issue, contact device manufacturer or consider device replacement - repeated time retrieval failures indicate serious Secure Element clock/time management hardware problems</step>
-    </recovery>
-    <relatedExceptions>
-        <exception>ErrorFunctionFailed</exception>
-        <exception>ErrorDeviceNotInitialized</exception>
-        <exception>ErrorTimeSyncVariantNotSupported</exception>
-        <exception>ErrorUpdateTimeFailed</exception>
-    </relatedExceptions>
-    <postconditionality>
-        <state name="Device Operational State">Device remains fully operational and unmodified. The failure to retrieve time does not affect device initialization state, internal memory, stored data, or the ability to perform other operations. All device components remain in their pre-call state.</state>
-        <state name="Time Data Return Status">No time value is returned to the caller. The function exits without providing any time information. Applications must not assume a default or cached time value; they must handle the exception as indicating time information is unavailable.</state>
-        <state name="Secure Element State">Secure Element remains unchanged by the failed time query. No state modifications, data updates, or configuration changes occur. The Secure Element continues to maintain and advance its internal time independently regardless of the retrieval failure.</state>
-        <state name="Time Advancement Continuity">Secure Element's internal clock continues to advance time independently. The failure to retrieve the current time value does not stop or pause time tracking. Subsequent attempts to query time or operations depending on time may succeed once the underlying issue is resolved.</state>
-        <state name="No Cascading State Effects">No cascading state inconsistencies or secondary failures occur as a result of the time retrieval failure. Device internal consistency is maintained. Other SE API functions continue to operate normally without state corruption.</state>
-        <state name="Recovery Preconditions Met">The device state after exception is consistent and allows for recovery operations. The underlying issue (clock malfunction, communication error, storage corruption) remains present, but the device is stable enough to accept diagnostic queries or recovery attempts.</state>
-    </postconditionality>
-    <notes>
-        <note>ErrorGetCurrentSeTimeFailed is thrown ONLY by the getCurrentSeTime function - it is the most specific and precise exception for Secure Element time retrieval failures</note>
-        <note>This exception indicates a failure in the Secure Element's ability to report its current time. It is an informational failure specific to time access, not a general critical operational failure</note>
-        <note>Critical distinction from ErrorFunctionFailed: ErrorGetCurrentSeTimeFailed specifically indicates time information is unavailable at the Secure Element level, while ErrorFunctionFailed indicates broader unspecified critical failures</note>
-        <note>Exception is raised during the time retrieval phase (steps 6-7), after device initialization and authentication checks have passed</note>
-        <note>After this exception, the Secure Element remains unchanged and continues to track time internally. The time query can be retried once the underlying issue is resolved</note>
-        <note>This exception has Medium severity because it prevents users from querying Secure Element time (impacting logging, timestamps, time-based validation) but does not immediately prevent device operation or other SE API functions</note>
-        <note>Secure Element time value may differ significantly from host system time if synchronization is not maintained or if Secure Element has different time reference (e.g., device startup time vs. epoch time)</note>
-        <note>The exception indicates time data cannot be reliably obtained; applications must not implement workarounds using system time without explicit synchronization verification</note>
-        <note>Failure scenarios range from transient (temporary communication issues, temporary state) to persistent (hardware clock malfunction, storage corruption, firmware error)</note>
-        <note>If this exception occurs frequently or persistently, it indicates serious issues with Secure Element time management hardware or firmware that require diagnostic investigation or device replacement</note>
-        <note>Time retrieval is a read-only query; failure does not modify any Secure Element state, so recovery typically requires only retrying the query once underlying issue is resolved</note>
-        <note>Different device models and firmware versions may support different time representations (milliseconds since epoch, device uptime, etc.) - consult device specifications</note>
-        <note>Time information is essential for multiple SE API operations: transaction timestamps, event logging, certificate validity checking, access control decisions, and clock synchronization</note>
-        <note>Applications must implement appropriate error handling and fallback strategies for time retrieval failures, especially in high-availability or mission-critical deployments</note>
-        <note>Repeated failures may indicate device needs firmware update, hardware service, or replacement - manufacturer support should be engaged for persistent issues</note>
-    </notes>
-    <usage>
-        <scenario name="Scenario 1: Time Synchronization Status Verification Before Critical Operations">
-            <description>An application must verify that Secure Element time is synchronized with system time before performing time-sensitive operations such as cryptographic signing, certificate validation, or transaction timestamping. The application retrieves the current Secure Element time and compares it to system time. If ErrorGetCurrentSeTimeFailed is raised, the application cannot verify synchronization and must conservatively reject time-sensitive operations to prevent invalid timestamps.</description>
-            <relatedFunctions>getCurrentSeTime, getTimeSyncVariant, updateTime</relatedFunctions>
-            <errorContext>Time synchronization status cannot be verified due to unavailable Secure Element time information</errorContext>
-        </scenario>
-        <scenario name="Scenario 2: Event Logging Timestamp Generation and Validation">
-            <description>An audit logging system uses Secure Element time to generate authoritative timestamps for all logged events. Before creating a log entry, the system retrieves the current Secure Element time to ensure logged timestamps are accurate and from the trusted time source. If ErrorGetCurrentSeTimeFailed is raised, the logging system cannot generate trustworthy timestamps and must either use fallback time sources or reject the event logging.</description>
-            <relatedFunctions>getCurrentSeTime, logging operations</relatedFunctions>
-            <errorContext>Secure Element time unavailable for authoritative event timestamp generation</errorContext>
-        </scenario>
-        <scenario name="Scenario 3: Certificate Validity Window Checking During Authentication">
-            <description>An application performs client authentication requiring certificate validity verification. The application must check if the presented certificate is within its validity window at the current time. To ensure accurate time-based validation, the application retrieves the Secure Element's current time and uses it as the reference point for validity checking. If ErrorGetCurrentSeTimeFailed is raised, the application cannot reliably verify certificate validity against the Secure Element's time perspective and must reject authentication.</description>
-            <relatedFunctions>getCurrentSeTime, certificate validation</relatedFunctions>
-            <errorContext>Secure Element time unavailable for certificate validity window verification</errorContext>
-        </scenario>
-        <scenario name="Scenario 4: System Health Monitoring and Diagnostic Data Collection">
-            <description>A system management application collects comprehensive device diagnostics including Secure Element time for monitoring and support purposes. As part of the diagnostic snapshot, the application queries getCurrentSeTime to document the device's current time state. If ErrorGetCurrentSeTimeFailed is raised, the application logs this as a diagnostic finding indicating time management issues, which triggers investigation into potential Secure Element clock failures or communication problems.</description>
-            <relatedFunctions>getCurrentSeTime, diagnostics, health monitoring</relatedFunctions>
-            <errorContext>Secure Element time information unavailable during system health and diagnostic data collection</errorContext>
-        </scenario>
-    </usage>
-    <implementationContext>
-        <note>The getCurrentSeTime function retrieves the current time maintained by the Secure Element's independent internal clock, which may differ from host system time</note>
-        <note>Secure Element time is independent of system time and maintained separately by the Secure Element's hardware clock. Periodic synchronization using the updateTime function may be required to maintain consistency.</note>
-        <note>Time values are typically represented in device-specific formats (e.g., milliseconds since epoch, device startup time, or vendor-specific time representation) - consult device specification documentation</note>
-        <note>The Secure Element's time is critical for generating trustworthy timestamps in logged events, transactions, audit trails, and time-based cryptographic operations</note>
-        <note>Different time synchronization variants (returned by getTimeSyncVariant) determine how the Secure Element's clock is maintained, updated, and how often synchronization is required</note>
-        <note>If Secure Element time retrieval fails but other Secure Element operations continue successfully, the issue is specific to the time query/access mechanism, not to general time tracking or Secure Element functionality</note>
-        <note>Hardware clock failures, storage corruption, or internal state errors in the Secure Element persist until corrected - simple retries may not resolve persistent clock hardware issues</note>
-        <note>Time retrieval is a read-only operation; ErrorGetCurrentSeTimeFailed does not indicate state corruption or require state recovery - it indicates the time information source (hardware clock) is unavailable</note>
-    </implementationContext>
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorGetCurrentSeTimeFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+  <name>ErrorGetCurrentSeTimeFailed</name>
+  <description>This exception is thrown if the SE API function getCurrentSeTime fails to obtain the current time of the Secure Element. The function attempts to retrieve the current time maintained by the Secure Element, but the retrieval process fails before the time value can be determined and returned.</description>
+  <category>Time Management - Information Retrieval</category>
+  <severity>Medium</severity>
+  <javadoc>
+    <summary>This class defines the exception ErrorGetCurrentSeTimeFailed that is thrown if the SE API function getCurrentSeTime fails to obtain the current time of the Secure Element.</summary>
+    <description>This exception is thrown when the getCurrentSeTime function cannot retrieve the current time value from the Secure Element's internal clock. The Secure Element maintains an independent time source that is used for transaction timestamps, event logging, certificate validity checking, and time-based access control decisions. ErrorGetCurrentSeTimeFailed indicates that the Secure Element cannot provide its current time due to hardware clock malfunction, internal time management system errors, storage corruption, communication failures, or Secure Element state restrictions. When this exception occurs, no time data is returned and applications cannot rely on Secure Element time for their operations. Recovery typically involves device verification, communication checks, potential device time synchronization, and possible hardware diagnosis if the failure persists.</description>
+    <constructors>
+      <constructor>
+        <signature>ErrorGetCurrentSeTimeFailed()</signature>
+        <description>Constructs a new ErrorGetCurrentSeTimeFailed exception with null as the value for its detail message</description>
+      </constructor>
+      <constructor>
+        <signature>ErrorGetCurrentSeTimeFailed(String message)</signature>
+        <description>Constructs a new ErrorGetCurrentSeTimeFailed exception whereby its detail message is initialized with the passed value</description>
+        <parameter name="message">value for the detail message of the exception, typically describing the Secure Element time retrieval failure</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorGetCurrentSeTimeFailed(String message, Throwable cause)</signature>
+        <description>Constructs a new ErrorGetCurrentSeTimeFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorGetCurrentSeTimeFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+        <description>Constructs a new ErrorGetCurrentSeTimeFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+      </constructor>
+    </constructors>
+  </javadoc>
+  <specification>
+    <source>BSI TR-03151-1</source>
+    <section>3.3.8 Time Management - getCurrentSeTime</section>
+    <requirement>The function getCurrentSeTime SHALL query the Secure Element to obtain its current internal time value. If the Secure Element cannot provide or return the required time information, the function SHALL raise the exception ErrorGetCurrentSeTimeFailed and exit without returning any time data. The Secure Element time retrieval failure indicates the Secure Element's time query functionality could not complete successfully.</requirement>
+    <applicability>Time management operations - getCurrentSeTime function only</applicability>
+    <reference>getCurrentSeTime – Function (3.3.8)</reference>
+  </specification>
+  <thrownBy>
+    <function>getCurrentSeTime</function>
+  </thrownBy>
+  <triggerConditions>
+    <condition>
+      <scenario>Secure Element clock/timer hardware failure</scenario>
+      <description>The Secure Element's internal clock hardware malfunctions or stops functioning, making time information unavailable from the device</description>
+      <trigger>The Secure Element's time management hardware fails, stops counting, or returns invalid time data. When getCurrentSeTime is called, the time retrieval query is sent to the Secure Element, but the hardware cannot provide a valid time response. The function receives a failure status from the Secure Element, triggering ErrorGetCurrentSeTimeFailed.</trigger>
+    </condition>
+    <condition>
+      <scenario>Secure Element time storage corruption</scenario>
+      <description>The Secure Element's internal time storage or time management data structures become corrupted or inaccessible</description>
+      <trigger>The Secure Element's memory containing time data or time management tables becomes corrupted, experiences data loss, or is marked as inaccessible due to storage errors. When getCurrentSeTime attempts to read the current time from storage, the data cannot be reliably retrieved, triggering ErrorGetCurrentSeTimeFailed.</trigger>
+    </condition>
+    <condition>
+      <scenario>Secure Element internal time management system error</scenario>
+      <description>The Secure Element's time management firmware, software, or internal processes encounter critical errors that prevent time value calculation or retrieval</description>
+      <trigger>The Secure Element's time management subsystem (responsible for maintaining time values, managing time updates, and tracking elapsed time) encounters an internal error, deadlock, or exception. When getCurrentSeTime is called, the time management system cannot process the request, triggering ErrorGetCurrentSeTimeFailed.</trigger>
+    </condition>
+    <condition>
+      <scenario>Device-to-Secure Element communication failure during time query</scenario>
+      <description>The communication channel between the device and Secure Element is disrupted, preventing successful transmission of the time query or retrieval of the time response</description>
+      <trigger>A communication failure occurs while getCurrentSeTime transmits the time query to the Secure Element or while receiving the time response. The command may be corrupted, the response may be incomplete, or the communication link may be temporarily unavailable. The function receives a communication error status, triggering ErrorGetCurrentSeTimeFailed.</trigger>
+    </condition>
+    <condition>
+      <scenario>Secure Element in restricted or error state prohibiting time access</scenario>
+      <description>The Secure Element is in a restricted operational state or error state that prevents external queries for time information</description>
+      <trigger>The Secure Element enters a locked, restricted, or error state where certain operations including time queries are not permitted. When getCurrentSeTime is called and the Secure Element's state prohibits time access, the function receives a state-related rejection, triggering ErrorGetCurrentSeTimeFailed.</trigger>
+    </condition>
+  </triggerConditions>
+  <executionSequence>
+    <step number="1">User/application calls getCurrentSeTime function on device</step>
+    <step number="2">Function validates input parameters and checks authentication status (if required by referencing guideline)</step>
+    <step number="3">Function checks authorization for time information access (if required by referencing guideline)</step>
+    <step number="4">Function verifies device is properly initialized and operational</step>
+    <step number="5">Function initiates communication channel to Secure Element and prepares time query command</step>
+    <step number="6">Function transmits time query command to Secure Element requesting current time value</step>
+    <step number="6a">If Secure Element responds with failure status (clock malfunction, storage error, internal error) → ErrorGetCurrentSeTimeFailed raised, function exits without time data</step>
+    <step number="6b">If communication failure occurs during query transmission or response reception → ErrorGetCurrentSeTimeFailed raised, function exits</step>
+    <step number="7">If successful, function receives time value from Secure Element</step>
+    <step number="8">Function validates time value for correctness (format, range, logical consistency)</step>
+    <step number="9">Function closes Secure Element communication channel</step>
+    <step number="10">Function returns valid time value to caller</step>
+  </executionSequence>
+  <recovery>
+    <step>Verify device operational status - confirm device is initialized, responding to other operations, and not in an error state</step>
+    <step>Verify Secure Element accessibility - confirm device can communicate with Secure Element through diagnostic commands</step>
+    <step>Check device initialization - ensure device has been properly initialized with initDevice before attempting getCurrentSeTime</step>
+    <step>Retry getCurrentSeTime operation - attempt the function call again as the failure may be transient</step>
+    <step>Review device diagnostics for time management subsystem health - query device for diagnostic information about Secure Element time status</step>
+    <step>Verify Secure Element clock status through device manufacturer diagnostics - check if hardware clock is functioning</step>
+    <step>Attempt device time synchronization with updateTime function - if supported, attempt to reinitialize Secure Element time management</step>
+    <step>Cross-validate time information from alternative sources - check if time can be embedded in cryptographic operations or obtained through other SE API functions</step>
+    <step>Implement comprehensive error logging and monitoring - log this failure consistently to identify patterns (transient vs. persistent, frequency, correlation with other failures)</step>
+    <step>If failure is persistent and suspected hardware issue, contact device manufacturer or consider device replacement - repeated time retrieval failures indicate serious Secure Element clock/time management hardware problems</step>
+  </recovery>
+  <relatedExceptions>
+    <exception>ErrorFunctionFailed</exception>
+    <exception>ErrorDeviceNotInitialized</exception>
+    <exception>ErrorTimeSyncVariantNotSupported</exception>
+    <exception>ErrorUpdateTimeFailed</exception>
+  </relatedExceptions>
+  <postconditionality>
+    <state name="Device Operational State">Device remains fully operational and unmodified. The failure to retrieve time does not affect device initialization state, internal memory, stored data, or the ability to perform other operations. All device components remain in their pre-call state.</state>
+    <state name="Time Data Return Status">No time value is returned to the caller. The function exits without providing any time information. Applications must not assume a default or cached time value; they must handle the exception as indicating time information is unavailable.</state>
+    <state name="Secure Element State">Secure Element remains unchanged by the failed time query. No state modifications, data updates, or configuration changes occur. The Secure Element continues to maintain and advance its internal time independently regardless of the retrieval failure.</state>
+    <state name="Time Advancement Continuity">Secure Element's internal clock continues to advance time independently. The failure to retrieve the current time value does not stop or pause time tracking. Subsequent attempts to query time or operations depending on time may succeed once the underlying issue is resolved.</state>
+    <state name="No Cascading State Effects">No cascading state inconsistencies or secondary failures occur as a result of the time retrieval failure. Device internal consistency is maintained. Other SE API functions continue to operate normally without state corruption.</state>
+    <state name="Recovery Preconditions Met">The device state after exception is consistent and allows for recovery operations. The underlying issue (clock malfunction, communication error, storage corruption) remains present, but the device is stable enough to accept diagnostic queries or recovery attempts.</state>
+  </postconditionality>
+  <notes>
+    <note>ErrorGetCurrentSeTimeFailed is thrown ONLY by the getCurrentSeTime function - it is the most specific and precise exception for Secure Element time retrieval failures</note>
+    <note>This exception indicates a failure in the Secure Element's ability to report its current time. It is an informational failure specific to time access, not a general critical operational failure</note>
+    <note>Critical distinction from ErrorFunctionFailed: ErrorGetCurrentSeTimeFailed specifically indicates time information is unavailable at the Secure Element level, while ErrorFunctionFailed indicates broader unspecified critical failures</note>
+    <note>Exception is raised during the time retrieval phase (steps 6-7), after device initialization and authentication checks have passed</note>
+    <note>After this exception, the Secure Element remains unchanged and continues to track time internally. The time query can be retried once the underlying issue is resolved</note>
+    <note>This exception has Medium severity because it prevents users from querying Secure Element time (impacting logging, timestamps, time-based validation) but does not immediately prevent device operation or other SE API functions</note>
+    <note>Secure Element time value may differ significantly from host system time if synchronization is not maintained or if Secure Element has different time reference (e.g., device startup time vs. epoch time)</note>
+    <note>The exception indicates time data cannot be reliably obtained; applications must not implement workarounds using system time without explicit synchronization verification</note>
+    <note>Failure scenarios range from transient (temporary communication issues, temporary state) to persistent (hardware clock malfunction, storage corruption, firmware error)</note>
+    <note>If this exception occurs frequently or persistently, it indicates serious issues with Secure Element time management hardware or firmware that require diagnostic investigation or device replacement</note>
+    <note>Time retrieval is a read-only query; failure does not modify any Secure Element state, so recovery typically requires only retrying the query once underlying issue is resolved</note>
+    <note>Different device models and firmware versions may support different time representations (milliseconds since epoch, device uptime, etc.) - consult device specifications</note>
+    <note>Time information is essential for multiple SE API operations: transaction timestamps, event logging, certificate validity checking, access control decisions, and clock synchronization</note>
+    <note>Applications must implement appropriate error handling and fallback strategies for time retrieval failures, especially in high-availability or mission-critical deployments</note>
+    <note>Repeated failures may indicate device needs firmware update, hardware service, or replacement - manufacturer support should be engaged for persistent issues</note>
+  </notes>
+  <usage>
+    <scenario name="Scenario 1: Time Synchronization Status Verification Before Critical Operations">
+      <description>An application must verify that Secure Element time is synchronized with system time before performing time-sensitive operations such as cryptographic signing, certificate validation, or transaction timestamping. The application retrieves the current Secure Element time and compares it to system time. If ErrorGetCurrentSeTimeFailed is raised, the application cannot verify synchronization and must conservatively reject time-sensitive operations to prevent invalid timestamps.</description>
+      <relatedFunctions>getCurrentSeTime, getTimeSyncVariant, updateTime</relatedFunctions>
+      <errorContext>Time synchronization status cannot be verified due to unavailable Secure Element time information</errorContext>
+    </scenario>
+    <scenario name="Scenario 2: Event Logging Timestamp Generation and Validation">
+      <description>An audit logging system uses Secure Element time to generate authoritative timestamps for all logged events. Before creating a log entry, the system retrieves the current Secure Element time to ensure logged timestamps are accurate and from the trusted time source. If ErrorGetCurrentSeTimeFailed is raised, the logging system cannot generate trustworthy timestamps and must either use fallback time sources or reject the event logging.</description>
+      <relatedFunctions>getCurrentSeTime, logging operations</relatedFunctions>
+      <errorContext>Secure Element time unavailable for authoritative event timestamp generation</errorContext>
+    </scenario>
+    <scenario name="Scenario 3: Certificate Validity Window Checking During Authentication">
+      <description>An application performs client authentication requiring certificate validity verification. The application must check if the presented certificate is within its validity window at the current time. To ensure accurate time-based validation, the application retrieves the Secure Element's current time and uses it as the reference point for validity checking. If ErrorGetCurrentSeTimeFailed is raised, the application cannot reliably verify certificate validity against the Secure Element's time perspective and must reject authentication.</description>
+      <relatedFunctions>getCurrentSeTime, certificate validation</relatedFunctions>
+      <errorContext>Secure Element time unavailable for certificate validity window verification</errorContext>
+    </scenario>
+    <scenario name="Scenario 4: System Health Monitoring and Diagnostic Data Collection">
+      <description>A system management application collects comprehensive device diagnostics including Secure Element time for monitoring and support purposes. As part of the diagnostic snapshot, the application queries getCurrentSeTime to document the device's current time state. If ErrorGetCurrentSeTimeFailed is raised, the application logs this as a diagnostic finding indicating time management issues, which triggers investigation into potential Secure Element clock failures or communication problems.</description>
+      <relatedFunctions>getCurrentSeTime, diagnostics, health monitoring</relatedFunctions>
+      <errorContext>Secure Element time information unavailable during system health and diagnostic data collection</errorContext>
+    </scenario>
+  </usage>
+  <implementationContext>
+    <note>The getCurrentSeTime function retrieves the current time maintained by the Secure Element's independent internal clock, which may differ from host system time</note>
+    <note>Secure Element time is independent of system time and maintained separately by the Secure Element's hardware clock. Periodic synchronization using the updateTime function may be required to maintain consistency.</note>
+    <note>Time values are typically represented in device-specific formats (e.g., milliseconds since epoch, device startup time, or vendor-specific time representation) - consult device specification documentation</note>
+    <note>The Secure Element's time is critical for generating trustworthy timestamps in logged events, transactions, audit trails, and time-based cryptographic operations</note>
+    <note>Different time synchronization variants (returned by getTimeSyncVariant) determine how the Secure Element's clock is maintained, updated, and how often synchronization is required</note>
+    <note>If Secure Element time retrieval fails but other Secure Element operations continue successfully, the issue is specific to the time query/access mechanism, not to general time tracking or Secure Element functionality</note>
+    <note>Hardware clock failures, storage corruption, or internal state errors in the Secure Element persist until corrected - simple retries may not resolve persistent clock hardware issues</note>
+    <note>Time retrieval is a read-only operation; ErrorGetCurrentSeTimeFailed does not indicate state corruption or require state recovery - it indicates the time information source (hardware clock) is unavailable</note>
+  </implementationContext>
 </exception>

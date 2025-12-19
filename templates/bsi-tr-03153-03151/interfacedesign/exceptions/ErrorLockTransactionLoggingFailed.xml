@@ -1,167 +1,167 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<exception id="ErrorLockTransactionLoggingFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
-    <name>ErrorLockTransactionLoggingFailed</name>
-    <description>This exception is thrown if the SE API function lockTransactionLogging fails to lock the transaction logging functionality on the Secure Element. The function attempts to transition the transaction logging system into a locked state to prevent further log entries from being recorded, but the locking operation encounters a failure condition that prevents this transition from being completed successfully. ErrorLockTransactionLoggingFailed indicates that the transaction logging system remains in its current state (unlocked or partially locked) and cannot be reliably transitioned to the locked state.</description>
-    <category>Transaction Logging - Lock Management</category>
-    <severity>High</severity>
-    <javadoc>
-        <summary>This class defines the exception ErrorLockTransactionLoggingFailed that is thrown if the transaction logging lock operation fails.</summary>
-        <description>This exception is thrown when the lockTransactionLogging function cannot successfully lock the transaction logging functionality on the Secure Element. The lockTransactionLogging operation is used to prevent any further transaction log entries from being recorded or modified. When this operation fails, it indicates that the transaction logging system could not be transitioned to the locked state, leaving the logging system in an indeterminate or potentially unsafe state. ErrorLockTransactionLoggingFailed is raised to inform the caller that the requested lock operation did not complete and the transaction logging system cannot be guaranteed to be in a locked (read-only) state. Recovery requires investigating the cause of the lock operation failure and retrying the operation, or potentially using alternative transaction logging management functions.</description>
-        <constructors>
-            <constructor>
-                <signature>ErrorLockTransactionLoggingFailed()</signature>
-                <description>Constructs a new ErrorLockTransactionLoggingFailed exception with null as the value for its detail message</description>
-            </constructor>
-            <constructor>
-                <signature>ErrorLockTransactionLoggingFailed(String message)</signature>
-                <description>Constructs a new ErrorLockTransactionLoggingFailed exception whereby its detail message is initialized with the passed value</description>
-                <parameter name="message">value for the detail message of the exception, typically describing the transaction logging lock failure reason</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorLockTransactionLoggingFailed(String message, Throwable cause)</signature>
-                <description>Constructs a new ErrorLockTransactionLoggingFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorLockTransactionLoggingFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-                <description>Constructs a new ErrorLockTransactionLoggingFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-            </constructor>
-        </constructors>
-    </javadoc>
-    <specification>
-        <source>BSI TR-03151-1</source>
-        <section>3.3.3 Transaction Logging Management - lockTransactionLogging</section>
-        <requirement>The function lockTransactionLogging SHALL attempt to lock the transaction logging functionality on the Secure Element to prevent further transaction log entries from being recorded or modified. If the lock operation cannot be successfully completed due to communication failure, device error, permission restriction, or other failure condition, the function SHALL raise the exception ErrorLockTransactionLoggingFailed. The transaction logging system state remains unchanged if the lock operation fails - no partial locking shall occur.</requirement>
-        <applicability>Transaction logging lock operations - lockTransactionLogging function only</applicability>
-        <reference>lockTransactionLogging – Function (3.3.3)</reference>
-    </specification>
-    <thrownBy>
-        <function>lockTransactionLogging</function>
-    </thrownBy>
-    <triggerConditions>
-        <condition>
-            <scenario>Secure Element communication failure during lock operation</scenario>
-            <description>Communication with the Secure Element fails while attempting to transmit or receive the lock command</description>
-            <trigger>The lockTransactionLogging function initiates communication with the Secure Element to send the lock command, but the connection is lost, timeout occurs, or transmission fails. The Secure Element does not receive the complete lock command or the response is not received by the caller. The lock operation cannot be confirmed and ErrorLockTransactionLoggingFailed is raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Secure Element reports lock operation failure</scenario>
-            <description>The Secure Element receives and processes the lock command but reports a failure status</description>
-            <trigger>The Secure Element successfully receives the lockTransactionLogging command but cannot execute it due to internal error, resource limitation, or device state incompatibility. The device responds with a failure status code, causing ErrorLockTransactionLoggingFailed to be raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Insufficient permissions or access control restrictions</scenario>
-            <description>The caller lacks the necessary permissions or credentials to lock the transaction logging functionality</description>
-            <trigger>The lockTransactionLogging function checks authorization requirements and determines that the caller does not have permission to lock transaction logging. The operation is rejected and ErrorLockTransactionLoggingFailed is raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Transaction logging system in incompatible state</scenario>
-            <description>The transaction logging system is in a state that prevents the lock operation from being executed</description>
-            <trigger>The Secure Element's transaction logging system is disabled, uninitialized, or in a state incompatible with lock operations. The lock command cannot be executed and ErrorLockTransactionLoggingFailed is raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Device resource exhaustion affecting lock management</scenario>
-            <description>The device lacks sufficient resources to complete the lock operation</description>
-            <trigger>The device is low on memory, processing capacity, or other resources required to execute the lock operation. The lock operation fails due to resource constraints and ErrorLockTransactionLoggingFailed is raised.</trigger>
-        </condition>
-    </triggerConditions>
-    <executionSequence>
-        <step number="1">User/application calls lockTransactionLogging function to lock transaction logging</step>
-        <step number="2">Function validates authorization and checks caller permissions for logging management</step>
-        <step number="3">Function checks device state and transaction logging subsystem state</step>
-        <step number="3a">If device state is incompatible with lock operations → ErrorLockTransactionLoggingFailed raised, function exits</step>
-        <step number="3b">If device state is compatible → proceed to step 4</step>
-        <step number="4">Function initiates communication with Secure Element</step>
-        <step number="5">Function transmits lockTransactionLogging command to Secure Element</step>
-        <step number="5a">If communication fails or timeout occurs → ErrorLockTransactionLoggingFailed raised, function exits</step>
-        <step number="5b">If communication succeeds → proceed to step 6</step>
-        <step number="6">Function receives response from Secure Element</step>
-        <step number="6a">If Secure Element reports lock success → proceed to step 7</step>
-        <step number="6b">If Secure Element reports lock failure → ErrorLockTransactionLoggingFailed raised, function exits</step>
-        <step number="7">Function verifies the lock status on Secure Element</step>
-        <step number="8">Function closes communication channel with Secure Element</step>
-        <step number="9">Function updates internal transaction logging state to reflect locked status</step>
-        <step number="10">Function returns successfully with transaction logging now locked</step>
-    </executionSequence>
-    <recovery>
-        <step>Verify device connectivity - check that the Secure Element is accessible and communication channels are functional</step>
-        <step>Check device and logging system state - call getTransactionLoggingState or similar function to determine current logging system state</step>
-        <step>Verify authorization - ensure the caller has proper credentials and permissions to lock transaction logging</step>
-        <step>Review device resources - check for resource constraints or device errors that may be preventing lock operations</step>
-        <step>Retry the lock operation - attempt to call lockTransactionLogging again after a brief delay</step>
-        <step>Check for active transactions - verify if there are active transactions that may be preventing the logging system from being locked</step>
-        <step>Implement exponential backoff - if initial retry fails, implement exponential backoff strategy for subsequent retry attempts</step>
-        <step>Check device error logs - if available, examine device error or event logs to determine the root cause of the lock failure</step>
-        <step>Reset logging system state - if the logging system is in an indeterminate state, attempt to reset or reinitialize it before retrying</step>
-        <step>If persistent, contact device manufacturer - repeated lock failures may indicate a device issue or malfunction requiring device servicing</step>
-    </recovery>
-    <relatedExceptions>
-        <exception>ErrorUnlockTransactionLoggingFailed</exception>
-        <exception>ErrorGetTransactionLoggingStateFailed</exception>
-        <exception>ErrorDeleteLogMessagesFailed</exception>
-        <exception>ErrorExportLoggingCertificateFailed</exception>
-        <exception>ErrorFunctionFailed</exception>
-    </relatedExceptions>
-    <postconditionality>
-        <state name="Transaction Logging Lock Status Unchanged">The transaction logging system remains in its state prior to the failed lock operation. If it was unlocked before, it remains unlocked. If it was in a partial state, it remains in that state. The lock operation produces no state change.</state>
-        <state name="Transaction Logging Accessible for New Entries">Because the lock operation failed, the transaction logging system is still capable of accepting and recording new transaction log entries. The failure to lock means logging continues to function normally.</state>
-        <state name="Device State Unmodified">The device's overall state remains unchanged by the lock operation failure. No cascading side effects or device state modifications occur as a result of the exception.</state>
-        <state name="Authorization State Unaffected">The caller's authorization state and permissions remain unchanged. The failure to lock does not affect the caller's ability to invoke other functions.</state>
-        <state name="Logging Data Integrity Maintained">Existing transaction log entries remain intact and unmodified. The failed lock operation does not compromise or modify any previously recorded logging data.</state>
-        <state name="Error Reporting Available">The device and lock management subsystem remain operational. Error details and diagnostic information about the lock failure are available for investigation.</state>
-    </postconditionality>
-    <notes>
-        <note>ErrorLockTransactionLoggingFailed is thrown ONLY by the lockTransactionLogging function - it is the specific exception for transaction logging lock failures</note>
-        <note>This exception indicates the transaction logging system could not be transitioned to locked state - the system remains in an unverified state</note>
-        <note>Transaction logging lock operations are critical for security and audit trail integrity - lock failures require careful investigation</note>
-        <note>The purpose of locking transaction logging is typically to create a finalized, immutable audit trail - lock failure prevents achieving this security goal</note>
-        <note>Lock failures may indicate device issues, permission problems, or communication issues - the root cause must be identified for proper recovery</note>
-        <note>This exception has High severity because it prevents achieving transaction logging immutability - a critical security requirement</note>
-        <note>Some devices may require specific prerequisites before locking transaction logging (e.g., no active transactions, sufficient resources)</note>
-        <note>The transaction logging system state should be queried after a lock failure to determine the current state and appropriate recovery action</note>
-        <note>Repeated lock failures may indicate systemic issues requiring device reconfiguration or replacement</note>
-        <note>Applications should implement retry logic with appropriate backoff to handle transient lock failures</note>
-        <note>The transaction logging lock is typically permanent or long-lived - once locked, logging typically cannot be resumed on that device</note>
-        <note>Lock failure should trigger alerts or notifications as it indicates inability to achieve transaction logging immutability</note>
-        <note>Authorization checks should be performed early to provide clear feedback if insufficient permissions are the cause</note>
-        <note>Device error diagnostics should be consulted if lock failures persist after retry attempts</note>
-        <note>Some implementations may support time-limited locks or conditional locks - consult device specifications for lock semantics</note>
-    </notes>
-    <usage>
-        <scenario name="Scenario 1: Device Decommissioning with Audit Trail Finalization">
-            <description>When a device is being decommissioned, the application locks the transaction logging to create an immutable audit trail for compliance and archival purposes. When ErrorLockTransactionLoggingFailed is raised, the decommissioning process cannot be completed and the device cannot be decommissioned without resolving the lock failure.</description>
-            <relatedFunctions>lockTransactionLogging, getTransactionLoggingState, exportLoggingCertificate</relatedFunctions>
-            <errorContext>Lock failure prevents device decommissioning and audit trail finalization</errorContext>
-        </scenario>
-        <scenario name="Scenario 2: Audit Trail Protection with Retry and Recovery">
-            <description>An application protects critical transaction logs by locking logging after completing a sensitive operation. When ErrorLockTransactionLoggingFailed is raised, the application implements retry logic with exponential backoff and queries device state to determine if the lock failure is transient or permanent before deciding on recovery strategy.</description>
-            <relatedFunctions>lockTransactionLogging, getTransactionLoggingState</relatedFunctions>
-            <errorContext>Lock failure triggers retry and diagnostics to identify root cause</errorContext>
-        </scenario>
-        <scenario name="Scenario 3: Compliance Checkpoint with Lock Verification">
-            <description>A compliance-critical application reaches a processing checkpoint and attempts to lock transaction logging to finalize the audit trail for that checkpoint. When ErrorLockTransactionLoggingFailed is raised, the application cannot proceed and must investigate and resolve the lock failure before advancing to the next processing phase.</description>
-            <relatedFunctions>lockTransactionLogging, getTransactionLoggingState, deleteLogMessages</relatedFunctions>
-            <errorContext>Lock failure at compliance checkpoint prevents processing progression</errorContext>
-        </scenario>
-        <scenario name="Scenario 4: Multi-Device Logging Management with Fallback">
-            <description>An enterprise system manages transaction logging across multiple devices and implements a policy to lock logging on each device at regular intervals. When ErrorLockTransactionLoggingFailed is raised on one device, the system logs the failure and potentially initiates device diagnostics or failover to alternate devices for critical transaction recording.</description>
-            <relatedFunctions>lockTransactionLogging, getTransactionLoggingState, exportLoggingCertificate</relatedFunctions>
-            <errorContext>Lock failure on one device triggers diagnostics and potential failover</errorContext>
-        </scenario>
-    </usage>
-    <implementationContext>
-        <note>The lockTransactionLogging function transitions the transaction logging system from active (accepting entries) to locked (read-only)</note>
-        <note>Transaction logging lock is typically a permanent or very long-lived state - the system design should reflect this permanence</note>
-        <note>Lock operations may have prerequisites such as completing pending logging operations or verifying device readiness</note>
-        <note>The Secure Element may report specific failure reasons or error codes that can guide debugging and recovery</note>
-        <note>Applications should distinguish between transient failures (communication, timeout) and persistent failures (permissions, device state) for appropriate recovery</note>
-        <note>Once locked, the transaction logging typically cannot be resumed - the application should verify locking is intended before calling lockTransactionLogging</note>
-        <note>Transaction logging locks may interact with other device locks or state management - consult device architecture for lock coordination</note>
-        <note>Lock failure diagnostics may require examining device logs, error codes, or state information that is not directly accessible via SE API</note>
-    </implementationContext>
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorLockTransactionLoggingFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+  <name>ErrorLockTransactionLoggingFailed</name>
+  <description>This exception is thrown if the SE API function lockTransactionLogging fails to lock the transaction logging functionality on the Secure Element. The function attempts to transition the transaction logging system into a locked state to prevent further log entries from being recorded, but the locking operation encounters a failure condition that prevents this transition from being completed successfully. ErrorLockTransactionLoggingFailed indicates that the transaction logging system remains in its current state (unlocked or partially locked) and cannot be reliably transitioned to the locked state.</description>
+  <category>Transaction Logging - Lock Management</category>
+  <severity>High</severity>
+  <javadoc>
+    <summary>This class defines the exception ErrorLockTransactionLoggingFailed that is thrown if the transaction logging lock operation fails.</summary>
+    <description>This exception is thrown when the lockTransactionLogging function cannot successfully lock the transaction logging functionality on the Secure Element. The lockTransactionLogging operation is used to prevent any further transaction log entries from being recorded or modified. When this operation fails, it indicates that the transaction logging system could not be transitioned to the locked state, leaving the logging system in an indeterminate or potentially unsafe state. ErrorLockTransactionLoggingFailed is raised to inform the caller that the requested lock operation did not complete and the transaction logging system cannot be guaranteed to be in a locked (read-only) state. Recovery requires investigating the cause of the lock operation failure and retrying the operation, or potentially using alternative transaction logging management functions.</description>
+    <constructors>
+      <constructor>
+        <signature>ErrorLockTransactionLoggingFailed()</signature>
+        <description>Constructs a new ErrorLockTransactionLoggingFailed exception with null as the value for its detail message</description>
+      </constructor>
+      <constructor>
+        <signature>ErrorLockTransactionLoggingFailed(String message)</signature>
+        <description>Constructs a new ErrorLockTransactionLoggingFailed exception whereby its detail message is initialized with the passed value</description>
+        <parameter name="message">value for the detail message of the exception, typically describing the transaction logging lock failure reason</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorLockTransactionLoggingFailed(String message, Throwable cause)</signature>
+        <description>Constructs a new ErrorLockTransactionLoggingFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorLockTransactionLoggingFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+        <description>Constructs a new ErrorLockTransactionLoggingFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+      </constructor>
+    </constructors>
+  </javadoc>
+  <specification>
+    <source>BSI TR-03151-1</source>
+    <section>3.3.3 Transaction Logging Management - lockTransactionLogging</section>
+    <requirement>The function lockTransactionLogging SHALL attempt to lock the transaction logging functionality on the Secure Element to prevent further transaction log entries from being recorded or modified. If the lock operation cannot be successfully completed due to communication failure, device error, permission restriction, or other failure condition, the function SHALL raise the exception ErrorLockTransactionLoggingFailed. The transaction logging system state remains unchanged if the lock operation fails - no partial locking shall occur.</requirement>
+    <applicability>Transaction logging lock operations - lockTransactionLogging function only</applicability>
+    <reference>lockTransactionLogging – Function (3.3.3)</reference>
+  </specification>
+  <thrownBy>
+    <function>lockTransactionLogging</function>
+  </thrownBy>
+  <triggerConditions>
+    <condition>
+      <scenario>Secure Element communication failure during lock operation</scenario>
+      <description>Communication with the Secure Element fails while attempting to transmit or receive the lock command</description>
+      <trigger>The lockTransactionLogging function initiates communication with the Secure Element to send the lock command, but the connection is lost, timeout occurs, or transmission fails. The Secure Element does not receive the complete lock command or the response is not received by the caller. The lock operation cannot be confirmed and ErrorLockTransactionLoggingFailed is raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Secure Element reports lock operation failure</scenario>
+      <description>The Secure Element receives and processes the lock command but reports a failure status</description>
+      <trigger>The Secure Element successfully receives the lockTransactionLogging command but cannot execute it due to internal error, resource limitation, or device state incompatibility. The device responds with a failure status code, causing ErrorLockTransactionLoggingFailed to be raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Insufficient permissions or access control restrictions</scenario>
+      <description>The caller lacks the necessary permissions or credentials to lock the transaction logging functionality</description>
+      <trigger>The lockTransactionLogging function checks authorization requirements and determines that the caller does not have permission to lock transaction logging. The operation is rejected and ErrorLockTransactionLoggingFailed is raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Transaction logging system in incompatible state</scenario>
+      <description>The transaction logging system is in a state that prevents the lock operation from being executed</description>
+      <trigger>The Secure Element's transaction logging system is disabled, uninitialized, or in a state incompatible with lock operations. The lock command cannot be executed and ErrorLockTransactionLoggingFailed is raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Device resource exhaustion affecting lock management</scenario>
+      <description>The device lacks sufficient resources to complete the lock operation</description>
+      <trigger>The device is low on memory, processing capacity, or other resources required to execute the lock operation. The lock operation fails due to resource constraints and ErrorLockTransactionLoggingFailed is raised.</trigger>
+    </condition>
+  </triggerConditions>
+  <executionSequence>
+    <step number="1">User/application calls lockTransactionLogging function to lock transaction logging</step>
+    <step number="2">Function validates authorization and checks caller permissions for logging management</step>
+    <step number="3">Function checks device state and transaction logging subsystem state</step>
+    <step number="3a">If device state is incompatible with lock operations → ErrorLockTransactionLoggingFailed raised, function exits</step>
+    <step number="3b">If device state is compatible → proceed to step 4</step>
+    <step number="4">Function initiates communication with Secure Element</step>
+    <step number="5">Function transmits lockTransactionLogging command to Secure Element</step>
+    <step number="5a">If communication fails or timeout occurs → ErrorLockTransactionLoggingFailed raised, function exits</step>
+    <step number="5b">If communication succeeds → proceed to step 6</step>
+    <step number="6">Function receives response from Secure Element</step>
+    <step number="6a">If Secure Element reports lock success → proceed to step 7</step>
+    <step number="6b">If Secure Element reports lock failure → ErrorLockTransactionLoggingFailed raised, function exits</step>
+    <step number="7">Function verifies the lock status on Secure Element</step>
+    <step number="8">Function closes communication channel with Secure Element</step>
+    <step number="9">Function updates internal transaction logging state to reflect locked status</step>
+    <step number="10">Function returns successfully with transaction logging now locked</step>
+  </executionSequence>
+  <recovery>
+    <step>Verify device connectivity - check that the Secure Element is accessible and communication channels are functional</step>
+    <step>Check device and logging system state - call getTransactionLoggingState or similar function to determine current logging system state</step>
+    <step>Verify authorization - ensure the caller has proper credentials and permissions to lock transaction logging</step>
+    <step>Review device resources - check for resource constraints or device errors that may be preventing lock operations</step>
+    <step>Retry the lock operation - attempt to call lockTransactionLogging again after a brief delay</step>
+    <step>Check for active transactions - verify if there are active transactions that may be preventing the logging system from being locked</step>
+    <step>Implement exponential backoff - if initial retry fails, implement exponential backoff strategy for subsequent retry attempts</step>
+    <step>Check device error logs - if available, examine device error or event logs to determine the root cause of the lock failure</step>
+    <step>Reset logging system state - if the logging system is in an indeterminate state, attempt to reset or reinitialize it before retrying</step>
+    <step>If persistent, contact device manufacturer - repeated lock failures may indicate a device issue or malfunction requiring device servicing</step>
+  </recovery>
+  <relatedExceptions>
+    <exception>ErrorUnlockTransactionLoggingFailed</exception>
+    <exception>ErrorGetTransactionLoggingStateFailed</exception>
+    <exception>ErrorDeleteLogMessagesFailed</exception>
+    <exception>ErrorExportLoggingCertificateFailed</exception>
+    <exception>ErrorFunctionFailed</exception>
+  </relatedExceptions>
+  <postconditionality>
+    <state name="Transaction Logging Lock Status Unchanged">The transaction logging system remains in its state prior to the failed lock operation. If it was unlocked before, it remains unlocked. If it was in a partial state, it remains in that state. The lock operation produces no state change.</state>
+    <state name="Transaction Logging Accessible for New Entries">Because the lock operation failed, the transaction logging system is still capable of accepting and recording new transaction log entries. The failure to lock means logging continues to function normally.</state>
+    <state name="Device State Unmodified">The device's overall state remains unchanged by the lock operation failure. No cascading side effects or device state modifications occur as a result of the exception.</state>
+    <state name="Authorization State Unaffected">The caller's authorization state and permissions remain unchanged. The failure to lock does not affect the caller's ability to invoke other functions.</state>
+    <state name="Logging Data Integrity Maintained">Existing transaction log entries remain intact and unmodified. The failed lock operation does not compromise or modify any previously recorded logging data.</state>
+    <state name="Error Reporting Available">The device and lock management subsystem remain operational. Error details and diagnostic information about the lock failure are available for investigation.</state>
+  </postconditionality>
+  <notes>
+    <note>ErrorLockTransactionLoggingFailed is thrown ONLY by the lockTransactionLogging function - it is the specific exception for transaction logging lock failures</note>
+    <note>This exception indicates the transaction logging system could not be transitioned to locked state - the system remains in an unverified state</note>
+    <note>Transaction logging lock operations are critical for security and audit trail integrity - lock failures require careful investigation</note>
+    <note>The purpose of locking transaction logging is typically to create a finalized, immutable audit trail - lock failure prevents achieving this security goal</note>
+    <note>Lock failures may indicate device issues, permission problems, or communication issues - the root cause must be identified for proper recovery</note>
+    <note>This exception has High severity because it prevents achieving transaction logging immutability - a critical security requirement</note>
+    <note>Some devices may require specific prerequisites before locking transaction logging (e.g., no active transactions, sufficient resources)</note>
+    <note>The transaction logging system state should be queried after a lock failure to determine the current state and appropriate recovery action</note>
+    <note>Repeated lock failures may indicate systemic issues requiring device reconfiguration or replacement</note>
+    <note>Applications should implement retry logic with appropriate backoff to handle transient lock failures</note>
+    <note>The transaction logging lock is typically permanent or long-lived - once locked, logging typically cannot be resumed on that device</note>
+    <note>Lock failure should trigger alerts or notifications as it indicates inability to achieve transaction logging immutability</note>
+    <note>Authorization checks should be performed early to provide clear feedback if insufficient permissions are the cause</note>
+    <note>Device error diagnostics should be consulted if lock failures persist after retry attempts</note>
+    <note>Some implementations may support time-limited locks or conditional locks - consult device specifications for lock semantics</note>
+  </notes>
+  <usage>
+    <scenario name="Scenario 1: Device Decommissioning with Audit Trail Finalization">
+      <description>When a device is being decommissioned, the application locks the transaction logging to create an immutable audit trail for compliance and archival purposes. When ErrorLockTransactionLoggingFailed is raised, the decommissioning process cannot be completed and the device cannot be decommissioned without resolving the lock failure.</description>
+      <relatedFunctions>lockTransactionLogging, getTransactionLoggingState, exportLoggingCertificate</relatedFunctions>
+      <errorContext>Lock failure prevents device decommissioning and audit trail finalization</errorContext>
+    </scenario>
+    <scenario name="Scenario 2: Audit Trail Protection with Retry and Recovery">
+      <description>An application protects critical transaction logs by locking logging after completing a sensitive operation. When ErrorLockTransactionLoggingFailed is raised, the application implements retry logic with exponential backoff and queries device state to determine if the lock failure is transient or permanent before deciding on recovery strategy.</description>
+      <relatedFunctions>lockTransactionLogging, getTransactionLoggingState</relatedFunctions>
+      <errorContext>Lock failure triggers retry and diagnostics to identify root cause</errorContext>
+    </scenario>
+    <scenario name="Scenario 3: Compliance Checkpoint with Lock Verification">
+      <description>A compliance-critical application reaches a processing checkpoint and attempts to lock transaction logging to finalize the audit trail for that checkpoint. When ErrorLockTransactionLoggingFailed is raised, the application cannot proceed and must investigate and resolve the lock failure before advancing to the next processing phase.</description>
+      <relatedFunctions>lockTransactionLogging, getTransactionLoggingState, deleteLogMessages</relatedFunctions>
+      <errorContext>Lock failure at compliance checkpoint prevents processing progression</errorContext>
+    </scenario>
+    <scenario name="Scenario 4: Multi-Device Logging Management with Fallback">
+      <description>An enterprise system manages transaction logging across multiple devices and implements a policy to lock logging on each device at regular intervals. When ErrorLockTransactionLoggingFailed is raised on one device, the system logs the failure and potentially initiates device diagnostics or failover to alternate devices for critical transaction recording.</description>
+      <relatedFunctions>lockTransactionLogging, getTransactionLoggingState, exportLoggingCertificate</relatedFunctions>
+      <errorContext>Lock failure on one device triggers diagnostics and potential failover</errorContext>
+    </scenario>
+  </usage>
+  <implementationContext>
+    <note>The lockTransactionLogging function transitions the transaction logging system from active (accepting entries) to locked (read-only)</note>
+    <note>Transaction logging lock is typically a permanent or very long-lived state - the system design should reflect this permanence</note>
+    <note>Lock operations may have prerequisites such as completing pending logging operations or verifying device readiness</note>
+    <note>The Secure Element may report specific failure reasons or error codes that can guide debugging and recovery</note>
+    <note>Applications should distinguish between transient failures (communication, timeout) and persistent failures (permissions, device state) for appropriate recovery</note>
+    <note>Once locked, the transaction logging typically cannot be resumed - the application should verify locking is intended before calling lockTransactionLogging</note>
+    <note>Transaction logging locks may interact with other device locks or state management - consult device architecture for lock coordination</note>
+    <note>Lock failure diagnostics may require examining device logs, error codes, or state information that is not directly accessible via SE API</note>
+  </implementationContext>
 </exception>

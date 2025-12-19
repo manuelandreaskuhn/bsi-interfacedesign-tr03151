@@ -1,181 +1,210 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<exception id="ErrorUserNotAuthenticated" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
-    <name>ErrorUserNotAuthenticated</name>
-    <description>This exception is thrown if a restricted SE API function is invoked by a user who does not have authenticated status. The device maintains user authentication state to control access to security-sensitive operations. Certain functions (configuration, logging control, device management, PIN operations) require the user to be in authenticated state. Authentication is established through successful user authentication via authenticateUser. ErrorUserNotAuthenticated is raised when a restricted function is called without the caller being in authenticated state. ErrorUserNotAuthenticated is a High severity exception because it indicates unauthorized access attempt or user session management issue. Recovery requires authenticating the user before the restricted operation can proceed.</description>
-    <category>Authentication - Access Control</category>
-    <severity>High</severity>
-    <javadoc>
-        <summary>This class defines the exception ErrorUserNotAuthenticated that is thrown if a restricted SE API function is invoked by a user without authenticated status.</summary>
-        <description>This exception is thrown when a restricted SE API function is called by a user who is not in authenticated state. The device maintains user authentication state to control access to security-sensitive operations. Functions that modify configuration, manage logging, control PIN access, update firmware, or perform administrative tasks require authenticated status. If such a restricted function is invoked without the user being authenticated, ErrorUserNotAuthenticated is raised. This indicates the caller must first authenticate before accessing the restricted operation. ErrorUserNotAuthenticated is a High severity exception because it represents an access control violation. Recovery requires calling authenticateUser first to establish authenticated status, then retrying the restricted operation.</description>
-        <constructors>
-            <constructor>
-                <signature>ErrorUserNotAuthenticated()</signature>
-                <description>Constructs a new ErrorUserNotAuthenticated exception with null as the value for its detail message</description>
-            </constructor>
-            <constructor>
-                <signature>ErrorUserNotAuthenticated(String message)</signature>
-                <description>Constructs a new ErrorUserNotAuthenticated exception whereby its detail message is initialized with the passed value</description>
-                <parameter name="message">value for the detail message of the exception, typically describing authentication requirement</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorUserNotAuthenticated(String message, Throwable cause)</signature>
-                <description>Constructs a new ErrorUserNotAuthenticated exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorUserNotAuthenticated(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-                <description>Constructs a new ErrorUserNotAuthenticated exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-            </constructor>
-        </constructors>
-    </javadoc>
-    <specification>
-        <source>BSI TR-03151-1</source>
-        <section>3.5.1 Authentication - Access Control and User State</section>
-        <requirement>The SE API maintains user authentication state to control access to security-sensitive operations. Certain functions require the user to be in authenticated state: configuration functions (setDescription, configureLogging), device management functions (updateDevice, disableSecureElement, updateTime), PIN management (unblockPin), logging control (lockTransactionLogging, unlockTransactionLogging, deleteLogMessages, restoreLogsFromBackup), client management (registerClient, deregisterClient), maintenance functions (selfTest). If a restricted function is invoked by a user without authenticated status, the Secure Element SHALL raise ErrorUserNotAuthenticated. This indicates the caller must first establish authenticated status via authenticateUser before accessing the restricted function. ErrorUserNotAuthenticated is a High severity exception because it represents an access control violation and security policy breach.</requirement>
-        <applicability>All restricted API functions requiring authenticated user: logOut, unblockPin, setDescription, selfTest, updateDevice, disableSecureElement, updateTime, configureLogging, deleteLogMessages, restoreLogsFromBackup, registerClient, deregisterClient, lockTransactionLogging, unlockTransactionLogging</applicability>
-        <reference>Authentication (3.5.1), Access Control (3.5.1), User State Management (3.5.1), authenticateUser – Function (3.5.1)</reference>
-    </specification>
-    <thrownBy>
-        <function>logOut</function>
-        <function>unblockPin</function>
-        <function>setDescription</function>
-        <function>selfTest</function>
-        <function>updateDevice</function>
-        <function>disableSecureElement</function>
-        <function>updateTime</function>
-        <function>configureLogging</function>
-        <function>deleteLogMessages</function>
-        <function>restoreLogsFromBackup</function>
-        <function>registerClient</function>
-        <function>deregisterClient</function>
-        <function>lockTransactionLogging</function>
-        <function>unlockTransactionLogging</function>
-    </thrownBy>
-    <triggerConditions>
-        <condition>
-            <scenario>Restricted function called without prior authentication</scenario>
-            <description>Function invoked with no authentication established</description>
-            <trigger>Application calls setDescription without first calling authenticateUser. Device checks user authentication state, finds not authenticated. ErrorUserNotAuthenticated raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Authentication session expired before restricted call</scenario>
-            <description>User was authenticated but session expired or timed out</description>
-            <trigger>User authenticates successfully. Time passes without activity. Session timeout expires. User calls updateDevice. Device detects authentication expired. ErrorUserNotAuthenticated raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>User logged out before calling restricted function</scenario>
-            <description>User previously authenticated but has since called logOut</description>
-            <trigger>User authenticates via authenticateUser. User calls logOut ending session. User then calls unblockPin. Device detects no active authentication. ErrorUserNotAuthenticated raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Restricted function attempted on different user context</scenario>
-            <description>Restricted function called in different user/session context</description>
-            <trigger>User A authenticates and calls restricted function successfully. User B attempts same restricted function without authentication. Device detects User B not authenticated. ErrorUserNotAuthenticated raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Device reset clears authentication state</scenario>
-            <description>Device restart or reset clears user authentication</description>
-            <trigger>User authenticated. Device restarts or is reset. User attempts restricted function. Device authentication cleared by reset. ErrorUserNotAuthenticated raised.</trigger>
-        </condition>
-    </triggerConditions>
-    <executionSequence>
-        <step number="1">User/application calls restricted SE API function (e.g., setDescription, updateDevice, deleteLogMessages)</step>
-        <step number="2">Function validates input parameters</step>
-        <step number="3">Function checks if operation requires authentication</step>
-        <step number="3a">If operation unrestricted → proceed to step 4</step>
-        <step number="3b">If operation restricted → proceed to step 5</step>
-        <step number="4">Function proceeds with normal execution</step>
-        <step number="5">Function checks user authentication state</step>
-        <step number="5a">If user not authenticated → ErrorUserNotAuthenticated raised, operation aborted</step>
-        <step number="5b">If user authenticated → proceed to step 6</step>
-        <step number="6">Function validates authentication has not expired</step>
-        <step number="6a">If authentication expired → ErrorUserNotAuthenticated raised</step>
-        <step number="6b">If authentication valid → proceed to step 7</step>
-        <step number="7">Function initiates communication with Secure Element</step>
-        <step number="8">Secure Element receives restricted operation request</step>
-        <step number="9">Secure Element verifies user authenticated status</step>
-        <step number="9a">If not authenticated → ErrorUserNotAuthenticated raised</step>
-        <step number="9b">If authenticated → proceed with operation</step>
-        <step number="10">Operation executes with authentication verified</step>
-    </executionSequence>
-    <recovery>
-        <step>Review error message - understand authentication is required</step>
-        <step>Check authentication status - verify current user is not authenticated</step>
-        <step>Check session state - verify no active authenticated session</step>
-        <step>Authenticate user - call authenticateUser with valid credentials</step>
-        <step>Verify authentication - confirm authenticateUser succeeded</step>
-        <step>Check authentication timeout - verify authentication has not expired</step>
-        <step>Retry restricted function - attempt original restricted operation again</step>
-        <step>Verify operation completes - confirm restricted function now succeeds</step>
-    </recovery>
-    <relatedExceptions>
-        <exception>ErrorUnknownUserId</exception>
-        <exception>ErrorPinBlocked</exception>
-        <exception>ErrorParameterMismatch</exception>
-        <exception>ErrorFunctionFailed</exception>
-    </relatedExceptions>
-    <postconditionality>
-        <state name="Restricted Operation Not Executed">Restricted function does not execute due to authentication requirement.</state>
-        <state name="User Authentication Required">User must establish authenticated status first.</state>
-        <state name="Operation Not Permitted">Operation is blocked by access control policy.</state>
-        <state name="User State Not Modified">No state changes from attempted restricted operation.</state>
-        <state name="High Exception Returned">Function returns ErrorUserNotAuthenticated High exception to caller.</state>
-        <state name="Caller Must Authenticate">Caller must call authenticateUser before retrying restricted operation.</state>
-    </postconditionality>
-    <notes>
-        <note>ErrorUserNotAuthenticated is thrown by 14 restricted functions</note>
-        <note>This is a High severity exception - access control violation</note>
-        <note>Restricted functions require authenticated user status</note>
-        <note>Authentication established by successful authenticateUser call</note>
-        <note>Authentication state is maintained by device</note>
-        <note>Session timeout may expire authentication after inactivity</note>
-        <note>logOut explicitly clears authenticated status</note>
-        <note>Device reset may clear authentication state</note>
-        <note>Authentication is user/session specific</note>
-        <note>Restricted functions include configuration, management, PIN, logging control</note>
-        <note>Error messages should indicate authentication requirement</note>
-        <note>Application should check authentication before calling restricted functions</note>
-        <note>Session timeout behavior should be configurable</note>
-        <note>Authentication failures should be logged for security audit</note>
-        <note>Access control is essential for device security model</note>
-    </notes>
-    <usage>
-        <scenario name="Scenario 1: Restricted Function Without Authentication">
-            <description>Application attempts to call setDescription without first authenticating user. Device checks authentication state, finds user not authenticated. ErrorUserNotAuthenticated raised. Application calls authenticateUser with credentials. After successful authentication, application retries setDescription successfully.</description>
-            <relatedFunctions>setDescription, authenticateUser</relatedFunctions>
-            <errorContext>Authentication required for restricted operation - authenticate first</errorContext>
-        </scenario>
-        <scenario name="Scenario 2: Authentication Session Timeout">
-            <description>User authenticates via authenticateUser successfully. User performs operations. Long time passes with no activity. Session timeout expires. User attempts updateDevice call. Device detects authentication expired. ErrorUserNotAuthenticated raised. User re-authenticates and retries.</description>
-            <relatedFunctions>updateDevice, authenticateUser</relatedFunctions>
-            <errorContext>Authentication session expired - re-authenticate</errorContext>
-        </scenario>
-        <scenario name="Scenario 3: Logout Clears Authentication">
-            <description>User authenticates and performs restricted operations successfully. User calls logOut to end session. User then attempts to call unblockPin. Device detects no active authentication after logOut. ErrorUserNotAuthenticated raised. User authenticates again before attempting unblockPin.</description>
-            <relatedFunctions>unblockPin, logOut, authenticateUser</relatedFunctions>
-            <errorContext>User logged out - authentication required for further operations</errorContext>
-        </scenario>
-        <scenario name="Scenario 4: Device Reset Clears Authentication">
-            <description>User authenticated and making calls. Device restarts or is reset. Restart clears authentication state. User attempts configureLogging without re-authenticating. Device detects no valid authentication after reset. ErrorUserNotAuthenticated raised. User must re-authenticate.</description>
-            <relatedFunctions>configureLogging, authenticateUser</relatedFunctions>
-            <errorContext>Device reset cleared authentication - re-authenticate</errorContext>
-        </scenario>
-    </usage>
-    <implementationContext>
-        <note>Authentication state must be tracked per user/session</note>
-        <note>Restricted functions must check authentication before execution</note>
-        <note>Authentication validation should occur early in function flow</note>
-        <note>Session timeout should be configurable and enforced</note>
-        <note>Authentication state must be cleared on logOut</note>
-        <note>Device reset should clear temporary authentication states</note>
-        <note>Error messages should indicate authentication requirement</note>
-        <note>Audit trail should log all authentication-related events</note>
-        <note>Access control should be enforced consistently across all restricted functions</note>
-        <note>Authentication failure attempts should trigger security logging</note>
-    </implementationContext>
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorUserNotAuthenticated" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+  <name>ErrorUserNotAuthenticated</name>
+  <description>This exception is thrown if a restricted SE API function is invoked by a user who does not have authenticated status. The device maintains user authentication state to control access to security-sensitive operations. Certain functions (configuration, logging control, device management, PIN operations) require the user to be in authenticated state. Authentication is established through successful user authentication via authenticateUser. ErrorUserNotAuthenticated is raised when a restricted function is called without the caller being in authenticated state. ErrorUserNotAuthenticated is a High severity exception because it indicates unauthorized access attempt or user session management issue. Recovery requires authenticating the user before the restricted operation can proceed.</description>
+  <category>Authentication - Access Control</category>
+  <severity>High</severity>
+  <thrownBy>
+    <function>configureLogging</function>
+    <function>deleteLogMessages</function>
+    <function>deregisterClient</function>
+    <function>disableSecureElement</function>
+    <function>exportFilteredTransactionLogs</function>
+    <function>exportLogMessages</function>
+    <function>exportLoggingCertificates</function>
+    <function>exportSerialNumbers</function>
+    <function>finishTransaction</function>
+    <function>getComponentVersions</function>
+    <function>getCurrentLoggingSignatureCounters</function>
+    <function>getCurrentNumberOfClients</function>
+    <function>getCurrentNumberOfTransactions</function>
+    <function>getCurrentSeTime</function>
+    <function>getCurrentTransactionCounter</function>
+    <function>getDescription</function>
+    <function>getDeviceHealth</function>
+    <function>getEndOfUsageDate</function>
+    <function>getFreeMemory</function>
+    <function>getLastLogMessage</function>
+    <function>getLastTransactionLogMessage</function>
+    <function>getMaxNumberOfClients</function>
+    <function>getMaxNumberOfTransactions</function>
+    <function>getOpenTransactions</function>
+    <function>getRegisteredClients</function>
+    <function>getSupportedTransactionUpdateVariants</function>
+    <function>getTimeSyncVariant</function>
+    <function>getTotalMemory</function>
+    <function>getTransactionState</function>
+    <function>getUsedMemory</function>
+    <function>initialize</function>
+    <function>lockTransactionLogging</function>
+    <function>logOut</function>
+    <function>registerClient</function>
+    <function>restoreLogsFromBackup</function>
+    <function>selfTest</function>
+    <function>setDescription</function>
+    <function>startTransaction</function>
+    <function>unblockPin</function>
+    <function>unlockTransactionLogging</function>
+    <function>updateDevice</function>
+    <function>updateTime</function>
+    <function>updateTransaction</function>
+  </thrownBy>
+  <javadoc>
+    <summary>This class defines the exception ErrorUserNotAuthenticated that is thrown if a restricted SE API function is invoked by a user without authenticated status.</summary>
+    <description>This exception is thrown when a restricted SE API function is called by a user who is not in authenticated state. The device maintains user authentication state to control access to security-sensitive operations. Functions that modify configuration, manage logging, control PIN access, update firmware, or perform administrative tasks require authenticated status. If such a restricted function is invoked without the user being authenticated, ErrorUserNotAuthenticated is raised. This indicates the caller must first authenticate before accessing the restricted operation. ErrorUserNotAuthenticated is a High severity exception because it represents an access control violation. Recovery requires calling authenticateUser first to establish authenticated status, then retrying the restricted operation.</description>
+    <constructors>
+      <constructor>
+        <signature>ErrorUserNotAuthenticated()</signature>
+        <description>Constructs a new ErrorUserNotAuthenticated exception with null as the value for its detail message</description>
+      </constructor>
+      <constructor>
+        <signature>ErrorUserNotAuthenticated(String message)</signature>
+        <description>Constructs a new ErrorUserNotAuthenticated exception whereby its detail message is initialized with the passed value</description>
+        <parameter name="message">value for the detail message of the exception, typically describing authentication requirement</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorUserNotAuthenticated(String message, Throwable cause)</signature>
+        <description>Constructs a new ErrorUserNotAuthenticated exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorUserNotAuthenticated(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+        <description>Constructs a new ErrorUserNotAuthenticated exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+      </constructor>
+    </constructors>
+  </javadoc>
+  <specification>
+    <source>BSI TR-03151-1</source>
+    <section>3.5.1 Authentication - Access Control and User State</section>
+    <requirement>The SE API maintains user authentication state to control access to security-sensitive operations. Certain functions require the user to be in authenticated state: configuration functions (setDescription, configureLogging), device management functions (updateDevice, disableSecureElement, updateTime), PIN management (unblockPin), logging control (lockTransactionLogging, unlockTransactionLogging, deleteLogMessages, restoreLogsFromBackup), client management (registerClient, deregisterClient), maintenance functions (selfTest). If a restricted function is invoked by a user without authenticated status, the Secure Element SHALL raise ErrorUserNotAuthenticated. This indicates the caller must first establish authenticated status via authenticateUser before accessing the restricted function. ErrorUserNotAuthenticated is a High severity exception because it represents an access control violation and security policy breach.</requirement>
+    <applicability>All restricted API functions requiring authenticated user: logOut, unblockPin, setDescription, selfTest, updateDevice, disableSecureElement, updateTime, configureLogging, deleteLogMessages, restoreLogsFromBackup, registerClient, deregisterClient, lockTransactionLogging, unlockTransactionLogging</applicability>
+    <reference>Authentication (3.5.1), Access Control (3.5.1), User State Management (3.5.1), authenticateUser – Function (3.5.1)</reference>
+  </specification>
+  <triggerConditions>
+    <condition>
+      <scenario>Restricted function called without prior authentication</scenario>
+      <description>Function invoked with no authentication established</description>
+      <trigger>Application calls setDescription without first calling authenticateUser. Device checks user authentication state, finds not authenticated. ErrorUserNotAuthenticated raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Authentication session expired before restricted call</scenario>
+      <description>User was authenticated but session expired or timed out</description>
+      <trigger>User authenticates successfully. Time passes without activity. Session timeout expires. User calls updateDevice. Device detects authentication expired. ErrorUserNotAuthenticated raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>User logged out before calling restricted function</scenario>
+      <description>User previously authenticated but has since called logOut</description>
+      <trigger>User authenticates via authenticateUser. User calls logOut ending session. User then calls unblockPin. Device detects no active authentication. ErrorUserNotAuthenticated raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Restricted function attempted on different user context</scenario>
+      <description>Restricted function called in different user/session context</description>
+      <trigger>User A authenticates and calls restricted function successfully. User B attempts same restricted function without authentication. Device detects User B not authenticated. ErrorUserNotAuthenticated raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Device reset clears authentication state</scenario>
+      <description>Device restart or reset clears user authentication</description>
+      <trigger>User authenticated. Device restarts or is reset. User attempts restricted function. Device authentication cleared by reset. ErrorUserNotAuthenticated raised.</trigger>
+    </condition>
+  </triggerConditions>
+  <executionSequence>
+    <step number="1">User/application calls restricted SE API function (e.g., setDescription, updateDevice, deleteLogMessages)</step>
+    <step number="2">Function validates input parameters</step>
+    <step number="3">Function checks if operation requires authentication</step>
+    <step number="3a">If operation unrestricted → proceed to step 4</step>
+    <step number="3b">If operation restricted → proceed to step 5</step>
+    <step number="4">Function proceeds with normal execution</step>
+    <step number="5">Function checks user authentication state</step>
+    <step number="5a">If user not authenticated → ErrorUserNotAuthenticated raised, operation aborted</step>
+    <step number="5b">If user authenticated → proceed to step 6</step>
+    <step number="6">Function validates authentication has not expired</step>
+    <step number="6a">If authentication expired → ErrorUserNotAuthenticated raised</step>
+    <step number="6b">If authentication valid → proceed to step 7</step>
+    <step number="7">Function initiates communication with Secure Element</step>
+    <step number="8">Secure Element receives restricted operation request</step>
+    <step number="9">Secure Element verifies user authenticated status</step>
+    <step number="9a">If not authenticated → ErrorUserNotAuthenticated raised</step>
+    <step number="9b">If authenticated → proceed with operation</step>
+    <step number="10">Operation executes with authentication verified</step>
+  </executionSequence>
+  <recovery>
+    <step>Review error message - understand authentication is required</step>
+    <step>Check authentication status - verify current user is not authenticated</step>
+    <step>Check session state - verify no active authenticated session</step>
+    <step>Authenticate user - call authenticateUser with valid credentials</step>
+    <step>Verify authentication - confirm authenticateUser succeeded</step>
+    <step>Check authentication timeout - verify authentication has not expired</step>
+    <step>Retry restricted function - attempt original restricted operation again</step>
+    <step>Verify operation completes - confirm restricted function now succeeds</step>
+  </recovery>
+  <relatedExceptions>
+    <exception>ErrorUnknownUserId</exception>
+    <exception>ErrorPinBlocked</exception>
+    <exception>ErrorParameterMismatch</exception>
+    <exception>ErrorFunctionFailed</exception>
+  </relatedExceptions>
+  <postconditionality>
+    <state name="Restricted Operation Not Executed">Restricted function does not execute due to authentication requirement.</state>
+    <state name="User Authentication Required">User must establish authenticated status first.</state>
+    <state name="Operation Not Permitted">Operation is blocked by access control policy.</state>
+    <state name="User State Not Modified">No state changes from attempted restricted operation.</state>
+    <state name="High Exception Returned">Function returns ErrorUserNotAuthenticated High exception to caller.</state>
+    <state name="Caller Must Authenticate">Caller must call authenticateUser before retrying restricted operation.</state>
+  </postconditionality>
+  <notes>
+    <note>ErrorUserNotAuthenticated is thrown by 14 restricted functions</note>
+    <note>This is a High severity exception - access control violation</note>
+    <note>Restricted functions require authenticated user status</note>
+    <note>Authentication established by successful authenticateUser call</note>
+    <note>Authentication state is maintained by device</note>
+    <note>Session timeout may expire authentication after inactivity</note>
+    <note>logOut explicitly clears authenticated status</note>
+    <note>Device reset may clear authentication state</note>
+    <note>Authentication is user/session specific</note>
+    <note>Restricted functions include configuration, management, PIN, logging control</note>
+    <note>Error messages should indicate authentication requirement</note>
+    <note>Application should check authentication before calling restricted functions</note>
+    <note>Session timeout behavior should be configurable</note>
+    <note>Authentication failures should be logged for security audit</note>
+    <note>Access control is essential for device security model</note>
+  </notes>
+  <usage>
+    <scenario name="Scenario 1: Restricted Function Without Authentication">
+      <description>Application attempts to call setDescription without first authenticating user. Device checks authentication state, finds user not authenticated. ErrorUserNotAuthenticated raised. Application calls authenticateUser with credentials. After successful authentication, application retries setDescription successfully.</description>
+      <relatedFunctions>setDescription, authenticateUser</relatedFunctions>
+      <errorContext>Authentication required for restricted operation - authenticate first</errorContext>
+    </scenario>
+    <scenario name="Scenario 2: Authentication Session Timeout">
+      <description>User authenticates via authenticateUser successfully. User performs operations. Long time passes with no activity. Session timeout expires. User attempts updateDevice call. Device detects authentication expired. ErrorUserNotAuthenticated raised. User re-authenticates and retries.</description>
+      <relatedFunctions>updateDevice, authenticateUser</relatedFunctions>
+      <errorContext>Authentication session expired - re-authenticate</errorContext>
+    </scenario>
+    <scenario name="Scenario 3: Logout Clears Authentication">
+      <description>User authenticates and performs restricted operations successfully. User calls logOut to end session. User then attempts to call unblockPin. Device detects no active authentication after logOut. ErrorUserNotAuthenticated raised. User authenticates again before attempting unblockPin.</description>
+      <relatedFunctions>unblockPin, logOut, authenticateUser</relatedFunctions>
+      <errorContext>User logged out - authentication required for further operations</errorContext>
+    </scenario>
+    <scenario name="Scenario 4: Device Reset Clears Authentication">
+      <description>User authenticated and making calls. Device restarts or is reset. Restart clears authentication state. User attempts configureLogging without re-authenticating. Device detects no valid authentication after reset. ErrorUserNotAuthenticated raised. User must re-authenticate.</description>
+      <relatedFunctions>configureLogging, authenticateUser</relatedFunctions>
+      <errorContext>Device reset cleared authentication - re-authenticate</errorContext>
+    </scenario>
+  </usage>
+  <implementationContext>
+    <note>Authentication state must be tracked per user/session</note>
+    <note>Restricted functions must check authentication before execution</note>
+    <note>Authentication validation should occur early in function flow</note>
+    <note>Session timeout should be configurable and enforced</note>
+    <note>Authentication state must be cleared on logOut</note>
+    <note>Device reset should clear temporary authentication states</note>
+    <note>Error messages should indicate authentication requirement</note>
+    <note>Audit trail should log all authentication-related events</note>
+    <note>Access control should be enforced consistently across all restricted functions</note>
+    <note>Authentication failure attempts should trigger security logging</note>
+  </implementationContext>
 </exception>

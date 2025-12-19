@@ -1,163 +1,163 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<exception id="ErrorIncorrectPin" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
-    <name>ErrorIncorrectPin</name>
-    <description>This exception is thrown if the SE API function authenticateUser fails because an incorrect PIN was provided. The function attempts to authenticate a user with supplied credentials, but the provided PIN does not match the registered authentication credential, causing the authentication process to fail and reject the authentication attempt.</description>
-    <category>Authentication - PIN Verification</category>
-    <severity>High</severity>
-    <javadoc>
-        <summary>This class defines the exception ErrorIncorrectPin that is thrown if the SE API function authenticateUser has been invoked with an incorrect PIN.</summary>
-        <description>This exception is thrown when the authenticateUser function receives an incorrect PIN that does not match the user's registered authentication credential. PIN verification is a critical security operation that controls access to protected SE API functions and operations. ErrorIncorrectPin indicates that the supplied PIN does not match the registered credential stored on the Secure Element. When this exception occurs, the authentication attempt fails and the user remains unauthenticated. The Secure Element may also track failed authentication attempts and implement security countermeasures (PIN retry counter decrement, potential PIN blocking after maximum failures). Recovery requires supplying the correct PIN in a subsequent authentication attempt, or requesting PIN reset through administrative procedures if the PIN is forgotten.</description>
-        <constructors>
-            <constructor>
-                <signature>ErrorIncorrectPin()</signature>
-                <description>Constructs a new ErrorIncorrectPin exception with null as the value for its detail message</description>
-            </constructor>
-            <constructor>
-                <signature>ErrorIncorrectPin(String message)</signature>
-                <description>Constructs a new ErrorIncorrectPin exception whereby its detail message is initialized with the passed value</description>
-                <parameter name="message">value for the detail message of the exception, typically describing the incorrect PIN error</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorIncorrectPin(String message, Throwable cause)</signature>
-                <description>Constructs a new ErrorIncorrectPin exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorIncorrectPin(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-                <description>Constructs a new ErrorIncorrectPin exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-            </constructor>
-        </constructors>
-    </javadoc>
-    <specification>
-        <source>BSI TR-03151-1</source>
-        <section>3.5.2 User Authentication - authenticateUser</section>
-        <requirement>The function authenticateUser SHALL authenticate a user by verifying the provided PIN against the registered authentication credential. If the provided PIN does not match the registered credential, the function SHALL raise the exception ErrorIncorrectPin and reject the authentication attempt without establishing user authentication. The Secure Element SHALL track failed authentication attempts and may implement security countermeasures including PIN retry counter management.</requirement>
-        <applicability>User authentication operations - authenticateUser function only</applicability>
-        <reference>authenticateUser – Function (3.5.2)</reference>
-    </specification>
-    <thrownBy>
-        <function>authenticateUser</function>
-    </thrownBy>
-    <triggerConditions>
-        <condition>
-            <scenario>User supplies incorrect PIN value</scenario>
-            <description>The user provides a PIN that does not match the registered authentication credential</description>
-            <trigger>The user/application calls authenticateUser with a PIN parameter that does not match the registered credential stored on the Secure Element. The Secure Element verifies the supplied PIN against the registered credential and finds a mismatch. The verification fails and the Secure Element raises ErrorIncorrectPin to reject the authentication attempt.</trigger>
-        </condition>
-        <condition>
-            <scenario>PIN verification failure due to typo or user error</scenario>
-            <description>User accidentally enters an incorrect PIN due to typing error, keyboard layout mismatch, or other accidental input errors</description>
-            <trigger>The user enters a PIN that is similar to but not identical to the correct PIN (single character difference, reversed digits, etc.). When authenticateUser verifies the PIN, the mismatch is detected and ErrorIncorrectPin is raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Malicious or brute force authentication attempt</scenario>
-            <description>An attacker attempts to authenticate with incorrect PINs in a brute force attack or denial of service attempt</description>
-            <trigger>An attacker or unauthorized party calls authenticateUser multiple times with various incorrect PIN values attempting to guess the correct PIN. Each incorrect PIN triggers ErrorIncorrectPin. The Secure Element may track these repeated failures and implement security countermeasures.</trigger>
-        </condition>
-        <condition>
-            <scenario>Authentication attempt after user credential change</scenario>
-            <description>A user attempts to authenticate with an old PIN after the PIN has been changed or updated</description>
-            <trigger>The user attempts authentication using a previously valid PIN that has been changed or reset through administrative procedures. The old PIN no longer matches the current registered credential, causing PIN verification to fail and ErrorIncorrectPin to be raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>PIN verification with corrupted or incomplete PIN data</scenario>
-            <description>The authentication attempt uses a PIN that is incomplete, corrupted, or improperly formatted</description>
-            <trigger>The user supplies a PIN that is incomplete (fewer characters than required), corrupted (contains invalid characters), or improperly formatted. When the Secure Element verifies this PIN against the registered credential, the verification fails due to format/content mismatch, triggering ErrorIncorrectPin.</trigger>
-        </condition>
-    </triggerConditions>
-    <executionSequence>
-        <step number="1">User/application calls authenticateUser function with PIN parameter</step>
-        <step number="2">Function validates input parameters including PIN format and length</step>
-        <step number="3">Function checks if authentication is currently allowed (not already authenticated, not in locked state)</step>
-        <step number="4">Function verifies user exists and PIN authentication is applicable for this user</step>
-        <step number="5">Function initiates communication channel to Secure Element and prepares authentication command with supplied PIN</step>
-        <step number="6">Function transmits authentication command to Secure Element with supplied PIN for verification</step>
-        <step number="6a">If supplied PIN does NOT match registered credential → Secure Element responds with failure, ErrorIncorrectPin raised, function exits</step>
-        <step number="6b">If PIN verification confirms mismatch → Secure Element increments failed authentication counter and may apply security countermeasures</step>
-        <step number="7">If supplied PIN matches registered credential, function receives authentication success confirmation</step>
-        <step number="8">Function establishes authenticated user session and records successful authentication</step>
-        <step number="9">Function closes Secure Element communication channel</step>
-        <step number="10">Function returns to caller with authenticated user context established</step>
-    </executionSequence>
-    <recovery>
-        <step>Verify PIN value accuracy - confirm the entered PIN is correct according to user's registered credential</step>
-        <step>Check for common input errors - verify no keyboard layout issues, language issues, or accidental character transpositions in PIN entry</step>
-        <step>Confirm authentication is currently attempted - ensure user is not already authenticated and authentication is permitted in current device state</step>
-        <step>Review failed authentication counter if available - check how many failed attempts have been made and how many remain before PIN blocking</step>
-        <step>Retry authentication with verified correct PIN - re-attempt authenticateUser with the correct PIN value</step>
-        <step>Check if PIN has been recently changed - verify whether PIN has been updated through administrative procedures requiring use of new PIN</step>
-        <step>Implement comprehensive error logging and rate limiting - log failed authentication attempts to detect brute force attacks and implement throttling</step>
-        <step>Monitor for PIN retry counter exhaustion - track whether repeated failures may trigger PIN blocking or account lockout</step>
-        <step>If repeated authentication failures occur, contact administrator for PIN reset - after excessive failed attempts, PIN reset through administrative procedures may be required</step>
-        <step>If concerned about security breach, implement additional security measures - if unauthorized parties are attempting authentication, consider security incident response</step>
-    </recovery>
-    <relatedExceptions>
-        <exception>ErrorPinBlocked</exception>
-        <exception>ErrorUserNotAuthenticated</exception>
-        <exception>ErrorUserAlreadyAuthenticated</exception>
-        <exception>ErrorAuthenticationFailed</exception>
-        <exception>ErrorFunctionNotSupported</exception>
-    </relatedExceptions>
-    <postconditionality>
-        <state name="Authentication State">User remains unauthenticated. The failed authentication attempt does not establish authentication context. The device operates in the unauthenticated state and protected operations continue to require authentication.</state>
-        <state name="Failed Authentication Counter Update">The Secure Element's failed authentication counter is typically incremented to track the authentication failure. If implemented, this counter tracks repeated failed attempts and may trigger security countermeasures (PIN blocking) after excessive failures.</state>
-        <state name="PIN Blocking Preconditions">Repeated failed authentication attempts may eventually trigger PIN blocking or account lockout. If the failed attempt counter reaches the maximum threshold configured for PIN blocking, the next authenticateUser call may raise ErrorPinBlocked instead of ErrorIncorrectPin.</state>
-        <state name="No Credential Modification">The registered authentication credential remains unchanged. The incorrect PIN does not modify the registered credential or authentication configuration. Subsequent authentication attempts use the same registered credential.</state>
-        <state name="Device Operational State">Device remains fully operational and unmodified. The failed authentication does not affect device state, configuration, or other operations. All device components remain in their pre-call state.</state>
-        <state name="Recovery Preconditions Met">The device state after exception is consistent and allows for recovery operations. User can immediately retry authentication with the correct PIN. No special recovery procedures are required unless PIN blocking is triggered or PIN reset is needed.</state>
-    </postconditionality>
-    <notes>
-        <note>ErrorIncorrectPin is thrown ONLY by the authenticateUser function - it is the specific exception for PIN verification failures during user authentication</note>
-        <note>This exception indicates the supplied PIN does not match the registered authentication credential - this is an authentication failure, not a system error</note>
-        <note>Critical distinction from ErrorAuthenticationFailed: ErrorIncorrectPin specifically indicates PIN verification mismatch, while ErrorAuthenticationFailed may indicate broader authentication system issues</note>
-        <note>Exception is raised during the PIN verification phase (steps 6-7), after input validation and authentication permission checks have passed</note>
-        <note>After this exception, the user remains unauthenticated and the registered credential remains unchanged. The user can immediately retry authentication with the correct PIN</note>
-        <note>This exception has High severity because it indicates either user credential mismatch or potential unauthorized access attempts (brute force)</note>
-        <note>PIN verification is a critical security operation - incorrect PIN detection is a fundamental authentication security control</note>
-        <note>The Secure Element typically implements PIN retry counters and blocking mechanisms - repeated incorrect attempts may trigger PIN blocking</note>
-        <note>Multiple rapid ErrorIncorrectPin exceptions indicate either repeated user errors or potential brute force attack - both scenarios require attention</note>
-        <note>If this exception occurs frequently with correct PIN entries, it indicates potential credential synchronization issues or user confusion about the correct PIN</note>
-        <note>Each ErrorIncorrectPin exception should be logged and monitored to detect brute force attacks or unusual authentication patterns</note>
-        <note>PIN-based authentication is a security-critical function - ErrorIncorrectPin indicates a fundamental security control is functioning (rejecting incorrect credentials)</note>
-        <note>Applications must implement appropriate user guidance when ErrorIncorrectPin is raised - clear indication that the PIN is incorrect and user should retry</note>
-        <note>After repeated ErrorIncorrectPin exceptions, PIN blocking may be triggered - users should be warned when approaching authentication attempt limits</note>
-        <note>PIN reset procedures may be required if PIN is forgotten after repeated failed authentication attempts - contact device administrator for assistance</note>
-    </notes>
-    <usage>
-        <scenario name="Scenario 1: User Authentication and Secure Access Control">
-            <description>A system protects sensitive operations with PIN-based user authentication. When a user attempts to access protected operations, the system calls authenticateUser with the user-supplied PIN. If ErrorIncorrectPin is raised, the system informs the user that the PIN is incorrect and prompts for retry. Correct PIN entry establishes authentication for accessing protected functions.</description>
-            <relatedFunctions>authenticateUser, logoutUser</relatedFunctions>
-            <errorContext>Incorrect PIN supplied during user authentication attempt</errorContext>
-        </scenario>
-        <scenario name="Scenario 2: Multi-Attempt Authentication with User Guidance">
-            <description>A user interface guides users through PIN entry and authentication. When authenticateUser raises ErrorIncorrectPin, the UI displays an error message and allows the user to retry. The UI tracks the number of failed attempts and warns users when approaching the PIN blocking threshold.</description>
-            <relatedFunctions>authenticateUser, logoutUser</relatedFunctions>
-            <errorContext>PIN verification failure with user retry capability</errorContext>
-        </scenario>
-        <scenario name="Scenario 3: Authentication Security Monitoring and Brute Force Detection">
-            <description>A security monitoring system logs all authentication attempts and detects potential brute force attacks. When ErrorIncorrectPin is raised, the monitoring system logs the failure, tracks the source, and identifies suspicious patterns. If multiple failed attempts occur from the same source in short time, the system triggers security alerts.</description>
-            <relatedFunctions>authenticateUser</relatedFunctions>
-            <errorContext>Authentication failure monitoring and brute force attack detection</errorContext>
-        </scenario>
-        <scenario name="Scenario 4: Automated System Authentication with Retry Logic">
-            <description>An automated system requires PIN authentication for certain operations. When authenticateUser raises ErrorIncorrectPin, the system logs the failure, checks the failed attempt counter, and determines whether to retry or fail the operation. After excessive failures, the system alerts administrators or implements fallback procedures.</description>
-            <relatedFunctions>authenticateUser, logoutUser</relatedFunctions>
-            <errorContext>Automated system authentication with retry and failure handling</errorContext>
-        </scenario>
-    </usage>
-    <implementationContext>
-        <note>The authenticateUser function performs PIN-based user authentication to verify user identity and establish authenticated session</note>
-        <note>Incorrect PIN is fundamentally distinct from authentication system errors - it represents failed credential verification, not system failure</note>
-        <note>PIN verification is typically performed by the Secure Element's authentication subsystem with secure comparison to prevent timing attacks</note>
-        <note>Most Secure Elements implement PIN retry counters and blocking mechanisms after excessive failed attempts - brute force protection is standard</note>
-        <note>ErrorIncorrectPin is a normal, expected exception during authentication workflows - it is not exceptional in systems where users occasionally enter wrong credentials</note>
-        <note>Applications should implement user-friendly error messages and retry capability when ErrorIncorrectPin is raised - authentication is expected to require multiple attempts in some cases</note>
-        <note>Failed authentication attempts should be logged for security auditing and brute force detection - authentication is a critical security checkpoint</note>
-        <note>PIN blocking and retry counter management are typically handled transparently by the Secure Element - applications should be aware these mechanisms may trigger ErrorPinBlocked after repeated failures</note>
-    </implementationContext>
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorIncorrectPin" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+  <name>ErrorIncorrectPin</name>
+  <description>This exception is thrown if the SE API function authenticateUser fails because an incorrect PIN was provided. The function attempts to authenticate a user with supplied credentials, but the provided PIN does not match the registered authentication credential, causing the authentication process to fail and reject the authentication attempt.</description>
+  <category>Authentication - PIN Verification</category>
+  <severity>High</severity>
+  <javadoc>
+    <summary>This class defines the exception ErrorIncorrectPin that is thrown if the SE API function authenticateUser has been invoked with an incorrect PIN.</summary>
+    <description>This exception is thrown when the authenticateUser function receives an incorrect PIN that does not match the user's registered authentication credential. PIN verification is a critical security operation that controls access to protected SE API functions and operations. ErrorIncorrectPin indicates that the supplied PIN does not match the registered credential stored on the Secure Element. When this exception occurs, the authentication attempt fails and the user remains unauthenticated. The Secure Element may also track failed authentication attempts and implement security countermeasures (PIN retry counter decrement, potential PIN blocking after maximum failures). Recovery requires supplying the correct PIN in a subsequent authentication attempt, or requesting PIN reset through administrative procedures if the PIN is forgotten.</description>
+    <constructors>
+      <constructor>
+        <signature>ErrorIncorrectPin()</signature>
+        <description>Constructs a new ErrorIncorrectPin exception with null as the value for its detail message</description>
+      </constructor>
+      <constructor>
+        <signature>ErrorIncorrectPin(String message)</signature>
+        <description>Constructs a new ErrorIncorrectPin exception whereby its detail message is initialized with the passed value</description>
+        <parameter name="message">value for the detail message of the exception, typically describing the incorrect PIN error</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorIncorrectPin(String message, Throwable cause)</signature>
+        <description>Constructs a new ErrorIncorrectPin exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorIncorrectPin(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+        <description>Constructs a new ErrorIncorrectPin exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+      </constructor>
+    </constructors>
+  </javadoc>
+  <specification>
+    <source>BSI TR-03151-1</source>
+    <section>3.5.2 User Authentication - authenticateUser</section>
+    <requirement>The function authenticateUser SHALL authenticate a user by verifying the provided PIN against the registered authentication credential. If the provided PIN does not match the registered credential, the function SHALL raise the exception ErrorIncorrectPin and reject the authentication attempt without establishing user authentication. The Secure Element SHALL track failed authentication attempts and may implement security countermeasures including PIN retry counter management.</requirement>
+    <applicability>User authentication operations - authenticateUser function only</applicability>
+    <reference>authenticateUser – Function (3.5.2)</reference>
+  </specification>
+  <thrownBy>
+    <function>authenticateUser</function>
+  </thrownBy>
+  <triggerConditions>
+    <condition>
+      <scenario>User supplies incorrect PIN value</scenario>
+      <description>The user provides a PIN that does not match the registered authentication credential</description>
+      <trigger>The user/application calls authenticateUser with a PIN parameter that does not match the registered credential stored on the Secure Element. The Secure Element verifies the supplied PIN against the registered credential and finds a mismatch. The verification fails and the Secure Element raises ErrorIncorrectPin to reject the authentication attempt.</trigger>
+    </condition>
+    <condition>
+      <scenario>PIN verification failure due to typo or user error</scenario>
+      <description>User accidentally enters an incorrect PIN due to typing error, keyboard layout mismatch, or other accidental input errors</description>
+      <trigger>The user enters a PIN that is similar to but not identical to the correct PIN (single character difference, reversed digits, etc.). When authenticateUser verifies the PIN, the mismatch is detected and ErrorIncorrectPin is raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Malicious or brute force authentication attempt</scenario>
+      <description>An attacker attempts to authenticate with incorrect PINs in a brute force attack or denial of service attempt</description>
+      <trigger>An attacker or unauthorized party calls authenticateUser multiple times with various incorrect PIN values attempting to guess the correct PIN. Each incorrect PIN triggers ErrorIncorrectPin. The Secure Element may track these repeated failures and implement security countermeasures.</trigger>
+    </condition>
+    <condition>
+      <scenario>Authentication attempt after user credential change</scenario>
+      <description>A user attempts to authenticate with an old PIN after the PIN has been changed or updated</description>
+      <trigger>The user attempts authentication using a previously valid PIN that has been changed or reset through administrative procedures. The old PIN no longer matches the current registered credential, causing PIN verification to fail and ErrorIncorrectPin to be raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>PIN verification with corrupted or incomplete PIN data</scenario>
+      <description>The authentication attempt uses a PIN that is incomplete, corrupted, or improperly formatted</description>
+      <trigger>The user supplies a PIN that is incomplete (fewer characters than required), corrupted (contains invalid characters), or improperly formatted. When the Secure Element verifies this PIN against the registered credential, the verification fails due to format/content mismatch, triggering ErrorIncorrectPin.</trigger>
+    </condition>
+  </triggerConditions>
+  <executionSequence>
+    <step number="1">User/application calls authenticateUser function with PIN parameter</step>
+    <step number="2">Function validates input parameters including PIN format and length</step>
+    <step number="3">Function checks if authentication is currently allowed (not already authenticated, not in locked state)</step>
+    <step number="4">Function verifies user exists and PIN authentication is applicable for this user</step>
+    <step number="5">Function initiates communication channel to Secure Element and prepares authentication command with supplied PIN</step>
+    <step number="6">Function transmits authentication command to Secure Element with supplied PIN for verification</step>
+    <step number="6a">If supplied PIN does NOT match registered credential → Secure Element responds with failure, ErrorIncorrectPin raised, function exits</step>
+    <step number="6b">If PIN verification confirms mismatch → Secure Element increments failed authentication counter and may apply security countermeasures</step>
+    <step number="7">If supplied PIN matches registered credential, function receives authentication success confirmation</step>
+    <step number="8">Function establishes authenticated user session and records successful authentication</step>
+    <step number="9">Function closes Secure Element communication channel</step>
+    <step number="10">Function returns to caller with authenticated user context established</step>
+  </executionSequence>
+  <recovery>
+    <step>Verify PIN value accuracy - confirm the entered PIN is correct according to user's registered credential</step>
+    <step>Check for common input errors - verify no keyboard layout issues, language issues, or accidental character transpositions in PIN entry</step>
+    <step>Confirm authentication is currently attempted - ensure user is not already authenticated and authentication is permitted in current device state</step>
+    <step>Review failed authentication counter if available - check how many failed attempts have been made and how many remain before PIN blocking</step>
+    <step>Retry authentication with verified correct PIN - re-attempt authenticateUser with the correct PIN value</step>
+    <step>Check if PIN has been recently changed - verify whether PIN has been updated through administrative procedures requiring use of new PIN</step>
+    <step>Implement comprehensive error logging and rate limiting - log failed authentication attempts to detect brute force attacks and implement throttling</step>
+    <step>Monitor for PIN retry counter exhaustion - track whether repeated failures may trigger PIN blocking or account lockout</step>
+    <step>If repeated authentication failures occur, contact administrator for PIN reset - after excessive failed attempts, PIN reset through administrative procedures may be required</step>
+    <step>If concerned about security breach, implement additional security measures - if unauthorized parties are attempting authentication, consider security incident response</step>
+  </recovery>
+  <relatedExceptions>
+    <exception>ErrorPinBlocked</exception>
+    <exception>ErrorUserNotAuthenticated</exception>
+    <exception>ErrorUserAlreadyAuthenticated</exception>
+    <exception>ErrorAuthenticationFailed</exception>
+    <exception>ErrorFunctionNotSupported</exception>
+  </relatedExceptions>
+  <postconditionality>
+    <state name="Authentication State">User remains unauthenticated. The failed authentication attempt does not establish authentication context. The device operates in the unauthenticated state and protected operations continue to require authentication.</state>
+    <state name="Failed Authentication Counter Update">The Secure Element's failed authentication counter is typically incremented to track the authentication failure. If implemented, this counter tracks repeated failed attempts and may trigger security countermeasures (PIN blocking) after excessive failures.</state>
+    <state name="PIN Blocking Preconditions">Repeated failed authentication attempts may eventually trigger PIN blocking or account lockout. If the failed attempt counter reaches the maximum threshold configured for PIN blocking, the next authenticateUser call may raise ErrorPinBlocked instead of ErrorIncorrectPin.</state>
+    <state name="No Credential Modification">The registered authentication credential remains unchanged. The incorrect PIN does not modify the registered credential or authentication configuration. Subsequent authentication attempts use the same registered credential.</state>
+    <state name="Device Operational State">Device remains fully operational and unmodified. The failed authentication does not affect device state, configuration, or other operations. All device components remain in their pre-call state.</state>
+    <state name="Recovery Preconditions Met">The device state after exception is consistent and allows for recovery operations. User can immediately retry authentication with the correct PIN. No special recovery procedures are required unless PIN blocking is triggered or PIN reset is needed.</state>
+  </postconditionality>
+  <notes>
+    <note>ErrorIncorrectPin is thrown ONLY by the authenticateUser function - it is the specific exception for PIN verification failures during user authentication</note>
+    <note>This exception indicates the supplied PIN does not match the registered authentication credential - this is an authentication failure, not a system error</note>
+    <note>Critical distinction from ErrorAuthenticationFailed: ErrorIncorrectPin specifically indicates PIN verification mismatch, while ErrorAuthenticationFailed may indicate broader authentication system issues</note>
+    <note>Exception is raised during the PIN verification phase (steps 6-7), after input validation and authentication permission checks have passed</note>
+    <note>After this exception, the user remains unauthenticated and the registered credential remains unchanged. The user can immediately retry authentication with the correct PIN</note>
+    <note>This exception has High severity because it indicates either user credential mismatch or potential unauthorized access attempts (brute force)</note>
+    <note>PIN verification is a critical security operation - incorrect PIN detection is a fundamental authentication security control</note>
+    <note>The Secure Element typically implements PIN retry counters and blocking mechanisms - repeated incorrect attempts may trigger PIN blocking</note>
+    <note>Multiple rapid ErrorIncorrectPin exceptions indicate either repeated user errors or potential brute force attack - both scenarios require attention</note>
+    <note>If this exception occurs frequently with correct PIN entries, it indicates potential credential synchronization issues or user confusion about the correct PIN</note>
+    <note>Each ErrorIncorrectPin exception should be logged and monitored to detect brute force attacks or unusual authentication patterns</note>
+    <note>PIN-based authentication is a security-critical function - ErrorIncorrectPin indicates a fundamental security control is functioning (rejecting incorrect credentials)</note>
+    <note>Applications must implement appropriate user guidance when ErrorIncorrectPin is raised - clear indication that the PIN is incorrect and user should retry</note>
+    <note>After repeated ErrorIncorrectPin exceptions, PIN blocking may be triggered - users should be warned when approaching authentication attempt limits</note>
+    <note>PIN reset procedures may be required if PIN is forgotten after repeated failed authentication attempts - contact device administrator for assistance</note>
+  </notes>
+  <usage>
+    <scenario name="Scenario 1: User Authentication and Secure Access Control">
+      <description>A system protects sensitive operations with PIN-based user authentication. When a user attempts to access protected operations, the system calls authenticateUser with the user-supplied PIN. If ErrorIncorrectPin is raised, the system informs the user that the PIN is incorrect and prompts for retry. Correct PIN entry establishes authentication for accessing protected functions.</description>
+      <relatedFunctions>authenticateUser, logoutUser</relatedFunctions>
+      <errorContext>Incorrect PIN supplied during user authentication attempt</errorContext>
+    </scenario>
+    <scenario name="Scenario 2: Multi-Attempt Authentication with User Guidance">
+      <description>A user interface guides users through PIN entry and authentication. When authenticateUser raises ErrorIncorrectPin, the UI displays an error message and allows the user to retry. The UI tracks the number of failed attempts and warns users when approaching the PIN blocking threshold.</description>
+      <relatedFunctions>authenticateUser, logoutUser</relatedFunctions>
+      <errorContext>PIN verification failure with user retry capability</errorContext>
+    </scenario>
+    <scenario name="Scenario 3: Authentication Security Monitoring and Brute Force Detection">
+      <description>A security monitoring system logs all authentication attempts and detects potential brute force attacks. When ErrorIncorrectPin is raised, the monitoring system logs the failure, tracks the source, and identifies suspicious patterns. If multiple failed attempts occur from the same source in short time, the system triggers security alerts.</description>
+      <relatedFunctions>authenticateUser</relatedFunctions>
+      <errorContext>Authentication failure monitoring and brute force attack detection</errorContext>
+    </scenario>
+    <scenario name="Scenario 4: Automated System Authentication with Retry Logic">
+      <description>An automated system requires PIN authentication for certain operations. When authenticateUser raises ErrorIncorrectPin, the system logs the failure, checks the failed attempt counter, and determines whether to retry or fail the operation. After excessive failures, the system alerts administrators or implements fallback procedures.</description>
+      <relatedFunctions>authenticateUser, logoutUser</relatedFunctions>
+      <errorContext>Automated system authentication with retry and failure handling</errorContext>
+    </scenario>
+  </usage>
+  <implementationContext>
+    <note>The authenticateUser function performs PIN-based user authentication to verify user identity and establish authenticated session</note>
+    <note>Incorrect PIN is fundamentally distinct from authentication system errors - it represents failed credential verification, not system failure</note>
+    <note>PIN verification is typically performed by the Secure Element's authentication subsystem with secure comparison to prevent timing attacks</note>
+    <note>Most Secure Elements implement PIN retry counters and blocking mechanisms after excessive failed attempts - brute force protection is standard</note>
+    <note>ErrorIncorrectPin is a normal, expected exception during authentication workflows - it is not exceptional in systems where users occasionally enter wrong credentials</note>
+    <note>Applications should implement user-friendly error messages and retry capability when ErrorIncorrectPin is raised - authentication is expected to require multiple attempts in some cases</note>
+    <note>Failed authentication attempts should be logged for security auditing and brute force detection - authentication is a critical security checkpoint</note>
+    <note>PIN blocking and retry counter management are typically handled transparently by the Secure Element - applications should be aware these mechanisms may trigger ErrorPinBlocked after repeated failures</note>
+  </implementationContext>
 </exception>

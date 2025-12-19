@@ -1,163 +1,163 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<exception id="ErrorGetMaxNumberTransactionsFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
-    <name>ErrorGetMaxNumberTransactionsFailed</name>
-    <description>This exception is thrown if the SE API function getMaxNumberOfTransactions fails to retrieve the maximum number of transactions that can be simultaneously managed by the Secure Element. The function attempts to determine the device's transaction capacity limit, but the retrieval process fails before the capacity value can be determined and returned.</description>
-    <category>Transaction Management - Capacity Query</category>
-    <severity>Medium</severity>
-    <javadoc>
-        <summary>This class defines the exception ErrorGetMaxNumberTransactionsFailed that is thrown if the determination of the maximum number of transactions that can be managed simultaneously failed.</summary>
-        <description>This exception is thrown when the getMaxNumberOfTransactions function cannot retrieve the maximum transaction capacity from the Secure Element. The maximum number of transactions represents the upper limit on concurrent transactions that the device can simultaneously manage. ErrorGetMaxNumberTransactionsFailed indicates that the Secure Element cannot provide the transaction capacity information due to hardware failure, storage corruption, internal transaction management system errors, communication failures, or Secure Element state restrictions. When this exception occurs, no capacity data is returned and applications cannot determine the device's maximum transaction limit or assess transaction processing capacity. Recovery typically involves device verification, transaction management subsystem diagnostics, and possible hardware diagnosis if the failure persists.</description>
-        <constructors>
-            <constructor>
-                <signature>ErrorGetMaxNumberTransactionsFailed()</signature>
-                <description>Constructs a new ErrorGetMaxNumberTransactionsFailed exception with null as the value for its detail message</description>
-            </constructor>
-            <constructor>
-                <signature>ErrorGetMaxNumberTransactionsFailed(String message)</signature>
-                <description>Constructs a new ErrorGetMaxNumberTransactionsFailed exception whereby its detail message is initialized with the passed value</description>
-                <parameter name="message">value for the detail message of the exception, typically describing the maximum transaction capacity retrieval failure</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorGetMaxNumberTransactionsFailed(String message, Throwable cause)</signature>
-                <description>Constructs a new ErrorGetMaxNumberTransactionsFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorGetMaxNumberTransactionsFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-                <description>Constructs a new ErrorGetMaxNumberTransactionsFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-            </constructor>
-        </constructors>
-    </javadoc>
-    <specification>
-        <source>BSI TR-03151-1</source>
-        <section>3.4.2 Transaction Management - getMaxNumberOfTransactions</section>
-        <requirement>The function getMaxNumberOfTransactions SHALL query the Secure Element to determine the maximum number of transactions that can be simultaneously managed. If the Secure Element cannot provide or return the required capacity information, the function SHALL raise the exception ErrorGetMaxNumberTransactionsFailed and exit without returning any capacity data. The maximum transaction capacity retrieval failure indicates the Secure Element's transaction capacity query functionality could not complete successfully.</requirement>
-        <applicability>Transaction management operations - getMaxNumberOfTransactions function only</applicability>
-        <reference>getMaxNumberOfTransactions – Function (3.4.2)</reference>
-    </specification>
-    <thrownBy>
-        <function>getMaxNumberOfTransactions</function>
-    </thrownBy>
-    <triggerConditions>
-        <condition>
-            <scenario>Transaction capacity configuration storage hardware failure</scenario>
-            <description>The Secure Element's transaction capacity configuration storage hardware malfunctions or becomes inaccessible, preventing capacity value retrieval</description>
-            <trigger>The Secure Element's capacity configuration storage hardware fails or experiences read errors. When getMaxNumberOfTransactions is called, the capacity query is sent to the Secure Element, but the hardware cannot provide valid capacity data. The function receives a failure status from the Secure Element, triggering ErrorGetMaxNumberTransactionsFailed.</trigger>
-        </condition>
-        <condition>
-            <scenario>Transaction management configuration data corruption</scenario>
-            <description>The Secure Element's transaction management configuration or capacity specification data becomes corrupted or is lost</description>
-            <trigger>The Secure Element's memory containing transaction capacity configuration or transaction management data becomes corrupted, experiences data loss, or is marked as inaccessible due to storage errors. When getMaxNumberOfTransactions attempts to read capacity configuration from storage, the data cannot be reliably retrieved, triggering ErrorGetMaxNumberTransactionsFailed.</trigger>
-        </condition>
-        <condition>
-            <scenario>Transaction management subsystem internal error</scenario>
-            <description>The Secure Element's transaction management subsystem encounters critical errors that prevent transaction capacity information retrieval</description>
-            <trigger>The Secure Element's transaction management subsystem (responsible for managing transactions and providing transaction capacity information) encounters an internal error, deadlock, or exception. When getMaxNumberOfTransactions is called, the transaction management system cannot process the capacity query, triggering ErrorGetMaxNumberTransactionsFailed.</trigger>
-        </condition>
-        <condition>
-            <scenario>Device-to-Secure Element communication failure during capacity query</scenario>
-            <description>The communication channel between device and Secure Element is disrupted during transaction capacity retrieval</description>
-            <trigger>A communication failure occurs while getMaxNumberOfTransactions transmits the capacity query to the Secure Element or while receiving the capacity response. The command may be corrupted, the response may be incomplete, or the communication link may be temporarily unavailable. The function receives a communication error status, triggering ErrorGetMaxNumberTransactionsFailed.</trigger>
-        </condition>
-        <condition>
-            <scenario>Secure Element in restricted or error state prohibiting capacity access</scenario>
-            <description>The Secure Element is in a locked, restricted, or error state that prevents external queries for transaction capacity information</description>
-            <trigger>The Secure Element enters a state where transaction management queries or transaction capacity access is not permitted. When getMaxNumberOfTransactions is called and the Secure Element's state prohibits capacity access, the function receives a state-related rejection, triggering ErrorGetMaxNumberTransactionsFailed.</trigger>
-        </condition>
-    </triggerConditions>
-    <executionSequence>
-        <step number="1">User/application calls getMaxNumberOfTransactions function on device</step>
-        <step number="2">Function validates input parameters and checks authentication status (if required by referencing guideline)</step>
-        <step number="3">Function checks authorization for transaction management information access (if required by referencing guideline)</step>
-        <step number="4">Function verifies device is properly initialized and transaction management is operational</step>
-        <step number="5">Function initiates communication channel to Secure Element and prepares capacity query command</step>
-        <step number="6">Function transmits capacity query command to Secure Element requesting maximum transaction capacity</step>
-        <step number="6a">If Secure Element responds with failure status (configuration error, capacity retrieval error, management error) → ErrorGetMaxNumberTransactionsFailed raised, function exits without capacity data</step>
-        <step number="6b">If communication failure occurs during query transmission or response reception → ErrorGetMaxNumberTransactionsFailed raised, function exits</step>
-        <step number="7">If successful, function receives maximum transaction capacity from Secure Element</step>
-        <step number="8">Function validates capacity value for correctness (format, numeric range, logical consistency)</step>
-        <step number="9">Function closes Secure Element communication channel</step>
-        <step number="10">Function returns valid maximum transaction capacity to caller</step>
-    </executionSequence>
-    <recovery>
-        <step>Verify device operational status - confirm device is initialized, responding to other operations, and not in an error state</step>
-        <step>Verify Secure Element accessibility - confirm device can communicate with Secure Element through diagnostic commands</step>
-        <step>Check device initialization - ensure device has been properly initialized with initDevice before attempting getMaxNumberOfTransactions</step>
-        <step>Retry getMaxNumberOfTransactions operation - attempt the function call again as the failure may be transient</step>
-        <step>Review device diagnostics for transaction management system health - query device for diagnostic information about Secure Element transaction capacity status</step>
-        <step>Verify transaction capacity configuration integrity through device manufacturer diagnostics - check if capacity configuration is accessible and uncorrupted</step>
-        <step>Test other transaction management queries - attempt retrieving current transaction count to verify general transaction management access capability</step>
-        <step>Implement comprehensive error logging and monitoring - log this failure consistently to identify patterns (transient vs. persistent, correlation with transaction start/finish operations)</step>
-        <step>If failure is persistent, attempt device firmware update if available - may resolve transaction management subsystem errors</step>
-        <step>If failure persists and suspected hardware issue, contact device manufacturer or consider device replacement - repeated capacity retrieval failures indicate serious transaction management hardware problems</step>
-    </recovery>
-    <relatedExceptions>
-        <exception>ErrorFunctionFailed</exception>
-        <exception>ErrorDeviceNotInitialized</exception>
-        <exception>ErrorStartTransactionFailed</exception>
-        <exception>ErrorGetCurrentNumberOfTransactionsFailed</exception>
-        <exception>ErrorGetOpenTransactionsFailed</exception>
-    </relatedExceptions>
-    <postconditionality>
-        <state name="Device Operational State">Device remains fully operational and unmodified. The failure to retrieve maximum transaction capacity does not affect device initialization state, transaction management operations, internal memory, stored data, or the ability to perform other operations. All device components remain in their pre-call state.</state>
-        <state name="Capacity Data Return Status">No capacity value is returned to the caller. The function exits without providing any maximum transaction capacity information. Applications must not assume default capacity values or cached information; they must handle the exception as indicating capacity information is unavailable.</state>
-        <state name="Secure Element Transaction Management State">Secure Element transaction management subsystem remains unchanged by the failed capacity query. No state modifications, transaction limit changes, or transaction management configuration changes occur. Transaction management continues normally regardless of the retrieval failure.</state>
-        <state name="Transaction Capacity Continuity">The Secure Element continues to maintain accurate transaction capacity limits internally. The failure to retrieve maximum capacity does not affect the actual capacity limit or transaction management operations. Capacity queries can be retried once the underlying issue is resolved.</state>
-        <state name="No Cascading State Effects">No cascading state inconsistencies or secondary failures occur as a result of the capacity query failure. Device internal consistency is maintained. Other SE API functions and transaction management operations continue normally without state corruption.</state>
-        <state name="Recovery Preconditions Met">The device state after exception is consistent and allows for recovery operations. The underlying issue (hardware error, communication error, management system error) remains present, but the device is stable enough to accept diagnostic queries or recovery attempts.</state>
-    </postconditionality>
-    <notes>
-        <note>ErrorGetMaxNumberTransactionsFailed is thrown ONLY by the getMaxNumberOfTransactions function - it is the most specific and precise exception for Secure Element maximum transaction capacity retrieval failures</note>
-        <note>This exception indicates a failure in the Secure Element's ability to report its maximum transaction capacity. It is an informational failure, not a critical operational failure, though it prevents capacity assessment</note>
-        <note>Critical distinction from ErrorFunctionFailed: ErrorGetMaxNumberTransactionsFailed specifically indicates transaction capacity information is unavailable at the transaction management subsystem level, while ErrorFunctionFailed indicates broader unspecified critical failures</note>
-        <note>Exception is raised during the capacity retrieval phase (steps 6-7), after device initialization and authentication checks have passed</note>
-        <note>After this exception, the Secure Element remains unchanged and continues to maintain accurate transaction capacity limits internally. Capacity queries can be retried once the underlying issue is resolved</note>
-        <note>This exception has Medium severity because it prevents users from determining device transaction capacity, but does not immediately prevent device operation or other SE API functions</note>
-        <note>Maximum transaction capacity is a static device property that represents the upper limit of concurrent transactions supported by the device architecture</note>
-        <note>The exception indicates transaction capacity cannot be reliably obtained; applications must not implement workarounds using estimated capacity without explicit validation</note>
-        <note>Failure scenarios range from transient (temporary communication issues, temporary state) to persistent (storage corruption, hardware failure, firmware error)</note>
-        <note>If this exception occurs frequently or persistently, it indicates serious issues with Secure Element transaction management hardware, firmware, or capacity configuration that require diagnostic investigation</note>
-        <note>Capacity query is a read-only operation; failure does not modify any Secure Element state, so recovery typically requires only retrying the query once underlying issue is resolved</note>
-        <note>Maximum transaction capacity is typically fixed for a device model and firmware version - consult device specifications for expected values</note>
-        <note>Transaction capacity should be greater than or equal to the current number of active transactions at any given time</note>
-        <note>Applications must implement appropriate error handling for capacity retrieval failures, especially in multi-transaction environments where capacity planning is important</note>
-        <note>Repeated capacity retrieval failures may indicate device needs firmware update, transaction management reset, or hardware service - manufacturer support should be engaged</note>
-    </notes>
-    <usage>
-        <scenario name="Scenario 1: Transaction Capacity Planning Before Multi-Transaction Deployment">
-            <description>An enterprise prepares to deploy an application that will manage multiple concurrent transactions through the SE API. The deployment planning process queries getMaxNumberOfTransactions to determine how many concurrent transactions the device can support. If ErrorGetMaxNumberTransactionsFailed is raised, the deployment planning cannot determine device transaction capacity and must defer deployment or use conservative capacity estimates.</description>
-            <relatedFunctions>getMaxNumberOfTransactions, getCurrentNumberOfTransactions, startTransaction</relatedFunctions>
-            <errorContext>Maximum transaction capacity unavailable for deployment capacity planning</errorContext>
-        </scenario>
-        <scenario name="Scenario 2: Runtime Transaction Capacity Monitoring and Transaction Admission Control">
-            <description>A runtime system monitors active transactions and enforces transaction capacity limits. When new transaction requests arrive, the system queries getMaxNumberOfTransactions to determine the capacity limit and decides whether to accept new transactions. If ErrorGetMaxNumberTransactionsFailed is raised, the system cannot determine capacity limits and must conservatively reject new transaction requests.</description>
-            <relatedFunctions>getMaxNumberOfTransactions, getCurrentNumberOfTransactions, startTransaction</relatedFunctions>
-            <errorContext>Maximum transaction capacity unavailable for transaction admission control</errorContext>
-        </scenario>
-        <scenario name="Scenario 3: Multi-Device Transaction Capacity Assessment and Load Distribution">
-            <description>A load balancing system distributes transactions across multiple devices to optimize utilization and prevent capacity overload. The system queries getMaxNumberOfTransactions on each device to understand device capacity and determine optimal transaction distribution. If ErrorGetMaxNumberTransactionsFailed is raised on one device, the system cannot determine that device's capacity and must exclude it from transaction distribution until capacity can be determined.</description>
-            <relatedFunctions>getMaxNumberOfTransactions, getCurrentNumberOfTransactions, startTransaction</relatedFunctions>
-            <errorContext>Maximum transaction capacity unavailable for multi-device load distribution</errorContext>
-        </scenario>
-        <scenario name="Scenario 4: Device Provisioning and Configuration Documentation">
-            <description>A device provisioning system collects device configuration information for deployment documentation and capacity planning. The system queries getMaxNumberOfTransactions to document the device's transaction processing capacity in configuration records. If ErrorGetMaxNumberTransactionsFailed is raised, the system cannot complete the device configuration documentation with transaction capacity information.</description>
-            <relatedFunctions>getMaxNumberOfTransactions, getCurrentNumberOfTransactions, getVersion, getSerialNumber</relatedFunctions>
-            <errorContext>Maximum transaction capacity unavailable for device provisioning documentation</errorContext>
-        </scenario>
-    </usage>
-    <implementationContext>
-        <note>The getMaxNumberOfTransactions function retrieves the maximum transaction capacity maintained by the Secure Element's transaction management subsystem</note>
-        <note>Maximum transaction capacity represents the upper limit on concurrent transactions that the device can simultaneously manage</note>
-        <note>Maximum capacity is typically a static property determined by device hardware and firmware architecture - it does not change during device operation</note>
-        <note>Different device models and firmware versions may support different maximum transaction capacities - consult device specifications for expected values</note>
-        <note>Maximum transaction capacity should always be greater than or equal to the current number of active transactions to prevent transaction rejection scenarios</note>
-        <note>If maximum capacity retrieval fails but other transaction management queries succeed (current transaction count), the issue is specific to capacity configuration storage, not to general transaction management access</note>
-        <note>Maximum capacity configuration corruption or calculation errors represent potential integrity issues in transaction management that should be investigated</note>
-        <note>Capacity query is a read-only operation; ErrorGetMaxNumberTransactionsFailed does not indicate state corruption requiring state recovery - it indicates the capacity information source is temporarily unavailable</note>
-    </implementationContext>
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorGetMaxNumberTransactionsFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+  <name>ErrorGetMaxNumberTransactionsFailed</name>
+  <description>This exception is thrown if the SE API function getMaxNumberOfTransactions fails to retrieve the maximum number of transactions that can be simultaneously managed by the Secure Element. The function attempts to determine the device's transaction capacity limit, but the retrieval process fails before the capacity value can be determined and returned.</description>
+  <category>Transaction Management - Capacity Query</category>
+  <severity>Medium</severity>
+  <javadoc>
+    <summary>This class defines the exception ErrorGetMaxNumberTransactionsFailed that is thrown if the determination of the maximum number of transactions that can be managed simultaneously failed.</summary>
+    <description>This exception is thrown when the getMaxNumberOfTransactions function cannot retrieve the maximum transaction capacity from the Secure Element. The maximum number of transactions represents the upper limit on concurrent transactions that the device can simultaneously manage. ErrorGetMaxNumberTransactionsFailed indicates that the Secure Element cannot provide the transaction capacity information due to hardware failure, storage corruption, internal transaction management system errors, communication failures, or Secure Element state restrictions. When this exception occurs, no capacity data is returned and applications cannot determine the device's maximum transaction limit or assess transaction processing capacity. Recovery typically involves device verification, transaction management subsystem diagnostics, and possible hardware diagnosis if the failure persists.</description>
+    <constructors>
+      <constructor>
+        <signature>ErrorGetMaxNumberTransactionsFailed()</signature>
+        <description>Constructs a new ErrorGetMaxNumberTransactionsFailed exception with null as the value for its detail message</description>
+      </constructor>
+      <constructor>
+        <signature>ErrorGetMaxNumberTransactionsFailed(String message)</signature>
+        <description>Constructs a new ErrorGetMaxNumberTransactionsFailed exception whereby its detail message is initialized with the passed value</description>
+        <parameter name="message">value for the detail message of the exception, typically describing the maximum transaction capacity retrieval failure</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorGetMaxNumberTransactionsFailed(String message, Throwable cause)</signature>
+        <description>Constructs a new ErrorGetMaxNumberTransactionsFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorGetMaxNumberTransactionsFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+        <description>Constructs a new ErrorGetMaxNumberTransactionsFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+      </constructor>
+    </constructors>
+  </javadoc>
+  <specification>
+    <source>BSI TR-03151-1</source>
+    <section>3.4.2 Transaction Management - getMaxNumberOfTransactions</section>
+    <requirement>The function getMaxNumberOfTransactions SHALL query the Secure Element to determine the maximum number of transactions that can be simultaneously managed. If the Secure Element cannot provide or return the required capacity information, the function SHALL raise the exception ErrorGetMaxNumberTransactionsFailed and exit without returning any capacity data. The maximum transaction capacity retrieval failure indicates the Secure Element's transaction capacity query functionality could not complete successfully.</requirement>
+    <applicability>Transaction management operations - getMaxNumberOfTransactions function only</applicability>
+    <reference>getMaxNumberOfTransactions – Function (3.4.2)</reference>
+  </specification>
+  <thrownBy>
+    <function>getMaxNumberOfTransactions</function>
+  </thrownBy>
+  <triggerConditions>
+    <condition>
+      <scenario>Transaction capacity configuration storage hardware failure</scenario>
+      <description>The Secure Element's transaction capacity configuration storage hardware malfunctions or becomes inaccessible, preventing capacity value retrieval</description>
+      <trigger>The Secure Element's capacity configuration storage hardware fails or experiences read errors. When getMaxNumberOfTransactions is called, the capacity query is sent to the Secure Element, but the hardware cannot provide valid capacity data. The function receives a failure status from the Secure Element, triggering ErrorGetMaxNumberTransactionsFailed.</trigger>
+    </condition>
+    <condition>
+      <scenario>Transaction management configuration data corruption</scenario>
+      <description>The Secure Element's transaction management configuration or capacity specification data becomes corrupted or is lost</description>
+      <trigger>The Secure Element's memory containing transaction capacity configuration or transaction management data becomes corrupted, experiences data loss, or is marked as inaccessible due to storage errors. When getMaxNumberOfTransactions attempts to read capacity configuration from storage, the data cannot be reliably retrieved, triggering ErrorGetMaxNumberTransactionsFailed.</trigger>
+    </condition>
+    <condition>
+      <scenario>Transaction management subsystem internal error</scenario>
+      <description>The Secure Element's transaction management subsystem encounters critical errors that prevent transaction capacity information retrieval</description>
+      <trigger>The Secure Element's transaction management subsystem (responsible for managing transactions and providing transaction capacity information) encounters an internal error, deadlock, or exception. When getMaxNumberOfTransactions is called, the transaction management system cannot process the capacity query, triggering ErrorGetMaxNumberTransactionsFailed.</trigger>
+    </condition>
+    <condition>
+      <scenario>Device-to-Secure Element communication failure during capacity query</scenario>
+      <description>The communication channel between device and Secure Element is disrupted during transaction capacity retrieval</description>
+      <trigger>A communication failure occurs while getMaxNumberOfTransactions transmits the capacity query to the Secure Element or while receiving the capacity response. The command may be corrupted, the response may be incomplete, or the communication link may be temporarily unavailable. The function receives a communication error status, triggering ErrorGetMaxNumberTransactionsFailed.</trigger>
+    </condition>
+    <condition>
+      <scenario>Secure Element in restricted or error state prohibiting capacity access</scenario>
+      <description>The Secure Element is in a locked, restricted, or error state that prevents external queries for transaction capacity information</description>
+      <trigger>The Secure Element enters a state where transaction management queries or transaction capacity access is not permitted. When getMaxNumberOfTransactions is called and the Secure Element's state prohibits capacity access, the function receives a state-related rejection, triggering ErrorGetMaxNumberTransactionsFailed.</trigger>
+    </condition>
+  </triggerConditions>
+  <executionSequence>
+    <step number="1">User/application calls getMaxNumberOfTransactions function on device</step>
+    <step number="2">Function validates input parameters and checks authentication status (if required by referencing guideline)</step>
+    <step number="3">Function checks authorization for transaction management information access (if required by referencing guideline)</step>
+    <step number="4">Function verifies device is properly initialized and transaction management is operational</step>
+    <step number="5">Function initiates communication channel to Secure Element and prepares capacity query command</step>
+    <step number="6">Function transmits capacity query command to Secure Element requesting maximum transaction capacity</step>
+    <step number="6a">If Secure Element responds with failure status (configuration error, capacity retrieval error, management error) → ErrorGetMaxNumberTransactionsFailed raised, function exits without capacity data</step>
+    <step number="6b">If communication failure occurs during query transmission or response reception → ErrorGetMaxNumberTransactionsFailed raised, function exits</step>
+    <step number="7">If successful, function receives maximum transaction capacity from Secure Element</step>
+    <step number="8">Function validates capacity value for correctness (format, numeric range, logical consistency)</step>
+    <step number="9">Function closes Secure Element communication channel</step>
+    <step number="10">Function returns valid maximum transaction capacity to caller</step>
+  </executionSequence>
+  <recovery>
+    <step>Verify device operational status - confirm device is initialized, responding to other operations, and not in an error state</step>
+    <step>Verify Secure Element accessibility - confirm device can communicate with Secure Element through diagnostic commands</step>
+    <step>Check device initialization - ensure device has been properly initialized with initDevice before attempting getMaxNumberOfTransactions</step>
+    <step>Retry getMaxNumberOfTransactions operation - attempt the function call again as the failure may be transient</step>
+    <step>Review device diagnostics for transaction management system health - query device for diagnostic information about Secure Element transaction capacity status</step>
+    <step>Verify transaction capacity configuration integrity through device manufacturer diagnostics - check if capacity configuration is accessible and uncorrupted</step>
+    <step>Test other transaction management queries - attempt retrieving current transaction count to verify general transaction management access capability</step>
+    <step>Implement comprehensive error logging and monitoring - log this failure consistently to identify patterns (transient vs. persistent, correlation with transaction start/finish operations)</step>
+    <step>If failure is persistent, attempt device firmware update if available - may resolve transaction management subsystem errors</step>
+    <step>If failure persists and suspected hardware issue, contact device manufacturer or consider device replacement - repeated capacity retrieval failures indicate serious transaction management hardware problems</step>
+  </recovery>
+  <relatedExceptions>
+    <exception>ErrorFunctionFailed</exception>
+    <exception>ErrorDeviceNotInitialized</exception>
+    <exception>ErrorStartTransactionFailed</exception>
+    <exception>ErrorGetCurrentNumberOfTransactionsFailed</exception>
+    <exception>ErrorGetOpenTransactionsFailed</exception>
+  </relatedExceptions>
+  <postconditionality>
+    <state name="Device Operational State">Device remains fully operational and unmodified. The failure to retrieve maximum transaction capacity does not affect device initialization state, transaction management operations, internal memory, stored data, or the ability to perform other operations. All device components remain in their pre-call state.</state>
+    <state name="Capacity Data Return Status">No capacity value is returned to the caller. The function exits without providing any maximum transaction capacity information. Applications must not assume default capacity values or cached information; they must handle the exception as indicating capacity information is unavailable.</state>
+    <state name="Secure Element Transaction Management State">Secure Element transaction management subsystem remains unchanged by the failed capacity query. No state modifications, transaction limit changes, or transaction management configuration changes occur. Transaction management continues normally regardless of the retrieval failure.</state>
+    <state name="Transaction Capacity Continuity">The Secure Element continues to maintain accurate transaction capacity limits internally. The failure to retrieve maximum capacity does not affect the actual capacity limit or transaction management operations. Capacity queries can be retried once the underlying issue is resolved.</state>
+    <state name="No Cascading State Effects">No cascading state inconsistencies or secondary failures occur as a result of the capacity query failure. Device internal consistency is maintained. Other SE API functions and transaction management operations continue normally without state corruption.</state>
+    <state name="Recovery Preconditions Met">The device state after exception is consistent and allows for recovery operations. The underlying issue (hardware error, communication error, management system error) remains present, but the device is stable enough to accept diagnostic queries or recovery attempts.</state>
+  </postconditionality>
+  <notes>
+    <note>ErrorGetMaxNumberTransactionsFailed is thrown ONLY by the getMaxNumberOfTransactions function - it is the most specific and precise exception for Secure Element maximum transaction capacity retrieval failures</note>
+    <note>This exception indicates a failure in the Secure Element's ability to report its maximum transaction capacity. It is an informational failure, not a critical operational failure, though it prevents capacity assessment</note>
+    <note>Critical distinction from ErrorFunctionFailed: ErrorGetMaxNumberTransactionsFailed specifically indicates transaction capacity information is unavailable at the transaction management subsystem level, while ErrorFunctionFailed indicates broader unspecified critical failures</note>
+    <note>Exception is raised during the capacity retrieval phase (steps 6-7), after device initialization and authentication checks have passed</note>
+    <note>After this exception, the Secure Element remains unchanged and continues to maintain accurate transaction capacity limits internally. Capacity queries can be retried once the underlying issue is resolved</note>
+    <note>This exception has Medium severity because it prevents users from determining device transaction capacity, but does not immediately prevent device operation or other SE API functions</note>
+    <note>Maximum transaction capacity is a static device property that represents the upper limit of concurrent transactions supported by the device architecture</note>
+    <note>The exception indicates transaction capacity cannot be reliably obtained; applications must not implement workarounds using estimated capacity without explicit validation</note>
+    <note>Failure scenarios range from transient (temporary communication issues, temporary state) to persistent (storage corruption, hardware failure, firmware error)</note>
+    <note>If this exception occurs frequently or persistently, it indicates serious issues with Secure Element transaction management hardware, firmware, or capacity configuration that require diagnostic investigation</note>
+    <note>Capacity query is a read-only operation; failure does not modify any Secure Element state, so recovery typically requires only retrying the query once underlying issue is resolved</note>
+    <note>Maximum transaction capacity is typically fixed for a device model and firmware version - consult device specifications for expected values</note>
+    <note>Transaction capacity should be greater than or equal to the current number of active transactions at any given time</note>
+    <note>Applications must implement appropriate error handling for capacity retrieval failures, especially in multi-transaction environments where capacity planning is important</note>
+    <note>Repeated capacity retrieval failures may indicate device needs firmware update, transaction management reset, or hardware service - manufacturer support should be engaged</note>
+  </notes>
+  <usage>
+    <scenario name="Scenario 1: Transaction Capacity Planning Before Multi-Transaction Deployment">
+      <description>An enterprise prepares to deploy an application that will manage multiple concurrent transactions through the SE API. The deployment planning process queries getMaxNumberOfTransactions to determine how many concurrent transactions the device can support. If ErrorGetMaxNumberTransactionsFailed is raised, the deployment planning cannot determine device transaction capacity and must defer deployment or use conservative capacity estimates.</description>
+      <relatedFunctions>getMaxNumberOfTransactions, getCurrentNumberOfTransactions, startTransaction</relatedFunctions>
+      <errorContext>Maximum transaction capacity unavailable for deployment capacity planning</errorContext>
+    </scenario>
+    <scenario name="Scenario 2: Runtime Transaction Capacity Monitoring and Transaction Admission Control">
+      <description>A runtime system monitors active transactions and enforces transaction capacity limits. When new transaction requests arrive, the system queries getMaxNumberOfTransactions to determine the capacity limit and decides whether to accept new transactions. If ErrorGetMaxNumberTransactionsFailed is raised, the system cannot determine capacity limits and must conservatively reject new transaction requests.</description>
+      <relatedFunctions>getMaxNumberOfTransactions, getCurrentNumberOfTransactions, startTransaction</relatedFunctions>
+      <errorContext>Maximum transaction capacity unavailable for transaction admission control</errorContext>
+    </scenario>
+    <scenario name="Scenario 3: Multi-Device Transaction Capacity Assessment and Load Distribution">
+      <description>A load balancing system distributes transactions across multiple devices to optimize utilization and prevent capacity overload. The system queries getMaxNumberOfTransactions on each device to understand device capacity and determine optimal transaction distribution. If ErrorGetMaxNumberTransactionsFailed is raised on one device, the system cannot determine that device's capacity and must exclude it from transaction distribution until capacity can be determined.</description>
+      <relatedFunctions>getMaxNumberOfTransactions, getCurrentNumberOfTransactions, startTransaction</relatedFunctions>
+      <errorContext>Maximum transaction capacity unavailable for multi-device load distribution</errorContext>
+    </scenario>
+    <scenario name="Scenario 4: Device Provisioning and Configuration Documentation">
+      <description>A device provisioning system collects device configuration information for deployment documentation and capacity planning. The system queries getMaxNumberOfTransactions to document the device's transaction processing capacity in configuration records. If ErrorGetMaxNumberTransactionsFailed is raised, the system cannot complete the device configuration documentation with transaction capacity information.</description>
+      <relatedFunctions>getMaxNumberOfTransactions, getCurrentNumberOfTransactions, getVersion, getSerialNumber</relatedFunctions>
+      <errorContext>Maximum transaction capacity unavailable for device provisioning documentation</errorContext>
+    </scenario>
+  </usage>
+  <implementationContext>
+    <note>The getMaxNumberOfTransactions function retrieves the maximum transaction capacity maintained by the Secure Element's transaction management subsystem</note>
+    <note>Maximum transaction capacity represents the upper limit on concurrent transactions that the device can simultaneously manage</note>
+    <note>Maximum capacity is typically a static property determined by device hardware and firmware architecture - it does not change during device operation</note>
+    <note>Different device models and firmware versions may support different maximum transaction capacities - consult device specifications for expected values</note>
+    <note>Maximum transaction capacity should always be greater than or equal to the current number of active transactions to prevent transaction rejection scenarios</note>
+    <note>If maximum capacity retrieval fails but other transaction management queries succeed (current transaction count), the issue is specific to capacity configuration storage, not to general transaction management access</note>
+    <note>Maximum capacity configuration corruption or calculation errors represent potential integrity issues in transaction management that should be investigated</note>
+    <note>Capacity query is a read-only operation; ErrorGetMaxNumberTransactionsFailed does not indicate state corruption requiring state recovery - it indicates the capacity information source is temporarily unavailable</note>
+  </implementationContext>
 </exception>

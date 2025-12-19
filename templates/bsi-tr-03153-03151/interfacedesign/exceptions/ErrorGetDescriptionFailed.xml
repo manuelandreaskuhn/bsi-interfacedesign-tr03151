@@ -1,163 +1,163 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<exception id="ErrorGetDescriptionFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
-    <name>ErrorGetDescriptionFailed</name>
-    <description>This exception is thrown if the SE API function getDescription fails to retrieve the short description text of the device. The function attempts to obtain the device's descriptive identifier or display name from the Secure Element, but the retrieval process fails before the description can be determined and returned.</description>
-    <category>Device Information - Description Retrieval</category>
-    <severity>Medium</severity>
-    <javadoc>
-        <summary>This class defines the exception ErrorGetDescriptionFailed that is thrown if the SE API function getDescription fails to determine the short description of the device.</summary>
-        <description>This exception is thrown when the getDescription function cannot retrieve the device's short description text from the Secure Element. The device description provides human-readable identification information for the Secure Element, such as device model, variant, or descriptive label. ErrorGetDescriptionFailed indicates that the Secure Element cannot provide the description text due to hardware failure, storage corruption, internal information system errors, communication failures, or Secure Element state restrictions. When this exception occurs, no description data is returned and applications cannot identify or describe the device to users. Recovery typically involves device verification, information subsystem diagnostics, and possible hardware diagnosis if the failure persists.</description>
-        <constructors>
-            <constructor>
-                <signature>ErrorGetDescriptionFailed()</signature>
-                <description>Constructs a new ErrorGetDescriptionFailed exception with null as the value for its detail message</description>
-            </constructor>
-            <constructor>
-                <signature>ErrorGetDescriptionFailed(String message)</signature>
-                <description>Constructs a new ErrorGetDescriptionFailed exception whereby its detail message is initialized with the passed value</description>
-                <parameter name="message">value for the detail message of the exception, typically describing the device description retrieval failure</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorGetDescriptionFailed(String message, Throwable cause)</signature>
-                <description>Constructs a new ErrorGetDescriptionFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorGetDescriptionFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-                <description>Constructs a new ErrorGetDescriptionFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-            </constructor>
-        </constructors>
-    </javadoc>
-    <specification>
-        <source>BSI TR-03151-1</source>
-        <section>3.1.3 Basic Device Information - getDescription</section>
-        <requirement>The function getDescription SHALL retrieve the short description text of the Secure Element device. If the Secure Element cannot provide or return the required description information, the function SHALL raise the exception ErrorGetDescriptionFailed and exit without returning any description data. The device description retrieval failure indicates the Secure Element's information query functionality could not complete successfully.</requirement>
-        <applicability>Device information operations - getDescription function only</applicability>
-        <reference>getDescription – Function (3.1.3)</reference>
-    </specification>
-    <thrownBy>
-        <function>getDescription</function>
-    </thrownBy>
-    <triggerConditions>
-        <condition>
-            <scenario>Device description storage hardware failure</scenario>
-            <description>The Secure Element's description storage hardware malfunctions or becomes inaccessible, preventing description text retrieval</description>
-            <trigger>The Secure Element's description storage hardware fails or experiences read errors. When getDescription is called, the description retrieval query is sent to the Secure Element, but the hardware cannot provide valid description data. The function receives a failure status from the Secure Element, triggering ErrorGetDescriptionFailed.</trigger>
-        </condition>
-        <condition>
-            <scenario>Device description storage corruption</scenario>
-            <description>The Secure Element's device description storage becomes corrupted or data is lost</description>
-            <trigger>The Secure Element's memory containing description text or device information tables becomes corrupted, experiences data loss, or is marked as inaccessible due to storage errors. When getDescription attempts to read description text from storage, the data cannot be reliably retrieved, triggering ErrorGetDescriptionFailed.</trigger>
-        </condition>
-        <condition>
-            <scenario>Device information subsystem internal error</scenario>
-            <description>The Secure Element's device information subsystem encounters critical errors that prevent description text retrieval</description>
-            <trigger>The Secure Element's device information subsystem (responsible for maintaining and providing device identification and description information) encounters an internal error, deadlock, or exception. When getDescription is called, the information subsystem cannot process the description query, triggering ErrorGetDescriptionFailed.</trigger>
-        </condition>
-        <condition>
-            <scenario>Device-to-Secure Element communication failure during description query</scenario>
-            <description>The communication channel between device and Secure Element is disrupted during device description retrieval</description>
-            <trigger>A communication failure occurs while getDescription transmits the description query to the Secure Element or while receiving the description response. The command may be corrupted, the response may be incomplete, or the communication link may be temporarily unavailable. The function receives a communication error status, triggering ErrorGetDescriptionFailed.</trigger>
-        </condition>
-        <condition>
-            <scenario>Secure Element in restricted or error state prohibiting description access</scenario>
-            <description>The Secure Element is in a locked, restricted, or error state that prevents external queries for device description information</description>
-            <trigger>The Secure Element enters a state where information queries or device description access is not permitted. When getDescription is called and the Secure Element's state prohibits description access, the function receives a state-related rejection, triggering ErrorGetDescriptionFailed.</trigger>
-        </condition>
-    </triggerConditions>
-    <executionSequence>
-        <step number="1">User/application calls getDescription function on device</step>
-        <step number="2">Function validates input parameters and checks authentication status (if required by referencing guideline)</step>
-        <step number="3">Function checks authorization for device information access (if required by referencing guideline)</step>
-        <step number="4">Function verifies device is properly initialized and accessible</step>
-        <step number="5">Function initiates communication channel to Secure Element and prepares description query command</step>
-        <step number="6">Function transmits description query command to Secure Element requesting device short description text</step>
-        <step number="6a">If Secure Element responds with failure status (storage error, information retrieval error, subsystem error) → ErrorGetDescriptionFailed raised, function exits without description data</step>
-        <step number="6b">If communication failure occurs during query transmission or response reception → ErrorGetDescriptionFailed raised, function exits</step>
-        <step number="7">If successful, function receives description text from Secure Element</step>
-        <step number="8">Function validates description text for correctness (format, encoding, length validity)</step>
-        <step number="9">Function closes Secure Element communication channel</step>
-        <step number="10">Function returns valid description text to caller</step>
-    </executionSequence>
-    <recovery>
-        <step>Verify device operational status - confirm device is initialized, responding to other operations, and not in an error state</step>
-        <step>Verify Secure Element accessibility - confirm device can communicate with Secure Element through diagnostic commands</step>
-        <step>Check device initialization - ensure device has been properly initialized with initDevice before attempting getDescription</step>
-        <step>Retry getDescription operation - attempt the function call again as the failure may be transient</step>
-        <step>Review device diagnostics for information subsystem health - query device for diagnostic information about Secure Element device information status</step>
-        <step>Verify description storage integrity through device manufacturer diagnostics - check if description storage is accessible and uncorrupted</step>
-        <step>Attempt alternative information queries - try retrieving other device information (serial number, version) to verify general information access</step>
-        <step>Implement comprehensive error logging and monitoring - log this failure consistently to identify patterns (transient vs. persistent, correlation with other information queries)</step>
-        <step>If failure is persistent and information system is otherwise operational, attempt device firmware update if available - may resolve corrupted description data</step>
-        <step>If failure persists and suspected hardware issue, contact device manufacturer or consider device replacement - repeated description retrieval failures indicate serious device information hardware problems</step>
-    </recovery>
-    <relatedExceptions>
-        <exception>ErrorFunctionFailed</exception>
-        <exception>ErrorDeviceNotInitialized</exception>
-        <exception>ErrorGetVersionFailed</exception>
-        <exception>ErrorGetSerialNumberFailed</exception>
-        <exception>ErrorGetComponentVersionsFailed</exception>
-    </relatedExceptions>
-    <postconditionality>
-        <state name="Device Operational State">Device remains fully operational and unmodified. The failure to retrieve description does not affect device initialization state, internal memory, stored data, or the ability to perform other operations. All device components remain in their pre-call state.</state>
-        <state name="Description Data Return Status">No description text is returned to the caller. The function exits without providing any device description information. Applications must not assume default or cached description values; they must handle the exception as indicating description information is unavailable.</state>
-        <state name="Secure Element State">Secure Element remains unchanged by the failed description query. No state modifications, information updates, or device configuration changes occur. Device identification information continues to be maintained internally in the Secure Element regardless of the retrieval failure.</state>
-        <state name="Device Identification Continuity">The Secure Element continues to maintain its device identification and description information internally. The failure to retrieve description text does not affect the underlying device identity or properties. The description can be queried again once the underlying issue is resolved.</state>
-        <state name="No Cascading State Effects">No cascading state inconsistencies or secondary failures occur as a result of the description retrieval failure. Device internal consistency is maintained. Other SE API functions and device information queries continue normally without state corruption.</state>
-        <state name="Recovery Preconditions Met">The device state after exception is consistent and allows for recovery operations. The underlying issue (storage error, communication error, information system error) remains present, but the device is stable enough to accept diagnostic queries or recovery attempts.</state>
-    </postconditionality>
-    <notes>
-        <note>ErrorGetDescriptionFailed is thrown ONLY by the getDescription function - it is the most specific and precise exception for Secure Element device description retrieval failures</note>
-        <note>This exception indicates a failure in the Secure Element's ability to report its short device description. It is an informational failure, not a critical operational failure</note>
-        <note>Critical distinction from ErrorFunctionFailed: ErrorGetDescriptionFailed specifically indicates device description information is unavailable at the information subsystem level, while ErrorFunctionFailed indicates broader unspecified critical failures</note>
-        <note>Exception is raised during the description retrieval phase (steps 6-7), after device initialization and authentication checks have passed</note>
-        <note>After this exception, the Secure Element remains unchanged and continues to maintain device identification information internally. Description queries can be retried once the underlying issue is resolved</note>
-        <note>This exception has Medium severity because it prevents users from retrieving device description text (impacting device identification and user interface presentation) but does not prevent device operation or other SE API functions</note>
-        <note>Device description is a static informational property that typically does not change during device operation, unlike dynamic device state information</note>
-        <note>The exception indicates description data cannot be reliably obtained; applications must not implement workarounds using external device identifiers without explicit validation</note>
-        <note>Failure scenarios range from transient (temporary communication issues, temporary state) to persistent (storage corruption, hardware failure, firmware error)</note>
-        <note>If this exception occurs frequently or persistently, it indicates serious issues with Secure Element information storage hardware, firmware, or device information subsystem that require diagnostic investigation or device replacement</note>
-        <note>Description retrieval is a read-only query; failure does not modify any Secure Element state, so recovery typically requires only retrying the query once underlying issue is resolved</note>
-        <note>Device description text format and encoding may vary by device manufacturer and firmware version - consult device specifications for expected format</note>
-        <note>Description is the short human-readable identification for the device, distinct from version numbers, serial numbers, or detailed component information</note>
-        <note>Applications must implement appropriate error handling for description retrieval failures, especially in multi-device deployments where device identification is important</note>
-        <note>Repeated description retrieval failures may indicate device needs firmware update, information subsystem reset, or hardware service - manufacturer support should be engaged for persistent issues</note>
-    </notes>
-    <usage>
-        <scenario name="Scenario 1: Device Identification and User Interface Display">
-            <description>An application provides a user interface showing connected devices and their properties. The application retrieves device description text to display a user-friendly device identifier in lists, dropdown menus, or configuration dialogs. If ErrorGetDescriptionFailed is raised, the application cannot display the device description and must use alternative identification methods or show a placeholder.</description>
-            <relatedFunctions>getDescription, getVersion, getSerialNumber</relatedFunctions>
-            <errorContext>Device description unavailable for user interface display and device identification</errorContext>
-        </scenario>
-        <scenario name="Scenario 2: Multi-Device System Configuration and Documentation">
-            <description>An application manages multiple devices in an enterprise deployment and generates configuration documentation that includes device descriptions for each device. The application retrieves description text for each connected device to create accurate inventory records and deployment documentation. If ErrorGetDescriptionFailed is raised on one device, the documentation cannot include that device's description text.</description>
-            <relatedFunctions>getDescription, getSerialNumber, getVersion</relatedFunctions>
-            <errorContext>Device description unavailable for configuration documentation and inventory records</errorContext>
-        </scenario>
-        <scenario name="Scenario 3: Device Selection and User Guidance">
-            <description>An application guides users through selecting a device from multiple available options, displaying description text to help users identify the correct device for their intended purpose. The application retrieves the description for each available device to provide informative selection options. If ErrorGetDescriptionFailed is raised, the application cannot show descriptive information for that device option.</description>
-            <relatedFunctions>getDescription, getVersion, getSerialNumber</relatedFunctions>
-            <errorContext>Device description unavailable for user guidance in device selection</errorContext>
-        </scenario>
-        <scenario name="Scenario 4: Device Diagnostics and Support Information Collection">
-            <description>A support or diagnostics tool collects comprehensive device information for troubleshooting and support purposes. As part of the diagnostic report, the tool retrieves the device description to document device identification details. If ErrorGetDescriptionFailed is raised, the tool logs this as a diagnostic finding indicating information retrieval issues.</description>
-            <relatedFunctions>getDescription, getVersion, getSerialNumber, getComponentVersions</relatedFunctions>
-            <errorContext>Device description unavailable for device diagnostics and support information gathering</errorContext>
-        </scenario>
-    </usage>
-    <implementationContext>
-        <note>The getDescription function retrieves the short human-readable description text maintained by the Secure Element for device identification purposes</note>
-        <note>Device description is a static property that identifies the device type, variant, or functional category - it typically does not change during device operation</note>
-        <note>Description text format, encoding, and length may vary by device manufacturer - consult device specifications for expected format</note>
-        <note>Device description is distinct from and complementary to other device identification information such as version numbers, serial numbers, and component versions</note>
-        <note>Description retrieval is part of the basic device information interface that provides essential identification data for device management and user interface presentation</note>
-        <note>If description retrieval fails but other device information queries succeed (version, serial number), the issue is specific to description storage, not to general device information access</note>
-        <note>Description storage corruption or retrieval errors represent potential integrity issues in the device information subsystem that should be investigated</note>
-        <note>Description retrieval is a read-only query; ErrorGetDescriptionFailed does not indicate state corruption requiring state recovery - it indicates the description information source is temporarily unavailable</note>
-    </implementationContext>
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorGetDescriptionFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+  <name>ErrorGetDescriptionFailed</name>
+  <description>This exception is thrown if the SE API function getDescription fails to retrieve the short description text of the device. The function attempts to obtain the device's descriptive identifier or display name from the Secure Element, but the retrieval process fails before the description can be determined and returned.</description>
+  <category>Device Information - Description Retrieval</category>
+  <severity>Medium</severity>
+  <javadoc>
+    <summary>This class defines the exception ErrorGetDescriptionFailed that is thrown if the SE API function getDescription fails to determine the short description of the device.</summary>
+    <description>This exception is thrown when the getDescription function cannot retrieve the device's short description text from the Secure Element. The device description provides human-readable identification information for the Secure Element, such as device model, variant, or descriptive label. ErrorGetDescriptionFailed indicates that the Secure Element cannot provide the description text due to hardware failure, storage corruption, internal information system errors, communication failures, or Secure Element state restrictions. When this exception occurs, no description data is returned and applications cannot identify or describe the device to users. Recovery typically involves device verification, information subsystem diagnostics, and possible hardware diagnosis if the failure persists.</description>
+    <constructors>
+      <constructor>
+        <signature>ErrorGetDescriptionFailed()</signature>
+        <description>Constructs a new ErrorGetDescriptionFailed exception with null as the value for its detail message</description>
+      </constructor>
+      <constructor>
+        <signature>ErrorGetDescriptionFailed(String message)</signature>
+        <description>Constructs a new ErrorGetDescriptionFailed exception whereby its detail message is initialized with the passed value</description>
+        <parameter name="message">value for the detail message of the exception, typically describing the device description retrieval failure</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorGetDescriptionFailed(String message, Throwable cause)</signature>
+        <description>Constructs a new ErrorGetDescriptionFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorGetDescriptionFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+        <description>Constructs a new ErrorGetDescriptionFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+      </constructor>
+    </constructors>
+  </javadoc>
+  <specification>
+    <source>BSI TR-03151-1</source>
+    <section>3.1.3 Basic Device Information - getDescription</section>
+    <requirement>The function getDescription SHALL retrieve the short description text of the Secure Element device. If the Secure Element cannot provide or return the required description information, the function SHALL raise the exception ErrorGetDescriptionFailed and exit without returning any description data. The device description retrieval failure indicates the Secure Element's information query functionality could not complete successfully.</requirement>
+    <applicability>Device information operations - getDescription function only</applicability>
+    <reference>getDescription – Function (3.1.3)</reference>
+  </specification>
+  <thrownBy>
+    <function>getDescription</function>
+  </thrownBy>
+  <triggerConditions>
+    <condition>
+      <scenario>Device description storage hardware failure</scenario>
+      <description>The Secure Element's description storage hardware malfunctions or becomes inaccessible, preventing description text retrieval</description>
+      <trigger>The Secure Element's description storage hardware fails or experiences read errors. When getDescription is called, the description retrieval query is sent to the Secure Element, but the hardware cannot provide valid description data. The function receives a failure status from the Secure Element, triggering ErrorGetDescriptionFailed.</trigger>
+    </condition>
+    <condition>
+      <scenario>Device description storage corruption</scenario>
+      <description>The Secure Element's device description storage becomes corrupted or data is lost</description>
+      <trigger>The Secure Element's memory containing description text or device information tables becomes corrupted, experiences data loss, or is marked as inaccessible due to storage errors. When getDescription attempts to read description text from storage, the data cannot be reliably retrieved, triggering ErrorGetDescriptionFailed.</trigger>
+    </condition>
+    <condition>
+      <scenario>Device information subsystem internal error</scenario>
+      <description>The Secure Element's device information subsystem encounters critical errors that prevent description text retrieval</description>
+      <trigger>The Secure Element's device information subsystem (responsible for maintaining and providing device identification and description information) encounters an internal error, deadlock, or exception. When getDescription is called, the information subsystem cannot process the description query, triggering ErrorGetDescriptionFailed.</trigger>
+    </condition>
+    <condition>
+      <scenario>Device-to-Secure Element communication failure during description query</scenario>
+      <description>The communication channel between device and Secure Element is disrupted during device description retrieval</description>
+      <trigger>A communication failure occurs while getDescription transmits the description query to the Secure Element or while receiving the description response. The command may be corrupted, the response may be incomplete, or the communication link may be temporarily unavailable. The function receives a communication error status, triggering ErrorGetDescriptionFailed.</trigger>
+    </condition>
+    <condition>
+      <scenario>Secure Element in restricted or error state prohibiting description access</scenario>
+      <description>The Secure Element is in a locked, restricted, or error state that prevents external queries for device description information</description>
+      <trigger>The Secure Element enters a state where information queries or device description access is not permitted. When getDescription is called and the Secure Element's state prohibits description access, the function receives a state-related rejection, triggering ErrorGetDescriptionFailed.</trigger>
+    </condition>
+  </triggerConditions>
+  <executionSequence>
+    <step number="1">User/application calls getDescription function on device</step>
+    <step number="2">Function validates input parameters and checks authentication status (if required by referencing guideline)</step>
+    <step number="3">Function checks authorization for device information access (if required by referencing guideline)</step>
+    <step number="4">Function verifies device is properly initialized and accessible</step>
+    <step number="5">Function initiates communication channel to Secure Element and prepares description query command</step>
+    <step number="6">Function transmits description query command to Secure Element requesting device short description text</step>
+    <step number="6a">If Secure Element responds with failure status (storage error, information retrieval error, subsystem error) → ErrorGetDescriptionFailed raised, function exits without description data</step>
+    <step number="6b">If communication failure occurs during query transmission or response reception → ErrorGetDescriptionFailed raised, function exits</step>
+    <step number="7">If successful, function receives description text from Secure Element</step>
+    <step number="8">Function validates description text for correctness (format, encoding, length validity)</step>
+    <step number="9">Function closes Secure Element communication channel</step>
+    <step number="10">Function returns valid description text to caller</step>
+  </executionSequence>
+  <recovery>
+    <step>Verify device operational status - confirm device is initialized, responding to other operations, and not in an error state</step>
+    <step>Verify Secure Element accessibility - confirm device can communicate with Secure Element through diagnostic commands</step>
+    <step>Check device initialization - ensure device has been properly initialized with initDevice before attempting getDescription</step>
+    <step>Retry getDescription operation - attempt the function call again as the failure may be transient</step>
+    <step>Review device diagnostics for information subsystem health - query device for diagnostic information about Secure Element device information status</step>
+    <step>Verify description storage integrity through device manufacturer diagnostics - check if description storage is accessible and uncorrupted</step>
+    <step>Attempt alternative information queries - try retrieving other device information (serial number, version) to verify general information access</step>
+    <step>Implement comprehensive error logging and monitoring - log this failure consistently to identify patterns (transient vs. persistent, correlation with other information queries)</step>
+    <step>If failure is persistent and information system is otherwise operational, attempt device firmware update if available - may resolve corrupted description data</step>
+    <step>If failure persists and suspected hardware issue, contact device manufacturer or consider device replacement - repeated description retrieval failures indicate serious device information hardware problems</step>
+  </recovery>
+  <relatedExceptions>
+    <exception>ErrorFunctionFailed</exception>
+    <exception>ErrorDeviceNotInitialized</exception>
+    <exception>ErrorGetVersionFailed</exception>
+    <exception>ErrorGetSerialNumberFailed</exception>
+    <exception>ErrorGetComponentVersionsFailed</exception>
+  </relatedExceptions>
+  <postconditionality>
+    <state name="Device Operational State">Device remains fully operational and unmodified. The failure to retrieve description does not affect device initialization state, internal memory, stored data, or the ability to perform other operations. All device components remain in their pre-call state.</state>
+    <state name="Description Data Return Status">No description text is returned to the caller. The function exits without providing any device description information. Applications must not assume default or cached description values; they must handle the exception as indicating description information is unavailable.</state>
+    <state name="Secure Element State">Secure Element remains unchanged by the failed description query. No state modifications, information updates, or device configuration changes occur. Device identification information continues to be maintained internally in the Secure Element regardless of the retrieval failure.</state>
+    <state name="Device Identification Continuity">The Secure Element continues to maintain its device identification and description information internally. The failure to retrieve description text does not affect the underlying device identity or properties. The description can be queried again once the underlying issue is resolved.</state>
+    <state name="No Cascading State Effects">No cascading state inconsistencies or secondary failures occur as a result of the description retrieval failure. Device internal consistency is maintained. Other SE API functions and device information queries continue normally without state corruption.</state>
+    <state name="Recovery Preconditions Met">The device state after exception is consistent and allows for recovery operations. The underlying issue (storage error, communication error, information system error) remains present, but the device is stable enough to accept diagnostic queries or recovery attempts.</state>
+  </postconditionality>
+  <notes>
+    <note>ErrorGetDescriptionFailed is thrown ONLY by the getDescription function - it is the most specific and precise exception for Secure Element device description retrieval failures</note>
+    <note>This exception indicates a failure in the Secure Element's ability to report its short device description. It is an informational failure, not a critical operational failure</note>
+    <note>Critical distinction from ErrorFunctionFailed: ErrorGetDescriptionFailed specifically indicates device description information is unavailable at the information subsystem level, while ErrorFunctionFailed indicates broader unspecified critical failures</note>
+    <note>Exception is raised during the description retrieval phase (steps 6-7), after device initialization and authentication checks have passed</note>
+    <note>After this exception, the Secure Element remains unchanged and continues to maintain device identification information internally. Description queries can be retried once the underlying issue is resolved</note>
+    <note>This exception has Medium severity because it prevents users from retrieving device description text (impacting device identification and user interface presentation) but does not prevent device operation or other SE API functions</note>
+    <note>Device description is a static informational property that typically does not change during device operation, unlike dynamic device state information</note>
+    <note>The exception indicates description data cannot be reliably obtained; applications must not implement workarounds using external device identifiers without explicit validation</note>
+    <note>Failure scenarios range from transient (temporary communication issues, temporary state) to persistent (storage corruption, hardware failure, firmware error)</note>
+    <note>If this exception occurs frequently or persistently, it indicates serious issues with Secure Element information storage hardware, firmware, or device information subsystem that require diagnostic investigation or device replacement</note>
+    <note>Description retrieval is a read-only query; failure does not modify any Secure Element state, so recovery typically requires only retrying the query once underlying issue is resolved</note>
+    <note>Device description text format and encoding may vary by device manufacturer and firmware version - consult device specifications for expected format</note>
+    <note>Description is the short human-readable identification for the device, distinct from version numbers, serial numbers, or detailed component information</note>
+    <note>Applications must implement appropriate error handling for description retrieval failures, especially in multi-device deployments where device identification is important</note>
+    <note>Repeated description retrieval failures may indicate device needs firmware update, information subsystem reset, or hardware service - manufacturer support should be engaged for persistent issues</note>
+  </notes>
+  <usage>
+    <scenario name="Scenario 1: Device Identification and User Interface Display">
+      <description>An application provides a user interface showing connected devices and their properties. The application retrieves device description text to display a user-friendly device identifier in lists, dropdown menus, or configuration dialogs. If ErrorGetDescriptionFailed is raised, the application cannot display the device description and must use alternative identification methods or show a placeholder.</description>
+      <relatedFunctions>getDescription, getVersion, getSerialNumber</relatedFunctions>
+      <errorContext>Device description unavailable for user interface display and device identification</errorContext>
+    </scenario>
+    <scenario name="Scenario 2: Multi-Device System Configuration and Documentation">
+      <description>An application manages multiple devices in an enterprise deployment and generates configuration documentation that includes device descriptions for each device. The application retrieves description text for each connected device to create accurate inventory records and deployment documentation. If ErrorGetDescriptionFailed is raised on one device, the documentation cannot include that device's description text.</description>
+      <relatedFunctions>getDescription, getSerialNumber, getVersion</relatedFunctions>
+      <errorContext>Device description unavailable for configuration documentation and inventory records</errorContext>
+    </scenario>
+    <scenario name="Scenario 3: Device Selection and User Guidance">
+      <description>An application guides users through selecting a device from multiple available options, displaying description text to help users identify the correct device for their intended purpose. The application retrieves the description for each available device to provide informative selection options. If ErrorGetDescriptionFailed is raised, the application cannot show descriptive information for that device option.</description>
+      <relatedFunctions>getDescription, getVersion, getSerialNumber</relatedFunctions>
+      <errorContext>Device description unavailable for user guidance in device selection</errorContext>
+    </scenario>
+    <scenario name="Scenario 4: Device Diagnostics and Support Information Collection">
+      <description>A support or diagnostics tool collects comprehensive device information for troubleshooting and support purposes. As part of the diagnostic report, the tool retrieves the device description to document device identification details. If ErrorGetDescriptionFailed is raised, the tool logs this as a diagnostic finding indicating information retrieval issues.</description>
+      <relatedFunctions>getDescription, getVersion, getSerialNumber, getComponentVersions</relatedFunctions>
+      <errorContext>Device description unavailable for device diagnostics and support information gathering</errorContext>
+    </scenario>
+  </usage>
+  <implementationContext>
+    <note>The getDescription function retrieves the short human-readable description text maintained by the Secure Element for device identification purposes</note>
+    <note>Device description is a static property that identifies the device type, variant, or functional category - it typically does not change during device operation</note>
+    <note>Description text format, encoding, and length may vary by device manufacturer - consult device specifications for expected format</note>
+    <note>Device description is distinct from and complementary to other device identification information such as version numbers, serial numbers, and component versions</note>
+    <note>Description retrieval is part of the basic device information interface that provides essential identification data for device management and user interface presentation</note>
+    <note>If description retrieval fails but other device information queries succeed (version, serial number), the issue is specific to description storage, not to general device information access</note>
+    <note>Description storage corruption or retrieval errors represent potential integrity issues in the device information subsystem that should be investigated</note>
+    <note>Description retrieval is a read-only query; ErrorGetDescriptionFailed does not indicate state corruption requiring state recovery - it indicates the description information source is temporarily unavailable</note>
+  </implementationContext>
 </exception>

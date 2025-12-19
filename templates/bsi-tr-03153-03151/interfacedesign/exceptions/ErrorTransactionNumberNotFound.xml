@@ -1,168 +1,170 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<exception id="ErrorTransactionNumberNotFound" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
-    <name>ErrorTransactionNumberNotFound</name>
-    <description>This exception is thrown if no data has been found for the provided transaction number(s) in the context of exporting or querying transaction data. Transaction numbers are unique identifiers for each executed transaction. When export or query functions search for specific transaction numbers that don't exist in the device's transaction records, ErrorTransactionNumberNotFound is raised. This can occur during data export operations that filter by transaction number or when querying the state of a specific transaction. ErrorTransactionNumberNotFound is a Medium severity exception because the query is valid but matches no records. The requested transaction number(s) may have never existed, been deleted, or the transaction number may be incorrect.</description>
-    <category>Transaction Management - Transaction Number Query</category>
-    <severity>Medium</severity>
-    <javadoc>
-        <summary>This class defines the exception ErrorTransactionNumberNotFound that is thrown if no data has been found for the provided transaction number(s).</summary>
-        <description>This exception is thrown when transaction export or query operations search for specific transaction number(s) that don't exist in the device's transaction records. Transaction numbers are unique identifiers for each executed transaction. Functions like exportFilteredTransactionLogs and getTransactionState accept transaction number parameters to search for or retrieve specific transactions. If the provided transaction number(s) don't match any records, ErrorTransactionNumberNotFound is raised. This indicates the transaction numbers may be incorrect, the transactions may have been deleted, or they may have never existed. ErrorTransactionNumberNotFound is a Medium severity exception because the query is valid but matches no results. The caller should verify transaction numbers are correct and exist before querying.</description>
-        <constructors>
-            <constructor>
-                <signature>ErrorTransactionNumberNotFound()</signature>
-                <description>Constructs a new ErrorTransactionNumberNotFound exception with null as the value for its detail message</description>
-            </constructor>
-            <constructor>
-                <signature>ErrorTransactionNumberNotFound(String message)</signature>
-                <description>Constructs a new ErrorTransactionNumberNotFound exception whereby its detail message is initialized with the passed value</description>
-                <parameter name="message">value for the detail message of the exception, typically describing which transaction number(s) were not found</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorTransactionNumberNotFound(String message, Throwable cause)</signature>
-                <description>Constructs a new ErrorTransactionNumberNotFound exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorTransactionNumberNotFound(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-                <description>Constructs a new ErrorTransactionNumberNotFound exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-            </constructor>
-        </constructors>
-    </javadoc>
-    <specification>
-        <source>BSI TR-03151-1</source>
-        <section>3.2.2 Transaction Management - Transaction Query Functions</section>
-        <requirement>Transaction data export and query functions accept transaction number parameters to filter or retrieve specific transactions. Transaction numbers are unique identifiers assigned to each transaction. If provided transaction number(s) don't match any records in the device's transaction storage, the function SHALL raise ErrorTransactionNumberNotFound. This indicates the transaction numbers may be incorrect, transactions may have been deleted, or they may never have existed. ErrorTransactionNumberNotFound is a Medium severity exception because the query is valid but matches no results. The caller should verify transaction numbers are correct or provide alternative query parameters.</requirement>
-        <applicability>Transaction number-based queries: exportFilteredTransactionLogs, getTransactionState</applicability>
-        <reference>Transaction Management (3.2.2), Transaction Query Functions (3.2.2), exportFilteredTransactionLogs – Function (3.2.2), getTransactionState – Function (3.2.2)</reference>
-    </specification>
-    <thrownBy>
-        <function>exportFilteredTransactionLogs</function>
-        <function>getTransactionState</function>
-    </thrownBy>
-    <triggerConditions>
-        <condition>
-            <scenario>Export filters by transaction number that doesn't exist</scenario>
-            <description>exportFilteredTransactionLogs called with transaction number not in database</description>
-            <trigger>Application calls exportFilteredTransactionLogs with transactionNumber=99999. Device searches records, finds no matching transaction. ErrorTransactionNumberNotFound raised to indicate transaction doesn't exist.</trigger>
-        </condition>
-        <condition>
-            <scenario>Query transaction state for non-existent transaction</scenario>
-            <description>getTransactionState called with invalid or non-existent transaction number</description>
-            <trigger>Application calls getTransactionState with transactionNumber=50000. Device searches active and completed transaction records, finds no match. ErrorTransactionNumberNotFound raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Transaction number provided but transaction deleted or archived</scenario>
-            <description>Transaction number was valid but transaction has been deleted or archived</description>
-            <trigger>Application attempts to export transaction number that existed but was deleted. Device searches current records, cannot find transaction. ErrorTransactionNumberNotFound raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Incorrect or invalid transaction number format</scenario>
-            <description>Transaction number provided has incorrect format or is out of valid range</description>
-            <trigger>Application calls getTransactionState with malformed or out-of-range transaction number. Device rejects search, raises ErrorTransactionNumberNotFound.</trigger>
-        </condition>
-        <condition>
-            <scenario>Transaction number from different device queried</scenario>
-            <description>Transaction number from different device attempted on current device</description>
-            <trigger>Administrator attempts to query transaction from Device A using number from Device B. Device A doesn't find matching transaction number. ErrorTransactionNumberNotFound raised.</trigger>
-        </condition>
-    </triggerConditions>
-    <executionSequence>
-        <step number="1">User/application calls transaction query function (e.g., exportFilteredTransactionLogs, getTransactionState) with transaction number parameter(s)</step>
-        <step number="2">Function validates input parameters including transaction number format</step>
-        <step number="2a">If transaction number invalid/malformed → may raise ErrorParameterSyntax</step>
-        <step number="2b">If transaction number valid → proceed to step 3</step>
-        <step number="3">Function initiates communication with Secure Element</step>
-        <step number="4">Secure Element receives query request with transaction number(s)</step>
-        <step number="5">Secure Element searches transaction records by provided transaction number(s)</step>
-        <step number="6">Secure Element checks if matching transaction record exists</step>
-        <step number="6a">If matching record found → proceed to step 7</step>
-        <step number="6b">If no matching record found → ErrorTransactionNumberNotFound raised, operation aborted</step>
-        <step number="7">Secure Element retrieves transaction data for matching number(s)</step>
-        <step number="8">Secure Element prepares response with transaction data</step>
-        <step number="9">Secure Element returns results to function</step>
-        <step number="10">Function returns transaction data to caller</step>
-    </executionSequence>
-    <recovery>
-        <step>Review error message - understand transaction number not found</step>
-        <step>Verify transaction number - confirm transaction number provided is correct</step>
-        <step>Check format - verify transaction number format matches expected pattern</step>
-        <step>Review transaction history - confirm transaction was executed and exists</step>
-        <step>Check deletion status - verify transaction hasn't been deleted or archived</step>
-        <step>Query all transactions - attempt query with less restrictive filters to find transaction</step>
-        <step>Check transaction counter - review current transaction counter state</step>
-        <step>Verify device - confirm query on correct device (not different device's number)</step>
-        <step>Export with different filters - attempt export with date range or status filters instead</step>
-        <step>List available transactions - query available transaction numbers to identify correct number</step>
-        <step>Retry query - attempt transaction query again with corrected transaction number</step>
-    </recovery>
-    <relatedExceptions>
-        <exception>ErrorNoDataAvailable</exception>
-        <exception>ErrorParameterSyntax</exception>
-        <exception>ErrorParameterMismatch</exception>
-        <exception>ErrorTransactionNumberNotFound</exception>
-    </relatedExceptions>
-    <postconditionality>
-        <state name="Transaction Data Not Retrieved">Transaction data cannot be retrieved for requested transaction number.</state>
-        <state name="Query Returns No Results">No matching transaction records found in storage.</state>
-        <state name="Export Not Completed">Export operation does not proceed due to no matching transactions.</state>
-        <state name="Query State Invalid">Transaction state cannot be determined for non-existent transaction.</state>
-        <state name="Medium Exception Returned">Function returns ErrorTransactionNumberNotFound Medium exception to caller.</state>
-        <state name="Caller Must Verify Number">Caller should verify transaction number is correct and exists.</state>
-    </postconditionality>
-    <notes>
-        <note>ErrorTransactionNumberNotFound is thrown by 2 transaction query functions</note>
-        <note>This is a Medium severity exception - no results match query</note>
-        <note>Exception indicates transaction number not found, not a failure</note>
-        <note>Transaction numbers are unique identifiers for each transaction</note>
-        <note>Query search must be exact match on transaction number</note>
-        <note>Transaction number format must match expected pattern</note>
-        <note>Transaction may have been deleted or archived reducing available numbers</note>
-        <note>Different devices maintain separate transaction number sequences</note>
-        <note>Error messages should indicate which transaction number(s) not found</note>
-        <note>Caller should verify transaction numbers before querying</note>
-        <note>Alternative query filters (date range, status) may help find transactions</note>
-        <note>Transaction listing functions can help identify valid transaction numbers</note>
-        <note>Transaction number ranges indicate device transaction volume history</note>
-        <note>Range-based queries can work if specific numbers unknown</note>
-        <note>Archives or backups may contain deleted transaction records</note>
-    </notes>
-    <usage>
-        <scenario name="Scenario 1: Export with Invalid Transaction Number">
-            <description>Administrator attempts to export transaction logs using specific transaction number from documentation. Calls exportFilteredTransactionLogs with provided transaction number. Device searches records but transaction number not found. ErrorTransactionNumberNotFound raised. Administrator verifies transaction number in documentation and retries with corrected number.</description>
-            <relatedFunctions>exportFilteredTransactionLogs</relatedFunctions>
-            <errorContext>Transaction number query unsuccessful - verification needed</errorContext>
-        </scenario>
-        <scenario name="Scenario 2: Query Deleted Transaction State">
-            <description>Application attempts to retrieve state of transaction that was previously executed. Calls getTransactionState with stored transaction number. Device indicates transaction not found. ErrorTransactionNumberNotFound raised because transaction has been deleted or archived. Application handles error and queries alternative transaction.</description>
-            <relatedFunctions>getTransactionState</relatedFunctions>
-            <errorContext>Transaction deleted or archived - no longer available for query</errorContext>
-        </scenario>
-        <scenario name="Scenario 3: Cross-Device Transaction Number Query">
-            <description>Administrator has transaction number from Device A. Administrator attempts to query transaction on Device B using same number. Device B doesn't recognize transaction number. ErrorTransactionNumberNotFound raised. Administrator recognizes mistake and queries correct device.</description>
-            <relatedFunctions>getTransactionState, exportFilteredTransactionLogs</relatedFunctions>
-            <errorContext>Transaction number from different device - device-specific number sequence</errorContext>
-        </scenario>
-        <scenario name="Scenario 4: Export with Range-Based Fallback Query">
-            <description>Application cannot locate specific transaction number. Instead of failing, application retries exportFilteredTransactionLogs with date range filter. Query succeeds and returns transactions including the originally-sought transaction with its actual number.</description>
-            <relatedFunctions>exportFilteredTransactionLogs</relatedFunctions>
-            <errorContext>Range query fallback when specific transaction number not found</errorContext>
-        </scenario>
-    </usage>
-    <implementationContext>
-        <note>Transaction number search must be performed against transaction storage index</note>
-        <note>Transaction number lookup should use efficient indexed search</note>
-        <note>Search must check both active and completed transaction records</note>
-        <note>Deleted or archived transactions should not match search results</note>
-        <note>Transaction number format validation should occur before search</note>
-        <note>Error messages should include the transaction number(s) not found</note>
-        <note>Search results should be verified to match provided transaction number exactly</note>
-        <note>Alternative query mechanisms (date range, status) should be available</note>
-        <note>Transaction number uniqueness should be maintained for accurate lookup</note>
-        <note>Device-specific transaction number sequences should be preserved</note>
-    </implementationContext>
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorTransactionNumberNotFound" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+  <name>ErrorTransactionNumberNotFound</name>
+  <description>This exception is thrown if no data has been found for the provided transaction number(s) in the context of exporting or querying transaction data. Transaction numbers are unique identifiers for each executed transaction. When export or query functions search for specific transaction numbers that don't exist in the device's transaction records, ErrorTransactionNumberNotFound is raised. This can occur during data export operations that filter by transaction number or when querying the state of a specific transaction. ErrorTransactionNumberNotFound is a Medium severity exception because the query is valid but matches no records. The requested transaction number(s) may have never existed, been deleted, or the transaction number may be incorrect.</description>
+  <category>Transaction Management - Transaction Number Query</category>
+  <severity>Medium</severity>
+  <thrownBy>
+    <function>exportFilteredTransactionLogs</function>
+    <function>finishTransaction</function>
+    <function>getTransactionState</function>
+    <function>updateTransaction</function>
+  </thrownBy>
+  <javadoc>
+    <summary>This class defines the exception ErrorTransactionNumberNotFound that is thrown if no data has been found for the provided transaction number(s).</summary>
+    <description>This exception is thrown when transaction export or query operations search for specific transaction number(s) that don't exist in the device's transaction records. Transaction numbers are unique identifiers for each executed transaction. Functions like exportFilteredTransactionLogs and getTransactionState accept transaction number parameters to search for or retrieve specific transactions. If the provided transaction number(s) don't match any records, ErrorTransactionNumberNotFound is raised. This indicates the transaction numbers may be incorrect, the transactions may have been deleted, or they may have never existed. ErrorTransactionNumberNotFound is a Medium severity exception because the query is valid but matches no results. The caller should verify transaction numbers are correct and exist before querying.</description>
+    <constructors>
+      <constructor>
+        <signature>ErrorTransactionNumberNotFound()</signature>
+        <description>Constructs a new ErrorTransactionNumberNotFound exception with null as the value for its detail message</description>
+      </constructor>
+      <constructor>
+        <signature>ErrorTransactionNumberNotFound(String message)</signature>
+        <description>Constructs a new ErrorTransactionNumberNotFound exception whereby its detail message is initialized with the passed value</description>
+        <parameter name="message">value for the detail message of the exception, typically describing which transaction number(s) were not found</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorTransactionNumberNotFound(String message, Throwable cause)</signature>
+        <description>Constructs a new ErrorTransactionNumberNotFound exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorTransactionNumberNotFound(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+        <description>Constructs a new ErrorTransactionNumberNotFound exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+      </constructor>
+    </constructors>
+  </javadoc>
+  <specification>
+    <source>BSI TR-03151-1</source>
+    <section>3.2.2 Transaction Management - Transaction Query Functions</section>
+    <requirement>Transaction data export and query functions accept transaction number parameters to filter or retrieve specific transactions. Transaction numbers are unique identifiers assigned to each transaction. If provided transaction number(s) don't match any records in the device's transaction storage, the function SHALL raise ErrorTransactionNumberNotFound. This indicates the transaction numbers may be incorrect, transactions may have been deleted, or they may never have existed. ErrorTransactionNumberNotFound is a Medium severity exception because the query is valid but matches no results. The caller should verify transaction numbers are correct or provide alternative query parameters.</requirement>
+    <applicability>Transaction number-based queries: exportFilteredTransactionLogs, getTransactionState</applicability>
+    <reference>Transaction Management (3.2.2), Transaction Query Functions (3.2.2), exportFilteredTransactionLogs – Function (3.2.2), getTransactionState – Function (3.2.2)</reference>
+  </specification>
+  <triggerConditions>
+    <condition>
+      <scenario>Export filters by transaction number that doesn't exist</scenario>
+      <description>exportFilteredTransactionLogs called with transaction number not in database</description>
+      <trigger>Application calls exportFilteredTransactionLogs with transactionNumber=99999. Device searches records, finds no matching transaction. ErrorTransactionNumberNotFound raised to indicate transaction doesn't exist.</trigger>
+    </condition>
+    <condition>
+      <scenario>Query transaction state for non-existent transaction</scenario>
+      <description>getTransactionState called with invalid or non-existent transaction number</description>
+      <trigger>Application calls getTransactionState with transactionNumber=50000. Device searches active and completed transaction records, finds no match. ErrorTransactionNumberNotFound raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Transaction number provided but transaction deleted or archived</scenario>
+      <description>Transaction number was valid but transaction has been deleted or archived</description>
+      <trigger>Application attempts to export transaction number that existed but was deleted. Device searches current records, cannot find transaction. ErrorTransactionNumberNotFound raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Incorrect or invalid transaction number format</scenario>
+      <description>Transaction number provided has incorrect format or is out of valid range</description>
+      <trigger>Application calls getTransactionState with malformed or out-of-range transaction number. Device rejects search, raises ErrorTransactionNumberNotFound.</trigger>
+    </condition>
+    <condition>
+      <scenario>Transaction number from different device queried</scenario>
+      <description>Transaction number from different device attempted on current device</description>
+      <trigger>Administrator attempts to query transaction from Device A using number from Device B. Device A doesn't find matching transaction number. ErrorTransactionNumberNotFound raised.</trigger>
+    </condition>
+  </triggerConditions>
+  <executionSequence>
+    <step number="1">User/application calls transaction query function (e.g., exportFilteredTransactionLogs, getTransactionState) with transaction number parameter(s)</step>
+    <step number="2">Function validates input parameters including transaction number format</step>
+    <step number="2a">If transaction number invalid/malformed → may raise ErrorParameterSyntax</step>
+    <step number="2b">If transaction number valid → proceed to step 3</step>
+    <step number="3">Function initiates communication with Secure Element</step>
+    <step number="4">Secure Element receives query request with transaction number(s)</step>
+    <step number="5">Secure Element searches transaction records by provided transaction number(s)</step>
+    <step number="6">Secure Element checks if matching transaction record exists</step>
+    <step number="6a">If matching record found → proceed to step 7</step>
+    <step number="6b">If no matching record found → ErrorTransactionNumberNotFound raised, operation aborted</step>
+    <step number="7">Secure Element retrieves transaction data for matching number(s)</step>
+    <step number="8">Secure Element prepares response with transaction data</step>
+    <step number="9">Secure Element returns results to function</step>
+    <step number="10">Function returns transaction data to caller</step>
+  </executionSequence>
+  <recovery>
+    <step>Review error message - understand transaction number not found</step>
+    <step>Verify transaction number - confirm transaction number provided is correct</step>
+    <step>Check format - verify transaction number format matches expected pattern</step>
+    <step>Review transaction history - confirm transaction was executed and exists</step>
+    <step>Check deletion status - verify transaction hasn't been deleted or archived</step>
+    <step>Query all transactions - attempt query with less restrictive filters to find transaction</step>
+    <step>Check transaction counter - review current transaction counter state</step>
+    <step>Verify device - confirm query on correct device (not different device's number)</step>
+    <step>Export with different filters - attempt export with date range or status filters instead</step>
+    <step>List available transactions - query available transaction numbers to identify correct number</step>
+    <step>Retry query - attempt transaction query again with corrected transaction number</step>
+  </recovery>
+  <relatedExceptions>
+    <exception>ErrorNoDataAvailable</exception>
+    <exception>ErrorParameterSyntax</exception>
+    <exception>ErrorParameterMismatch</exception>
+    <exception>ErrorTransactionNumberNotFound</exception>
+  </relatedExceptions>
+  <postconditionality>
+    <state name="Transaction Data Not Retrieved">Transaction data cannot be retrieved for requested transaction number.</state>
+    <state name="Query Returns No Results">No matching transaction records found in storage.</state>
+    <state name="Export Not Completed">Export operation does not proceed due to no matching transactions.</state>
+    <state name="Query State Invalid">Transaction state cannot be determined for non-existent transaction.</state>
+    <state name="Medium Exception Returned">Function returns ErrorTransactionNumberNotFound Medium exception to caller.</state>
+    <state name="Caller Must Verify Number">Caller should verify transaction number is correct and exists.</state>
+  </postconditionality>
+  <notes>
+    <note>ErrorTransactionNumberNotFound is thrown by 2 transaction query functions</note>
+    <note>This is a Medium severity exception - no results match query</note>
+    <note>Exception indicates transaction number not found, not a failure</note>
+    <note>Transaction numbers are unique identifiers for each transaction</note>
+    <note>Query search must be exact match on transaction number</note>
+    <note>Transaction number format must match expected pattern</note>
+    <note>Transaction may have been deleted or archived reducing available numbers</note>
+    <note>Different devices maintain separate transaction number sequences</note>
+    <note>Error messages should indicate which transaction number(s) not found</note>
+    <note>Caller should verify transaction numbers before querying</note>
+    <note>Alternative query filters (date range, status) may help find transactions</note>
+    <note>Transaction listing functions can help identify valid transaction numbers</note>
+    <note>Transaction number ranges indicate device transaction volume history</note>
+    <note>Range-based queries can work if specific numbers unknown</note>
+    <note>Archives or backups may contain deleted transaction records</note>
+  </notes>
+  <usage>
+    <scenario name="Scenario 1: Export with Invalid Transaction Number">
+      <description>Administrator attempts to export transaction logs using specific transaction number from documentation. Calls exportFilteredTransactionLogs with provided transaction number. Device searches records but transaction number not found. ErrorTransactionNumberNotFound raised. Administrator verifies transaction number in documentation and retries with corrected number.</description>
+      <relatedFunctions>exportFilteredTransactionLogs</relatedFunctions>
+      <errorContext>Transaction number query unsuccessful - verification needed</errorContext>
+    </scenario>
+    <scenario name="Scenario 2: Query Deleted Transaction State">
+      <description>Application attempts to retrieve state of transaction that was previously executed. Calls getTransactionState with stored transaction number. Device indicates transaction not found. ErrorTransactionNumberNotFound raised because transaction has been deleted or archived. Application handles error and queries alternative transaction.</description>
+      <relatedFunctions>getTransactionState</relatedFunctions>
+      <errorContext>Transaction deleted or archived - no longer available for query</errorContext>
+    </scenario>
+    <scenario name="Scenario 3: Cross-Device Transaction Number Query">
+      <description>Administrator has transaction number from Device A. Administrator attempts to query transaction on Device B using same number. Device B doesn't recognize transaction number. ErrorTransactionNumberNotFound raised. Administrator recognizes mistake and queries correct device.</description>
+      <relatedFunctions>getTransactionState, exportFilteredTransactionLogs</relatedFunctions>
+      <errorContext>Transaction number from different device - device-specific number sequence</errorContext>
+    </scenario>
+    <scenario name="Scenario 4: Export with Range-Based Fallback Query">
+      <description>Application cannot locate specific transaction number. Instead of failing, application retries exportFilteredTransactionLogs with date range filter. Query succeeds and returns transactions including the originally-sought transaction with its actual number.</description>
+      <relatedFunctions>exportFilteredTransactionLogs</relatedFunctions>
+      <errorContext>Range query fallback when specific transaction number not found</errorContext>
+    </scenario>
+  </usage>
+  <implementationContext>
+    <note>Transaction number search must be performed against transaction storage index</note>
+    <note>Transaction number lookup should use efficient indexed search</note>
+    <note>Search must check both active and completed transaction records</note>
+    <note>Deleted or archived transactions should not match search results</note>
+    <note>Transaction number format validation should occur before search</note>
+    <note>Error messages should include the transaction number(s) not found</note>
+    <note>Search results should be verified to match provided transaction number exactly</note>
+    <note>Alternative query mechanisms (date range, status) should be available</note>
+    <note>Transaction number uniqueness should be maintained for accurate lookup</note>
+    <note>Device-specific transaction number sequences should be preserved</note>
+  </implementationContext>
 </exception>

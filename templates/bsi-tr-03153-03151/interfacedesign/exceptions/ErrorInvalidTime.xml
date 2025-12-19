@@ -1,164 +1,164 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<exception id="ErrorInvalidTime" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
-    <name>ErrorInvalidTime</name>
-    <description>This exception is thrown if the SE API function updateTime fails because the supplied time parameters are not valid or fall outside the acceptable range. The function attempts to update the Secure Element's current time, but the provided time parameters contain invalid values (out-of-range year, month, day, hour, minute, second), causing the time validation to fail.</description>
-    <category>Time Management - Time Validation</category>
-    <severity>High</severity>
-    <javadoc>
-        <summary>This class defines the exception ErrorInvalidTime that is thrown if the supplied time parameters are not valid or are outside valid ranges.</summary>
-        <description>This exception is thrown when the updateTime function receives time parameters that fail validation checks. Time parameters include year, month, day, hour, minute, and second values that must fall within valid ranges for a valid date and time. ErrorInvalidTime indicates that one or more time parameters are outside the acceptable range or represent an invalid date/time combination. When this exception occurs, the time is not updated and the Secure Element's current time remains unchanged. Recovery requires supplying valid time parameters that represent a legitimate date and time within the acceptable range.</description>
-        <constructors>
-            <constructor>
-                <signature>ErrorInvalidTime()</signature>
-                <description>Constructs a new ErrorInvalidTime exception with null as the value for its detail message</description>
-            </constructor>
-            <constructor>
-                <signature>ErrorInvalidTime(String message)</signature>
-                <description>Constructs a new ErrorInvalidTime exception whereby its detail message is initialized with the passed value</description>
-                <parameter name="message">value for the detail message of the exception, typically describing which time parameter is invalid</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorInvalidTime(String message, Throwable cause)</signature>
-                <description>Constructs a new ErrorInvalidTime exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorInvalidTime(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-                <description>Constructs a new ErrorInvalidTime exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-            </constructor>
-        </constructors>
-    </javadoc>
-    <specification>
-        <source>BSI TR-03151-1</source>
-        <section>3.2.3 Time Management - updateTime</section>
-        <requirement>The function updateTime SHALL validate all supplied time parameters before updating the Secure Element's current time. Time parameters (year, month, day, hour, minute, second) must fall within valid ranges: year within supported range, month 1-12, day 1-31 (depending on month), hour 0-23, minute 0-59, second 0-59. If any time parameter is outside the valid range or represents an invalid date combination, the function SHALL raise the exception ErrorInvalidTime and reject the time update without modifying the Secure Element's time.</requirement>
-        <applicability>Time management operations - updateTime function only</applicability>
-        <reference>updateTime – Function (3.2.3)</reference>
-    </specification>
-    <thrownBy>
-        <function>updateTime</function>
-    </thrownBy>
-    <triggerConditions>
-        <condition>
-            <scenario>Year parameter is outside valid range</scenario>
-            <description>The supplied year value is outside the valid year range supported by the Secure Element</description>
-            <trigger>The user supplies a year that is before the minimum supported year or after the maximum supported year for the device (e.g., year 1970 when minimum is 2000, or year 2099 when maximum is 2050). When setCurrentSeTime validates the year parameter, it is found to be outside the acceptable range and ErrorInvalidTime is raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Month parameter is out of range</scenario>
-            <description>The supplied month value is not between 1 and 12</description>
-            <trigger>The user supplies a month value outside 1-12 range (e.g., month 0, month 13, or month -1). When the month validation occurs, the out-of-range value is detected and ErrorInvalidTime is raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Day parameter is invalid for the specified month and year</scenario>
-            <description>The supplied day value is invalid for the month and year combination (e.g., February 30, April 31)</description>
-            <trigger>The user supplies a day value that is not valid for the specified month/year (beyond the valid day range for that month, considering leap years). When date validation checks the day against the month and year, the invalid combination is detected and ErrorInvalidTime is raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Hour, minute, or second parameters are out of range</scenario>
-            <description>The supplied time-of-day parameters are outside valid ranges (hour 0-23, minute 0-59, second 0-59)</description>
-            <trigger>The user supplies time values outside valid ranges (e.g., hour 25, minute 60, second -1). When the time-of-day validation occurs, these out-of-range values are detected and ErrorInvalidTime is raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Time parameter combination represents an impossible date/time</scenario>
-            <description>The combination of time parameters represents an impossible or logically invalid date/time</description>
-            <trigger>The user supplies time parameters that, while individually might be in range, form an impossible combination (e.g., February 29 in a non-leap year, or invalid timestamp format). When comprehensive date/time validation occurs, the logical impossibility is detected and ErrorInvalidTime is raised.</trigger>
-        </condition>
-    </triggerConditions>
-    <executionSequence>
-        <step number="1">User/application calls updateTime function with time parameters (year, month, day, hour, minute, second)</step>
-        <step number="2">Function receives the time parameters from the caller</step>
-        <step number="3">Function performs preliminary input validation on all time parameters (type checks, null checks)</step>
-        <step number="4">Function validates individual time parameter ranges (year range, month 1-12, day 1-31, hour 0-23, minute 0-59, second 0-59)</step>
-        <step number="4a">If any parameter is outside its valid range → ErrorInvalidTime raised, function exits</step>
-        <step number="4b">If parameter format is invalid or inconsistent → ErrorInvalidTime raised, function exits</step>
-        <step number="5">Function validates date validity (e.g., February 29 only in leap years, day validity for the specific month)</step>
-        <step number="5a">If the date combination is invalid → ErrorInvalidTime raised, function exits</step>
-        <step number="6">If all validation passes, function checks authorization and device state</step>
-        <step number="7">Function initiates communication with Secure Element and prepares time update command</step>
-        <step number="8">Function transmits validated time parameters to Secure Element</step>
-        <step number="9">Function processes the Secure Element response confirming time update</step>
-        <step number="10">Function returns to caller with updated time</step>
-    </executionSequence>
-    <recovery>
-        <step>Verify time parameter ranges - review the TR-03151-1 specification for valid ranges for each time parameter (year, month, day, hour, minute, second)</step>
-        <step>Check year parameter - verify the year is within the supported range for the device (consult device specifications for minimum and maximum year)</step>
-        <step>Validate month parameter - ensure month is between 1 and 12 (inclusive)</step>
-        <step>Validate day parameter - ensure day is valid for the specified month and year (e.g., no February 30, no April 31)</step>
-        <step>Check for leap year - verify that February 29 is only used in leap years (divisible by 4, except century years unless divisible by 400)</step>
-        <step>Validate time-of-day parameters - ensure hour is 0-23, minute is 0-59, second is 0-59</step>
-        <step>Correct invalid parameters - modify time parameters to represent a valid date and time</step>
-        <step>Retry updateTime with corrected parameters - re-attempt the time update with valid time values</step>
-        <step>Implement input validation in application - add client-side validation to check time parameter ranges before calling updateTime</step>
-        <step>Use system time functions - consider using operating system or standard library time functions that validate and normalize time automatically</step>
-    </recovery>
-    <relatedExceptions>
-        <exception>ErrorSetCurrentSeTimeFailed</exception>
-        <exception>ErrorGetCurrentSeTimeFailed</exception>
-        <exception>ErrorEndOfUsageReached</exception>
-        <exception>ErrorParameterMismatch</exception>
-        <exception>ErrorFunctionFailed</exception>
-    </relatedExceptions>
-    <postconditionality>
-        <state name="Device Time Unchanged">The Secure Element's current time remains completely unchanged. The rejected time update does not modify the device's clock or time configuration. The device continues to maintain its previous time value.</state>
-        <state name="Time Update Not Performed">The time update operation is not performed and has no effect on the Secure Element's time. No clock adjustment occurs. The time is rejected at validation.</state>
-        <state name="No Device State Modification">No device state is modified. Configuration, stored data, and operational parameters remain unchanged. The rejection occurs at input validation before Secure Element communication.</state>
-        <state name="No Device-Secure Element Interaction">The operation does not reach the Secure Element communication stage. The error is detected and raised before device-to-Secure Element interaction occurs.</state>
-        <state name="Function Fails Without Side Effects">The time update operation fails cleanly without any partial effects or side effects. No state corruption or incomplete operations result from the invalid time parameters.</state>
-        <state name="Recovery Preconditions Met">The application can immediately retry the operation with corrected time parameters. No recovery procedures or device intervention is required - the error is input data error.</state>
-    </postconditionality>
-    <notes>
-        <note>ErrorInvalidTime is thrown ONLY when time parameter validation detects out-of-range or invalid values - it is the most specific exception for time value validation failures</note>
-        <note>This exception indicates input data error (invalid time parameters) rather than a system or device error</note>
-        <note>Critical distinction from ErrorSetCurrentSeTimeFailed: ErrorInvalidTime indicates parameter validation failure, while ErrorSetCurrentSeTimeFailed indicates system-level time update failure</note>
-        <note>Exception is raised during the parameter validation phase (steps 4-5), before any Secure Element communication or time modification</note>
-        <note>After this exception, the device time remains completely unchanged and the application can immediately retry with corrected input</note>
-        <note>This exception has High severity because it represents either a coding error in the application or potential security issues with invalid timestamps</note>
-        <note>Time parameter validation is a mandatory input validation requirement - strict range checking prevents invalid time values from being set</note>
-        <note>The valid year range depends on device specifications - consult device documentation for minimum and maximum supported years</note>
-        <note>Leap year calculations must follow standard rules: divisible by 4 except for century years, which must be divisible by 400</note>
-        <note>If this exception occurs frequently, it suggests the application may not be properly validating time parameters - application-side validation should be added</note>
-        <note>Time parameter validation occurs consistently regardless of current device state, authorization, or other factors</note>
-        <note>Applications should implement client-side time validation to detect format errors early and provide better user experience</note>
-        <note>ErrorInvalidTime is an expected, normal exception in workflows where external or user-supplied time values might be processed</note>
-        <note>The error message should ideally indicate which specific time parameter is invalid to facilitate debugging and correction</note>
-        <note>Standard library time functions should be used when possible to avoid manual time validation errors</note>
-    </notes>
-    <usage>
-        <scenario name="Scenario 1: Time Synchronization with User Input">
-            <description>An application synchronizes the Secure Element's time with an external source. The application receives time parameters and calls updateTime to update the device time. If the supplied time parameters are invalid, ErrorInvalidTime is raised. The application must validate the time before transmission and handle validation errors.</description>
-            <relatedFunctions>updateTime, getCurrentSeTime</relatedFunctions>
-            <errorContext>Invalid time parameters prevent time synchronization</errorContext>
-        </scenario>
-        <scenario name="Scenario 2: Automated Time Synchronization with NTP Integration">
-            <description>An automated system synchronizes device time using NTP (Network Time Protocol). The system receives NTP timestamp and converts it to individual time parameters (year, month, day, hour, minute, second). When calling updateTime, if the converted parameters are invalid, ErrorInvalidTime is raised. The system must validate the conversion and handle conversion errors.</description>
-            <relatedFunctions>updateTime, getCurrentSeTime</relatedFunctions>
-            <errorContext>Invalid time from NTP conversion prevents automatic time synchronization</errorContext>
-        </scenario>
-        <scenario name="Scenario 3: Time Input Processing and Validation Pipeline">
-            <description>An application processes time values from various sources (configuration, user input, external APIs). The application validates each time value before using it in updateTime. When invalid time parameters are encountered, ErrorInvalidTime is raised, and the application logs the error and uses fallback time.</description>
-            <relatedFunctions>updateTime, getCurrentSeTime</relatedFunctions>
-            <errorContext>Validation of externally-supplied time parameters for validity</errorContext>
-        </scenario>
-        <scenario name="Scenario 4: Time Synchronization with Format Conversion">
-            <description>An application converts time from various formats (ISO 8601, Unix timestamp, custom format) to SE API time parameter format. The application calls updateTime with the converted parameters. If the conversion results in invalid parameters, ErrorInvalidTime is raised, indicating conversion error.</description>
-            <relatedFunctions>updateTime, getCurrentSeTime</relatedFunctions>
-            <errorContext>Time format conversion error detected via invalid parameter validation</errorContext>
-        </scenario>
-    </usage>
-    <implementationContext>
-        <note>Time parameter validation is a fundamental input validation requirement for time update operations</note>
-        <note>Time parameter ranges are strictly defined to ensure only valid date/time values are accepted</note>
-        <note>Supported year range depends on device specifications and Secure Element capabilities - typically 1970-2099 or similar</note>
-        <note>Month must be 1-12, day 1-31 (depending on month), hour 0-23, minute 0-59, second 0-59</note>
-        <note>Leap year logic must be correctly implemented: year divisible by 4 is leap year, except century years (divisible by 100) unless also divisible by 400</note>
-        <note>Applications should implement client-side validation to detect format errors early and provide better user experience</note>
-        <note>ErrorInvalidTime is detected during input validation before Secure Element communication - no device state is affected</note>
-        <note>Standard library time functions should be preferred for time validation to avoid manual error-prone calculations</note>
-    </implementationContext>
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorInvalidTime" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+  <name>ErrorInvalidTime</name>
+  <description>This exception is thrown if the SE API function updateTime fails because the supplied time parameters are not valid or fall outside the acceptable range. The function attempts to update the Secure Element's current time, but the provided time parameters contain invalid values (out-of-range year, month, day, hour, minute, second), causing the time validation to fail.</description>
+  <category>Time Management - Time Validation</category>
+  <severity>High</severity>
+  <javadoc>
+    <summary>This class defines the exception ErrorInvalidTime that is thrown if the supplied time parameters are not valid or are outside valid ranges.</summary>
+    <description>This exception is thrown when the updateTime function receives time parameters that fail validation checks. Time parameters include year, month, day, hour, minute, and second values that must fall within valid ranges for a valid date and time. ErrorInvalidTime indicates that one or more time parameters are outside the acceptable range or represent an invalid date/time combination. When this exception occurs, the time is not updated and the Secure Element's current time remains unchanged. Recovery requires supplying valid time parameters that represent a legitimate date and time within the acceptable range.</description>
+    <constructors>
+      <constructor>
+        <signature>ErrorInvalidTime()</signature>
+        <description>Constructs a new ErrorInvalidTime exception with null as the value for its detail message</description>
+      </constructor>
+      <constructor>
+        <signature>ErrorInvalidTime(String message)</signature>
+        <description>Constructs a new ErrorInvalidTime exception whereby its detail message is initialized with the passed value</description>
+        <parameter name="message">value for the detail message of the exception, typically describing which time parameter is invalid</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorInvalidTime(String message, Throwable cause)</signature>
+        <description>Constructs a new ErrorInvalidTime exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorInvalidTime(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+        <description>Constructs a new ErrorInvalidTime exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+      </constructor>
+    </constructors>
+  </javadoc>
+  <specification>
+    <source>BSI TR-03151-1</source>
+    <section>3.2.3 Time Management - updateTime</section>
+    <requirement>The function updateTime SHALL validate all supplied time parameters before updating the Secure Element's current time. Time parameters (year, month, day, hour, minute, second) must fall within valid ranges: year within supported range, month 1-12, day 1-31 (depending on month), hour 0-23, minute 0-59, second 0-59. If any time parameter is outside the valid range or represents an invalid date combination, the function SHALL raise the exception ErrorInvalidTime and reject the time update without modifying the Secure Element's time.</requirement>
+    <applicability>Time management operations - updateTime function only</applicability>
+    <reference>updateTime – Function (3.2.3)</reference>
+  </specification>
+  <thrownBy>
+    <function>updateTime</function>
+  </thrownBy>
+  <triggerConditions>
+    <condition>
+      <scenario>Year parameter is outside valid range</scenario>
+      <description>The supplied year value is outside the valid year range supported by the Secure Element</description>
+      <trigger>The user supplies a year that is before the minimum supported year or after the maximum supported year for the device (e.g., year 1970 when minimum is 2000, or year 2099 when maximum is 2050). When setCurrentSeTime validates the year parameter, it is found to be outside the acceptable range and ErrorInvalidTime is raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Month parameter is out of range</scenario>
+      <description>The supplied month value is not between 1 and 12</description>
+      <trigger>The user supplies a month value outside 1-12 range (e.g., month 0, month 13, or month -1). When the month validation occurs, the out-of-range value is detected and ErrorInvalidTime is raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Day parameter is invalid for the specified month and year</scenario>
+      <description>The supplied day value is invalid for the month and year combination (e.g., February 30, April 31)</description>
+      <trigger>The user supplies a day value that is not valid for the specified month/year (beyond the valid day range for that month, considering leap years). When date validation checks the day against the month and year, the invalid combination is detected and ErrorInvalidTime is raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Hour, minute, or second parameters are out of range</scenario>
+      <description>The supplied time-of-day parameters are outside valid ranges (hour 0-23, minute 0-59, second 0-59)</description>
+      <trigger>The user supplies time values outside valid ranges (e.g., hour 25, minute 60, second -1). When the time-of-day validation occurs, these out-of-range values are detected and ErrorInvalidTime is raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Time parameter combination represents an impossible date/time</scenario>
+      <description>The combination of time parameters represents an impossible or logically invalid date/time</description>
+      <trigger>The user supplies time parameters that, while individually might be in range, form an impossible combination (e.g., February 29 in a non-leap year, or invalid timestamp format). When comprehensive date/time validation occurs, the logical impossibility is detected and ErrorInvalidTime is raised.</trigger>
+    </condition>
+  </triggerConditions>
+  <executionSequence>
+    <step number="1">User/application calls updateTime function with time parameters (year, month, day, hour, minute, second)</step>
+    <step number="2">Function receives the time parameters from the caller</step>
+    <step number="3">Function performs preliminary input validation on all time parameters (type checks, null checks)</step>
+    <step number="4">Function validates individual time parameter ranges (year range, month 1-12, day 1-31, hour 0-23, minute 0-59, second 0-59)</step>
+    <step number="4a">If any parameter is outside its valid range → ErrorInvalidTime raised, function exits</step>
+    <step number="4b">If parameter format is invalid or inconsistent → ErrorInvalidTime raised, function exits</step>
+    <step number="5">Function validates date validity (e.g., February 29 only in leap years, day validity for the specific month)</step>
+    <step number="5a">If the date combination is invalid → ErrorInvalidTime raised, function exits</step>
+    <step number="6">If all validation passes, function checks authorization and device state</step>
+    <step number="7">Function initiates communication with Secure Element and prepares time update command</step>
+    <step number="8">Function transmits validated time parameters to Secure Element</step>
+    <step number="9">Function processes the Secure Element response confirming time update</step>
+    <step number="10">Function returns to caller with updated time</step>
+  </executionSequence>
+  <recovery>
+    <step>Verify time parameter ranges - review the TR-03151-1 specification for valid ranges for each time parameter (year, month, day, hour, minute, second)</step>
+    <step>Check year parameter - verify the year is within the supported range for the device (consult device specifications for minimum and maximum year)</step>
+    <step>Validate month parameter - ensure month is between 1 and 12 (inclusive)</step>
+    <step>Validate day parameter - ensure day is valid for the specified month and year (e.g., no February 30, no April 31)</step>
+    <step>Check for leap year - verify that February 29 is only used in leap years (divisible by 4, except century years unless divisible by 400)</step>
+    <step>Validate time-of-day parameters - ensure hour is 0-23, minute is 0-59, second is 0-59</step>
+    <step>Correct invalid parameters - modify time parameters to represent a valid date and time</step>
+    <step>Retry updateTime with corrected parameters - re-attempt the time update with valid time values</step>
+    <step>Implement input validation in application - add client-side validation to check time parameter ranges before calling updateTime</step>
+    <step>Use system time functions - consider using operating system or standard library time functions that validate and normalize time automatically</step>
+  </recovery>
+  <relatedExceptions>
+    <exception>ErrorSetCurrentSeTimeFailed</exception>
+    <exception>ErrorGetCurrentSeTimeFailed</exception>
+    <exception>ErrorEndOfUsageReached</exception>
+    <exception>ErrorParameterMismatch</exception>
+    <exception>ErrorFunctionFailed</exception>
+  </relatedExceptions>
+  <postconditionality>
+    <state name="Device Time Unchanged">The Secure Element's current time remains completely unchanged. The rejected time update does not modify the device's clock or time configuration. The device continues to maintain its previous time value.</state>
+    <state name="Time Update Not Performed">The time update operation is not performed and has no effect on the Secure Element's time. No clock adjustment occurs. The time is rejected at validation.</state>
+    <state name="No Device State Modification">No device state is modified. Configuration, stored data, and operational parameters remain unchanged. The rejection occurs at input validation before Secure Element communication.</state>
+    <state name="No Device-Secure Element Interaction">The operation does not reach the Secure Element communication stage. The error is detected and raised before device-to-Secure Element interaction occurs.</state>
+    <state name="Function Fails Without Side Effects">The time update operation fails cleanly without any partial effects or side effects. No state corruption or incomplete operations result from the invalid time parameters.</state>
+    <state name="Recovery Preconditions Met">The application can immediately retry the operation with corrected time parameters. No recovery procedures or device intervention is required - the error is input data error.</state>
+  </postconditionality>
+  <notes>
+    <note>ErrorInvalidTime is thrown ONLY when time parameter validation detects out-of-range or invalid values - it is the most specific exception for time value validation failures</note>
+    <note>This exception indicates input data error (invalid time parameters) rather than a system or device error</note>
+    <note>Critical distinction from ErrorSetCurrentSeTimeFailed: ErrorInvalidTime indicates parameter validation failure, while ErrorSetCurrentSeTimeFailed indicates system-level time update failure</note>
+    <note>Exception is raised during the parameter validation phase (steps 4-5), before any Secure Element communication or time modification</note>
+    <note>After this exception, the device time remains completely unchanged and the application can immediately retry with corrected input</note>
+    <note>This exception has High severity because it represents either a coding error in the application or potential security issues with invalid timestamps</note>
+    <note>Time parameter validation is a mandatory input validation requirement - strict range checking prevents invalid time values from being set</note>
+    <note>The valid year range depends on device specifications - consult device documentation for minimum and maximum supported years</note>
+    <note>Leap year calculations must follow standard rules: divisible by 4 except for century years, which must be divisible by 400</note>
+    <note>If this exception occurs frequently, it suggests the application may not be properly validating time parameters - application-side validation should be added</note>
+    <note>Time parameter validation occurs consistently regardless of current device state, authorization, or other factors</note>
+    <note>Applications should implement client-side time validation to detect format errors early and provide better user experience</note>
+    <note>ErrorInvalidTime is an expected, normal exception in workflows where external or user-supplied time values might be processed</note>
+    <note>The error message should ideally indicate which specific time parameter is invalid to facilitate debugging and correction</note>
+    <note>Standard library time functions should be used when possible to avoid manual time validation errors</note>
+  </notes>
+  <usage>
+    <scenario name="Scenario 1: Time Synchronization with User Input">
+      <description>An application synchronizes the Secure Element's time with an external source. The application receives time parameters and calls updateTime to update the device time. If the supplied time parameters are invalid, ErrorInvalidTime is raised. The application must validate the time before transmission and handle validation errors.</description>
+      <relatedFunctions>updateTime, getCurrentSeTime</relatedFunctions>
+      <errorContext>Invalid time parameters prevent time synchronization</errorContext>
+    </scenario>
+    <scenario name="Scenario 2: Automated Time Synchronization with NTP Integration">
+      <description>An automated system synchronizes device time using NTP (Network Time Protocol). The system receives NTP timestamp and converts it to individual time parameters (year, month, day, hour, minute, second). When calling updateTime, if the converted parameters are invalid, ErrorInvalidTime is raised. The system must validate the conversion and handle conversion errors.</description>
+      <relatedFunctions>updateTime, getCurrentSeTime</relatedFunctions>
+      <errorContext>Invalid time from NTP conversion prevents automatic time synchronization</errorContext>
+    </scenario>
+    <scenario name="Scenario 3: Time Input Processing and Validation Pipeline">
+      <description>An application processes time values from various sources (configuration, user input, external APIs). The application validates each time value before using it in updateTime. When invalid time parameters are encountered, ErrorInvalidTime is raised, and the application logs the error and uses fallback time.</description>
+      <relatedFunctions>updateTime, getCurrentSeTime</relatedFunctions>
+      <errorContext>Validation of externally-supplied time parameters for validity</errorContext>
+    </scenario>
+    <scenario name="Scenario 4: Time Synchronization with Format Conversion">
+      <description>An application converts time from various formats (ISO 8601, Unix timestamp, custom format) to SE API time parameter format. The application calls updateTime with the converted parameters. If the conversion results in invalid parameters, ErrorInvalidTime is raised, indicating conversion error.</description>
+      <relatedFunctions>updateTime, getCurrentSeTime</relatedFunctions>
+      <errorContext>Time format conversion error detected via invalid parameter validation</errorContext>
+    </scenario>
+  </usage>
+  <implementationContext>
+    <note>Time parameter validation is a fundamental input validation requirement for time update operations</note>
+    <note>Time parameter ranges are strictly defined to ensure only valid date/time values are accepted</note>
+    <note>Supported year range depends on device specifications and Secure Element capabilities - typically 1970-2099 or similar</note>
+    <note>Month must be 1-12, day 1-31 (depending on month), hour 0-23, minute 0-59, second 0-59</note>
+    <note>Leap year logic must be correctly implemented: year divisible by 4 is leap year, except century years (divisible by 100) unless also divisible by 400</note>
+    <note>Applications should implement client-side validation to detect format errors early and provide better user experience</note>
+    <note>ErrorInvalidTime is detected during input validation before Secure Element communication - no device state is affected</note>
+    <note>Standard library time functions should be preferred for time validation to avoid manual error-prone calculations</note>
+  </implementationContext>
 </exception>

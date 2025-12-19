@@ -1,168 +1,167 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<exception id="ErrorUnknownUserId" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
-    <name>ErrorUnknownUserId</name>
-    <description>This exception is thrown if a function is invoked with a User-ID that is not registered or recognized by the device. User-IDs identify users within the device's user management system. The device maintains a registry of valid User-IDs that can authenticate and perform operations. When a function receives a User-ID that doesn't match any registered user, ErrorUnknownUserId is raised. ErrorUnknownUserId is a High severity exception because it indicates an attempt to authenticate or operate as an unrecognized user. This may represent incorrect credentials, user not registered, or invalid user parameter. Recovery requires providing a valid, registered User-ID.</description>
-    <category>Authentication - User Management</category>
-    <severity>High</severity>
-    <javadoc>
-        <summary>This class defines the exception ErrorUnknownUserId that is thrown if a function is invoked with an unknown or unregistered User-ID.</summary>
-        <description>This exception is thrown when an SE API function is called with a User-ID that is not registered or recognized on the device. User-IDs identify users within the device's user management system. Functions like authenticateUser, logOut, and unblockPin require valid, registered User-IDs. If an unrecognized User-ID is provided, ErrorUnknownUserId is raised. This indicates the user is not registered on the device, the User-ID is invalid, or incorrect credentials were provided. ErrorUnknownUserId is a High severity exception because authentication with unknown user cannot proceed. The caller must provide a valid, registered User-ID for operations to succeed.</description>
-        <constructors>
-            <constructor>
-                <signature>ErrorUnknownUserId()</signature>
-                <description>Constructs a new ErrorUnknownUserId exception with null as the value for its detail message</description>
-            </constructor>
-            <constructor>
-                <signature>ErrorUnknownUserId(String message)</signature>
-                <description>Constructs a new ErrorUnknownUserId exception whereby its detail message is initialized with the passed value</description>
-                <parameter name="message">value for the detail message of the exception, typically describing which User-ID was not recognized</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorUnknownUserId(String message, Throwable cause)</signature>
-                <description>Constructs a new ErrorUnknownUserId exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorUnknownUserId(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-                <description>Constructs a new ErrorUnknownUserId exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-            </constructor>
-        </constructors>
-    </javadoc>
-    <specification>
-        <source>BSI TR-03151-1</source>
-        <section>3.5.1 Authentication - User Management and Authentication</section>
-        <requirement>The SE API maintains a registry of valid User-IDs that can authenticate and perform operations. Each user is uniquely identified by a User-ID. Functions that require user context (authenticateUser, logOut, unblockPin) accept User-ID parameters. If a provided User-ID is not registered or recognized in the device's user registry, the Secure Element SHALL raise ErrorUnknownUserId. This indicates the user is not registered or the User-ID is invalid. ErrorUnknownUserId is a High severity exception because authentication cannot proceed with unknown user. The caller must provide a valid, registered User-ID for operations to succeed.</requirement>
-        <applicability>User authentication and management operations: authenticateUser, logOut, unblockPin</applicability>
-        <reference>Authentication (3.5.1), User Management (3.5.1), authenticateUser – Function (3.5.1), logOut – Function (3.5.1), unblockPin – Function (3.5.1)</reference>
-    </specification>
-    <thrownBy>
-        <function>authenticateUser</function>
-        <function>logOut</function>
-        <function>unblockPin</function>
-    </thrownBy>
-    <triggerConditions>
-        <condition>
-            <scenario>Authentication attempt with unregistered User-ID</scenario>
-            <description>authenticateUser called with User-ID not in device registry</description>
-            <trigger>User attempts to authenticate with User-ID. Device checks user registry, finds User-ID not registered. ErrorUnknownUserId raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>Logout attempted for non-existent user</scenario>
-            <description>logOut called with User-ID not in registry</description>
-            <trigger>Application calls logOut with User-ID. Device verifies User-ID exists in registry, finds it doesn't. ErrorUnknownUserId raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>PIN unblock requested for unknown user</scenario>
-            <description>unblockPin called with User-ID not registered</description>
-            <trigger>User provides User-ID to unblockPin. Device doesn't recognize User-ID in user registry. ErrorUnknownUserId raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>User-ID parameter has incorrect format or value</scenario>
-            <description>Provided User-ID is invalid or malformed</description>
-            <trigger>Application passes User-ID with invalid format. Device rejects User-ID format during lookup. ErrorUnknownUserId raised.</trigger>
-        </condition>
-        <condition>
-            <scenario>User deleted from registry but operation attempted</scenario>
-            <description>User-ID was valid but user has been deleted or deregistered</description>
-            <trigger>User previously registered but then deleted. Attempting authentication raises ErrorUnknownUserId because user no longer in registry.</trigger>
-        </condition>
-    </triggerConditions>
-    <executionSequence>
-        <step number="1">User/application calls function with User-ID parameter (e.g., authenticateUser, logOut, unblockPin)</step>
-        <step number="2">Function validates input parameters including User-ID format</step>
-        <step number="2a">If User-ID format invalid → may raise ErrorParameterSyntax</step>
-        <step number="2b">If User-ID format valid → proceed to step 3</step>
-        <step number="3">Function initiates communication with Secure Element</step>
-        <step number="4">Secure Element receives request with User-ID parameter</step>
-        <step number="5">Secure Element searches user registry for provided User-ID</step>
-        <step number="6">Secure Element checks if User-ID exists in registry</step>
-        <step number="6a">If User-ID found in registry → proceed to step 7</step>
-        <step number="6b">If User-ID not found in registry → ErrorUnknownUserId raised, operation aborted</step>
-        <step number="7">Secure Element retrieves user information for User-ID</step>
-        <step number="8">Secure Element processes operation for authenticated user</step>
-        <step number="9">Secure Element returns result to function</step>
-        <step number="10">Function returns result to caller</step>
-    </executionSequence>
-    <recovery>
-        <step>Review error message - understand User-ID is not recognized</step>
-        <step>Verify User-ID - confirm User-ID provided is correct</step>
-        <step>Check format - verify User-ID format matches expected pattern</step>
-        <step>Query registered users - determine which User-IDs are registered</step>
-        <step>Confirm user exists - verify user should be registered</step>
-        <step>Register user - if user not registered, complete user registration first</step>
-        <step>Verify registration - confirm user is now in device registry</step>
-        <step>Retry operation - attempt original operation with correct User-ID</step>
-        <step>Check user status - verify user is active (not deleted/deregistered)</step>
-        <step>Contact administrator - if user registration needed, contact admin</step>
-    </recovery>
-    <relatedExceptions>
-        <exception>ErrorParameterSyntax</exception>
-        <exception>ErrorParameterMismatch</exception>
-        <exception>ErrorClientNotRegistered</exception>
-        <exception>ErrorFunctionFailed</exception>
-    </relatedExceptions>
-    <postconditionality>
-        <state name="Authentication Not Performed">User authentication does not proceed.</state>
-        <state name="Operation Not Executed">Requested operation is not executed due to unknown user.</state>
-        <state name="User Not Recognized">User-ID is not found in device registry.</state>
-        <state name="User Session Not Active">No user session is created or modified.</state>
-        <state name="High Exception Returned">Function returns ErrorUnknownUserId High exception to caller.</state>
-        <state name="Caller Must Provide Valid User-ID">Caller must provide registered User-ID for operation to succeed.</state>
-    </postconditionality>
-    <notes>
-        <note>ErrorUnknownUserId is thrown by 3 user-related functions</note>
-        <note>This is a High severity exception blocking user operations</note>
-        <note>User-IDs must be registered in device user registry</note>
-        <note>User registry contains all valid, authorized User-IDs</note>
-        <note>User-ID format must match expected pattern</note>
-        <note>User lookup is exact match on User-ID value</note>
-        <note>Users deleted from registry will raise this exception</note>
-        <note>User registration is separate from User-ID authentication</note>
-        <note>Different devices may have different User-IDs</note>
-        <note>Error messages should indicate which User-ID was not found</note>
-        <note>Query user registry to identify valid User-IDs</note>
-        <note>User management operations control registry membership</note>
-        <note>User deactivation/deletion removes from registry</note>
-        <note>User roles or permissions may be associated with User-IDs</note>
-        <note>Audit trail should log all unknown User-ID attempts</note>
-    </notes>
-    <usage>
-        <scenario name="Scenario 1: Authentication Attempt with Wrong User-ID">
-            <description>User attempts to authenticate using incorrect User-ID. Calls authenticateUser with unregistered User-ID. Device checks user registry, User-ID not found. ErrorUnknownUserId raised. User corrects User-ID and retries with correct User-ID.</description>
-            <relatedFunctions>authenticateUser, verifyPin</relatedFunctions>
-            <errorContext>User-ID verification failed - User-ID not recognized</errorContext>
-        </scenario>
-        <scenario name="Scenario 2: Logout for Non-Existent User">
-            <description>Application calls logOut with User-ID for user that was previously deleted. Device checks registry, finds User-ID no longer exists. ErrorUnknownUserId raised. Application error handling catches exception and continues.</description>
-            <relatedFunctions>logOut, authenticateUser</relatedFunctions>
-            <errorContext>Logout attempted for deleted user - User-ID no longer in registry</errorContext>
-        </scenario>
-        <scenario name="Scenario 3: PIN Unblock for Unknown User">
-            <description>Administrator attempts to help user unlock PIN by calling unblockPin with User-ID. Administrator provides incorrect User-ID. Device doesn't recognize User-ID in registry. ErrorUnknownUserId raised. Administrator verifies correct User-ID and retries.</description>
-            <relatedFunctions>unblockPin</relatedFunctions>
-            <errorContext>User-ID verification failed during PIN unblock operation</errorContext>
-        </scenario>
-        <scenario name="Scenario 4: User Registration Before Authentication">
-            <description>New user attempts to authenticate but has not been registered yet. Authentication raises ErrorUnknownUserId because User-ID not in registry. Administrator registers user in device. User retries authentication successfully.</description>
-            <relatedFunctions>authenticateUser</relatedFunctions>
-            <errorContext>User not yet registered - must complete registration first</errorContext>
-        </scenario>
-    </usage>
-    <implementationContext>
-        <note>User registry must be maintained and queried for each operation</note>
-        <note>User-ID lookup should be efficient index-based search</note>
-        <note>User-ID format validation should occur before registry lookup</note>
-        <note>Registry lookup must be atomic to prevent race conditions</note>
-        <note>User deletion should remove User-ID from registry</note>
-        <note>User registration adds User-ID to registry</note>
-        <note>Error messages should indicate User-ID not found clearly</note>
-        <note>Audit trail should log all unknown User-ID attempts for security</note>
-        <note>Registry queries should be protected against brute force</note>
-        <note>Device should track failed authentication attempts per User-ID</note>
-    </implementationContext>
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorUnknownUserId" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+  <name>ErrorUnknownUserId</name>
+  <description>This exception is thrown if a function is invoked with a User-ID that is not registered or recognized by the device. User-IDs identify users within the device's user management system. The device maintains a registry of valid User-IDs that can authenticate and perform operations. When a function receives a User-ID that doesn't match any registered user, ErrorUnknownUserId is raised. ErrorUnknownUserId is a High severity exception because it indicates an attempt to authenticate or operate as an unrecognized user. This may represent incorrect credentials, user not registered, or invalid user parameter. Recovery requires providing a valid, registered User-ID.</description>
+  <category>Authentication - User Management</category>
+  <severity>High</severity>
+  <thrownBy>
+    <function>authenticateUser</function>
+    <function>unblockPin</function>
+  </thrownBy>
+  <javadoc>
+    <summary>This class defines the exception ErrorUnknownUserId that is thrown if a function is invoked with an unknown or unregistered User-ID.</summary>
+    <description>This exception is thrown when an SE API function is called with a User-ID that is not registered or recognized on the device. User-IDs identify users within the device's user management system. Functions like authenticateUser, logOut, and unblockPin require valid, registered User-IDs. If an unrecognized User-ID is provided, ErrorUnknownUserId is raised. This indicates the user is not registered on the device, the User-ID is invalid, or incorrect credentials were provided. ErrorUnknownUserId is a High severity exception because authentication with unknown user cannot proceed. The caller must provide a valid, registered User-ID for operations to succeed.</description>
+    <constructors>
+      <constructor>
+        <signature>ErrorUnknownUserId()</signature>
+        <description>Constructs a new ErrorUnknownUserId exception with null as the value for its detail message</description>
+      </constructor>
+      <constructor>
+        <signature>ErrorUnknownUserId(String message)</signature>
+        <description>Constructs a new ErrorUnknownUserId exception whereby its detail message is initialized with the passed value</description>
+        <parameter name="message">value for the detail message of the exception, typically describing which User-ID was not recognized</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorUnknownUserId(String message, Throwable cause)</signature>
+        <description>Constructs a new ErrorUnknownUserId exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorUnknownUserId(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+        <description>Constructs a new ErrorUnknownUserId exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+      </constructor>
+    </constructors>
+  </javadoc>
+  <specification>
+    <source>BSI TR-03151-1</source>
+    <section>3.5.1 Authentication - User Management and Authentication</section>
+    <requirement>The SE API maintains a registry of valid User-IDs that can authenticate and perform operations. Each user is uniquely identified by a User-ID. Functions that require user context (authenticateUser, logOut, unblockPin) accept User-ID parameters. If a provided User-ID is not registered or recognized in the device's user registry, the Secure Element SHALL raise ErrorUnknownUserId. This indicates the user is not registered or the User-ID is invalid. ErrorUnknownUserId is a High severity exception because authentication cannot proceed with unknown user. The caller must provide a valid, registered User-ID for operations to succeed.</requirement>
+    <applicability>User authentication and management operations: authenticateUser, logOut, unblockPin</applicability>
+    <reference>Authentication (3.5.1), User Management (3.5.1), authenticateUser – Function (3.5.1), logOut – Function (3.5.1), unblockPin – Function (3.5.1)</reference>
+  </specification>
+  <triggerConditions>
+    <condition>
+      <scenario>Authentication attempt with unregistered User-ID</scenario>
+      <description>authenticateUser called with User-ID not in device registry</description>
+      <trigger>User attempts to authenticate with User-ID. Device checks user registry, finds User-ID not registered. ErrorUnknownUserId raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>Logout attempted for non-existent user</scenario>
+      <description>logOut called with User-ID not in registry</description>
+      <trigger>Application calls logOut with User-ID. Device verifies User-ID exists in registry, finds it doesn't. ErrorUnknownUserId raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>PIN unblock requested for unknown user</scenario>
+      <description>unblockPin called with User-ID not registered</description>
+      <trigger>User provides User-ID to unblockPin. Device doesn't recognize User-ID in user registry. ErrorUnknownUserId raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>User-ID parameter has incorrect format or value</scenario>
+      <description>Provided User-ID is invalid or malformed</description>
+      <trigger>Application passes User-ID with invalid format. Device rejects User-ID format during lookup. ErrorUnknownUserId raised.</trigger>
+    </condition>
+    <condition>
+      <scenario>User deleted from registry but operation attempted</scenario>
+      <description>User-ID was valid but user has been deleted or deregistered</description>
+      <trigger>User previously registered but then deleted. Attempting authentication raises ErrorUnknownUserId because user no longer in registry.</trigger>
+    </condition>
+  </triggerConditions>
+  <executionSequence>
+    <step number="1">User/application calls function with User-ID parameter (e.g., authenticateUser, logOut, unblockPin)</step>
+    <step number="2">Function validates input parameters including User-ID format</step>
+    <step number="2a">If User-ID format invalid → may raise ErrorParameterSyntax</step>
+    <step number="2b">If User-ID format valid → proceed to step 3</step>
+    <step number="3">Function initiates communication with Secure Element</step>
+    <step number="4">Secure Element receives request with User-ID parameter</step>
+    <step number="5">Secure Element searches user registry for provided User-ID</step>
+    <step number="6">Secure Element checks if User-ID exists in registry</step>
+    <step number="6a">If User-ID found in registry → proceed to step 7</step>
+    <step number="6b">If User-ID not found in registry → ErrorUnknownUserId raised, operation aborted</step>
+    <step number="7">Secure Element retrieves user information for User-ID</step>
+    <step number="8">Secure Element processes operation for authenticated user</step>
+    <step number="9">Secure Element returns result to function</step>
+    <step number="10">Function returns result to caller</step>
+  </executionSequence>
+  <recovery>
+    <step>Review error message - understand User-ID is not recognized</step>
+    <step>Verify User-ID - confirm User-ID provided is correct</step>
+    <step>Check format - verify User-ID format matches expected pattern</step>
+    <step>Query registered users - determine which User-IDs are registered</step>
+    <step>Confirm user exists - verify user should be registered</step>
+    <step>Register user - if user not registered, complete user registration first</step>
+    <step>Verify registration - confirm user is now in device registry</step>
+    <step>Retry operation - attempt original operation with correct User-ID</step>
+    <step>Check user status - verify user is active (not deleted/deregistered)</step>
+    <step>Contact administrator - if user registration needed, contact admin</step>
+  </recovery>
+  <relatedExceptions>
+    <exception>ErrorParameterSyntax</exception>
+    <exception>ErrorParameterMismatch</exception>
+    <exception>ErrorClientNotRegistered</exception>
+    <exception>ErrorFunctionFailed</exception>
+  </relatedExceptions>
+  <postconditionality>
+    <state name="Authentication Not Performed">User authentication does not proceed.</state>
+    <state name="Operation Not Executed">Requested operation is not executed due to unknown user.</state>
+    <state name="User Not Recognized">User-ID is not found in device registry.</state>
+    <state name="User Session Not Active">No user session is created or modified.</state>
+    <state name="High Exception Returned">Function returns ErrorUnknownUserId High exception to caller.</state>
+    <state name="Caller Must Provide Valid User-ID">Caller must provide registered User-ID for operation to succeed.</state>
+  </postconditionality>
+  <notes>
+    <note>ErrorUnknownUserId is thrown by 3 user-related functions</note>
+    <note>This is a High severity exception blocking user operations</note>
+    <note>User-IDs must be registered in device user registry</note>
+    <note>User registry contains all valid, authorized User-IDs</note>
+    <note>User-ID format must match expected pattern</note>
+    <note>User lookup is exact match on User-ID value</note>
+    <note>Users deleted from registry will raise this exception</note>
+    <note>User registration is separate from User-ID authentication</note>
+    <note>Different devices may have different User-IDs</note>
+    <note>Error messages should indicate which User-ID was not found</note>
+    <note>Query user registry to identify valid User-IDs</note>
+    <note>User management operations control registry membership</note>
+    <note>User deactivation/deletion removes from registry</note>
+    <note>User roles or permissions may be associated with User-IDs</note>
+    <note>Audit trail should log all unknown User-ID attempts</note>
+  </notes>
+  <usage>
+    <scenario name="Scenario 1: Authentication Attempt with Wrong User-ID">
+      <description>User attempts to authenticate using incorrect User-ID. Calls authenticateUser with unregistered User-ID. Device checks user registry, User-ID not found. ErrorUnknownUserId raised. User corrects User-ID and retries with correct User-ID.</description>
+      <relatedFunctions>authenticateUser, verifyPin</relatedFunctions>
+      <errorContext>User-ID verification failed - User-ID not recognized</errorContext>
+    </scenario>
+    <scenario name="Scenario 2: Logout for Non-Existent User">
+      <description>Application calls logOut with User-ID for user that was previously deleted. Device checks registry, finds User-ID no longer exists. ErrorUnknownUserId raised. Application error handling catches exception and continues.</description>
+      <relatedFunctions>logOut, authenticateUser</relatedFunctions>
+      <errorContext>Logout attempted for deleted user - User-ID no longer in registry</errorContext>
+    </scenario>
+    <scenario name="Scenario 3: PIN Unblock for Unknown User">
+      <description>Administrator attempts to help user unlock PIN by calling unblockPin with User-ID. Administrator provides incorrect User-ID. Device doesn't recognize User-ID in registry. ErrorUnknownUserId raised. Administrator verifies correct User-ID and retries.</description>
+      <relatedFunctions>unblockPin</relatedFunctions>
+      <errorContext>User-ID verification failed during PIN unblock operation</errorContext>
+    </scenario>
+    <scenario name="Scenario 4: User Registration Before Authentication">
+      <description>New user attempts to authenticate but has not been registered yet. Authentication raises ErrorUnknownUserId because User-ID not in registry. Administrator registers user in device. User retries authentication successfully.</description>
+      <relatedFunctions>authenticateUser</relatedFunctions>
+      <errorContext>User not yet registered - must complete registration first</errorContext>
+    </scenario>
+  </usage>
+  <implementationContext>
+    <note>User registry must be maintained and queried for each operation</note>
+    <note>User-ID lookup should be efficient index-based search</note>
+    <note>User-ID format validation should occur before registry lookup</note>
+    <note>Registry lookup must be atomic to prevent race conditions</note>
+    <note>User deletion should remove User-ID from registry</note>
+    <note>User registration adds User-ID to registry</note>
+    <note>Error messages should indicate User-ID not found clearly</note>
+    <note>Audit trail should log all unknown User-ID attempts for security</note>
+    <note>Registry queries should be protected against brute force</note>
+    <note>Device should track failed authentication attempts per User-ID</note>
+  </implementationContext>
 </exception>

@@ -1,146 +1,146 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<exception id="ErrorCurrentNumberOfClientsNotTracked" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
-    <name>ErrorCurrentNumberOfClientsNotTracked</name>
-    <description>This exception is thrown if the device does not track the current number of registered clients and therefore cannot provide this information through the getCurrentNumberOfClients function. The exception represents a device capability limitation rather than a functional failure. ErrorCurrentNumberOfClientsNotTracked is raised when an application invokes getCurrentNumberOfClients on a device that supports a practically unlimited number of clients simultaneously and has deliberately omitted client counting functionality to avoid performance overhead. This exception indicates that the device is operating normally, but the specific capability to enumerate or count currently registered clients is not implemented or has been disabled. The exception is raised after the device validates that the function was invoked correctly but determines that client tracking is not available on this device variant.</description>
-    <category>Client Management</category>
-    <severity>Medium</severity>
-    <javadoc>
-        <summary>This class defines the exception ErrorCurrentNumberOfClientsNotTracked that is thrown if the devices does not track the current number of (registered) clients. Therefore, the SE API function getCurrentNumberOfClients cannot provide a number.</summary>
-        <description>The device supports a practically unlimited number of clients simultaneously and does not track the current number of clients. This exception is raised when the device capability to count active clients is not available, typically in systems designed for unlimited scalability.</description>
-        <constructors>
-            <constructor>
-                <signature>ErrorCurrentNumberOfClientsNotTracked()</signature>
-                <description>Constructs a new ErrorCurrentNumberOfClientsNotTracked exception with null as the value for its detail message</description>
-            </constructor>
-            <constructor>
-                <signature>ErrorCurrentNumberOfClientsNotTracked(String message)</signature>
-                <description>Constructs a new ErrorCurrentNumberOfClientsNotTracked exception whereby its detail message is initialized with the passed value</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorCurrentNumberOfClientsNotTracked(String message, Throwable cause)</signature>
-                <description>Constructs a new ErrorCurrentNumberOfClientsNotTracked exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorCurrentNumberOfClientsNotTracked(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-                <description>Constructs a new ErrorCurrentNumberOfClientsNotTracked exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-            </constructor>
-        </constructors>
-    </javadoc>
-    <specification>
-        <source>BSI TR-03151-1</source>
-        <section>3.7.9.2.3</section>
-        <requirement>MAY be raised when the device supports a practically unlimited number of clients simultaneously and at the same time does not track the current number of clients. If the device does not support client counting, the function SHALL raise the exception ErrorCurrentNumberOfClientsNotTracked and exit the function.</requirement>
-        <applicability>Client counting query when device does not support client tracking</applicability>
-        <reference>getCurrentNumberOfClients – Exceptions (3.7.9.2.3)</reference>
-    </specification>
-    <thrownBy>
-        <function>getCurrentNumberOfClients</function>
-    </thrownBy>
-    <triggerConditions>
-        <condition>
-            <scenario>Device with unlimited client support and no tracking mechanism</scenario>
-            <description>The device is configured to support a practically unlimited number of simultaneous clients and has deliberately omitted client counting functionality to avoid performance overhead and complexity. When getCurrentNumberOfClients is invoked, the device detects that client tracking is not available.</description>
-            <trigger>Invocation of getCurrentNumberOfClients on device without client tracking implementation</trigger>
-        </condition>
-        <condition>
-            <scenario>Client tracking disabled via device configuration</scenario>
-            <description>The device implementation supports client tracking in general, but client tracking has been disabled or suspended through device configuration settings. This might be done for performance reasons, memory constraints, or to support a specific operational mode.</description>
-            <trigger>getCurrentNumberOfClients called on device with tracking capability but disabled tracking feature</trigger>
-        </condition>
-        <condition>
-            <scenario>Device variant without client management subsystem</scenario>
-            <description>The device is a variant that does not implement the client management subsystem at all. The registerClient and deregisterClient functions may not be implemented, and consequently, client tracking is also not available.</description>
-            <trigger>getCurrentNumberOfClients invoked on device variant without client management implementation</trigger>
-        </condition>
-        <condition>
-            <scenario>Client tracking unavailable due to device state</scenario>
-            <description>The device or a critical subsystem responsible for client tracking is in a state where tracking information cannot be reliably provided. This might occur after firmware updates, during recovery from errors, or during specific operational modes.</description>
-            <trigger>Client tracking subsystem temporarily or permanently unavailable on this device instance</trigger>
-        </condition>
-    </triggerConditions>
-    <recovery>
-        <step>Verify the device supports the getCurrentNumberOfClients function by checking the device specification or implementation documentation</step>
-        <step>Check device configuration or firmware version to determine whether client tracking is a supported capability on this device variant</step>
-        <step>Query the maximum number of clients using getMaxNumberOfClients to understand the device's client capacity design (unlimited or bounded)</step>
-        <step>If the device supports client registration, use getRegisteredClients to obtain a list of currently registered clients and count them at the application level</step>
-        <step>Implement client-side tracking by maintaining a registry of registered clients within the application, mirroring the device's internal registrations</step>
-        <step>If client capacity management is critical, check if alternative functions are available (e.g., getMaxNumberOfClients) that provide related information</step>
-        <step>Review device health status using getDeviceHealth to determine if client tracking is unavailable due to a device error or operational issue</step>
-        <step>Consult device documentation or contact the manufacturer to understand whether client tracking is disabled by design or can be re-enabled through configuration</step>
-        <step>In applications where client counting is essential, consider using a different device variant that implements client tracking functionality</step>
-        <step>Document the device capability limitation and adjust application logic to handle the absence of server-side client counting information</step>
-    </recovery>
-    <relatedExceptions>
-        <exception>ErrorGetCurrentNumberOfClientsFailed</exception>
-        <exception>ErrorGetMaxNumberOfClientsFailed</exception>
-        <exception>ErrorDeviceNotInitialized</exception>
-    </relatedExceptions>
-    <notes>
-        <note>This exception indicates a capability limitation rather than a failure. The device is functioning normally but does not support client counting. This is an informational exception, not an error condition.</note>
-        <note>Devices that support unlimited simultaneous clients often do not implement client tracking mechanisms to avoid performance overhead and memory consumption. Client counting adds complexity and latency to client management operations.</note>
-        <note>Applications should handle this exception gracefully and implement alternative approaches to monitor or limit client connections if client counting is essential to the application logic.</note>
-        <note>The absence of client tracking does not necessarily imply that client registration (registerClient, deregisterClient) is not implemented. Some devices may support client registration and management without tracking aggregate client counts.</note>
-        <note>Unlike ErrorGetCurrentNumberOfClientsFailed (which indicates a transient failure), ErrorCurrentNumberOfClientsNotTracked indicates a permanent capability limitation specific to this device variant or configuration.</note>
-        <note>Device variants may differ significantly in whether they implement client tracking. Applications targeting multiple device variants must implement fallback mechanisms or conditional logic to handle both tracking and non-tracking devices.</note>
-        <note>If client capacity management is critical to application security or stability, applications should verify at initialization time whether client tracking is available and take appropriate action if it is not.</note>
-        <note>Some device implementations may provide alternative mechanisms for capacity monitoring, such as performance degradation monitoring, resource utilization queries, or transaction capacity limits, even when client counting is not directly available.</note>
-    </notes>
-    <executionSequence>
-        <step number="1" name="Function Invocation">Function entry point is reached for getCurrentNumberOfClients with no parameters required</step>
-        <step number="2" name="Device Capability Check">The device checks whether client tracking capability is available and enabled on this device instance</step>
-        <step number="3" name="Tracking Availability Detection">The device evaluates its configuration and firmware to determine if client tracking functionality is present and operational</step>
-        <step number="4a" name="Tracking Available">If client tracking is available, execution branches to retrieve and return the current client count (not taken in this exception case)</step>
-        <step number="4b" name="Tracking Not Available">If client tracking is not available, execution branches to exception handling at step 5</step>
-        <step number="5" name="Exception Context Preparation">Exception context is prepared including device capability information, firmware version, and device configuration state indicating absence of client tracking</step>
-        <step number="6" name="Exception Instance Creation">ErrorCurrentNumberOfClientsNotTracked exception instance is created with appropriate error message indicating that client tracking is not supported on this device</step>
-        <step number="7" name="Exception Propagation">Exception is raised and propagated up the call stack to the calling application, allowing capability-aware error handling</step>
-        <step number="8" name="Application Decision Point">The calling application receives the exception and must decide whether to implement fallback mechanisms, use alternative functions, or abort operations that require client counting</step>
-    </executionSequence>
-    <postconditionality>
-        <state name="Exception State">An ErrorCurrentNumberOfClientsNotTracked exception has been created and raised, indicating that client counting capability is not available on this device</state>
-        <state name="Device State">The device remains in its previous operational state. No device state has changed as a result of this operation or exception. The device continues to operate normally without client tracking.</state>
-        <state name="Client Registry State">The client registry (if implemented) remains unchanged. No clients have been registered or deregistered as a result of this operation.</state>
-        <state name="Device Capability State">The absence of client tracking capability is a permanent characteristic of this device variant or configuration, not a temporary condition. The device capability cannot be changed through subsequent API calls without reinitialization or firmware update.</state>
-        <state name="Function Exit">The function exits via exception propagation without providing client count information or returning normally</state>
-        <state name="Application Awareness">The calling application learns through this exception that it cannot depend on server-side client counting for this device and must implement alternative strategies</state>
-    </postconditionality>
-    <usage>
-        <scenario name="Scenario 1: Device Capability Discovery at Initialization">
-            <description>An application attempts to query client count at initialization time to discover device capabilities. The exception indicates that client tracking is not available, prompting the application to implement client-side tracking.</description>
-            <relatedFunctions>getCurrentNumberOfClients, getMaxNumberOfClients, initializeDevice</relatedFunctions>
-            <errorContext>Capability discovery phase where application learns that client tracking is not available</errorContext>
-        </scenario>
-        <scenario name="Scenario 2: Fallback to Alternative Client Information">
-            <description>An application that requires client capacity information receives this exception and falls back to querying getMaxNumberOfClients or getRegisteredClients to obtain related information.</description>
-            <relatedFunctions>getCurrentNumberOfClients, getMaxNumberOfClients, getRegisteredClients</relatedFunctions>
-            <errorContext>Graceful degradation where application adapts to missing capability</errorContext>
-        </scenario>
-        <scenario name="Scenario 3: Application-Level Client Registry Implementation">
-            <description>An application responds to this exception by implementing its own client registry at the application level, tracking client registrations and deregistrations internally to monitor client counts.</description>
-            <relatedFunctions>getCurrentNumberOfClients, registerClient, deregisterClient</relatedFunctions>
-            <errorContext>Client management where application mirrors server-side client registration in local data structures</errorContext>
-        </scenario>
-        <scenario name="Scenario 4: Device Variant Selection Based on Client Tracking">
-            <description>An application that critically depends on client counting receives this exception and determines that this device variant is unsuitable. The application may retry with a different device instance or variant that supports client tracking.</description>
-            <relatedFunctions>getCurrentNumberOfClients, getComponentVersions, getDeviceHealth</relatedFunctions>
-            <errorContext>Device selection scenario where client tracking capability drives device choice</errorContext>
-        </scenario>
-    </usage>
-    <implementationContext>
-        <note>This exception represents a capability boundary rather than a failure condition. It informs applications about permanent limitations in device implementation or configuration.</note>
-        <note>The absence of client tracking is typically a deliberate design choice to support unlimited client scalability without the overhead of client counting. Devices designed for unlimited client concurrency often omit this feature.</note>
-        <note>Client tracking is orthogonal to client registration. A device may implement registerClient/deregisterClient without maintaining a count of currently registered clients. Applications must not assume that if registration is implemented, counting must also be available.</note>
-        <note>Device variants may have significantly different client management implementations. Some variants may support bounded client counts with tracking, while others may support unlimited clients without tracking. Applications should discover capabilities at runtime rather than assuming consistency.</note>
-        <note>Unlike ErrorGetCurrentNumberOfClientsFailed (which is a transient failure), this exception indicates a permanent characteristic of the device that will not change during the device's current operational session without reinitialization.</note>
-        <note>Applications that implement client-side tracking must ensure that their tracking stays synchronized with device-level registrations. Mismatch between client-side tracking and device registrations can lead to incorrect client counts.</note>
-        <note>Some device implementations may provide alternative mechanisms for understanding client load or capacity utilization, even without explicit client counting. Applications should explore the full API surface to identify alternative capabilities.</note>
-        <note>In clustered or distributed SE API implementations, client tracking may be unavailable at individual device level even if the overall system provides cluster-level client accounting. Applications must distinguish between local and global client counting capabilities.</note>
-    </implementationContext>
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorCurrentNumberOfClientsNotTracked" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+  <name>ErrorCurrentNumberOfClientsNotTracked</name>
+  <description>This exception is thrown if the device does not track the current number of registered clients and therefore cannot provide this information through the getCurrentNumberOfClients function. The exception represents a device capability limitation rather than a functional failure. ErrorCurrentNumberOfClientsNotTracked is raised when an application invokes getCurrentNumberOfClients on a device that supports a practically unlimited number of clients simultaneously and has deliberately omitted client counting functionality to avoid performance overhead. This exception indicates that the device is operating normally, but the specific capability to enumerate or count currently registered clients is not implemented or has been disabled. The exception is raised after the device validates that the function was invoked correctly but determines that client tracking is not available on this device variant.</description>
+  <category>Client Management</category>
+  <severity>Medium</severity>
+  <javadoc>
+    <summary>This class defines the exception ErrorCurrentNumberOfClientsNotTracked that is thrown if the devices does not track the current number of (registered) clients. Therefore, the SE API function getCurrentNumberOfClients cannot provide a number.</summary>
+    <description>The device supports a practically unlimited number of clients simultaneously and does not track the current number of clients. This exception is raised when the device capability to count active clients is not available, typically in systems designed for unlimited scalability.</description>
+    <constructors>
+      <constructor>
+        <signature>ErrorCurrentNumberOfClientsNotTracked()</signature>
+        <description>Constructs a new ErrorCurrentNumberOfClientsNotTracked exception with null as the value for its detail message</description>
+      </constructor>
+      <constructor>
+        <signature>ErrorCurrentNumberOfClientsNotTracked(String message)</signature>
+        <description>Constructs a new ErrorCurrentNumberOfClientsNotTracked exception whereby its detail message is initialized with the passed value</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorCurrentNumberOfClientsNotTracked(String message, Throwable cause)</signature>
+        <description>Constructs a new ErrorCurrentNumberOfClientsNotTracked exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorCurrentNumberOfClientsNotTracked(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+        <description>Constructs a new ErrorCurrentNumberOfClientsNotTracked exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+      </constructor>
+    </constructors>
+  </javadoc>
+  <specification>
+    <source>BSI TR-03151-1</source>
+    <section>3.7.9.2.3</section>
+    <requirement>MAY be raised when the device supports a practically unlimited number of clients simultaneously and at the same time does not track the current number of clients. If the device does not support client counting, the function SHALL raise the exception ErrorCurrentNumberOfClientsNotTracked and exit the function.</requirement>
+    <applicability>Client counting query when device does not support client tracking</applicability>
+    <reference>getCurrentNumberOfClients – Exceptions (3.7.9.2.3)</reference>
+  </specification>
+  <thrownBy>
+    <function>getCurrentNumberOfClients</function>
+  </thrownBy>
+  <triggerConditions>
+    <condition>
+      <scenario>Device with unlimited client support and no tracking mechanism</scenario>
+      <description>The device is configured to support a practically unlimited number of simultaneous clients and has deliberately omitted client counting functionality to avoid performance overhead and complexity. When getCurrentNumberOfClients is invoked, the device detects that client tracking is not available.</description>
+      <trigger>Invocation of getCurrentNumberOfClients on device without client tracking implementation</trigger>
+    </condition>
+    <condition>
+      <scenario>Client tracking disabled via device configuration</scenario>
+      <description>The device implementation supports client tracking in general, but client tracking has been disabled or suspended through device configuration settings. This might be done for performance reasons, memory constraints, or to support a specific operational mode.</description>
+      <trigger>getCurrentNumberOfClients called on device with tracking capability but disabled tracking feature</trigger>
+    </condition>
+    <condition>
+      <scenario>Device variant without client management subsystem</scenario>
+      <description>The device is a variant that does not implement the client management subsystem at all. The registerClient and deregisterClient functions may not be implemented, and consequently, client tracking is also not available.</description>
+      <trigger>getCurrentNumberOfClients invoked on device variant without client management implementation</trigger>
+    </condition>
+    <condition>
+      <scenario>Client tracking unavailable due to device state</scenario>
+      <description>The device or a critical subsystem responsible for client tracking is in a state where tracking information cannot be reliably provided. This might occur after firmware updates, during recovery from errors, or during specific operational modes.</description>
+      <trigger>Client tracking subsystem temporarily or permanently unavailable on this device instance</trigger>
+    </condition>
+  </triggerConditions>
+  <recovery>
+    <step>Verify the device supports the getCurrentNumberOfClients function by checking the device specification or implementation documentation</step>
+    <step>Check device configuration or firmware version to determine whether client tracking is a supported capability on this device variant</step>
+    <step>Query the maximum number of clients using getMaxNumberOfClients to understand the device's client capacity design (unlimited or bounded)</step>
+    <step>If the device supports client registration, use getRegisteredClients to obtain a list of currently registered clients and count them at the application level</step>
+    <step>Implement client-side tracking by maintaining a registry of registered clients within the application, mirroring the device's internal registrations</step>
+    <step>If client capacity management is critical, check if alternative functions are available (e.g., getMaxNumberOfClients) that provide related information</step>
+    <step>Review device health status using getDeviceHealth to determine if client tracking is unavailable due to a device error or operational issue</step>
+    <step>Consult device documentation or contact the manufacturer to understand whether client tracking is disabled by design or can be re-enabled through configuration</step>
+    <step>In applications where client counting is essential, consider using a different device variant that implements client tracking functionality</step>
+    <step>Document the device capability limitation and adjust application logic to handle the absence of server-side client counting information</step>
+  </recovery>
+  <relatedExceptions>
+    <exception>ErrorGetCurrentNumberOfClientsFailed</exception>
+    <exception>ErrorGetMaxNumberOfClientsFailed</exception>
+    <exception>ErrorDeviceNotInitialized</exception>
+  </relatedExceptions>
+  <notes>
+    <note>This exception indicates a capability limitation rather than a failure. The device is functioning normally but does not support client counting. This is an informational exception, not an error condition.</note>
+    <note>Devices that support unlimited simultaneous clients often do not implement client tracking mechanisms to avoid performance overhead and memory consumption. Client counting adds complexity and latency to client management operations.</note>
+    <note>Applications should handle this exception gracefully and implement alternative approaches to monitor or limit client connections if client counting is essential to the application logic.</note>
+    <note>The absence of client tracking does not necessarily imply that client registration (registerClient, deregisterClient) is not implemented. Some devices may support client registration and management without tracking aggregate client counts.</note>
+    <note>Unlike ErrorGetCurrentNumberOfClientsFailed (which indicates a transient failure), ErrorCurrentNumberOfClientsNotTracked indicates a permanent capability limitation specific to this device variant or configuration.</note>
+    <note>Device variants may differ significantly in whether they implement client tracking. Applications targeting multiple device variants must implement fallback mechanisms or conditional logic to handle both tracking and non-tracking devices.</note>
+    <note>If client capacity management is critical to application security or stability, applications should verify at initialization time whether client tracking is available and take appropriate action if it is not.</note>
+    <note>Some device implementations may provide alternative mechanisms for capacity monitoring, such as performance degradation monitoring, resource utilization queries, or transaction capacity limits, even when client counting is not directly available.</note>
+  </notes>
+  <executionSequence>
+    <step number="1" name="Function Invocation">Function entry point is reached for getCurrentNumberOfClients with no parameters required</step>
+    <step number="2" name="Device Capability Check">The device checks whether client tracking capability is available and enabled on this device instance</step>
+    <step number="3" name="Tracking Availability Detection">The device evaluates its configuration and firmware to determine if client tracking functionality is present and operational</step>
+    <step number="4a" name="Tracking Available">If client tracking is available, execution branches to retrieve and return the current client count (not taken in this exception case)</step>
+    <step number="4b" name="Tracking Not Available">If client tracking is not available, execution branches to exception handling at step 5</step>
+    <step number="5" name="Exception Context Preparation">Exception context is prepared including device capability information, firmware version, and device configuration state indicating absence of client tracking</step>
+    <step number="6" name="Exception Instance Creation">ErrorCurrentNumberOfClientsNotTracked exception instance is created with appropriate error message indicating that client tracking is not supported on this device</step>
+    <step number="7" name="Exception Propagation">Exception is raised and propagated up the call stack to the calling application, allowing capability-aware error handling</step>
+    <step number="8" name="Application Decision Point">The calling application receives the exception and must decide whether to implement fallback mechanisms, use alternative functions, or abort operations that require client counting</step>
+  </executionSequence>
+  <postconditionality>
+    <state name="Exception State">An ErrorCurrentNumberOfClientsNotTracked exception has been created and raised, indicating that client counting capability is not available on this device</state>
+    <state name="Device State">The device remains in its previous operational state. No device state has changed as a result of this operation or exception. The device continues to operate normally without client tracking.</state>
+    <state name="Client Registry State">The client registry (if implemented) remains unchanged. No clients have been registered or deregistered as a result of this operation.</state>
+    <state name="Device Capability State">The absence of client tracking capability is a permanent characteristic of this device variant or configuration, not a temporary condition. The device capability cannot be changed through subsequent API calls without reinitialization or firmware update.</state>
+    <state name="Function Exit">The function exits via exception propagation without providing client count information or returning normally</state>
+    <state name="Application Awareness">The calling application learns through this exception that it cannot depend on server-side client counting for this device and must implement alternative strategies</state>
+  </postconditionality>
+  <usage>
+    <scenario name="Scenario 1: Device Capability Discovery at Initialization">
+      <description>An application attempts to query client count at initialization time to discover device capabilities. The exception indicates that client tracking is not available, prompting the application to implement client-side tracking.</description>
+      <relatedFunctions>getCurrentNumberOfClients, getMaxNumberOfClients, initializeDevice</relatedFunctions>
+      <errorContext>Capability discovery phase where application learns that client tracking is not available</errorContext>
+    </scenario>
+    <scenario name="Scenario 2: Fallback to Alternative Client Information">
+      <description>An application that requires client capacity information receives this exception and falls back to querying getMaxNumberOfClients or getRegisteredClients to obtain related information.</description>
+      <relatedFunctions>getCurrentNumberOfClients, getMaxNumberOfClients, getRegisteredClients</relatedFunctions>
+      <errorContext>Graceful degradation where application adapts to missing capability</errorContext>
+    </scenario>
+    <scenario name="Scenario 3: Application-Level Client Registry Implementation">
+      <description>An application responds to this exception by implementing its own client registry at the application level, tracking client registrations and deregistrations internally to monitor client counts.</description>
+      <relatedFunctions>getCurrentNumberOfClients, registerClient, deregisterClient</relatedFunctions>
+      <errorContext>Client management where application mirrors server-side client registration in local data structures</errorContext>
+    </scenario>
+    <scenario name="Scenario 4: Device Variant Selection Based on Client Tracking">
+      <description>An application that critically depends on client counting receives this exception and determines that this device variant is unsuitable. The application may retry with a different device instance or variant that supports client tracking.</description>
+      <relatedFunctions>getCurrentNumberOfClients, getComponentVersions, getDeviceHealth</relatedFunctions>
+      <errorContext>Device selection scenario where client tracking capability drives device choice</errorContext>
+    </scenario>
+  </usage>
+  <implementationContext>
+    <note>This exception represents a capability boundary rather than a failure condition. It informs applications about permanent limitations in device implementation or configuration.</note>
+    <note>The absence of client tracking is typically a deliberate design choice to support unlimited client scalability without the overhead of client counting. Devices designed for unlimited client concurrency often omit this feature.</note>
+    <note>Client tracking is orthogonal to client registration. A device may implement registerClient/deregisterClient without maintaining a count of currently registered clients. Applications must not assume that if registration is implemented, counting must also be available.</note>
+    <note>Device variants may have significantly different client management implementations. Some variants may support bounded client counts with tracking, while others may support unlimited clients without tracking. Applications should discover capabilities at runtime rather than assuming consistency.</note>
+    <note>Unlike ErrorGetCurrentNumberOfClientsFailed (which is a transient failure), this exception indicates a permanent characteristic of the device that will not change during the device's current operational session without reinitialization.</note>
+    <note>Applications that implement client-side tracking must ensure that their tracking stays synchronized with device-level registrations. Mismatch between client-side tracking and device registrations can lead to incorrect client counts.</note>
+    <note>Some device implementations may provide alternative mechanisms for understanding client load or capacity utilization, even without explicit client counting. Applications should explore the full API surface to identify alternative capabilities.</note>
+    <note>In clustered or distributed SE API implementations, client tracking may be unavailable at individual device level even if the overall system provides cluster-level client accounting. Applications must distinguish between local and global client counting capabilities.</note>
+  </implementationContext>
 </exception>

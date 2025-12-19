@@ -1,163 +1,163 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<exception id="ErrorGetTimeSyncVariantFailed" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
-    <name>ErrorGetTimeSyncVariantFailed</name>
-    <description>This exception is thrown if the SE API function getTimeSyncVariant fails to retrieve the supported time synchronization variant. The function attempts to determine which time synchronization mechanism and configuration the Secure Element supports, but the retrieval process fails before the time sync variant can be determined and returned.</description>
-    <category>Time Management - Synchronization Variant Query</category>
-    <severity>High</severity>
-    <javadoc>
-        <summary>This class defines the exception ErrorGetTimeSyncVariantFailed that is thrown if the determination of the supported time synchronization variant failed.</summary>
-        <description>This exception is thrown when the getTimeSyncVariant function cannot retrieve the supported time synchronization variant from the Secure Element. Time synchronization variant information describes which time synchronization mechanism and protocol variant the Secure Element supports for time synchronization operations. ErrorGetTimeSyncVariantFailed indicates that the Secure Element cannot provide the synchronization variant due to hardware failure, firmware information storage corruption, internal time management system errors, communication failures, or Secure Element state restrictions. When this exception occurs, no time sync variant is returned and applications cannot determine which time synchronization strategy is supported by this device. Recovery typically involves device verification, time management subsystem diagnostics, and firmware inspection if the failure persists.</description>
-        <constructors>
-            <constructor>
-                <signature>ErrorGetTimeSyncVariantFailed()</signature>
-                <description>Constructs a new ErrorGetTimeSyncVariantFailed exception with null as the value for its detail message</description>
-            </constructor>
-            <constructor>
-                <signature>ErrorGetTimeSyncVariantFailed(String message)</signature>
-                <description>Constructs a new ErrorGetTimeSyncVariantFailed exception whereby its detail message is initialized with the passed value</description>
-                <parameter name="message">value for the detail message of the exception, typically describing the time sync variant retrieval failure</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorGetTimeSyncVariantFailed(String message, Throwable cause)</signature>
-                <description>Constructs a new ErrorGetTimeSyncVariantFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-            </constructor>
-            <constructor>
-                <signature>ErrorGetTimeSyncVariantFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
-                <description>Constructs a new ErrorGetTimeSyncVariantFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
-                <parameter name="message">value for the detail message of the exception</parameter>
-                <parameter name="cause">value for the cause of the exception</parameter>
-                <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
-                <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
-            </constructor>
-        </constructors>
-    </javadoc>
-    <specification>
-        <source>BSI TR-03151-1</source>
-        <section>3.2.5 Time Management - getTimeSyncVariant</section>
-        <requirement>The function getTimeSyncVariant SHALL query the Secure Element to determine the supported time synchronization variant. If the Secure Element cannot provide or return the required time sync variant information, the function SHALL raise the exception ErrorGetTimeSyncVariantFailed and exit without returning any variant data. The time sync variant retrieval failure indicates the Secure Element's time management query functionality could not complete successfully.</requirement>
-        <applicability>Time management operations - getTimeSyncVariant function only</applicability>
-        <reference>getTimeSyncVariant – Function (3.2.5)</reference>
-    </specification>
-    <thrownBy>
-        <function>getTimeSyncVariant</function>
-    </thrownBy>
-    <triggerConditions>
-        <condition>
-            <scenario>Time management hardware failure</scenario>
-            <description>The Secure Element's time management hardware malfunctions or becomes inaccessible, preventing time sync variant retrieval</description>
-            <trigger>The Secure Element's time management or device capabilities hardware malfunctions or experiences read errors. When getTimeSyncVariant is called, the time sync variant query is sent to the Secure Element, but the hardware cannot provide valid capability data. The function receives a failure status from the Secure Element, triggering ErrorGetTimeSyncVariantFailed.</trigger>
-        </condition>
-        <condition>
-            <scenario>Time management metadata corruption</scenario>
-            <description>The Secure Element's time management configuration or time sync variant metadata becomes corrupted or is lost</description>
-            <trigger>The Secure Element's memory containing time management capabilities, time sync variant configuration, or synchronization mechanism information becomes corrupted, experiences data loss, or is marked as inaccessible due to storage errors. When getTimeSyncVariant attempts to read the variant, the data cannot be reliably retrieved, triggering ErrorGetTimeSyncVariantFailed.</trigger>
-        </condition>
-        <condition>
-            <scenario>Time management subsystem internal error</scenario>
-            <description>The Secure Element's time management or capabilities subsystem encounters critical errors that prevent variant enumeration</description>
-            <trigger>The Secure Element's time management subsystem (responsible for maintaining and providing time-related capabilities and variant information) encounters an internal error, deadlock, or exception. When getTimeSyncVariant is called, the time management system cannot process the query, triggering ErrorGetTimeSyncVariantFailed.</trigger>
-        </condition>
-        <condition>
-            <scenario>Device-to-Secure Element communication failure during variant query</scenario>
-            <description>The communication channel between device and Secure Element is disrupted during time sync variant retrieval</description>
-            <trigger>A communication failure occurs while getTimeSyncVariant transmits the capability query to the Secure Element or while receiving the variant response. The command may be corrupted, the response may be incomplete, or the communication link may be temporarily unavailable. The function receives a communication error status, triggering ErrorGetTimeSyncVariantFailed.</trigger>
-        </condition>
-        <condition>
-            <scenario>Secure Element in restricted or error state prohibiting time capability access</scenario>
-            <description>The Secure Element is in a locked, restricted, or error state that prevents external queries for time capability information</description>
-            <trigger>The Secure Element enters a state where time capability queries or time management information access is not permitted. When getTimeSyncVariant is called and the Secure Element's state prohibits capability access, the function receives a state-related rejection, triggering ErrorGetTimeSyncVariantFailed.</trigger>
-        </condition>
-    </triggerConditions>
-    <executionSequence>
-        <step number="1">User/application calls getTimeSyncVariant function on device</step>
-        <step number="2">Function validates input parameters and checks authentication status (if required by referencing guideline)</step>
-        <step number="3">Function checks authorization for time management information access (if required by referencing guideline)</step>
-        <step number="4">Function verifies device is properly initialized and time management is operational</step>
-        <step number="5">Function initiates communication channel to Secure Element and prepares time capability query command</step>
-        <step number="6">Function transmits capability query command to Secure Element requesting the supported time synchronization variant</step>
-        <step number="6a">If Secure Element responds with failure status (time management error, capability error, metadata error) → ErrorGetTimeSyncVariantFailed raised, function exits without variant</step>
-        <step number="6b">If communication failure occurs during query transmission or response reception → ErrorGetTimeSyncVariantFailed raised, function exits</step>
-        <step number="7">If successful, function receives time sync variant information from Secure Element</step>
-        <step number="8">Function validates time sync variant for correctness (format, variant identifier validity, synchronization mechanism validity)</step>
-        <step number="9">Function closes Secure Element communication channel</step>
-        <step number="10">Function returns valid time sync variant to caller</step>
-    </executionSequence>
-    <recovery>
-        <step>Verify device operational status - confirm device is initialized, responding to other operations, and not in an error state</step>
-        <step>Verify Secure Element accessibility - confirm device can communicate with Secure Element through diagnostic commands</step>
-        <step>Check device initialization - ensure device has been properly initialized with initDevice before attempting getTimeSyncVariant</step>
-        <step>Retry getTimeSyncVariant operation - attempt the function call again as the failure may be transient</step>
-        <step>Review device diagnostics for time management system health - query device for diagnostic information about Secure Element time management subsystem status</step>
-        <step>Verify time management information integrity through device manufacturer diagnostics - check if time management metadata is accessible and uncorrupted</step>
-        <step>Test other time queries - attempt retrieving current time or end-of-usage date to verify general time management access capability</step>
-        <step>Implement comprehensive error logging and monitoring - log this failure consistently to identify patterns (transient vs. persistent, correlation with time operations)</step>
-        <step>If failure is persistent, attempt device firmware update if available - may resolve time management subsystem errors or update variant information</step>
-        <step>If failure persists and suspected hardware issue, contact device manufacturer or consider device replacement - repeated time capability retrieval failures indicate serious hardware problems</step>
-    </recovery>
-    <relatedExceptions>
-        <exception>ErrorFunctionFailed</exception>
-        <exception>ErrorDeviceNotInitialized</exception>
-        <exception>ErrorSetCurrentSeTimeFailed</exception>
-        <exception>ErrorGetCurrentSeTimeFailed</exception>
-        <exception>ErrorGetEndOfUsageDateFailed</exception>
-    </relatedExceptions>
-    <postconditionality>
-        <state name="Device Operational State">Device remains fully operational and unmodified. The failure to retrieve the time sync variant does not affect device initialization state, time management capabilities, internal memory, stored data, or the ability to perform other operations. All device components remain in their pre-call state.</state>
-        <state name="Time Sync Variant Return Status">No time sync variant is returned to the caller. The function exits without providing any synchronization variant information. Applications must not assume default time sync variants or cached information; they must handle the exception as indicating time synchronization capability enumeration is unavailable.</state>
-        <state name="Secure Element Time Management State">Secure Element time management subsystem remains unchanged by the failed query. No state modifications, capability changes, or time configuration changes occur. Time management operations continue normally regardless of the retrieval failure.</state>
-        <state name="Time Synchronization Capability Continuity">Time synchronization capabilities continue to be maintained internally in the Secure Element. The failure to retrieve the variant does not affect time management or time synchronization operations. Variant queries can be retried once the underlying issue is resolved.</state>
-        <state name="No Cascading State Effects">No cascading state inconsistencies or secondary failures occur as a result of the variant query failure. Device internal consistency is maintained. Other SE API functions and time management operations continue normally without state corruption.</state>
-        <state name="Recovery Preconditions Met">The device state after exception is consistent and allows for recovery operations. The underlying issue (hardware error, communication error, time management error) remains present, but the device is stable enough to accept diagnostic queries or recovery attempts.</state>
-    </postconditionality>
-    <notes>
-        <note>ErrorGetTimeSyncVariantFailed is thrown ONLY by the getTimeSyncVariant function - it is the most specific and precise exception for Secure Element time sync variant retrieval failures</note>
-        <note>This exception indicates a failure in the Secure Element's ability to determine its supported time synchronization mechanism</note>
-        <note>Critical distinction from ErrorFunctionFailed: ErrorGetTimeSyncVariantFailed specifically indicates time sync variant enumeration is unavailable at the time management subsystem level, while ErrorFunctionFailed indicates broader unspecified critical failures</note>
-        <note>Exception is raised during the variant enumeration phase (steps 6-7), after device initialization and authentication checks have passed</note>
-        <note>After this exception, the Secure Element remains unchanged and time synchronization capabilities continue to be maintained internally. Variant queries can be retried once the underlying issue is resolved</note>
-        <note>This exception has High severity because it prevents users from determining which time synchronization strategy is supported (critical for time synchronization planning)</note>
-        <note>Time sync variant describes which time synchronization mechanism and protocol the Secure Element supports for time synchronization operations</note>
-        <note>The exception indicates time sync capabilities cannot be reliably determined; applications must not implement workarounds using external capability tracking without explicit validation</note>
-        <note>Failure scenarios range from transient (temporary communication issues, temporary state) to persistent (time management metadata corruption, hardware failure, firmware error)</note>
-        <note>If this exception occurs frequently or persistently, it indicates serious issues with Secure Element time management hardware, firmware, or metadata that require diagnostic investigation</note>
-        <note>Time sync capability enumeration is a read-only query; failure does not modify any time state, so recovery typically requires only retrying the query once underlying issue is resolved</note>
-        <note>Time sync variant information is essential for determining which time synchronization mechanisms are available and supported by the device</note>
-        <note>Applications must implement appropriate error handling for time sync capability enumeration failures when planning time synchronization operations</note>
-        <note>Repeated time management capability retrieval failures may indicate device needs firmware update, time management reset, or hardware service - manufacturer support should be engaged</note>
-        <note>Different device models and firmware versions may support different time synchronization variants - consult device specifications for supported time sync mechanism details</note>
-    </notes>
-    <usage>
-        <scenario name="Scenario 1: Time Synchronization Planning and Protocol Selection">
-            <description>A time synchronization system determines which time synchronization protocols and mechanisms are available before initiating time synchronization. The system calls getTimeSyncVariant to identify the supported time sync mechanism. Based on this information, the system selects the appropriate time synchronization approach for this device. If ErrorGetTimeSyncVariantFailed is raised, the system cannot determine which time sync protocols are supported.</description>
-            <relatedFunctions>getTimeSyncVariant, setCurrentSeTime, getCurrentSeTime</relatedFunctions>
-            <errorContext>Time sync variant unavailable for time synchronization protocol planning</errorContext>
-        </scenario>
-        <scenario name="Scenario 2: Device Capabilities Discovery and Time Management Assessment">
-            <description>A device management system discovers and catalogs device capabilities across an infrastructure. The system calls getTimeSyncVariant as part of comprehensive device capability discovery. This information is used for time management configuration, synchronization planning, and protocol compatibility assessment. If ErrorGetTimeSyncVariantFailed is raised, the capability discovery cannot include time synchronization information.</description>
-            <relatedFunctions>getTimeSyncVariant, getCurrentSeTime, getEndOfUsageDate</relatedFunctions>
-            <errorContext>Time sync variant unavailable for device capabilities discovery</errorContext>
-        </scenario>
-        <scenario name="Scenario 3: Time Synchronization Validation and Pre-Sync Configuration">
-            <description>A pre-synchronization validation system verifies that time synchronization operations are compatible with device capabilities before initiating synchronization. The system calls getTimeSyncVariant to confirm the device supports the time synchronization mechanism specified in the synchronization plan. If ErrorGetTimeSyncVariantFailed is raised, the system cannot verify time sync capability compatibility.</description>
-            <relatedFunctions>getTimeSyncVariant, setCurrentSeTime</relatedFunctions>
-            <errorContext>Time sync variant unavailable for pre-synchronization validation</errorContext>
-        </scenario>
-        <scenario name="Scenario 4: Multi-Device Time Synchronization Orchestration and Network Coordination">
-            <description>An enterprise time synchronization orchestration system manages coordinated time synchronization across many devices. The system calls getTimeSyncVariant on each device to determine which time synchronization variants each device supports. This enables the orchestrator to select appropriate synchronization strategies for each device or device group. If ErrorGetTimeSyncVariantFailed is raised on any device, the orchestrator cannot determine that device's time sync capability.</description>
-            <relatedFunctions>getTimeSyncVariant, setCurrentSeTime</relatedFunctions>
-            <errorContext>Time sync variant unavailable for multi-device time synchronization orchestration</errorContext>
-        </scenario>
-    </usage>
-    <implementationContext>
-        <note>The getTimeSyncVariant function retrieves the time synchronization variant and mechanism supported by the Secure Element</note>
-        <note>Time sync variant describes which time synchronization mechanisms and protocols (NTP, SNTP, manual time setting, etc.) are supported for time synchronization</note>
-        <note>Time sync variant information includes synchronization mechanism identifiers, protocol versions, and constraints specific to this device's time management</note>
-        <note>Different device models, firmware versions, and configurations may support different time synchronization variants - consult device specifications for supported time sync details</note>
-        <note>Time sync variant information is essential for planning time synchronization operations and ensuring compatibility of time synchronization mechanisms with device capabilities</note>
-        <note>If time sync variant retrieval fails but other time management queries succeed (current time, end-of-usage date), the issue is specific to variant information, not to general time management access</note>
-        <note>Time management capability corruption or enumeration errors represent critical issues in time management subsystem that should be investigated immediately</note>
-        <note>Time sync variant enumeration is a read-only query; ErrorGetTimeSyncVariantFailed does not indicate time state corruption requiring state recovery - it indicates the variant information source is unavailable</note>
-    </implementationContext>
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorGetTimeSyncVariantFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
+  <name>ErrorGetTimeSyncVariantFailed</name>
+  <description>This exception is thrown if the SE API function getTimeSyncVariant fails to retrieve the supported time synchronization variant. The function attempts to determine which time synchronization mechanism and configuration the Secure Element supports, but the retrieval process fails before the time sync variant can be determined and returned.</description>
+  <category>Time Management - Synchronization Variant Query</category>
+  <severity>High</severity>
+  <javadoc>
+    <summary>This class defines the exception ErrorGetTimeSyncVariantFailed that is thrown if the determination of the supported time synchronization variant failed.</summary>
+    <description>This exception is thrown when the getTimeSyncVariant function cannot retrieve the supported time synchronization variant from the Secure Element. Time synchronization variant information describes which time synchronization mechanism and protocol variant the Secure Element supports for time synchronization operations. ErrorGetTimeSyncVariantFailed indicates that the Secure Element cannot provide the synchronization variant due to hardware failure, firmware information storage corruption, internal time management system errors, communication failures, or Secure Element state restrictions. When this exception occurs, no time sync variant is returned and applications cannot determine which time synchronization strategy is supported by this device. Recovery typically involves device verification, time management subsystem diagnostics, and firmware inspection if the failure persists.</description>
+    <constructors>
+      <constructor>
+        <signature>ErrorGetTimeSyncVariantFailed()</signature>
+        <description>Constructs a new ErrorGetTimeSyncVariantFailed exception with null as the value for its detail message</description>
+      </constructor>
+      <constructor>
+        <signature>ErrorGetTimeSyncVariantFailed(String message)</signature>
+        <description>Constructs a new ErrorGetTimeSyncVariantFailed exception whereby its detail message is initialized with the passed value</description>
+        <parameter name="message">value for the detail message of the exception, typically describing the time sync variant retrieval failure</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorGetTimeSyncVariantFailed(String message, Throwable cause)</signature>
+        <description>Constructs a new ErrorGetTimeSyncVariantFailed exception whereby its detail message and cause are initialized with the appropriate passed values</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+      </constructor>
+      <constructor>
+        <signature>ErrorGetTimeSyncVariantFailed(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)</signature>
+        <description>Constructs a new ErrorGetTimeSyncVariantFailed exception whereby its detail message and cause are initialized with the appropriate passed values. Furthermore, it is specified whether or not suppression should be enabled or disabled and whether or not the stack trace should be writable for this exception.</description>
+        <parameter name="message">value for the detail message of the exception</parameter>
+        <parameter name="cause">value for the cause of the exception</parameter>
+        <parameter name="enableSuppression">specifies whether or not suppression should be enabled for this exception</parameter>
+        <parameter name="writableStackTrace">specifies whether or not the stack trace should be writable for this exception</parameter>
+      </constructor>
+    </constructors>
+  </javadoc>
+  <specification>
+    <source>BSI TR-03151-1</source>
+    <section>3.2.5 Time Management - getTimeSyncVariant</section>
+    <requirement>The function getTimeSyncVariant SHALL query the Secure Element to determine the supported time synchronization variant. If the Secure Element cannot provide or return the required time sync variant information, the function SHALL raise the exception ErrorGetTimeSyncVariantFailed and exit without returning any variant data. The time sync variant retrieval failure indicates the Secure Element's time management query functionality could not complete successfully.</requirement>
+    <applicability>Time management operations - getTimeSyncVariant function only</applicability>
+    <reference>getTimeSyncVariant – Function (3.2.5)</reference>
+  </specification>
+  <thrownBy>
+    <function>getTimeSyncVariant</function>
+  </thrownBy>
+  <triggerConditions>
+    <condition>
+      <scenario>Time management hardware failure</scenario>
+      <description>The Secure Element's time management hardware malfunctions or becomes inaccessible, preventing time sync variant retrieval</description>
+      <trigger>The Secure Element's time management or device capabilities hardware malfunctions or experiences read errors. When getTimeSyncVariant is called, the time sync variant query is sent to the Secure Element, but the hardware cannot provide valid capability data. The function receives a failure status from the Secure Element, triggering ErrorGetTimeSyncVariantFailed.</trigger>
+    </condition>
+    <condition>
+      <scenario>Time management metadata corruption</scenario>
+      <description>The Secure Element's time management configuration or time sync variant metadata becomes corrupted or is lost</description>
+      <trigger>The Secure Element's memory containing time management capabilities, time sync variant configuration, or synchronization mechanism information becomes corrupted, experiences data loss, or is marked as inaccessible due to storage errors. When getTimeSyncVariant attempts to read the variant, the data cannot be reliably retrieved, triggering ErrorGetTimeSyncVariantFailed.</trigger>
+    </condition>
+    <condition>
+      <scenario>Time management subsystem internal error</scenario>
+      <description>The Secure Element's time management or capabilities subsystem encounters critical errors that prevent variant enumeration</description>
+      <trigger>The Secure Element's time management subsystem (responsible for maintaining and providing time-related capabilities and variant information) encounters an internal error, deadlock, or exception. When getTimeSyncVariant is called, the time management system cannot process the query, triggering ErrorGetTimeSyncVariantFailed.</trigger>
+    </condition>
+    <condition>
+      <scenario>Device-to-Secure Element communication failure during variant query</scenario>
+      <description>The communication channel between device and Secure Element is disrupted during time sync variant retrieval</description>
+      <trigger>A communication failure occurs while getTimeSyncVariant transmits the capability query to the Secure Element or while receiving the variant response. The command may be corrupted, the response may be incomplete, or the communication link may be temporarily unavailable. The function receives a communication error status, triggering ErrorGetTimeSyncVariantFailed.</trigger>
+    </condition>
+    <condition>
+      <scenario>Secure Element in restricted or error state prohibiting time capability access</scenario>
+      <description>The Secure Element is in a locked, restricted, or error state that prevents external queries for time capability information</description>
+      <trigger>The Secure Element enters a state where time capability queries or time management information access is not permitted. When getTimeSyncVariant is called and the Secure Element's state prohibits capability access, the function receives a state-related rejection, triggering ErrorGetTimeSyncVariantFailed.</trigger>
+    </condition>
+  </triggerConditions>
+  <executionSequence>
+    <step number="1">User/application calls getTimeSyncVariant function on device</step>
+    <step number="2">Function validates input parameters and checks authentication status (if required by referencing guideline)</step>
+    <step number="3">Function checks authorization for time management information access (if required by referencing guideline)</step>
+    <step number="4">Function verifies device is properly initialized and time management is operational</step>
+    <step number="5">Function initiates communication channel to Secure Element and prepares time capability query command</step>
+    <step number="6">Function transmits capability query command to Secure Element requesting the supported time synchronization variant</step>
+    <step number="6a">If Secure Element responds with failure status (time management error, capability error, metadata error) → ErrorGetTimeSyncVariantFailed raised, function exits without variant</step>
+    <step number="6b">If communication failure occurs during query transmission or response reception → ErrorGetTimeSyncVariantFailed raised, function exits</step>
+    <step number="7">If successful, function receives time sync variant information from Secure Element</step>
+    <step number="8">Function validates time sync variant for correctness (format, variant identifier validity, synchronization mechanism validity)</step>
+    <step number="9">Function closes Secure Element communication channel</step>
+    <step number="10">Function returns valid time sync variant to caller</step>
+  </executionSequence>
+  <recovery>
+    <step>Verify device operational status - confirm device is initialized, responding to other operations, and not in an error state</step>
+    <step>Verify Secure Element accessibility - confirm device can communicate with Secure Element through diagnostic commands</step>
+    <step>Check device initialization - ensure device has been properly initialized with initDevice before attempting getTimeSyncVariant</step>
+    <step>Retry getTimeSyncVariant operation - attempt the function call again as the failure may be transient</step>
+    <step>Review device diagnostics for time management system health - query device for diagnostic information about Secure Element time management subsystem status</step>
+    <step>Verify time management information integrity through device manufacturer diagnostics - check if time management metadata is accessible and uncorrupted</step>
+    <step>Test other time queries - attempt retrieving current time or end-of-usage date to verify general time management access capability</step>
+    <step>Implement comprehensive error logging and monitoring - log this failure consistently to identify patterns (transient vs. persistent, correlation with time operations)</step>
+    <step>If failure is persistent, attempt device firmware update if available - may resolve time management subsystem errors or update variant information</step>
+    <step>If failure persists and suspected hardware issue, contact device manufacturer or consider device replacement - repeated time capability retrieval failures indicate serious hardware problems</step>
+  </recovery>
+  <relatedExceptions>
+    <exception>ErrorFunctionFailed</exception>
+    <exception>ErrorDeviceNotInitialized</exception>
+    <exception>ErrorSetCurrentSeTimeFailed</exception>
+    <exception>ErrorGetCurrentSeTimeFailed</exception>
+    <exception>ErrorGetEndOfUsageDateFailed</exception>
+  </relatedExceptions>
+  <postconditionality>
+    <state name="Device Operational State">Device remains fully operational and unmodified. The failure to retrieve the time sync variant does not affect device initialization state, time management capabilities, internal memory, stored data, or the ability to perform other operations. All device components remain in their pre-call state.</state>
+    <state name="Time Sync Variant Return Status">No time sync variant is returned to the caller. The function exits without providing any synchronization variant information. Applications must not assume default time sync variants or cached information; they must handle the exception as indicating time synchronization capability enumeration is unavailable.</state>
+    <state name="Secure Element Time Management State">Secure Element time management subsystem remains unchanged by the failed query. No state modifications, capability changes, or time configuration changes occur. Time management operations continue normally regardless of the retrieval failure.</state>
+    <state name="Time Synchronization Capability Continuity">Time synchronization capabilities continue to be maintained internally in the Secure Element. The failure to retrieve the variant does not affect time management or time synchronization operations. Variant queries can be retried once the underlying issue is resolved.</state>
+    <state name="No Cascading State Effects">No cascading state inconsistencies or secondary failures occur as a result of the variant query failure. Device internal consistency is maintained. Other SE API functions and time management operations continue normally without state corruption.</state>
+    <state name="Recovery Preconditions Met">The device state after exception is consistent and allows for recovery operations. The underlying issue (hardware error, communication error, time management error) remains present, but the device is stable enough to accept diagnostic queries or recovery attempts.</state>
+  </postconditionality>
+  <notes>
+    <note>ErrorGetTimeSyncVariantFailed is thrown ONLY by the getTimeSyncVariant function - it is the most specific and precise exception for Secure Element time sync variant retrieval failures</note>
+    <note>This exception indicates a failure in the Secure Element's ability to determine its supported time synchronization mechanism</note>
+    <note>Critical distinction from ErrorFunctionFailed: ErrorGetTimeSyncVariantFailed specifically indicates time sync variant enumeration is unavailable at the time management subsystem level, while ErrorFunctionFailed indicates broader unspecified critical failures</note>
+    <note>Exception is raised during the variant enumeration phase (steps 6-7), after device initialization and authentication checks have passed</note>
+    <note>After this exception, the Secure Element remains unchanged and time synchronization capabilities continue to be maintained internally. Variant queries can be retried once the underlying issue is resolved</note>
+    <note>This exception has High severity because it prevents users from determining which time synchronization strategy is supported (critical for time synchronization planning)</note>
+    <note>Time sync variant describes which time synchronization mechanism and protocol the Secure Element supports for time synchronization operations</note>
+    <note>The exception indicates time sync capabilities cannot be reliably determined; applications must not implement workarounds using external capability tracking without explicit validation</note>
+    <note>Failure scenarios range from transient (temporary communication issues, temporary state) to persistent (time management metadata corruption, hardware failure, firmware error)</note>
+    <note>If this exception occurs frequently or persistently, it indicates serious issues with Secure Element time management hardware, firmware, or metadata that require diagnostic investigation</note>
+    <note>Time sync capability enumeration is a read-only query; failure does not modify any time state, so recovery typically requires only retrying the query once underlying issue is resolved</note>
+    <note>Time sync variant information is essential for determining which time synchronization mechanisms are available and supported by the device</note>
+    <note>Applications must implement appropriate error handling for time sync capability enumeration failures when planning time synchronization operations</note>
+    <note>Repeated time management capability retrieval failures may indicate device needs firmware update, time management reset, or hardware service - manufacturer support should be engaged</note>
+    <note>Different device models and firmware versions may support different time synchronization variants - consult device specifications for supported time sync mechanism details</note>
+  </notes>
+  <usage>
+    <scenario name="Scenario 1: Time Synchronization Planning and Protocol Selection">
+      <description>A time synchronization system determines which time synchronization protocols and mechanisms are available before initiating time synchronization. The system calls getTimeSyncVariant to identify the supported time sync mechanism. Based on this information, the system selects the appropriate time synchronization approach for this device. If ErrorGetTimeSyncVariantFailed is raised, the system cannot determine which time sync protocols are supported.</description>
+      <relatedFunctions>getTimeSyncVariant, setCurrentSeTime, getCurrentSeTime</relatedFunctions>
+      <errorContext>Time sync variant unavailable for time synchronization protocol planning</errorContext>
+    </scenario>
+    <scenario name="Scenario 2: Device Capabilities Discovery and Time Management Assessment">
+      <description>A device management system discovers and catalogs device capabilities across an infrastructure. The system calls getTimeSyncVariant as part of comprehensive device capability discovery. This information is used for time management configuration, synchronization planning, and protocol compatibility assessment. If ErrorGetTimeSyncVariantFailed is raised, the capability discovery cannot include time synchronization information.</description>
+      <relatedFunctions>getTimeSyncVariant, getCurrentSeTime, getEndOfUsageDate</relatedFunctions>
+      <errorContext>Time sync variant unavailable for device capabilities discovery</errorContext>
+    </scenario>
+    <scenario name="Scenario 3: Time Synchronization Validation and Pre-Sync Configuration">
+      <description>A pre-synchronization validation system verifies that time synchronization operations are compatible with device capabilities before initiating synchronization. The system calls getTimeSyncVariant to confirm the device supports the time synchronization mechanism specified in the synchronization plan. If ErrorGetTimeSyncVariantFailed is raised, the system cannot verify time sync capability compatibility.</description>
+      <relatedFunctions>getTimeSyncVariant, setCurrentSeTime</relatedFunctions>
+      <errorContext>Time sync variant unavailable for pre-synchronization validation</errorContext>
+    </scenario>
+    <scenario name="Scenario 4: Multi-Device Time Synchronization Orchestration and Network Coordination">
+      <description>An enterprise time synchronization orchestration system manages coordinated time synchronization across many devices. The system calls getTimeSyncVariant on each device to determine which time synchronization variants each device supports. This enables the orchestrator to select appropriate synchronization strategies for each device or device group. If ErrorGetTimeSyncVariantFailed is raised on any device, the orchestrator cannot determine that device's time sync capability.</description>
+      <relatedFunctions>getTimeSyncVariant, setCurrentSeTime</relatedFunctions>
+      <errorContext>Time sync variant unavailable for multi-device time synchronization orchestration</errorContext>
+    </scenario>
+  </usage>
+  <implementationContext>
+    <note>The getTimeSyncVariant function retrieves the time synchronization variant and mechanism supported by the Secure Element</note>
+    <note>Time sync variant describes which time synchronization mechanisms and protocols (NTP, SNTP, manual time setting, etc.) are supported for time synchronization</note>
+    <note>Time sync variant information includes synchronization mechanism identifiers, protocol versions, and constraints specific to this device's time management</note>
+    <note>Different device models, firmware versions, and configurations may support different time synchronization variants - consult device specifications for supported time sync details</note>
+    <note>Time sync variant information is essential for planning time synchronization operations and ensuring compatibility of time synchronization mechanisms with device capabilities</note>
+    <note>If time sync variant retrieval fails but other time management queries succeed (current time, end-of-usage date), the issue is specific to variant information, not to general time management access</note>
+    <note>Time management capability corruption or enumeration errors represent critical issues in time management subsystem that should be investigated immediately</note>
+    <note>Time sync variant enumeration is a read-only query; ErrorGetTimeSyncVariantFailed does not indicate time state corruption requiring state recovery - it indicates the variant information source is unavailable</note>
+  </implementationContext>
 </exception>
