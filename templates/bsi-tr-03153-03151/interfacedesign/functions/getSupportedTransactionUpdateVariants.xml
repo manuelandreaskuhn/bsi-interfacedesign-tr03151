@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<function id="getSupportedTransactionUpdateVariants" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/functions.xsd">
+<function xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="getSupportedTransactionUpdateVariants" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/functions.xsd">
   <name>getSupportedTransactionUpdateVariants</name>
   <category>Client- und Transaktionsverwaltung</category>
   <description>The function getSupportedTransactionUpdateVariants can be used to obtain information how updates of transactions are performed.</description>

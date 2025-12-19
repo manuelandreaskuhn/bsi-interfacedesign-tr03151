@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<function id="getDescription" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/functions.xsd">
+<function xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="getDescription" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/functions.xsd">
   <name>getDescription</name>
   <category>Geräteinitialisierung</category>
   <description>The function getDescription can be used to obtain the short description of the device that is set using the function setDescription and also provided in the in the device information file.</description>

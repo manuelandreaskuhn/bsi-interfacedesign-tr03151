@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<function id="getEndOfUsageDate" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/functions.xsd">
+<function xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="getEndOfUsageDate" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/functions.xsd">
   <name>getEndOfUsageDate</name>
   <category>Gerätewartung</category>
   <description>Electrical devices may be subject to aging or wear and tear. Sometimes this process is observable or predictable. The API function getDeviceHealth can be used to get information about the actual health of the device or the components within.</description>

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<function id="lockTransactionLogging" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/functions.xsd">
+<function xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="lockTransactionLogging" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/functions.xsd">
   <name>lockTransactionLogging</name>
   <category>Client- und Transaktionsverwaltung</category>
   <description>The function lockTransactionLogging can be used to prevent logging of transactions until the function unlockTransactionLogging is invoked.</description>
@@ -153,8 +153,8 @@ BEENDE_ERFOLGREICH</pseudocode>
     <exception>ErrorRetrieveLogMessageFailed</exception>
     <exception>ErrorSecureElementDisabled</exception>
     <exception>ErrorSecureElementPartsDisconnected</exception>
-    <exception>ErrorSignatureCounterOverflow</exception>
     <exception>ErrorSignatureCounterExhausted</exception>
+    <exception>ErrorSignatureCounterOverflow</exception>
     <exception>ErrorSigningEventDataFailed</exception>
     <exception>ErrorStorageMediumDisconnected</exception>
     <exception>ErrorStorageMemoryFull</exception>

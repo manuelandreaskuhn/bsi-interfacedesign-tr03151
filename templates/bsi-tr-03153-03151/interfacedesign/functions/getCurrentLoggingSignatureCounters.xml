@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<function id="getCurrentLoggingSignatureCounters" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/functions.xsd">
+<function xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="getCurrentLoggingSignatureCounters" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/functions.xsd">
   <name>getCurrentLoggingSignatureCounters</name>
   <category>Logging</category>
   <description>The function getCurrentLoggingSignatureCounters can be used to obtain the current signature counters for each private key utilized in the secure element for signing log messages.</description>

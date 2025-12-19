@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<function id="exportLoggingCertificates" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/functions.xsd">
+<function xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="exportLoggingCertificates" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/functions.xsd">
   <name>exportLoggingCertificates</name>
   <category>Logging</category>
   <description>The function exportLoggingCertificates exports the certificates of the certificate chains. These certificates belong to the public keys of the key pairs that are used for the creation of signature values in log messages stored on the device. This includes the higher level certificates that form the complete certificate chain.</description>
@@ -68,8 +68,8 @@ RETURN ohne Exception</pseudocode>
   </returnValue>
   <exceptions>
     <exception>ErrorDeviceNotInitialized</exception>
-    <exception>ErrorFunctionFailed</exception>
     <exception>ErrorExportLoggingCertificateFailed</exception>
+    <exception>ErrorFunctionFailed</exception>
     <exception>ErrorFunctionNotSupported</exception>
     <exception>ErrorParameterSyntax</exception>
     <exception>ErrorStorageMediumDisconnected</exception>

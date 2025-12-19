@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<function id="exportFilteredTransactionLogs" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/functions.xsd">
+<function xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="exportFilteredTransactionLogs" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/functions.xsd">
   <name>exportFilteredTransactionLogs</name>
   <category>Client- und Transaktionsverwaltung</category>
   <description>This function can be used to export the &lt;ul&gt; &lt;li&gt;log messages containing the certified data and protocol data,&lt;/li&gt; &lt;li&gt;certificates that are necessary for the verification of the log messages and&lt;/li&gt; &lt;li&gt;device information&lt;/li&gt; &lt;/ul&gt; possibly limited by maximumNumberRecords.</description>
@@ -188,10 +188,10 @@ ENDE</pseudocode>
   </returnValue>
   <note>This function has multiple overloaded versions with different parameter combinations.</note>
   <exceptions>
+    <exception>ErrorClientIdNotFound</exception>
     <exception>ErrorDeviceNotInitialized</exception>
     <exception>ErrorFunctionFailed</exception>
     <exception>ErrorFunctionNotSupported</exception>
-    <exception>ErrorClientIdNotFound</exception>
     <exception>ErrorNoDataAvailable</exception>
     <exception>ErrorParameterMismatch</exception>
     <exception>ErrorParameterSyntax</exception>

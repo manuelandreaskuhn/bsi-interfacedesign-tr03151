@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<function id="restoreLogsFromBackup" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/functions.xsd">
+<function xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="restoreLogsFromBackup" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/functions.xsd">
   <name>restoreLogsFromBackup</name>
   <category>Logging</category>
   <description>Exports the serial number(s) of the SE API. A serial number is a hash value of a public key that belongs to a key pair, whose private key is used to create signature values of log messages.</description>

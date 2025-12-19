@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<function id="logOut" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/functions.xsd">
+<function xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="logOut" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/functions.xsd">
   <name>logOut</name>
   <category>Authentifizierung</category>
   <description>Enables the log out of an authenticated user or application from the SE API.</description>
@@ -95,8 +95,8 @@ BEENDE_ERFOLGREICH</pseudocode>
     <exception>ErrorRetrieveLogMessageFailed</exception>
     <exception>ErrorSecureElementDisabled</exception>
     <exception>ErrorSecureElementPartsDisconnected</exception>
-    <exception>ErrorSignatureCounterOverflow</exception>
     <exception>ErrorSignatureCounterExhausted</exception>
+    <exception>ErrorSignatureCounterOverflow</exception>
     <exception>ErrorSigningEventDataFailed</exception>
     <exception>ErrorStorageMediumDisconnected</exception>
     <exception>ErrorStorageMemoryFull</exception>

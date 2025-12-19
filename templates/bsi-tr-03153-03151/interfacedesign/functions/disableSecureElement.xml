@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<function id="disableSecureElement" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/functions.xsd">
+<function xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="disableSecureElement" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/functions.xsd">
   <name>disableSecureElement</name>
   <category>Gerätewartung</category>
   <description>The function disableSecureElement disables the Secure Element in a way that none of its functionality can be used anymore.</description>
@@ -135,8 +135,8 @@ RETURNE ohne Exception</pseudocode>
     <exception>ErrorRetrieveLogMessageFailed</exception>
     <exception>ErrorSecureElementDisabled</exception>
     <exception>ErrorSecureElementPartsDisconnected</exception>
-    <exception>ErrorSignatureCounterOverflow</exception>
     <exception>ErrorSignatureCounterExhausted</exception>
+    <exception>ErrorSignatureCounterOverflow</exception>
     <exception>ErrorSigningEventDataFailed</exception>
     <exception>ErrorStorageMediumDisconnected</exception>
     <exception>ErrorStorageMemoryFull</exception>

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<function id="updateTime" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/functions.xsd">
+<function xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="updateTime" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/functions.xsd">
   <name>updateTime</name>
   <category>Zeitverwaltung</category>
   <description>The function updateTime updates the current date/time that is maintained by the Secure Element by using the functionality for time synchronization of the Secure Element.</description>
@@ -169,8 +169,8 @@ BEENDE_ERFOLGREICH</pseudocode>
     <exception>ErrorRetrieveLogMessageFailed</exception>
     <exception>ErrorSecureElementDisabled</exception>
     <exception>ErrorSecureElementPartsDisconnected</exception>
-    <exception>ErrorSignatureCounterOverflow</exception>
     <exception>ErrorSignatureCounterExhausted</exception>
+    <exception>ErrorSignatureCounterOverflow</exception>
     <exception>ErrorSigningEventDataFailed</exception>
     <exception>ErrorStorageMediumDisconnected</exception>
     <exception>ErrorStorageMemoryFull</exception>
