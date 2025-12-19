@@ -113,13 +113,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The ErrorClientNotRegistered exception is central to the SE API's client isolation and lifecycle management model. Every transaction must be associated with a registered client, ensuring accountability and multi-client support.</note>
-    <note>Client registration requirements are mandatory only if the registerClient function is implemented. If client registration is not supported, clientId validation focuses on character validity (ErrorInvalidClientIdCharacter) rather than registration state.</note>
-    <note>The Secure Element maintains the client registry as a persistent or semi-persistent data structure that survives individual function calls but may be cleared on device deinitialization or explicit registry reset operations.</note>
-    <note>Performance implications: Client registry lookup is typically O(n) where n is the number of registered clients, or O(1) if implemented as a hash table. This lookup occurs on every transaction-related function call, making efficient registry implementation critical.</note>
-    <note>For backward compatibility with SE API implementations that do not support client registration, applications must implement conditional logic to handle both client-aware and client-unaware device variants.</note>
-    <note>ClientId values must be treated as case-sensitive strings. Applications must maintain consistent clientId usage across registerClient, transaction operations, and deregisterClient calls. String normalization or transformation is not performed by the Secure Element.</note>
-    <note>In scenarios where client registration is temporarily suspended or disabled via device configuration, the ErrorClientNotRegistered exception will not be raised even if validation would normally trigger it. Device configuration state affects exception behavior.</note>
-    <note>The exception does not indicate whether the clientId has never been registered or has been deregistered. Applications requiring this distinction must implement additional state tracking or query the device's transaction history or client audit logs.</note>
+    <note>Raised by transaction functions (startTransaction, finishTransaction, updateTransaction) for unregistered clientId</note>
+    <note>Transaction operations require client to be registered before use</note>
+    <note>Device validates client registration status during transaction initialization</note>
+    <note>Client must be registered via registerClient before transaction operations</note>
   </implementationContext>
 </exception>

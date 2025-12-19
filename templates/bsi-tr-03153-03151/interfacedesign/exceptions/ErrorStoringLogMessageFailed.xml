@@ -135,15 +135,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>Log message storage must be atomic - either fully store or fail cleanly</note>
-    <note>Storage capacity must be checked before attempting log message write</note>
-    <note>Log message storage should be verified and integrity checked after write</note>
-    <note>Communication reliability is critical for log storage operations</note>
-    <note>Error messages should distinguish between capacity, connectivity, and hardware issues</note>
-    <note>Device should not silently drop transaction logs if storage fails</note>
-    <note>Device should not continue transaction if log storage fails</note>
-    <note>Storage health monitoring should provide early warning of capacity issues</note>
-    <note>Archive and retention procedures should maintain available storage space</note>
-    <note>Audit trail continuity is essential for compliance and legal requirements</note>
+    <note>Raised by logging functions when log message storage fails</note>
+    <note>Device stores created log messages in persistent storage</note>
+    <note>Logging subsystem persists messages for audit trail</note>
+    <note>Storage failure prevents log message persistence</note>
   </implementationContext>
 </exception>

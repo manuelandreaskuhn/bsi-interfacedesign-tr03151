@@ -118,15 +118,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>Transaction number search must be performed against transaction storage index</note>
-    <note>Transaction number lookup should use efficient indexed search</note>
-    <note>Search must check both active and completed transaction records</note>
-    <note>Deleted or archived transactions should not match search results</note>
-    <note>Transaction number format validation should occur before search</note>
-    <note>Error messages should include the transaction number(s) not found</note>
-    <note>Search results should be verified to match provided transaction number exactly</note>
-    <note>Alternative query mechanisms (date range, status) should be available</note>
-    <note>Transaction number uniqueness should be maintained for accurate lookup</note>
-    <note>Device-specific transaction number sequences should be preserved</note>
+    <note>Raised by transaction functions when specified transaction not found</note>
+    <note>Transaction lookup by number fails to find matching transaction</note>
+    <note>Device searches active and historical transactions</note>
+    <note>Missing transaction prevents operation on specified transaction</note>
   </implementationContext>
 </exception>

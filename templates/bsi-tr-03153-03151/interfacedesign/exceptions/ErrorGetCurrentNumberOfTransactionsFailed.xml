@@ -113,13 +113,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The getCurrentNumberOfTransactions function is part of the transaction management subsystem that tracks active transactions and their lifecycle.</note>
-    <note>A transaction is started using the startTransaction function, updated with updateTransaction, and finished using finishTransaction. The count reflects the current active transaction state.</note>
-    <note>The current number of transactions must always be between 0 and the maximum number of transactions supported by the device as returned by getMaxNumberOfTransactions.</note>
-    <note>Transaction count information is essential for understanding device transaction processing capacity, load distribution, and multi-transaction environment management in enterprise deployments.</note>
-    <note>If transaction count retrieval fails but transactions continue to operate normally and other transaction management functions work correctly, the issue is with the counting/tracking mechanism, not the underlying transaction management itself.</note>
-    <note>Active transactions are those that have been started but not yet finished, including transactions in various states of progress (initiated, processing, awaiting completion).</note>
-    <note>Different device models and configurations may support different maximum numbers of concurrent transactions, making the relationship between current and maximum counts important for capacity planning.</note>
-    <note>Transaction count retrieval is a read-only query that should not modify device state or affect existing active transactions, so recovery typically only requires retrying the query.</note>
+    <note>Raised by getCurrentNumberOfTransactions when transaction count retrieval fails</note>
+    <note>Information function queries number of open transactions</note>
+    <note>Device maintains transaction state tracking</note>
+    <note>Retrieval failure prevents transaction count information</note>
   </implementationContext>
 </exception>

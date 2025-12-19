@@ -105,15 +105,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The exportFilteredTransactionLogs function allows filtering transaction logs by multiple criteria including clientId, transaction numbers, and date ranges</note>
-    <note>The clientId identifies which client performed the transactions - each client can have zero or more transactions</note>
-    <note>A client may be registered or previously registered but still have no transaction data if it never initiated any transactions</note>
-    <note>Transaction log data is persistent and is only removed through explicit deletion operations (deleteLogMessages)</note>
-    <note>The clientId filter is optional - if not specified, transactions from all clients are returned</note>
-    <note>ErrorClientIdNotFound specifically indicates the clientId filter matched no data, distinguishing it from other filter mismatches</note>
-    <note>Applications should use getRegisteredClients to verify client existence before attempting client-specific export operations</note>
-    <note>Combining clientId filter with date range or transaction number filters may also result in ErrorClientIdNotFound if no data matches all combined criteria</note>
-    <note>The exception is raised at the filter matching phase, before any transaction data is retrieved or copied</note>
-    <note>ErrorClientIdNotFound differs from ErrorNoDataAvailable - this specifically means no data for the clientId filter</note>
+    <note>Raised by exportFilteredTransactionLogs when specified clientId has no matching data</note>
+    <note>Export functions filter transaction logs by clientId parameter</note>
+    <note>Search operation returns empty result when clientId does not exist</note>
+    <note>Application must use valid registered clientIds for export operations</note>
   </implementationContext>
 </exception>

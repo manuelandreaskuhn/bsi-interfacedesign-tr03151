@@ -113,13 +113,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The getOpenTransactions function retrieves a detailed list of all currently open transactions from the Secure Element's transaction management subsystem</note>
-    <note>Open transactions are those that have been started but not yet finished, including transactions in various states of progress or awaiting completion</note>
-    <note>The open transaction list includes transaction identifiers and metadata that allow detailed inspection and monitoring of transaction state</note>
-    <note>Different device models and configurations may report different transaction state information - consult device specifications for transaction metadata details</note>
-    <note>The open transaction list is essential for transaction lifecycle monitoring, diagnostics, and recovery operations in production deployments</note>
-    <note>If open transaction retrieval fails but transaction count queries succeed (current/max transactions), the issue is specific to transaction enumeration, not to general transaction management access</note>
-    <note>Transaction registry corruption or enumeration errors represent critical issues in transaction management that should be investigated immediately</note>
-    <note>Transaction enumeration is a read-only query; ErrorGetOpenTransactionsFailed does not indicate transaction state corruption requiring state recovery - it indicates the transaction enumeration source is unavailable</note>
+    <note>Raised by getOpenTransactions when open transaction list retrieval fails</note>
+    <note>Query function retrieves information about currently open transactions</note>
+    <note>Device maintains transaction state for each open transaction</note>
+    <note>Retrieval failure prevents open transaction state access</note>
   </implementationContext>
 </exception>

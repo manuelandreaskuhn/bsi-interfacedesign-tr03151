@@ -113,15 +113,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The ErrorDeregisterClientFailed exception represents a failure in the client lifecycle management system at the deregistration phase, distinct from failures at registration time (ErrorRegisterClientFailed).</note>
-    <note>The fact that a deregistration log entry has been successfully created and stored indicates that the failure occurs after audit logging but before state registry updates. The device's audit trail may show the deregistration attempt even though it did not complete.</note>
-    <note>Client state may be partially updated after this exception. Depending on implementation, the client may be removed from some internal structures but remain in others, creating an inconsistent state.</note>
-    <note>Unlike ErrorClientNotRegistered (which is raised when a client cannot be found), ErrorDeregisterClientFailed indicates that the client was found and identified but could not be successfully deregistered.</note>
-    <note>The client's transaction access status is indeterminate after this exception. Applications should not assume that subsequent transaction attempts will fail (ErrorClientNotRegistered); they may still succeed if the client remains in the active registry.</note>
-    <note>Some implementations may support forced deregistration that bypasses blocking transaction checks. Others may strictly enforce transaction completion as a prerequisite to deregistration.</note>
-    <note>In multi-client scenarios, a deregistration failure for one client may not indicate problems with other clients. However, if multiple clients fail to deregister, the client management subsystem may be fundamentally corrupted.</note>
-    <note>The exception may indicate transient failures (recoverable through retry) or permanent failures (requiring device reinitialization). Applications should implement retry logic with appropriate backoff and eventual escalation to device recovery.</note>
-    <note>Deregistration may be critical for resource cleanup, capacity management, and security isolation. Failure to complete deregistration can leave clients with residual access or prevent new client registrations if capacity management is affected.</note>
-    <note>In distributed or replicated client management systems, deregistration failure on one replica may not indicate failure on other replicas. Applications should verify deregistration across the full infrastructure.</note>
+    <note>Raised by deregisterClient when client removal from registry fails</note>
+    <note>Client lifecycle management includes deregistration of inactive clients</note>
+    <note>Device removes client from active registry and associated resources</note>
+    <note>Deregistration failure prevents client cleanup and resource release</note>
   </implementationContext>
 </exception>

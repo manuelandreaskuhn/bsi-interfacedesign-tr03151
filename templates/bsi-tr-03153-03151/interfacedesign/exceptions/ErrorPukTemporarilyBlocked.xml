@@ -116,15 +116,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The unblockPin function must check PUK temporary block state before verifying the PUK</note>
-    <note>The device must maintain persistent PUK temporary block state with timeout tracking</note>
-    <note>Failed PUK attempt counters must accumulate across calls and reset after timeout expiration</note>
-    <note>The threshold for PUK temporary blocking (number of failed attempts) should be configurable during device initialization</note>
-    <note>The timeout period for PUK temporary block should be configurable (typically 15-60 minutes)</note>
-    <note>The temporary block should automatically expire after the configured timeout - no manual reset needed</note>
-    <note>PUK temporary blocks may be global or per-user depending on device architecture</note>
-    <note>Failed attempts during temporary block period typically do not increment the failure counter further</note>
-    <note>Security logging should record all PUK temporary block events with timestamps and attempt counts</note>
-    <note>Error messages should ideally include the remaining timeout duration to help users understand when to retry</note>
+    <note>Raised by unblockPin when PUK attempt counter indicates temporary block</note>
+    <note>Unblock function implements temporary PUK blocking</note>
+    <note>Device prevents rapid PUK attempts via blocking timer</note>
+    <note>Temporary block delays retry attempts</note>
   </implementationContext>
 </exception>

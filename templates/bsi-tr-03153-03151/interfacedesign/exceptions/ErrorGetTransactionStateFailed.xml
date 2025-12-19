@@ -113,13 +113,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The getTransactionState function retrieves the current operational state of a specific transaction identified by transaction ID</note>
-    <note>Transaction state describes the current phase or condition of a transaction (active, pending, suspended, completed, error, etc.)</note>
-    <note>Transaction state information is used to track transaction lifecycle and operational status</note>
-    <note>Different device models and configurations may report different transaction state values - consult device specifications for supported transaction states</note>
-    <note>Transaction state information is essential for transaction monitoring, diagnostics, and operational state verification</note>
-    <note>If transaction state retrieval fails but other transaction queries succeed (open transactions, transaction counter), the issue is specific to individual transaction state queries, not to general transaction management access</note>
-    <note>Transaction state errors or retrieval failures represent critical issues in transaction management that should be investigated immediately</note>
-    <note>Transaction state query is a read-only query; ErrorGetTransactionStateFailed does not indicate transaction state corruption requiring state recovery - it indicates the state information source is unavailable</note>
+    <note>Raised by getTransactionState when transaction state retrieval fails</note>
+    <note>Query function retrieves specific transaction state information</note>
+    <note>Device maintains detailed state for each transaction</note>
+    <note>Retrieval failure prevents transaction state access</note>
   </implementationContext>
 </exception>

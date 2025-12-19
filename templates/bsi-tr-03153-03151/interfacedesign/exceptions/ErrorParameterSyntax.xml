@@ -154,16 +154,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>All SE API functions must validate parameters for type correctness and syntax compliance</note>
-    <note>Input validation should occur early in function execution, before any device communication</note>
-    <note>Type checking should verify that each parameter has the correct data type (string, integer, boolean, object, array, etc.)</note>
-    <note>Syntax validation should verify that parameters conform to format specifications (character sets, formats, structure)</note>
-    <note>Error messages should identify which specific parameter has the error and what type/syntax is expected</note>
-    <note>Different functions may have different parameter requirements - each function should document its parameters fully</note>
-    <note>Complex parameters (objects, arrays) should validate required fields and data structure</note>
-    <note>String parameters should validate allowed character sets and format constraints</note>
-    <note>Numeric parameters should validate ranges and value constraints</note>
-    <note>Date/time parameters should validate format and temporal constraints</note>
-    <note>Client applications should implement parameter validation utilities to reduce parameter syntax errors</note>
+    <note>Raised by functions when parameter does not conform to required format</note>
+    <note>Parameter syntax validation enforces format requirements</note>
+    <note>Device validates parameter format compliance</note>
+    <note>Syntax error prevents function execution</note>
   </implementationContext>
 </exception>

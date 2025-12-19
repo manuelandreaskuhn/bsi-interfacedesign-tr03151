@@ -123,15 +123,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>Device must check time validity before allowing time-dependent operations</note>
-    <note>Time must be explicitly set via updateTime after initialization</note>
-    <note>Time should be persisted in device to survive short power disruptions</note>
-    <note>Time accuracy should be verified regularly during operation</note>
-    <note>Error messages should clearly indicate time needs to be updated</note>
-    <note>System startup sequence should include time synchronization via updateTime</note>
-    <note>Time synchronization should use accurate and reliable system clock source</note>
-    <note>Timestamp sequences should be monitored for non-decreasing values</note>
-    <note>Time drift should be detected and corrected periodically</note>
-    <note>Device time should not allow backward time adjustments without safeguards</note>
+    <note>Raised by functions when device time not initialized</note>
+    <note>Functions requiring valid time detect unset condition</note>
+    <note>Device requires time synchronization before time-dependent operations</note>
+    <note>Unset time prevents time-dependent function execution</note>
   </implementationContext>
 </exception>

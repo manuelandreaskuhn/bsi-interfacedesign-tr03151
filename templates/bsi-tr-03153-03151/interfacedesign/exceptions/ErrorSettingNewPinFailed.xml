@@ -122,15 +122,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The unblockPin function must validate new PIN format before attempting to store it</note>
-    <note>New PIN validation should enforce all security policy requirements (length, characters, strength)</note>
-    <note>Clear error messages should distinguish between PIN format issues vs. device storage issues</note>
-    <note>Device should provide feedback about PIN policy requirements for user information</note>
-    <note>PIN storage should be performed atomically - either fully commit or fully rollback</note>
-    <note>Communication during PIN operations should be reliable and error-checked</note>
-    <note>New PIN should be securely handled - never logged or transmitted insecurely</note>
-    <note>PUK consumption should be tracked to prevent exhaustion of unblock attempts</note>
-    <note>Device should differentiate between PUK authentication failure vs. PIN setting failure</note>
-    <note>Security policy should be enforced consistently across all PIN operations</note>
+    <note>Raised by unblockPin when new PIN assignment fails</note>
+    <note>PIN update operation stores new PIN in SE</note>
+    <note>Device sets new PIN value during unblocking</note>
+    <note>Setting failure prevents PIN update</note>
   </implementationContext>
 </exception>

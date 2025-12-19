@@ -124,15 +124,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The restoreLogsFromBackup function must validate backup data format and structure before attempting restore</note>
-    <note>The function must verify device compatibility with the backup data version and format</note>
-    <note>Device storage capacity must be checked before attempting to restore large backups</note>
-    <note>Backup data integrity must be validated (checksums, signatures, structure validation)</note>
-    <note>The restore operation should be atomic - either fully succeed or fully fail with no partial state</note>
-    <note>Corruption or format incompatibility should be detected early and reported clearly</note>
-    <note>Communication during restore should be reliable and error-checked</note>
-    <note>Error messages should provide specific information about restore failure (format, corruption, capacity, etc.)</note>
-    <note>Device manufacturers should document backup format and version compatibility requirements</note>
-    <note>Backup testing procedures should be part of system validation to ensure restore capability</note>
+    <note>Raised by restoreLogsFromBackup when restoration operation fails</note>
+    <note>Restore function reconstructs log data from backup source</note>
+    <note>Device attempts to recover log messages from backup</note>
+    <note>Restore failure prevents log recovery</note>
   </implementationContext>
 </exception>

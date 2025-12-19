@@ -115,15 +115,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>User registry must be maintained and queried for each operation</note>
-    <note>User-ID lookup should be efficient index-based search</note>
-    <note>User-ID format validation should occur before registry lookup</note>
-    <note>Registry lookup must be atomic to prevent race conditions</note>
-    <note>User deletion should remove User-ID from registry</note>
-    <note>User registration adds User-ID to registry</note>
-    <note>Error messages should indicate User-ID not found clearly</note>
-    <note>Audit trail should log all unknown User-ID attempts for security</note>
-    <note>Registry queries should be protected against brute force</note>
-    <note>Device should track failed authentication attempts per User-ID</note>
+    <note>Raised by authenticateUser and unblockPin when userId not recognized</note>
+    <note>User validation checks userId against managed users</note>
+    <note>Device maintains list of authorized users</note>
+    <note>Unknown user prevents authentication</note>
   </implementationContext>
 </exception>

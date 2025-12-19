@@ -114,15 +114,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>Export functions must evaluate query and count matching records before retrieval</note>
-    <note>maxRecords parameter must be validated and enforced on result set size</note>
-    <note>Query evaluation should be efficient to avoid unnecessary processing</note>
-    <note>Error messages should indicate actual record count and maximum limit</note>
-    <note>Pagination support should be considered in export function design</note>
-    <note>Query refinement options should be documented for users</note>
-    <note>Date range filtering should be supported to effectively narrow large result sets</note>
-    <note>Status or type filtering can provide alternative query refinement mechanisms</note>
-    <note>Memory management should limit maximum records retrieved per operation</note>
-    <note>Network bandwidth should be considered when sizing result sets</note>
+    <note>Raised by exportFilteredTransactionLogs when result set exceeds limits</note>
+    <note>Result set size validation limits returned data volume</note>
+    <note>Device prevents returning excessive result sets</note>
+    <note>Large result prevents complete data retrieval</note>
   </implementationContext>
 </exception>

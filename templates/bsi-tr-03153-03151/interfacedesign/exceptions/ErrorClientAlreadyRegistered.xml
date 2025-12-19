@@ -95,15 +95,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The registerClient function is part of the client management subsystem that tracks registered clients and their access to SE API functions</note>
-    <note>Each client must have a unique clientId within the device - duplicate clientIds are not permitted</note>
-    <note>The client registry is maintained by the device and enforces uniqueness constraints</note>
-    <note>Client registration is required before a client can perform transaction-related operations</note>
-    <note>A registered client can be deregistered to free up the clientId for potential future reuse</note>
-    <note>The clientId serves as the primary identifier for all client-related operations in transaction management</note>
-    <note>Applications should query getRegisteredClients before registration to avoid conflicts</note>
-    <note>Synchronization mechanisms should be implemented for multi-threaded client registration scenarios</note>
-    <note>The uniqueness check is performed at the Secure Element level to ensure consistency</note>
-    <note>ErrorClientAlreadyRegistered enforcement prevents clientId ambiguity in transaction logging and management</note>
+    <note>Raised by registerClient when passed clientId is already registered in device registry</note>
+    <note>Client registration subsystem enforces unique clientId constraint</note>
+    <note>Device checks client registry before allowing new registration</note>
+    <note>Prevents duplicate client identities that would violate uniqueness constraint</note>
   </implementationContext>
 </exception>

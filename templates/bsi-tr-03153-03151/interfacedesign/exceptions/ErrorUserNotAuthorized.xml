@@ -158,15 +158,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>Authorization must be checked per user and per function</note>
-    <note>Authorization levels should be managed and configurable</note>
-    <note>Role-based access control should be enforced consistently</note>
-    <note>Authorization expiration must be tracked and validated</note>
-    <note>Permission cache may improve performance but must be invalidated on changes</note>
-    <note>Error messages should indicate specific authorization required</note>
-    <note>Audit trail should log all authorization-related events</note>
-    <note>Multi-factor authorization requirements should be configurable</note>
-    <note>Authorization validation should occur early in function execution</note>
-    <note>Administrator role should manage authorization policies</note>
+    <note>Raised by functions with authorization requirements when access denied</note>
+    <note>Authorization validation checks user role/permissions</note>
+    <note>Device enforces role-based access control</note>
+    <note>Insufficient authorization prevents operation execution</note>
   </implementationContext>
 </exception>

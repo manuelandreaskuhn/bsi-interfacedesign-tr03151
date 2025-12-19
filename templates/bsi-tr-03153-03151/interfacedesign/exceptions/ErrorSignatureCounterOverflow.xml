@@ -134,15 +134,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>Counter maximum value should be well-documented (e.g., 2^64-1 for 64-bit counter)</note>
-    <note>Counter size should be chosen to vastly exceed expected device lifetime and transaction volume</note>
-    <note>Device should check for counter overflow before attempting increment</note>
-    <note>Error messages should clearly indicate counter is at maximum value</note>
-    <note>Device firmware should provide status API to query counter value and maximum</note>
-    <note>Monitoring should provide early warning when counter approaches maximum (80%+ capacity)</note>
-    <note>Counter overflow check must prevent counter from wrapping to zero</note>
-    <note>Device should never silently wrap counter to zero - overflow must always be reported</note>
-    <note>Documentation should clearly explain counter capacity and expected device lifetime</note>
-    <note>Capacity planning tools should model counter growth and predict overflow timing</note>
+    <note>Raised by logging functions when signature counter would overflow</note>
+    <note>Overflow protection prevents counter value wrap-around</note>
+    <note>Device detects impending counter maximum</note>
+    <note>Overflow condition blocks further signatures</note>
   </implementationContext>
 </exception>

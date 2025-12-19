@@ -113,13 +113,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The getEndOfUsageDate function retrieves the end of usage date maintained by the Secure Element's lifecycle management subsystem</note>
-    <note>End of usage date represents the deadline after which the device must no longer be used for cryptographic or operational purposes, determined by device lifecycle policies</note>
-    <note>The end of usage date works together with the begin of usage date (from getBeginOfUsageDate) to define the complete valid operational period for the device</note>
-    <note>Date format and representation may vary by device manufacturer and firmware version - typically ISO 8601 date format or Unix timestamp</note>
-    <note>Device lifecycle management is critical for ensuring compliance with security policies, certification requirements, and operational standards</note>
-    <note>If end of usage date retrieval fails but other device information queries succeed (version, serial number), the issue is specific to lifecycle date storage, not to general device information access</note>
-    <note>End of usage date storage corruption or retrieval errors represent potential integrity issues in the device lifecycle management subsystem that should be investigated</note>
-    <note>Date retrieval is a read-only query; ErrorGetEndOfUsageDateFailed does not indicate state corruption requiring state recovery - it indicates the lifecycle date information source is temporarily unavailable</note>
+    <note>Raised by getEndOfUsageDate when usage date retrieval fails</note>
+    <note>Lifecycle function queries device end-of-life date</note>
+    <note>Device maintains usage and lifespan information</note>
+    <note>Retrieval failure prevents lifecycle information access</note>
   </implementationContext>
 </exception>

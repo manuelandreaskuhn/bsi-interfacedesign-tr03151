@@ -113,13 +113,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>This exception is raised specifically when the Secure Element cannot provide certificates required for export. It is critical for export operations because certificates validate the authenticity and integrity of exported log data.</note>
-    <note>The Secure Element certificate retrieval is a barrier operation that must succeed before export data can be assembled. Unlike other failures that might allow partial data return, certificate retrieval failure blocks the entire export operation.</note>
-    <note>Users should understand that ErrorExportLoggingCertificateFailed means absolutely no export data is returned. There are no partial exports, no incomplete certificates, and no fallback data. The entire operation fails at the certificate collection phase.</note>
-    <note>This exception is distinct from ErrorExportSerialNumbersFailed. The two export operations (certificate export and serial number export) are independent. One can fail while the other succeeds, and each has its own specific exception.</note>
-    <note>Certificate export is essential for users who need to validate log messages outside the device or provide evidence for regulatory compliance. A repeated occurrence of this exception should trigger investigation of Secure Element certificate management and storage systems.</note>
-    <note>The exportLoggingCertificates function is the only source of this exception. It indicates that the underlying Secure Element certification infrastructure is experiencing difficulties. This is a High severity issue because it affects audit trail exportability and regulatory compliance.</note>
-    <note>Recovery from this exception typically requires either addressing the specific Secure Element issue (communication, storage, hardware) or restarting the device to reset state. If repeated failures occur, professional service is required.</note>
-    <note>Implementers should ensure comprehensive logging of certificate export failures because they may indicate serious issues with Secure Element functionality that require professional investigation and may affect device trustworthiness.</note>
+    <note>Raised by exportLoggingCertificates when certificate export fails</note>
+    <note>Certificate export function retrieves logging certificates from SE</note>
+    <note>Device provides certificates used for log message signing operations</note>
+    <note>Export failure prevents certificate provisioning to external systems</note>
   </implementationContext>
 </exception>

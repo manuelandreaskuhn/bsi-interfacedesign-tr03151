@@ -113,13 +113,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The getFreeMemory function retrieves the current amount of free memory maintained by the Secure Element's memory management subsystem</note>
-    <note>Free memory represents the amount of memory available for new allocations and data storage operations in the Secure Element</note>
-    <note>Different device models and configurations may have different total memory sizes and fragmentation characteristics - consult device specifications</note>
-    <note>Free memory changes dynamically as operations allocate and deallocate memory, so values may vary between queries</note>
-    <note>Memory availability is critical for determining whether devices can accept new transactions, logging operations, or other memory-intensive functions</note>
-    <note>If free memory retrieval fails but other memory queries succeed (total memory), the issue is specific to memory status calculation, not to general memory access</note>
-    <note>Memory management system corruption or calculation errors represent potential integrity issues in resource management that should be investigated</note>
-    <note>Memory query is a read-only operation; ErrorGetFreeMemoryFailed does not indicate memory corruption requiring recovery - it indicates the memory status information source is unavailable</note>
+    <note>Raised by getFreeMemory when free memory information retrieval fails</note>
+    <note>Memory function queries available device storage</note>
+    <note>Device tracks storage usage and available capacity</note>
+    <note>Retrieval failure prevents available memory information</note>
   </implementationContext>
 </exception>

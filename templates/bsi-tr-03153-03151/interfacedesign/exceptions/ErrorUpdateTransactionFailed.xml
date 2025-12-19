@@ -126,15 +126,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>Transaction state must be validated before update processing</note>
-    <note>Transaction data must be validated for format and range</note>
-    <note>Transaction counter increment must be verified</note>
-    <note>Transaction record write must include error handling</note>
-    <note>Logging must succeed for audit trail completeness</note>
-    <note>Update operation should be atomic when possible</note>
-    <note>Failure should not leave transaction in inconsistent state</note>
-    <note>Error messages should indicate specific failure reason</note>
-    <note>Failed updates should trigger rollback handling</note>
-    <note>Device diagnostics should include transaction update testing</note>
+    <note>Raised by updateTransaction when transaction update operation fails</note>
+    <note>Update function modifies transaction data and state</note>
+    <note>Device applies transaction state changes</note>
+    <note>Update failure prevents transaction modification</note>
   </implementationContext>
 </exception>

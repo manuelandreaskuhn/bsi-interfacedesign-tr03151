@@ -118,15 +118,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>All SE API functions with length-constrained parameters must validate parameter lengths during input validation</note>
-    <note>Length validation should occur early in function execution, before any device communication</note>
-    <note>Maximum length limits should be clearly documented for each parameter in function documentation</note>
-    <note>Length validation should check actual parameter length against documented maximum length</note>
-    <note>Error messages should identify which specific parameter exceeded the length limit and what the maximum is</note>
-    <note>Different functions may have different maximum lengths for similar parameters - document each function's constraints</note>
-    <note>Character encoding considerations: UTF-8 multi-byte characters may affect length calculations</note>
-    <note>Binary data parameters should be validated using byte length, not character length</note>
-    <note>Some parameters may have variable maximum lengths based on device configuration - this should be documented</note>
-    <note>Client applications should implement parameter length validation utilities to reduce validation failures</note>
+    <note>Raised by functions when parameter exceeds maximum length</note>
+    <note>Length validation enforces maximum parameter size</note>
+    <note>Device limits parameter length to prevent buffer overflows</note>
+    <note>Oversized parameter prevents function execution</note>
   </implementationContext>
 </exception>

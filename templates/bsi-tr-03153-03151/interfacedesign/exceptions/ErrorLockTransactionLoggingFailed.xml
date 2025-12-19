@@ -117,13 +117,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The lockTransactionLogging function transitions the transaction logging system from active (accepting entries) to locked (read-only)</note>
-    <note>Transaction logging lock is typically a permanent or very long-lived state - the system design should reflect this permanence</note>
-    <note>Lock operations may have prerequisites such as completing pending logging operations or verifying device readiness</note>
-    <note>The Secure Element may report specific failure reasons or error codes that can guide debugging and recovery</note>
-    <note>Applications should distinguish between transient failures (communication, timeout) and persistent failures (permissions, device state) for appropriate recovery</note>
-    <note>Once locked, the transaction logging typically cannot be resumed - the application should verify locking is intended before calling lockTransactionLogging</note>
-    <note>Transaction logging locks may interact with other device locks or state management - consult device architecture for lock coordination</note>
-    <note>Lock failure diagnostics may require examining device logs, error codes, or state information that is not directly accessible via SE API</note>
+    <note>Raised by lockTransactionLogging when transaction log locking fails</note>
+    <note>Locking function prevents transaction log modifications</note>
+    <note>Device maintains transaction log lock state</note>
+    <note>Lock operation failure prevents logging freeze</note>
   </implementationContext>
 </exception>

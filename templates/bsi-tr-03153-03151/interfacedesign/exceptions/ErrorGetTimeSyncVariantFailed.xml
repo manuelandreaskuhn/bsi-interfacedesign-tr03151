@@ -113,13 +113,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The getTimeSyncVariant function retrieves the time synchronization variant and mechanism supported by the Secure Element</note>
-    <note>Time sync variant describes which time synchronization mechanisms and protocols (NTP, SNTP, manual time setting, etc.) are supported for time synchronization</note>
-    <note>Time sync variant information includes synchronization mechanism identifiers, protocol versions, and constraints specific to this device's time management</note>
-    <note>Different device models, firmware versions, and configurations may support different time synchronization variants - consult device specifications for supported time sync details</note>
-    <note>Time sync variant information is essential for planning time synchronization operations and ensuring compatibility of time synchronization mechanisms with device capabilities</note>
-    <note>If time sync variant retrieval fails but other time management queries succeed (current time, end-of-usage date), the issue is specific to variant information, not to general time management access</note>
-    <note>Time management capability corruption or enumeration errors represent critical issues in time management subsystem that should be investigated immediately</note>
-    <note>Time sync variant enumeration is a read-only query; ErrorGetTimeSyncVariantFailed does not indicate time state corruption requiring state recovery - it indicates the variant information source is unavailable</note>
+    <note>Raised by getTimeSyncVariant when time synchronization method retrieval fails</note>
+    <note>Configuration function queries active time synchronization variant</note>
+    <note>Device maintains time sync configuration</note>
+    <note>Retrieval failure prevents time sync method access</note>
   </implementationContext>
 </exception>

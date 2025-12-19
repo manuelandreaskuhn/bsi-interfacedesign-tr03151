@@ -157,13 +157,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>ErrorFunctionFailed is the ultimate catch-all exception in the SE API. It represents a critical failure that does not fit into any of the specific exception categories defined by the API specification.</note>
-    <note>This exception can be thrown by virtually any SE API function. Implementations should document what specific critical errors can trigger ErrorFunctionFailed in their particular context.</note>
-    <note>The exception's role is to ensure that critical errors are never silently ignored or left unhandled. If a critical error cannot be classified as a specific exception, ErrorFunctionFailed provides a mechanism to communicate the failure.</note>
-    <note>When ErrorFunctionFailed occurs, callers should examine the exception message and cause carefully. These contain important diagnostic information not available from the exception type alone.</note>
-    <note>Common sources of ErrorFunctionFailed include: unexpected hardware errors, system-level failures, resource exhaustion, communication breakdowns, and unspecified operational errors.</note>
-    <note>Applications should implement comprehensive exception handling for ErrorFunctionFailed, including logging with full context, user notification, retry strategies, and escalation procedures.</note>
-    <note>Recovery from ErrorFunctionFailed depends heavily on the underlying cause, which is not explicitly categorized. Applications must use error messages, logs, and diagnostics to determine appropriate recovery strategies.</note>
-    <note>When ErrorFunctionFailed occurs repeatedly, it typically indicates a systemic problem requiring investigation, device diagnostics, or professional support intervention.</note>
+    <note>Generic function execution failure not covered by specific exception types</note>
+    <note>Indicates function did not complete successfully</note>
+    <note>May result from internal device error or operation failure</note>
+    <note>Application must determine root cause from exception message</note>
   </implementationContext>
 </exception>

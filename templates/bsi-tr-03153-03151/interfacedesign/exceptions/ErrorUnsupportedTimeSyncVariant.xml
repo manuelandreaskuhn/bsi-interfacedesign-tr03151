@@ -119,15 +119,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>Variant support must be checked before time sync operation</note>
-    <note>Supported variants should be queryable via capability interface</note>
-    <note>Variant parameter validation should occur early in processing</note>
-    <note>Variant support may depend on device configuration</note>
-    <note>Firmware version should be checked for variant compatibility</note>
-    <note>Error messages should clearly indicate unsupported variant</note>
-    <note>Error messages should suggest available alternative variants</note>
-    <note>Variant support should be documented in device specification</note>
-    <note>Device capabilities should list all supported variants</note>
-    <note>Configuration management should control variant availability</note>
+    <note>Raised by updateTime when time synchronization variant not supported</note>
+    <note>Time sync validation checks variant support</note>
+    <note>Device supports specific time synchronization methods</note>
+    <note>Unsupported variant prevents time update</note>
   </implementationContext>
 </exception>

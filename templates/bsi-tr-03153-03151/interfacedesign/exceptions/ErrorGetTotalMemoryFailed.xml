@@ -113,13 +113,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The getTotalMemory function retrieves the total storage capacity of the Secure Element's storage medium</note>
-    <note>Total memory represents the complete amount of storage available on the device for all purposes (data, firmware, system structures, etc.)</note>
-    <note>Total memory capacity is typically expressed in bytes or other standard storage units</note>
-    <note>Different device models and storage configurations may have different total memory capacities - consult device specifications for storage capacity details</note>
-    <note>Total memory information is essential for resource planning, capacity analysis, and understanding device storage limitations</note>
-    <note>If total memory retrieval fails but free memory queries succeed, the issue is specific to total capacity information, not to general resource management access</note>
-    <note>Memory capacity errors or enumeration failures represent critical issues in resource management subsystem that should be investigated immediately</note>
-    <note>Total memory enumeration is a read-only query; ErrorGetTotalMemoryFailed does not indicate storage corruption requiring state recovery - it indicates the capacity information source is unavailable</note>
+    <note>Raised by getTotalMemory when total memory information retrieval fails</note>
+    <note>Capacity function queries total device storage size</note>
+    <note>Device specifies total storage capacity</note>
+    <note>Retrieval failure prevents total memory information</note>
   </implementationContext>
 </exception>

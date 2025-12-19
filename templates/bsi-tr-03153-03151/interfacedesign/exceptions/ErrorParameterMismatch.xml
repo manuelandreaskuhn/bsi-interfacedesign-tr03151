@@ -117,15 +117,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The exportLogMessages and exportFilteredTransactionLogs functions must validate parameters before attempting export operations</note>
-    <note>Parameter validation should check: logical consistency, range validity, format correctness, and data model constraint compliance</note>
-    <note>Date/time ranges are particularly important - start/end relationships should be validated early</note>
-    <note>Mutually exclusive options should be explicitly identified and validated in the parameter checking logic</note>
-    <note>Parameter documentation should clearly specify all constraints and valid value ranges</note>
-    <note>Error messages should identify which specific parameters have conflicts for efficient debugging</note>
-    <note>Some parameter constraints may be device-specific - different device models may have different acceptable parameter combinations</note>
-    <note>Applications should implement parameter validation utilities to reduce likelihood of ErrorParameterMismatch</note>
-    <note>Complex filtering with many parameters requires careful validation of all parameter interactions</note>
-    <note>Test coverage should include boundary cases and edge cases for parameter values</note>
+    <note>Raised by functions when parameter types do not match expected types</note>
+    <note>Parameter type validation enforces strict type checking</note>
+    <note>Device validates parameter compatibility</note>
+    <note>Type mismatch prevents function execution</note>
   </implementationContext>
 </exception>

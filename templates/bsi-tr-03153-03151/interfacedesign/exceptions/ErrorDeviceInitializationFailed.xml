@@ -114,15 +114,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The ErrorDeviceInitializationFailed exception represents a critical failure in the device startup sequence that prevents the device from becoming operational. This is distinct from operational failures that occur after successful initialization.</note>
-    <note>The initialize function is a prerequisite for all other SE API functions. Until initialize succeeds, the device is unusable and all other API functions are unavailable.</note>
-    <note>Device implementations perform extensive initialization including Secure Element activation, state structure creation, storage verification, and self-testing. Failures in any of these areas result in this exception.</note>
-    <note>The specific initialization step that failed is typically captured in device logs or diagnostic information. Applications should examine detailed error information to understand whether the failure is hardware-related, firmware-related, or transient.</note>
-    <note>Unlike transient API operation failures, initialization failures are often persistent and may indicate hardware damage or firmware corruption requiring professional service or device replacement.</note>
-    <note>Some devices perform time-consuming initialization procedures including extensive self-tests and verification. Applications should allow appropriate timeouts for initialization to complete (typically seconds to minutes depending on device type).</note>
-    <note>In environments with redundant or clustered devices, initialization failure on one device should trigger automatic failover to alternative devices. The failed device should be isolated and scheduled for diagnostics.</note>
-    <note>The device state after initialization failure may be partially initialized, potentially creating security risks if partially initialized state is exploited. The device should be considered non-operational and untrusted until repair and re-initialization.</note>
-    <note>Factory reset or power cycling may clear transient initialization failures caused by timing issues or temporary state inconsistencies. However, persistent failures indicate hardware or firmware issues requiring professional intervention.</note>
-    <note>Some device implementations may provide detailed diagnostic or boot-failure information through alternative interfaces (UART, diagnostic ports, specialized tools). Applications may need to use these tools to determine the root cause of initialization failures.</note>
+    <note>Raised by initialize when device setup and initialization fails</note>
+    <note>Initialization function sets up device state, storage, and cryptographic components</note>
+    <note>Device performs self-tests and validates internal components during initialization</note>
+    <note>Initialization failure prevents device from reaching ready state</note>
   </implementationContext>
 </exception>

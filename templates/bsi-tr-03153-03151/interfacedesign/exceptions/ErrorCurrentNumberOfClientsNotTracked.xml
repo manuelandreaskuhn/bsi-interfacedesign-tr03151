@@ -103,13 +103,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>This exception represents a capability boundary rather than a failure condition. It informs applications about permanent limitations in device implementation or configuration.</note>
-    <note>The absence of client tracking is typically a deliberate design choice to support unlimited client scalability without the overhead of client counting. Devices designed for unlimited client concurrency often omit this feature.</note>
-    <note>Client tracking is orthogonal to client registration. A device may implement registerClient/deregisterClient without maintaining a count of currently registered clients. Applications must not assume that if registration is implemented, counting must also be available.</note>
-    <note>Device variants may have significantly different client management implementations. Some variants may support bounded client counts with tracking, while others may support unlimited clients without tracking. Applications should discover capabilities at runtime rather than assuming consistency.</note>
-    <note>Unlike ErrorGetCurrentNumberOfClientsFailed (which is a transient failure), this exception indicates a permanent characteristic of the device that will not change during the device's current operational session without reinitialization.</note>
-    <note>Applications that implement client-side tracking must ensure that their tracking stays synchronized with device-level registrations. Mismatch between client-side tracking and device registrations can lead to incorrect client counts.</note>
-    <note>Some device implementations may provide alternative mechanisms for understanding client load or capacity utilization, even without explicit client counting. Applications should explore the full API surface to identify alternative capabilities.</note>
-    <note>In clustered or distributed SE API implementations, client tracking may be unavailable at individual device level even if the overall system provides cluster-level client accounting. Applications must distinguish between local and global client counting capabilities.</note>
+    <note>Raised by getCurrentNumberOfClients when client count tracking unavailable</note>
+    <note>Device maintains current client count as part of runtime state</note>
+    <note>Tracking mechanism may be unavailable in certain device states</note>
+    <note>Application cannot retrieve real-time client count at this time</note>
   </implementationContext>
 </exception>

@@ -116,15 +116,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The authenticateUser function must check PIN block state before verifying the PIN</note>
-    <note>The device must maintain persistent PIN block state across restarts and power cycles</note>
-    <note>Failed PIN attempt counters must be incremented for each incorrect PIN, not reset between authentication attempts</note>
-    <note>The threshold for PIN blocking (number of failed attempts) should be configurable during device initialization</note>
-    <note>Once the PIN block threshold is reached, the PIN should be blocked immediately without further warning</note>
-    <note>PIN block state can only be cleared by the unblockPin function or administrative procedures</note>
-    <note>Different user accounts must have independent PIN block states</note>
-    <note>Security logging should record all PIN block events with timestamps and user identifiers</note>
-    <note>Applications should implement rate limiting or backoff strategies to prevent legitimate PIN locking</note>
-    <note>User interface should provide clear guidance on PIN recovery when ErrorPinBlocked is encountered</note>
+    <note>Raised by authenticateUser when PIN retry counter exhausted</note>
+    <note>Authentication blocking mechanism prevents brute force attacks</note>
+    <note>Device blocks PIN after multiple failed attempts</note>
+    <note>Blocked PIN requires unblocking via PUK</note>
   </implementationContext>
 </exception>

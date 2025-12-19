@@ -115,15 +115,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The unblockPin function must attempt to reset the retry counter as part of the unblocking operation</note>
-    <note>Device transaction management should use atomic operations to ensure PIN and counter are updated together</note>
-    <note>If atomic operations are not possible, the function should detect partial failures and handle them appropriately</note>
-    <note>If retry counter reset fails, the function should report ErrorResettingRetryCounterFailed while noting that PIN is unblocked</note>
-    <note>Error messages should clearly distinguish between PIN unblock failures and counter reset failures</note>
-    <note>Retry counter reset should be persistent - the counter value should be durably written to device storage</note>
-    <note>Device should provide diagnostic capability to query the current retry counter state</note>
-    <note>Administrative tools should provide capability to manually reset retry counters if necessary</note>
-    <note>Transaction logs should record both successful PIN operations and failed counter operations</note>
-    <note>Monitoring systems should track counter reset failures as a sign of device issues</note>
+    <note>Raised by unblockPin when retry counter reset fails</note>
+    <note>Counter reset function reinitializes PIN retry attempts</note>
+    <note>Device updates retry counter after successful PUK verification</note>
+    <note>Reset failure prevents PIN unblocking completion</note>
   </implementationContext>
 </exception>

@@ -112,13 +112,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The getCurrentSeTime function retrieves the current time maintained by the Secure Element's independent internal clock, which may differ from host system time</note>
-    <note>Secure Element time is independent of system time and maintained separately by the Secure Element's hardware clock. Periodic synchronization using the updateTime function may be required to maintain consistency.</note>
-    <note>Time values are typically represented in device-specific formats (e.g., milliseconds since epoch, device startup time, or vendor-specific time representation) - consult device specification documentation</note>
-    <note>The Secure Element's time is critical for generating trustworthy timestamps in logged events, transactions, audit trails, and time-based cryptographic operations</note>
-    <note>Different time synchronization variants (returned by getTimeSyncVariant) determine how the Secure Element's clock is maintained, updated, and how often synchronization is required</note>
-    <note>If Secure Element time retrieval fails but other Secure Element operations continue successfully, the issue is specific to the time query/access mechanism, not to general time tracking or Secure Element functionality</note>
-    <note>Hardware clock failures, storage corruption, or internal state errors in the Secure Element persist until corrected - simple retries may not resolve persistent clock hardware issues</note>
-    <note>Time retrieval is a read-only operation; ErrorGetCurrentSeTimeFailed does not indicate state corruption or require state recovery - it indicates the time information source (hardware clock) is unavailable</note>
+    <note>Raised by getCurrentSeTime when SE time retrieval fails</note>
+    <note>Time function queries Secure Element internal time</note>
+    <note>Device maintains time state in SE</note>
+    <note>Retrieval failure prevents SE time access</note>
   </implementationContext>
 </exception>

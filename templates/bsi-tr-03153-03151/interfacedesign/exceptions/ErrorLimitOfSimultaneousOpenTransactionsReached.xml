@@ -113,13 +113,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The startTransaction function enforces the Secure Element's maximum simultaneous transaction limit - this is a hard device capability</note>
-    <note>Transaction capacity is typically a configurable device parameter set during device initialization or manufacturing</note>
-    <note>The maximum transaction limit is separate from the maximum number of transactions the device can manage over its lifetime</note>
-    <note>Applications must implement capacity-aware transaction management strategies appropriate for their workload characteristics</note>
-    <note>Transaction capacity is a shared resource - all concurrent callers of startTransaction compete for available capacity</note>
-    <note>Proper transaction completion through finishTransaction is essential - incomplete transactions consume capacity indefinitely</note>
-    <note>Application should implement monitoring and alerting for capacity constraints - knowing when limits are being approached enables proactive management</note>
-    <note>Different transaction types or priorities may have different capacity implications - consult device specifications for transaction capacity details</note>
+    <note>Raised by startTransaction when maximum concurrent transactions exceeded</note>
+    <note>Transaction concurrency limit prevents excessive simultaneous transactions</note>
+    <note>Device enforces maximum open transaction count</note>
+    <note>Limit reached prevents new transaction initiation</note>
   </implementationContext>
 </exception>

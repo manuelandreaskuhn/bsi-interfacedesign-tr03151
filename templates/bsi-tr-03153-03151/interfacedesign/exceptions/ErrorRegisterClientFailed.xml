@@ -120,15 +120,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The registerClient function must check client capacity and available resources before attempting registration</note>
-    <note>The function must verify that the client ID is not already registered before proceeding with registration</note>
-    <note>Device client capacity is typically a device characteristic that should be documented and queryable</note>
-    <note>Registration failures should provide specific error codes or messages indicating the cause (capacity, duplicate, etc.)</note>
-    <note>The function should handle communication failures gracefully and ensure no partial registration occurs</note>
-    <note>Device client registry should be consistent and recoverable - registration failures should not corrupt state</note>
-    <note>Applications should implement client registration error handling and retry strategies</note>
-    <note>Device capacity management tools should help administrators understand and optimize client registry usage</note>
-    <note>Different device models may have different client capacity limits - this should be documented</note>
-    <note>Monitoring systems should track client registration patterns to identify capacity issues early</note>
+    <note>Raised by registerClient when client registration operation fails</note>
+    <note>Client registration subsystem adds client to device registry</note>
+    <note>Device allocates resources for new client</note>
+    <note>Registration failure prevents client from being added</note>
   </implementationContext>
 </exception>

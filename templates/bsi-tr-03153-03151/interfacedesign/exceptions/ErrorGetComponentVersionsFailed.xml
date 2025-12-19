@@ -111,13 +111,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The getComponentVersions function typically returns information about multiple device components including firmware version, Secure Element version, bootloader version, and other software/hardware component versions.</note>
-    <note>Component versions are essential for determining device capabilities, supported features, potential limitations, and required firmware updates.</note>
-    <note>Version information may be used to verify that firmware updates were applied successfully and that devices meet minimum version requirements for specific operations.</note>
-    <note>Different device models, manufacturing dates, and firmware configurations may have different sets of components and version reporting schemas.</note>
-    <note>Version retrieval failures may indicate issues with internal storage, firmware state, or device diagnostics that should be investigated and logged for support purposes.</note>
-    <note>Applications in multi-device environments should maintain a version compatibility matrix to track which versions support required features.</note>
-    <note>Firmware updates may add support for previously unavailable features or fix compatibility issues, making version verification important before feature deployment.</note>
-    <note>Version information is typically read-only and is not modified by normal API operations, so retrieval failures indicate a specific version management or storage issue.</note>
+    <note>Raised by getComponentVersions when version information retrieval fails</note>
+    <note>Version query function retrieves component firmware and version information</note>
+    <note>Device maintains component version metadata</note>
+    <note>Retrieval failure prevents version information access</note>
   </implementationContext>
 </exception>

@@ -114,15 +114,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>Unlock function must check current logging lock status before executing</note>
-    <note>Lock status check should be atomic to prevent race conditions</note>
-    <note>Unlock should be rejected if logging not locked (protective logic)</note>
-    <note>Error response should indicate current logging status clearly</note>
-    <note>Exception should be distinct from successful unlock condition</note>
-    <note>Logging status should be queryable through separate diagnostic function</note>
-    <note>Caller should verify status before unlock to avoid unnecessary exceptions</note>
-    <note>Automatic lock expiration should clear lock flag for consistency</note>
-    <note>Device restart handling should preserve permanent policy locks</note>
-    <note>Authorization checks should be performed alongside lock status check</note>
+    <note>Raised by unlockTransactionLogging when logging not locked</note>
+    <note>State validation expects transaction logging locked state</note>
+    <note>Device prevents unlocking when logging already unlocked</note>
+    <note>Unlocked state prevents unlock operation</note>
   </implementationContext>
 </exception>

@@ -113,13 +113,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The authenticateUser function performs PIN-based user authentication to verify user identity and establish authenticated session</note>
-    <note>Incorrect PIN is fundamentally distinct from authentication system errors - it represents failed credential verification, not system failure</note>
-    <note>PIN verification is typically performed by the Secure Element's authentication subsystem with secure comparison to prevent timing attacks</note>
-    <note>Most Secure Elements implement PIN retry counters and blocking mechanisms after excessive failed attempts - brute force protection is standard</note>
-    <note>ErrorIncorrectPin is a normal, expected exception during authentication workflows - it is not exceptional in systems where users occasionally enter wrong credentials</note>
-    <note>Applications should implement user-friendly error messages and retry capability when ErrorIncorrectPin is raised - authentication is expected to require multiple attempts in some cases</note>
-    <note>Failed authentication attempts should be logged for security auditing and brute force detection - authentication is a critical security checkpoint</note>
-    <note>PIN blocking and retry counter management are typically handled transparently by the Secure Element - applications should be aware these mechanisms may trigger ErrorPinBlocked after repeated failures</note>
+    <note>Raised by authenticateUser when provided PIN does not match stored PIN</note>
+    <note>Authentication function verifies PIN via Secure Element comparison</note>
+    <note>Device maintains PIN secret and retry counter</note>
+    <note>PIN mismatch indicates failed authentication attempt</note>
   </implementationContext>
 </exception>

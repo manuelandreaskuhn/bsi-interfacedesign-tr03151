@@ -144,15 +144,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>Storage connectivity must be verified before every storage access operation</note>
-    <note>Device should implement health monitoring for storage subsystem</note>
-    <note>Error detection and reporting must be immediate when storage becomes unavailable</note>
-    <note>Watchdog/heartbeat mechanisms should verify storage accessibility regularly</note>
-    <note>Device should not attempt to continue operation with disconnected storage</note>
-    <note>Error messages should clearly indicate storage is disconnected/unavailable</note>
-    <note>Storage interfaces should be designed for robustness and reliability</note>
-    <note>Physical connectors should be protected and secured against accidental disconnection</note>
-    <note>Redundant storage systems can provide resilience against single storage failures</note>
-    <note>Backup storage access procedures should be available for disaster recovery</note>
+    <note>Raised by functions when storage hardware is disconnected</note>
+    <note>Storage hardware connectivity validation detects disconnection</note>
+    <note>Device cannot access storage medium for data persistence</note>
+    <note>Disconnection prevents data write operations</note>
   </implementationContext>
 </exception>

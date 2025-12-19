@@ -128,15 +128,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>Update process must include cryptographic signature verification</note>
-    <note>Data integrity validation should verify checksums or hash values</note>
-    <note>Compatibility checking must verify device type and current version</note>
-    <note>Device state validation should ensure no incompatible operations</note>
-    <note>Hardware error detection should catch failures during installation</note>
-    <note>Post-install verification should confirm successful update application</note>
-    <note>Atomic operations should prevent partial update states</note>
-    <note>Rollback capability should preserve previous version if available</note>
-    <note>Update history should log all update attempts and results</note>
-    <note>Error messages should clearly indicate update failure reasons</note>
+    <note>Raised by updateDevice when device update operation fails</note>
+    <note>Update function applies device firmware or configuration changes</note>
+    <note>Device performs update process and validation</note>
+    <note>Update failure prevents firmware upgrade</note>
   </implementationContext>
 </exception>

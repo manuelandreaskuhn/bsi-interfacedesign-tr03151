@@ -117,15 +117,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>Export status tracking must be maintained per log message</note>
-    <note>Deletion operation must check export status of all affected messages</note>
-    <note>Export status should persist across device operations</note>
-    <note>Deletion scope must be clearly defined for export status checking</note>
-    <note>Error messages should specify which messages are unexported</note>
-    <note>Automatic storage cleanup must include export verification</note>
-    <note>Export to archival systems should mark messages as exported</note>
-    <note>Compliance policies should require export before deletion</note>
-    <note>Storage capacity planning should consider export performance</note>
-    <note>Audit trail should log all export and deletion operations</note>
+    <note>Raised by deleteLogMessages when exported log messages exist</note>
+    <note>Export completion validation ensures all messages exported</note>
+    <note>Device maintains export status of log messages</note>
+    <note>Unexported messages prevent deletion</note>
   </implementationContext>
 </exception>

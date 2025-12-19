@@ -134,15 +134,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The device must monitor signature counter memory status and predict exhaustion</note>
-    <note>Signature counter memory should be checked before every operation requiring counter increment</note>
-    <note>The device should raise ErrorSignatureCounterExhausted before memory is completely exhausted</note>
-    <note>Wear-leveling techniques should be employed to extend physical memory life</note>
-    <note>Error messages should indicate current counter value and estimated remaining capacity</note>
-    <note>Signature counter implementation should minimize write frequency through batching or caching where possible</note>
-    <note>Device firmware should provide status API to query signature counter memory status</note>
-    <note>Monitoring and alerting should provide early warning before counter exhaustion</note>
-    <note>Device decommissioning procedures should verify signature counter exhaustion status</note>
-    <note>Replacement devices should be procured with sufficient lifecycle for business needs</note>
+    <note>Raised by logging functions when signature counter reaches maximum</note>
+    <note>Logging subsystem tracks signature count for audit trail</note>
+    <note>Device maintains counter of signed log messages</note>
+    <note>Exhaustion prevents further log message creation</note>
   </implementationContext>
 </exception>

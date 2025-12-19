@@ -103,15 +103,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The ErrorDeviceIsInitialized exception represents a protective state check that prevents duplicate initialization. It is a very early safeguard in the initialize function's execution flow.</note>
-    <note>The exception is raised immediately upon entering the initialize function after checking device state, before any initialization actions are executed. Device state is guaranteed to be unchanged.</note>
-    <note>This is one of the few exceptions where the function exits immediately without error recovery or partial operation. The exception is purely informational about device state.</note>
-    <note>Unlike ErrorDeviceInitializationFailed (which indicates an initialization error), ErrorDeviceIsInitialized is not an error in the traditional sense - it is a preventive check ensuring the device is not re-initialized.</note>
-    <note>Applications should implement initialization guards using state flags or atomic operations to track whether initialization has been completed. This prevents accidental re-initialization attempts.</note>
-    <note>In multi-threaded environments, the initialization state check and subsequent initialization must be atomic or protected by synchronization to prevent race conditions where multiple threads see the device as uninitialized simultaneously.</note>
-    <note>Some applications use this exception as a confirmation that initialization is complete. If this exception is caught, it indicates the device is ready for use.</note>
-    <note>The exception is raised at the prerequisite check level, making it one of the first exceptions that can be raised from any SE API function. Applications should handle this exception at high-level initialization code.</note>
-    <note>In environments where devices may be dynamically attached or re-attached, care must be taken to distinguish between "re-attaching a device that was already initialized" and "initializing a fresh device instance".</note>
-    <note>The exception provides a way for applications to safely verify device initialization status: attempt initialize, catch ErrorDeviceIsInitialized, and proceed assuming the device is initialized.</note>
+    <note>Raised by initialize when re-initialization attempted on already initialized device</note>
+    <note>Device maintains initialization state preventing duplicate initialization</note>
+    <note>Reinitialization is not permitted when device already initialized</note>
+    <note>Application must reset or deregister before reinitializing</note>
   </implementationContext>
 </exception>

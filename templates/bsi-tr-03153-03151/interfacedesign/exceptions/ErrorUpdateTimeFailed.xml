@@ -125,15 +125,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>Time data validation must verify format and range before update</note>
-    <note>Time values must be within acceptable operational range</note>
-    <note>Hardware access to clock/time register must include error detection</note>
-    <note>Device state validation should ensure time update is compatible</note>
-    <note>Post-update verification should confirm time was properly set</note>
-    <note>Time update operations should be atomic to prevent partial state</note>
-    <note>Time update failures should be logged with timestamp for audit</note>
-    <note>Device diagnostics should include time functionality tests</note>
-    <note>Recovery procedures should support time resynchronization</note>
-    <note>Error messages should indicate specific validation failures</note>
+    <note>Raised by updateTime when time synchronization fails</note>
+    <note>Time function synchronizes device time to provided value</note>
+    <note>Device updates internal time via Secure Element</note>
+    <note>Update failure prevents time synchronization</note>
   </implementationContext>
 </exception>

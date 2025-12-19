@@ -113,13 +113,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The unblockPin function performs PUK-based PIN unblock to restore access when the user PIN has been blocked due to excessive failed authentication attempts</note>
-    <note>Incorrect PUK is fundamentally distinct from PIN unblock system errors - it represents failed credential verification for the unblock operation, not system failure</note>
-    <note>PUK verification is typically performed by the Secure Element's authentication subsystem with secure comparison to prevent timing attacks</note>
-    <note>Most Secure Elements implement PUK retry counters and blocking mechanisms after excessive failed attempts - PUK brute force protection is standard security practice</note>
-    <note>ErrorIncorrectPuk is a normal, expected exception during PIN unblock workflows - it is not exceptional in systems where users occasionally enter wrong credentials during recovery</note>
-    <note>Applications should implement user-friendly error messages and retry capability when ErrorIncorrectPuk is raised - PIN unblock recovery is expected to require multiple attempts in some cases</note>
-    <note>Failed PUK verification attempts should be logged for security auditing and brute force detection - PIN unblock is a critical security checkpoint</note>
-    <note>PUK blocking and retry counter management are typically handled transparently by the Secure Element - applications should be aware these mechanisms may trigger ErrorPukBlocked after repeated failures</note>
+    <note>Raised by unblockPin when provided PUK does not match stored PUK</note>
+    <note>Unblock function verifies PUK before allowing PIN reset</note>
+    <note>Device maintains PUK secret for PIN recovery</note>
+    <note>PUK mismatch prevents PIN unblocking</note>
   </implementationContext>
 </exception>

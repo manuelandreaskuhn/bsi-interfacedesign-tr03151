@@ -113,13 +113,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The getUsedMemory function retrieves the current amount of storage consumed on the Secure Element</note>
-    <note>Used memory represents the amount of storage currently occupied by data, transactions, logging, and other internal structures</note>
-    <note>Used memory is typically expressed in bytes or other standard storage units</note>
-    <note>Different device models, configurations, and operational states may have different memory consumption patterns - consult device specifications for resource details</note>
-    <note>Used memory information is essential for monitoring actual resource consumption and determining available capacity</note>
-    <note>If used memory retrieval fails but total and free memory queries succeed, the issue is specific to utilization accounting, not to general resource management access</note>
-    <note>Memory accounting errors or retrieval failures represent critical issues in resource management subsystem that should be investigated immediately</note>
-    <note>Used memory accounting is a read-only query; ErrorGetUsedMemoryFailed does not indicate storage corruption requiring state recovery - it indicates the accounting information source is unavailable</note>
+    <note>Raised by getUsedMemory when used memory information retrieval fails</note>
+    <note>Memory function queries current device storage usage</note>
+    <note>Device tracks storage allocation and usage</note>
+    <note>Retrieval failure prevents memory usage information</note>
   </implementationContext>
 </exception>

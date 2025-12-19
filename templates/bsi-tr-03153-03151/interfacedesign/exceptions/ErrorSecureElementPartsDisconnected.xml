@@ -130,15 +130,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>Secure Element must perform component connectivity verification on every operation entry</note>
-    <note>Multiple communication paths between components can provide redundancy and reliability</note>
-    <note>Component connectivity should be verified during device initialization</note>
-    <note>Watchdog/heartbeat mechanisms can detect component communication failures</note>
-    <note>Hardware health monitoring should track component connectivity statistics</note>
-    <note>Error messages should clearly identify which component or subsystem is affected</note>
-    <note>Device should not attempt to continue operation after component disconnection detected</note>
-    <note>Component reconnection should be verified before resuming operations</note>
-    <note>Physical design should minimize connector stress and vibration-related failures</note>
-    <note>Manufacturer should provide guidance on device maintenance and component replacement</note>
+    <note>Raised by functions when SE component communication fails</note>
+    <note>Hardware component connectivity validation detects disconnection</note>
+    <note>Device SE components communicate via internal bus</note>
+    <note>Disconnection prevents cryptographic operations</note>
   </implementationContext>
 </exception>

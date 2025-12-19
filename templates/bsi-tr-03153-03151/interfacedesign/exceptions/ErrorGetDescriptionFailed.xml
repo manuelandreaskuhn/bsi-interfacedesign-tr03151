@@ -113,13 +113,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The getDescription function retrieves the short human-readable description text maintained by the Secure Element for device identification purposes</note>
-    <note>Device description is a static property that identifies the device type, variant, or functional category - it typically does not change during device operation</note>
-    <note>Description text format, encoding, and length may vary by device manufacturer - consult device specifications for expected format</note>
-    <note>Device description is distinct from and complementary to other device identification information such as version numbers, serial numbers, and component versions</note>
-    <note>Description retrieval is part of the basic device information interface that provides essential identification data for device management and user interface presentation</note>
-    <note>If description retrieval fails but other device information queries succeed (version, serial number), the issue is specific to description storage, not to general device information access</note>
-    <note>Description storage corruption or retrieval errors represent potential integrity issues in the device information subsystem that should be investigated</note>
-    <note>Description retrieval is a read-only query; ErrorGetDescriptionFailed does not indicate state corruption requiring state recovery - it indicates the description information source is temporarily unavailable</note>
+    <note>Raised by getDescription when device description retrieval fails</note>
+    <note>Description function retrieves device identifying description</note>
+    <note>Device maintains user-set description string</note>
+    <note>Retrieval failure prevents description access</note>
   </implementationContext>
 </exception>

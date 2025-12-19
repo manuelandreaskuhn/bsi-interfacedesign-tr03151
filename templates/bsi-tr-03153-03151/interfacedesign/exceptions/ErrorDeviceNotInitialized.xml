@@ -140,15 +140,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The ErrorDeviceNotInitialized exception is one of the most fundamental error conditions in the SE API, representing a prerequisite violation that blocks all functional operations.</note>
-    <note>This exception is implemented by all 44 SE API functions that depend on device initialization, making it a universal barrier to API usage when initialization has not been completed.</note>
-    <note>The initialization state check is performed very early in every dependent function's execution flow, before any resource allocation, state modification, or operational logic. This ensures clear and immediate detection of uninitialized access.</note>
-    <note>The comprehensive list of 44 dependent functions spans multiple functional domains (authentication, device info, logging, client management, transactions, time management), demonstrating that initialization is a universal prerequisite across all SE API functionality.</note>
-    <note>Unlike transient failures that may be retried or recovered, uninitialized device access is a architectural error that requires application intervention: the initialize function must be called and must complete successfully.</note>
-    <note>In systems with device hot-swap or dynamic device attachment, initialization must be repeated for each new device instance. An application cannot assume a newly attached device is initialized.</note>
-    <note>The exception provides strong feedback that guides application developers toward correct usage patterns: initialize must be called before other operations.</note>
-    <note>Multi-threaded applications must be especially careful to ensure initialization is performed in a thread-safe manner before any concurrent access to dependent functions occurs.</note>
-    <note>The exception complements ErrorDeviceInitializationFailed: this exception indicates initialization was never completed; ErrorDeviceInitializationFailed indicates initialization was attempted but failed.</note>
-    <note>Some SE API implementations may allow certain functions (such as error information retrieval or diagnostics) to operate on uninitialized devices, but the vast majority require initialization as evidenced by the 44-function dependency list.</note>
+    <note>Raised by functions when device initialization prerequisite not met</note>
+    <note>Most functions require device initialized state for operation</note>
+    <note>Device state tracking enforces initialization requirement</note>
+    <note>Application must call initialize before using most API functions</note>
   </implementationContext>
 </exception>

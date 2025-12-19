@@ -115,13 +115,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The configureLogging function must validate that target event types are configurable before attempting to apply configuration changes</note>
-    <note>Each Secure Element model may have a different set of configurable event types - this should be documented in device specifications</note>
-    <note>Some event types may be mandatory-log for security or compliance reasons and therefore should never be configurable</note>
-    <note>The device's event logging policy defines which events are configurable - this policy is typically set at manufacturing or initialization time</note>
-    <note>Applications targeting multiple device types should implement device-specific configuration strategies based on each device's configurable event types</note>
-    <note>Error handling should gracefully skip non-configurable events when configuring multiple events in batch operations</note>
-    <note>Device capability discovery through attempted configuration (and handling ErrorLoggingOfEventNotConfigurable) can be used to build device feature maps</note>
-    <note>Documentation should clearly specify for each event type whether it is configurable and what configuration options are available</note>
+    <note>Raised by configureLogging when event type cannot be configured</note>
+    <note>Configuration constraint prevents enabling/disabling certain event types</note>
+    <note>Some events have fixed logging configuration</note>
+    <note>Non-configurable events cannot be controlled by application</note>
   </implementationContext>
 </exception>

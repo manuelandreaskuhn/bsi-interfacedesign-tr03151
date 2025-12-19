@@ -114,15 +114,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The ErrorDisableSecureElementFailed exception represents a critical failure in the disableSecureElement function's primary objective: deactivating the Secure Element.</note>
-    <note>Unlike other exceptions that occur during prerequisites or data processing, this exception occurs during a hardware operation (Secure Element deactivation command execution) that is difficult to retry without hardware intervention.</note>
-    <note>The exception is raised very early in the function's lifecycle (after prerequisite checks but before logging), ensuring that no inconsistent or partial state changes occur.</note>
-    <note>This exception is unique to the disableSecureElement function. No other function can raise this specific exception as only disableSecureElement invokes Secure Element deactivation.</note>
-    <note>The Secure Element remains fully enabled and operational after this exception, making continued device operation possible, though the intended security state transition (deactivation) has not been achieved.</note>
-    <note>Unlike ErrorSecureElementDisabled (which indicates deactivation was successful and some operations are now restricted), this exception indicates deactivation was attempted but failed, leaving the device in its original state.</note>
-    <note>Recovery from this exception typically requires hardware diagnostics, communication channel verification, or physical inspection. Retry strategies may have limited effectiveness if the underlying cause is hardware damage.</note>
-    <note>The exception provides strong indication that the Secure Element is experiencing problems that may affect other operations. Applications should consider conducting full device diagnostics if this exception occurs.</note>
-    <note>In systems where Secure Element deactivation is critical to a security protocol or lifecycle transition, failure to deactivate may require escalation to system administrators or device service personnel.</note>
-    <note>This exception demonstrates the importance of robust hardware health monitoring and diagnostic capabilities, as transient communication failures may resemble permanent hardware failures from the application's perspective.</note>
+    <note>Raised by disableSecureElement when SE disable operation fails</note>
+    <note>Secure Element state management controls device cryptographic capabilities</note>
+    <note>Device attempts to transition SE to disabled state</note>
+    <note>SE disable failure prevents security configuration change</note>
   </implementationContext>
 </exception>

@@ -116,15 +116,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>Counter overflow check must be performed before each transaction operation</note>
-    <note>Counter value comparison against maximum should be efficient integer operation</note>
-    <note>Overflow detection prevents counter wrap-around that would compromise authenticity</note>
-    <note>Counter increment must be validated to prevent undefined overflow behavior</note>
-    <note>Device must refuse all transaction operations once counter at maximum</note>
-    <note>Error messages should indicate counter maximum value and current value</note>
-    <note>Device diagnostics should include counter value reporting for end-of-life prediction</note>
-    <note>Counter reset procedures should be carefully documented and require authorization</note>
-    <note>Counter reset compromises transaction authenticity and audit trail continuity</note>
-    <note>Device replacement is strongly preferred over counter reset for security integrity</note>
+    <note>Raised by startTransaction when transaction counter would overflow</note>
+    <note>Overflow protection prevents counter wrap-around</note>
+    <note>Device detects impending counter maximum</note>
+    <note>Overflow condition blocks new transactions</note>
   </implementationContext>
 </exception>

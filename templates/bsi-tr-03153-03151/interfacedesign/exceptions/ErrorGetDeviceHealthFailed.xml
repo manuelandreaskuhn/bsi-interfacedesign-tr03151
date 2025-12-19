@@ -113,13 +113,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The getDeviceHealth function retrieves comprehensive health status information maintained by the Secure Element's health monitoring subsystem</note>
-    <note>Device health information includes operational state, component functionality status, error conditions, resource availability, and other diagnostic metrics</note>
-    <note>Health information is collected and maintained internally by the Secure Element's health monitoring subsystem, tracking device state continuously</note>
-    <note>Different device models and firmware versions may report different health status fields and metrics - consult device specifications for expected health information structure</note>
-    <note>Health monitoring is critical for proactive device management, predictive maintenance, and early problem detection in operational deployments</note>
-    <note>If health retrieval fails but other device information queries succeed (version, serial number), the issue is specific to health monitoring subsystem, not to general device information access</note>
-    <note>Health monitoring hardware or subsystem failure should be treated seriously as it prevents visibility into device operational state and potential problems</note>
-    <note>Health retrieval is a read-only query; ErrorGetDeviceHealthFailed does not indicate state corruption requiring state recovery - it indicates the health monitoring information source is unavailable</note>
+    <note>Raised by getDeviceHealth when health status retrieval fails</note>
+    <note>Health function retrieves device diagnostic and health information</note>
+    <note>Device performs health checks and status monitoring</note>
+    <note>Retrieval failure prevents health status access</note>
   </implementationContext>
 </exception>

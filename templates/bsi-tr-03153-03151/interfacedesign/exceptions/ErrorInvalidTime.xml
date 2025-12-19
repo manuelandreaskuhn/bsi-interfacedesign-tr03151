@@ -114,13 +114,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>Time parameter validation is a fundamental input validation requirement for time update operations</note>
-    <note>Time parameter ranges are strictly defined to ensure only valid date/time values are accepted</note>
-    <note>Supported year range depends on device specifications and Secure Element capabilities - typically 1970-2099 or similar</note>
-    <note>Month must be 1-12, day 1-31 (depending on month), hour 0-23, minute 0-59, second 0-59</note>
-    <note>Leap year logic must be correctly implemented: year divisible by 4 is leap year, except century years (divisible by 100) unless also divisible by 400</note>
-    <note>Applications should implement client-side validation to detect format errors early and provide better user experience</note>
-    <note>ErrorInvalidTime is detected during input validation before Secure Element communication - no device state is affected</note>
-    <note>Standard library time functions should be preferred for time validation to avoid manual error-prone calculations</note>
+    <note>Raised by updateTime when provided time value fails validation</note>
+    <note>Time update function validates time parameter format and value</note>
+    <note>Device enforces time value constraints</note>
+    <note>Invalid time prevents time synchronization</note>
   </implementationContext>
 </exception>

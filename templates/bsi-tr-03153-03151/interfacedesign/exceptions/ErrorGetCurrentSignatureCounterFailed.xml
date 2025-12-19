@@ -113,13 +113,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The getCurrentLoggingSignatureCounters function retrieves signature counter values maintained by the Secure Element's logging subsystem</note>
-    <note>Signature counters track the sequence of logged events and are used cryptographically to validate the integrity and authenticity of the logging audit trail</note>
-    <note>Different logging configurations and cryptographic variants may maintain different numbers of signature counters (per-key counters, global counters, application-specific counters)</note>
-    <note>The current signature counter values are essential for validating that logged events have not been tampered with and for verifying the complete sequence of audit trail events</note>
-    <note>Logging counter maintenance is part of the configured logging variant (determined by configureLogging) - counter state depends on logging configuration and key management</note>
-    <note>If counter value retrieval fails but logging operations continue successfully (new events are logged, export operations work), the issue is specific to counter query mechanism, not to logging functionality itself</note>
-    <note>Counter storage corruption or counter calculation errors in the logging subsystem represent critical integrity threats to the audit trail and require immediate investigation</note>
-    <note>Counter retrieval is a read-only query; ErrorGetCurrentSignatureCounterFailed does not indicate state corruption requiring state recovery - it indicates the counter information source is temporarily unavailable</note>
+    <note>Raised by getCurrentLoggingSignatureCounters when counter retrieval fails</note>
+    <note>Counter query function retrieves signature counter state</note>
+    <note>Device maintains signature counter for logging operations</note>
+    <note>Retrieval failure prevents counter value access</note>
   </implementationContext>
 </exception>

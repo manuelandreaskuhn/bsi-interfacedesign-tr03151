@@ -119,15 +119,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The selfTest function must execute comprehensive test suites covering all critical device components</note>
-    <note>Self-test should include cryptographic test vectors with known test data</note>
-    <note>Self-test should include memory integrity checks using checksums or parity verification</note>
-    <note>Self-test should verify component-to-component communication and connectivity</note>
-    <note>Self-test should validate security processor functionality and firmware integrity</note>
-    <note>Self-test should detect manufacturing defects and configuration errors</note>
-    <note>Error messages should clearly identify which specific test failed</note>
-    <note>Detailed diagnostic information should be logged for troubleshooting and root cause analysis</note>
-    <note>Self-test execution should be atomic - all tests complete or fail cleanly with no partial state</note>
-    <note>Device should recover gracefully from self-test failure without corrupting state</note>
+    <note>Raised by selfTest when device self-test operation fails</note>
+    <note>Self-test function validates device integrity and health</note>
+    <note>Device performs diagnostic tests on components</note>
+    <note>Test failure indicates potential device malfunction</note>
   </implementationContext>
 </exception>

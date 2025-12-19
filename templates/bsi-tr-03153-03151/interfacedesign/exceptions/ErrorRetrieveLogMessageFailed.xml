@@ -144,15 +144,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The getLastLogMessage and getLastTransactionLogMessage functions must establish reliable communication with the Secure Element</note>
-    <note>Communication should include error detection and retry mechanisms for robustness</note>
-    <note>Device state should be verified before attempting log message retrieval</note>
-    <note>Retrieved log data must be validated for structure and integrity before returning to caller</note>
-    <note>Distinction must be made between "no log messages exist" and "cannot retrieve log messages"</note>
-    <note>Error messages should indicate the specific retrieval failure (communication, storage, corruption, etc.)</note>
-    <note>Log message data should be treated as immutable - retrieval does not affect stored data</note>
-    <note>Timeout mechanisms should be implemented for communication-based retrieval</note>
-    <note>Retry strategies should be implemented with appropriate delays and limits</note>
-    <note>Device manufacturers should document log message structure and retrieval specifications</note>
+    <note>Raised by logging functions when log message creation or retrieval fails</note>
+    <note>Device creates log messages during function execution</note>
+    <note>Logging subsystem stores messages via Secure Element</note>
+    <note>Retrieval failure indicates logging operation incomplete</note>
   </implementationContext>
 </exception>

@@ -117,15 +117,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The getLastLogMessage and exportLogMessages functions must detect and report read errors from device storage</note>
-    <note>Read errors can occur at different points: storage access, data transmission, data parsing</note>
-    <note>Device error codes or diagnostic information should be included in error reporting to aid troubleshooting</note>
-    <note>Communication failures during message transmission should be distinguished from storage failures if possible</note>
-    <note>Resource constraints during large export operations should be handled gracefully</note>
-    <note>Retry logic should implement appropriate backoff to avoid overwhelming the device during recovery</note>
-    <note>Device health monitoring should track read failure frequency as an indicator of device degradation</note>
-    <note>Log message backup or redundancy strategies may help mitigate single points of failure</note>
-    <note>Error messages should provide actionable information to guide user troubleshooting and recovery</note>
-    <note>Device manufacturers should document known storage failure modes and recovery procedures</note>
+    <note>Raised by getLastLogMessage and getLastTransactionLogMessage when message read fails</note>
+    <note>Log retrieval functions read log message data from storage</note>
+    <note>Device attempts to access stored log message</note>
+    <note>Read failure prevents message data access</note>
   </implementationContext>
 </exception>

@@ -144,15 +144,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>Every SE API function requiring an enabled Secure Element must check device enabled/disabled state at entry</note>
-    <note>The enabled/disabled check must occur before attempting device communication</note>
-    <note>Device state should be queryable through status API to determine if disabled</note>
-    <note>Clear error messages should distinguish between disabled vs. not-initialized vs. failed states</note>
-    <note>Administrative enable/disable operations must be protected with appropriate authorization</note>
-    <note>Security policy should be able to automatically disable device under certain conditions</note>
-    <note>Device manufacturer should document how to enable/disable the Secure Element</note>
-    <note>Management interfaces should provide clear visibility into enabled/disabled state</note>
-    <note>Device should not lose data or configurations when disabled and re-enabled</note>
-    <note>Disabled state should be persistent across device resets unless explicitly reset to default</note>
+    <note>Raised by functions when Secure Element is not operational</note>
+    <note>Device state indicates SE disabled or not available</note>
+    <note>Functions requiring SE cryptography cannot execute</note>
+    <note>SE must be enabled for operation execution</note>
   </implementationContext>
 </exception>

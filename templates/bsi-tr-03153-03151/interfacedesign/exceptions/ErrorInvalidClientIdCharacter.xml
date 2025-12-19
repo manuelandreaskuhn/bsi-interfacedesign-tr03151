@@ -117,13 +117,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The clientId character set validation is a fundamental input validation requirement for all client operations</note>
-    <note>Client ID format constraints are security controls that prevent injection attacks and ensure predictable, safe identifiers</note>
-    <note>Allowed character set for clientId typically includes: uppercase letters (A-Z), lowercase letters (a-z), digits (0-9), and possibly hyphens or underscores - consult TR-03151-1 for exact specification</note>
-    <note>Character encoding is typically UTF-8 or ASCII - multi-byte UTF-8 sequences for non-ASCII characters are not permitted</note>
-    <note>Applications should implement client-side validation to detect format errors early and provide better user experience</note>
-    <note>ErrorInvalidClientIdCharacter is detected during input validation before Secure Element communication - no device state is affected</note>
-    <note>The exception should ideally include detail message indicating which characters or character positions are invalid</note>
-    <note>Client ID format validation applies consistently across all client operations - no special cases or exceptions exist</note>
+    <note>Raised by client registration functions when clientId contains invalid characters</note>
+    <note>Client identification validation enforces character restrictions</note>
+    <note>Device requires clientId to conform to specific format</note>
+    <note>Invalid character prevents client registration</note>
   </implementationContext>
 </exception>

@@ -116,15 +116,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>Counter memory exhaustion check must be performed before writing transaction records</note>
-    <note>Memory status monitoring should be continuous during device operation</note>
-    <note>Critical threshold logic should trigger exception to prevent catastrophic failure</note>
-    <note>Hardware error detection mechanisms provide early warning of memory degradation</note>
-    <note>Device self-test should regularly assess counter memory reliability</note>
-    <note>Error messages should indicate counter memory status and utilization level</note>
-    <note>Transaction operations must be blocked when counter memory is exhausted</note>
-    <note>Device must prevent any writing to exhausted counter memory</note>
-    <note>Service procedures should provide counter memory restoration or replacement options</note>
-    <note>Transaction authenticity depends on reliable counter memory - exhaustion is critical issue</note>
+    <note>Raised by startTransaction when transaction counter reaches maximum</note>
+    <note>Transaction numbering subsystem tracks issued transaction numbers</note>
+    <note>Device maintains counter of transactions</note>
+    <note>Exhaustion prevents new transaction creation</note>
   </implementationContext>
 </exception>

@@ -112,15 +112,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The ErrorDeleteLogMessagesFailed exception represents a storage system failure that prevents successful removal of log data, affecting log retention policy enforcement and storage capacity management.</note>
-    <note>The device's ability to delete log messages is critical for compliance with data retention policies, storage space management, and performance maintenance. Deletion failures block these essential operations.</note>
-    <note>Unlike ErrorStoringLogMessageFailed (which prevents new log entries) or ErrorRetrieveLogMessageFailed (which prevents log export), ErrorDeleteLogMessagesFailed specifically affects log retention and storage cleanup operations.</note>
-    <note>Different device implementations may have different deletion semantics. Some may support immediate deletion, while others may support soft-delete (marking for deletion) followed by garbage collection phases.</note>
-    <note>Transactional deletion guarantees vary by implementation. Some devices may guarantee all-or-nothing deletion of matching messages, while others may allow partial deletion where some messages are successfully deleted and others fail.</note>
-    <note>Storage error conditions may be permanent (requiring hardware replacement) or temporary (requiring reconnection or subsystem restart). Applications should implement retry logic with appropriate backoff strategies.</note>
-    <note>In systems with audit trails or immutable logging requirements, log message deletion may be intentionally restricted or prevented. The exception may indicate policy enforcement rather than a true storage failure.</note>
-    <note>External storage devices may have their own error reporting mechanisms and recovery procedures. Detailed error information from the storage device may be necessary to diagnose and resolve deletion failures.</note>
-    <note>The exception does not indicate whether the deletion operation was partially completed before failing. Applications requiring atomicity should verify log message counts after handling this exception.</note>
-    <note>In distributed or replicated logging systems, deletion failure on one replica may not indicate failure on other replicas. Applications should verify deletion status across the full storage infrastructure.</note>
+    <note>Raised by deleteLogMessages when message deletion operation fails</note>
+    <note>Log deletion subsystem removes stored log messages from device storage</note>
+    <note>Operation may fail due to storage issues or message state conflicts</note>
+    <note>Device maintains log integrity during deletion attempts</note>
   </implementationContext>
 </exception>

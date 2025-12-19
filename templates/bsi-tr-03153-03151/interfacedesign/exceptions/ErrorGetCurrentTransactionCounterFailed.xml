@@ -113,13 +113,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The getCurrentTransactionCounter function retrieves the transaction counter value maintained by the Secure Element's transaction management subsystem</note>
-    <note>Transaction counters track the sequence of transactions and are used to validate the integrity and authenticity of the transaction audit trail</note>
-    <note>Different transaction configurations and variants may maintain different counter state tracking mechanisms (per-transaction counters, global transaction counters, etc.)</note>
-    <note>The current transaction counter value is essential for validating that transactions have not been tampered with and for verifying the complete sequence of transaction events</note>
-    <note>Transaction counter maintenance is part of the configured transaction management variant - counter state depends on transaction configuration and security policies</note>
-    <note>If counter value retrieval fails but transaction operations continue successfully (new transactions are started, updated, and finished), the issue is specific to counter query mechanism, not to transaction functionality itself</note>
-    <note>Counter storage corruption or counter calculation errors in the transaction subsystem represent critical integrity threats to the transaction audit trail and require immediate investigation</note>
-    <note>Counter retrieval is a read-only query; ErrorGetCurrentTransactionCounterFailed does not indicate state corruption requiring state recovery - it indicates the counter information source is temporarily unavailable</note>
+    <note>Raised by getCurrentTransactionCounter when counter retrieval fails</note>
+    <note>Counter function queries transaction counter state</note>
+    <note>Device tracks transaction numbering via counter</note>
+    <note>Retrieval failure prevents transaction counter access</note>
   </implementationContext>
 </exception>

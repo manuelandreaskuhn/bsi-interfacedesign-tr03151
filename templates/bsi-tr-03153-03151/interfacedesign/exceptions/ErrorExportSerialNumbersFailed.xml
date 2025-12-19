@@ -113,13 +113,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>This exception is raised specifically when the Secure Element cannot provide serial numbers required for export. It is critical for export operations because serial numbers provide essential device identification for asset management and auditing.</note>
-    <note>The Secure Element serial number retrieval is a barrier operation that must succeed before export data can be assembled. Unlike other failures that might allow partial data return, serial number retrieval failure blocks the entire export operation.</note>
-    <note>Users should understand that ErrorExportSerialNumbersFailed means absolutely no export data is returned. There are no partial exports, no incomplete serial numbers, and no fallback data. The entire operation fails at the serial number collection phase.</note>
-    <note>This exception is distinct from ErrorExportLoggingCertificateFailed. The two export operations (serial number export and certificate export) are independent. One can fail while the other succeeds, and each has its own specific exception.</note>
-    <note>Serial number export is essential for users who need to identify devices in multi-device environments or provide evidence for regulatory compliance audits. A repeated occurrence of this exception should trigger investigation of Secure Element serial number management and storage systems.</note>
-    <note>The exportSerialNumbers function is the only source of this exception. It indicates that the underlying Secure Element identification infrastructure is experiencing difficulties. This is a High severity issue because it affects device identification and regulatory compliance.</note>
-    <note>Recovery from this exception typically requires either addressing the specific Secure Element issue (communication, storage, hardware) or restarting the device to reset state. If repeated failures occur, professional service is required.</note>
-    <note>Implementers should ensure comprehensive logging of serial number export failures because they may indicate serious issues with Secure Element functionality that require professional investigation and may affect device trustworthiness and auditability.</note>
+    <note>Raised by exportSerialNumbers when serial number export fails</note>
+    <note>Export function retrieves device and component serial numbers</note>
+    <note>Device maintains serial number information for identification</note>
+    <note>Export failure prevents device identification data retrieval</note>
   </implementationContext>
 </exception>

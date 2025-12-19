@@ -113,13 +113,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The getMaxNumberOfClients function retrieves the maximum client capacity maintained by the Secure Element's client management subsystem</note>
-    <note>Maximum client capacity represents the upper limit on concurrent client connections that the device can simultaneously serve</note>
-    <note>Maximum capacity is typically a static property determined by device hardware and firmware architecture - it does not change during device operation</note>
-    <note>Different device models and firmware versions may support different maximum client capacities - consult device specifications for expected values</note>
-    <note>Maximum client capacity should always be greater than or equal to the current number of connected clients to prevent client rejection scenarios</note>
-    <note>If maximum capacity retrieval fails but other client management queries succeed (current client count), the issue is specific to capacity configuration storage, not to general client management access</note>
-    <note>Maximum capacity configuration corruption or calculation errors represent potential integrity issues in client management that should be investigated</note>
-    <note>Capacity query is a read-only operation; ErrorGetMaxNumberOfClientsFailed does not indicate state corruption requiring state recovery - it indicates the capacity information source is temporarily unavailable</note>
+    <note>Raised by getMaxNumberOfClients when capacity limit retrieval fails</note>
+    <note>Capacity function queries maximum supported registered clients</note>
+    <note>Device specifies configured client registry capacity</note>
+    <note>Retrieval failure prevents capacity information access</note>
   </implementationContext>
 </exception>

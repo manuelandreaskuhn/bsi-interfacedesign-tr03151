@@ -130,15 +130,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>Storage capacity should be checked before accepting write operations</note>
-    <note>Device should verify sufficient free space exists for the write operation</note>
-    <note>Storage utilization monitoring should provide visibility into capacity status</note>
-    <note>Error messages should indicate current utilization and available free space</note>
-    <note>Device should not silently drop or truncate data when storage is full</note>
-    <note>Write operations should be atomic - either fully commit or fully rollback if space unavailable</note>
-    <note>Storage management APIs should provide capacity information and deletion capabilities</note>
-    <note>Archive procedures should regularly export logs to maintain available storage space</note>
-    <note>Storage capacity should be designed with margin above peak expected usage</note>
-    <note>Capacity planning should account for log growth, retention requirements, and transaction volume</note>
+    <note>Raised by functions when device storage capacity exhausted</note>
+    <note>Storage capacity monitoring detects full condition</note>
+    <note>Device cannot accept new data when storage full</note>
+    <note>Full condition prevents write operations</note>
   </implementationContext>
 </exception>

@@ -152,13 +152,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>Different device models, hardware versions, and firmware versions support different subsets of optional functions as defined by their implementation specifications.</note>
-    <note>Some devices may implement all optional functions defined in the SE API specification, while others may implement only a subset based on hardware capabilities and design decisions.</note>
-    <note>Firmware updates may add support for previously unavailable optional functions, providing a migration path for applications requiring newly available features.</note>
-    <note>Applications should not assume that all SE API devices support an identical set of optional functions - capability discovery is essential for multi-device environments.</note>
-    <note>Optional functions are distinguished from mandatory functions in the SE API specification. All compliant devices must implement mandatory functions, but optional functions are conditionally supported.</note>
-    <note>The exception message should include information about the unavailable function name and may include recommendations for enabling the feature (such as required firmware version).</note>
-    <note>Applications deploying to multiple device types should maintain a capability matrix documenting which optional functions are supported on which devices and firmware versions.</note>
-    <note>Feature parity across devices may require either designing applications to work with only mandatory functions or implementing conditional logic for optional functions.</note>
+    <note>Raised when device does not support requested function</note>
+    <note>Device capability tracking indicates function unavailability</note>
+    <note>Some functions may not be implemented in certain device variants</note>
+    <note>Application must check function availability before invocation</note>
   </implementationContext>
 </exception>

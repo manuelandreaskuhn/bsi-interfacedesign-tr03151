@@ -103,11 +103,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>ErrorCertificateExpired is raised for logging operations that use certificates for signing log messages</note>
-    <note>The exception is only raised if certificate expiration is detected AND the log message is successfully stored</note>
-    <note>Different logging functions may use different certificates (e.g., initialization certificates vs. transaction certificates)</note>
-    <note>Certificate expiration is determined by comparing current time with the certificate's notAfter validity period</note>
-    <note>The Secure Element maintains and validates certificates for cryptographic operations related to logging</note>
-    <note>Applications should implement certificate renewal procedures to prevent persistent ErrorCertificateExpired exceptions</note>
+    <note>Raised by logging functions when certificate validity check detects expiration</note>
+    <note>Functions that create log messages (initialize, updateTime, startTransaction, etc.) perform certificate validation</note>
+    <note>Device continues logging operation despite expired certificate to maintain audit trail integrity</note>
+    <note>Application must implement certificate management to prevent persistent expiration conditions</note>
   </implementationContext>
 </exception>

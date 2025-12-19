@@ -118,15 +118,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>Data must be validated and formatted before transmission to device for storage</note>
-    <note>Storage capacity should be checked before attempting data write operations</note>
-    <note>Write operations should be atomic - either fully commit or fully rollback</note>
-    <note>Storage write should be verified and data integrity checked after write</note>
-    <note>Communication during storage operations must be reliable with error checking</note>
-    <note>Error messages should distinguish between capacity issues, connectivity issues, and hardware failures</note>
-    <note>Device should not lose or corrupt data during failed storage operations</note>
-    <note>Storage health should be monitored and diagnostic information provided</note>
-    <note>Retry logic should be implemented with appropriate delays and attempt limits</note>
-    <note>Device manufacturer should provide storage diagnostics and health status APIs</note>
+    <note>Raised by setDescription when description storage fails</note>
+    <note>Data persistence function writes description to device storage</note>
+    <note>Device stores user-provided description string</note>
+    <note>Storage failure prevents description update</note>
   </implementationContext>
 </exception>

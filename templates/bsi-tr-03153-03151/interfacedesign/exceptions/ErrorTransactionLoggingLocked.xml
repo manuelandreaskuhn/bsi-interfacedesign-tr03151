@@ -120,15 +120,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>Logging lock status must be checked before each transaction operation</note>
-    <note>Lock check should occur early in transaction processing flow</note>
-    <note>Lock status must be atomic and consistent throughout transaction</note>
-    <note>Lock state should be persistent across device restarts if policy lock</note>
-    <note>Lock status should be queryable through diagnostic interface</note>
-    <note>Error messages should indicate if lock is temporary vs policy-based</note>
-    <note>Lock duration and reason should be documented for audit purposes</note>
-    <note>Administrative unlock procedures should require appropriate authorization</note>
-    <note>Security policy triggered locks should log the triggering event</note>
-    <note>Firmware update locks should be automatically released after update completion</note>
+    <note>Raised by transaction functions when transaction logging is locked</note>
+    <note>State validation checks transaction logging lock status</note>
+    <note>Device prevents transaction creation when logging locked</note>
+    <note>Locked state blocks transaction operations</note>
   </implementationContext>
 </exception>

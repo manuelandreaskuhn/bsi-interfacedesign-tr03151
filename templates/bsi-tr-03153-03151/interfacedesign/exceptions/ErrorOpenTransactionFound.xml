@@ -116,15 +116,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The disableSecureElement and updateDevice functions must check that all transactions are closed before proceeding</note>
-    <note>Open transactions represent incomplete processing contexts - they must be properly finalized before device state changes</note>
-    <note>The transaction state check is a prerequisite validation that occurs before the operation begins</note>
-    <note>Applications should implement robust transaction lifecycle management to ensure all transactions are properly closed</note>
-    <note>Error handling should include cleanup code (finishTransaction) to prevent transactions from being left open when exceptions occur</note>
-    <note>Transaction tracking can help applications monitor and manage the transaction state to prevent this exception</note>
-    <note>Different device models may have different transaction management policies - consult device specifications</note>
-    <note>Orphaned transactions from client crashes may require special recovery procedures or device-level interventions</note>
-    <note>Monitoring systems should track open transaction count as a device health metric</note>
-    <note>The error message should ideally include details about which transactions are open to aid in debugging and recovery</note>
+    <note>Raised by lockTransactionLogging and updateDevice when open transactions exist</note>
+    <note>State validation checks for incomplete transactions</note>
+    <note>Device prevents certain operations when transactions remain open</note>
+    <note>Presence of open transaction blocks operation execution</note>
   </implementationContext>
 </exception>

@@ -100,15 +100,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The registerClient function is part of the client management subsystem that tracks registered clients and enforces resource constraints</note>
-    <note>Each device has a maximum number of simultaneous clients it can manage, determined by hardware and firmware capabilities</note>
-    <note>The current client count plus the maximum client limit together define the registration capacity state</note>
-    <note>Client capacity is shared across all registration attempts - once reached, no new clients can be registered</note>
-    <note>Clients must be properly deregistered to free capacity slots for new registrations</note>
-    <note>The maximum number of clients is typically stated in device specifications and can be queried at runtime</note>
-    <note>Applications should implement proactive capacity monitoring to anticipate when ErrorClientLimitReached may occur</note>
-    <note>Capacity limitations are device-specific and should be documented in deployment and operational procedures</note>
-    <note>Client lifecycle management must include proper cleanup to ensure capacity slots are freed promptly</note>
-    <note>ErrorClientLimitReached is distinct from ErrorClientAlreadyRegistered - one indicates capacity exhaustion, the other duplicate registration</note>
+    <note>Raised by registerClient when maximum registered client count exceeded</note>
+    <note>Device maintains client registry with configurable capacity limits</note>
+    <note>Registration fails when adding new client would exceed maximum</note>
+    <note>Resource constraint prevents registration of additional clients</note>
   </implementationContext>
 </exception>

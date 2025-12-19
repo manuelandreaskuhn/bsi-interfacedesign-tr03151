@@ -136,15 +136,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>Event data must be carefully validated and formatted before transmission to device for signing</note>
-    <note>Cryptographic signing keys must be properly initialized and protected on device</note>
-    <note>Digital signature algorithm must be cryptographically strong and compliant with security standards</note>
-    <note>Signature computation should be performed in secure processor environment</note>
-    <note>Communication during signature operations must be reliable with error checking</note>
-    <note>Log message parts must be generated atomically with signatures to ensure consistency</note>
-    <note>Device should provide clear error messages distinguishing event data issues vs. cryptographic issues</note>
-    <note>Cryptographic processor health should be monitored and diagnostic information provided</note>
-    <note>Event data should include all necessary context for complete transaction record</note>
-    <note>Signatures should be immediately stored in audit trail to prevent loss</note>
+    <note>Raised by logging functions when cryptographic signing operation fails</note>
+    <note>Logging subsystem signs event data via Secure Element</note>
+    <note>Device creates cryptographic signature for log messages</note>
+    <note>Signing failure prevents log message creation</note>
   </implementationContext>
 </exception>

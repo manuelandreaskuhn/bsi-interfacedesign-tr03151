@@ -113,13 +113,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The getSupportedUpdateVariants function retrieves a list of all firmware update variants and mechanisms that the Secure Element supports</note>
-    <note>Supported update variants describe which update mechanisms (delta updates, full image updates, modular updates, staged updates, etc.) are available on this device</note>
-    <note>Update variant information includes configuration options and constraints specific to each supported update approach</note>
-    <note>Different device models, firmware versions, and configurations may support different sets of update variants - consult device specifications for supported variants details</note>
-    <note>Supported update variants information is essential for update planning, compatibility verification, and selecting optimal update strategies for each device</note>
-    <note>If supported variants retrieval fails but other device information queries succeed (description, component versions), the issue is specific to update capabilities information, not to general device information access</note>
-    <note>Device capabilities corruption or enumeration errors represent critical issues in device information subsystem that should be investigated immediately</note>
-    <note>Update variants enumeration is a read-only query; ErrorGetSupportedUpdateVariantsFailed does not indicate update capabilities corruption requiring state recovery - it indicates the capabilities information source is unavailable</note>
+    <note>Raised by getSupportedTransactionUpdateVariants when update options retrieval fails</note>
+    <note>Capability function queries supported transaction update methods</note>
+    <note>Device specifies available update variant implementations</note>
+    <note>Retrieval failure prevents update capability information</note>
   </implementationContext>
 </exception>

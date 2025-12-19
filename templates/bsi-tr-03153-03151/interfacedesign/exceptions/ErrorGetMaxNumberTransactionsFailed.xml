@@ -113,13 +113,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The getMaxNumberOfTransactions function retrieves the maximum transaction capacity maintained by the Secure Element's transaction management subsystem</note>
-    <note>Maximum transaction capacity represents the upper limit on concurrent transactions that the device can simultaneously manage</note>
-    <note>Maximum capacity is typically a static property determined by device hardware and firmware architecture - it does not change during device operation</note>
-    <note>Different device models and firmware versions may support different maximum transaction capacities - consult device specifications for expected values</note>
-    <note>Maximum transaction capacity should always be greater than or equal to the current number of active transactions to prevent transaction rejection scenarios</note>
-    <note>If maximum capacity retrieval fails but other transaction management queries succeed (current transaction count), the issue is specific to capacity configuration storage, not to general transaction management access</note>
-    <note>Maximum capacity configuration corruption or calculation errors represent potential integrity issues in transaction management that should be investigated</note>
-    <note>Capacity query is a read-only operation; ErrorGetMaxNumberTransactionsFailed does not indicate state corruption requiring state recovery - it indicates the capacity information source is temporarily unavailable</note>
+    <note>Raised by getMaxNumberOfTransactions when transaction limit retrieval fails</note>
+    <note>Capacity function queries maximum concurrent transactions</note>
+    <note>Device specifies transaction concurrency limits</note>
+    <note>Retrieval failure prevents transaction limit information</note>
   </implementationContext>
 </exception>

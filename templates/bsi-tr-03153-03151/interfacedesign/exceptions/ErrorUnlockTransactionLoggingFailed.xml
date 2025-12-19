@@ -121,15 +121,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>Unlock operation must verify authorization before proceeding</note>
-    <note>Authorization verification should be cryptographically secure</note>
-    <note>Lock state update must be atomic to prevent partial state</note>
-    <note>Lock state must be persisted in reliable storage</note>
-    <note>Unlock operation should log event with timestamp and result for audit</note>
-    <note>Hardware error detection should catch failures during unlock</note>
-    <note>Device state validation should occur before unlock operation</note>
-    <note>Communication with Secure Element should include error handling</note>
-    <note>Unlock failure should not leave device in inconsistent state</note>
-    <note>Authorization requirements should be consistent across unlock operations</note>
+    <note>Raised by unlockTransactionLogging when unlock operation fails</note>
+    <note>Unlock function enables transaction logging operations</note>
+    <note>Device transitions transaction logging to unlocked state</note>
+    <note>Unlock failure prevents logging resumption</note>
   </implementationContext>
 </exception>

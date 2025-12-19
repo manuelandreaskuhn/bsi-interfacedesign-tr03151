@@ -113,13 +113,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The getCurrentNumberOfClients function is part of the client management subsystem that tracks registered clients and their access to SE API functions.</note>
-    <note>A client is registered using the registerClient function and deregistered using the deregisterClient function. The count reflects the current registration state.</note>
-    <note>The current number of clients must always be between 0 and the maximum number of clients supported by the device as returned by getMaxNumberOfClients.</note>
-    <note>Client count information is essential for understanding device utilization, capacity planning, and multi-user environment management in enterprise deployments.</note>
-    <note>If client count retrieval fails but clients continue to operate normally and other client management functions work correctly, the issue is with the counting/tracking mechanism, not the underlying client management itself.</note>
-    <note>Client count changes occur only when registerClient or deregisterClient functions are called. Between those operations, the count should remain stable.</note>
-    <note>Different device models and configurations may support different maximum numbers of clients, making the relationship between current and maximum counts important for capacity planning.</note>
-    <note>Client count retrieval is a read-only query that should not modify device state or affect existing client registrations, so recovery typically only requires retrying the query.</note>
+    <note>Raised by getCurrentNumberOfClients when client count retrieval fails</note>
+    <note>Information function queries current registered client count</note>
+    <note>Device tracks active client registry size</note>
+    <note>Retrieval failure prevents runtime client count access</note>
   </implementationContext>
 </exception>

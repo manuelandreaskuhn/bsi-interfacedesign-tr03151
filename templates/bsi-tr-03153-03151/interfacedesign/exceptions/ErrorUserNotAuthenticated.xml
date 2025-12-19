@@ -158,15 +158,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>Authentication state must be tracked per user/session</note>
-    <note>Restricted functions must check authentication before execution</note>
-    <note>Authentication validation should occur early in function flow</note>
-    <note>Session timeout should be configurable and enforced</note>
-    <note>Authentication state must be cleared on logOut</note>
-    <note>Device reset should clear temporary authentication states</note>
-    <note>Error messages should indicate authentication requirement</note>
-    <note>Audit trail should log all authentication-related events</note>
-    <note>Access control should be enforced consistently across all restricted functions</note>
-    <note>Authentication failure attempts should trigger security logging</note>
+    <note>Raised by functions requiring authentication when user not authenticated</note>
+    <note>Authentication state validation checks user authentication status</note>
+    <note>Device tracks authenticated user for access control</note>
+    <note>Unauthenticated state prevents operation execution</note>
   </implementationContext>
 </exception>

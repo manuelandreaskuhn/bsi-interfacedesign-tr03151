@@ -113,13 +113,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The getRegisteredClients function retrieves a detailed list of all currently registered clients from the Secure Element's client management subsystem</note>
-    <note>Registered clients are those that have been successfully registered through registerClient and not yet deregistered</note>
-    <note>The registered client list includes client identifiers and metadata that allow detailed inspection and monitoring of client state</note>
-    <note>Different device models and configurations may report different client state information - consult device specifications for client metadata details</note>
-    <note>The registered client list is essential for client lifecycle monitoring, diagnostics, and management in multi-client environments</note>
-    <note>If registered client retrieval fails but client count queries succeed (current/max clients), the issue is specific to client enumeration, not to general client management access</note>
-    <note>Client registry corruption or enumeration errors represent critical issues in client management that should be investigated immediately</note>
-    <note>Client enumeration is a read-only query; ErrorGetRegisteredClientsFailed does not indicate client state corruption requiring state recovery - it indicates the client enumeration source is unavailable</note>
+    <note>Raised by getRegisteredClients when client list retrieval fails</note>
+    <note>Query function retrieves list of currently registered clients</note>
+    <note>Device maintains client registry with active registrations</note>
+    <note>Retrieval failure prevents registered client list access</note>
   </implementationContext>
 </exception>

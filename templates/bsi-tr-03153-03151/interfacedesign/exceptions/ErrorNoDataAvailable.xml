@@ -114,14 +114,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The exportLogMessages and exportFilteredTransactionLogs functions must search stored data and report empty results as ErrorNoDataAvailable</note>
-    <note>Filter criteria can include date ranges, event types, client IDs, transaction states, and other selection parameters</note>
-    <note>The combination of multiple filter criteria can produce empty result sets even when individual filters would match data</note>
-    <note>Export functions should return clear information about filter criteria in error messages to help applications understand why no data was found</note>
-    <note>Some devices may log data in circular buffers or with retention policies that automatically delete old data</note>
-    <note>Applications should be prepared to handle empty export results as a normal, expected condition</note>
-    <note>Query or discovery functions (if available) can help applications understand available data before attempting export</note>
-    <note>Date range specifications are particularly important for export operations - incorrect date ranges commonly result in ErrorNoDataAvailable</note>
-    <note>Export operations are typically read-only and do not modify device state, so ErrorNoDataAvailable has no side effects</note>
+    <note>Raised by export and query functions when no data matches criteria</note>
+    <note>Search operation returns empty result set</note>
+    <note>No matching data exists for specified parameters</note>
+    <note>Query execution completes without finding matching records</note>
   </implementationContext>
 </exception>

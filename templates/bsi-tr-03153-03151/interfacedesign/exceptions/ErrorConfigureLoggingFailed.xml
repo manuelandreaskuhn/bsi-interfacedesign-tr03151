@@ -105,13 +105,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>The ErrorConfigureLoggingFailed exception represents a failure in the runtime application of a valid logging configuration to the device, distinct from parameter validation errors.</note>
-    <note>The logging subsystem in many SE API implementations is resource-constrained due to memory limitations in the Secure Element. Configuration failures often indicate resource exhaustion rather than parameter errors.</note>
-    <note>Some device implementations may perform configuration asynchronously. A delayed retry may succeed if the device's internal queue processes and recovers from temporary contention.</note>
-    <note>The exception does not distinguish between different root causes (hardware error vs. memory exhaustion vs. state inconsistency). Applications may need to examine device health status separately to determine the underlying issue.</note>
-    <note>Device implementations may vary significantly in their recovery behavior. Some devices may automatically clear partial configuration state, while others may leave the logging subsystem in a partially configured and unusable state until reinitialization.</note>
-    <note>In implementations supporting multiple logging targets, a failure to configure one target may or may not affect the configuration of other targets previously applied. The atomicity of configuration operations varies by device.</note>
-    <note>The logging subsystem's state after this exception may prevent subsequent logging operations (e.g., exportLogMessages) from functioning correctly. Applications should consider reinitializing the device if critical logging functionality becomes unavailable.</note>
-    <note>This exception does not necessarily indicate a security or compliance issue. Logging configuration is typically a best-effort feature, and many devices continue to operate with default or partial logging configurations even when configuration updates fail.</note>
+    <note>Raised by configureLogging when event configuration operation fails</note>
+    <note>Logging configuration subsystem applies settings for specific event types</note>
+    <note>Device attempts to enable/disable logging of configured events</note>
+    <note>Configuration failure prevents logging behavior changes</note>
   </implementationContext>
 </exception>

@@ -122,15 +122,9 @@
     </scenario>
   </usage>
   <implementationContext>
-    <note>Unblock operation must verify PUK before proceeding with PIN update</note>
-    <note>PUK verification should be cryptographically secure against brute force</note>
-    <note>New PIN validation should check against security policy requirements</note>
-    <note>PIN storage update must be atomic to prevent partial state</note>
-    <note>Unblock operation should log event with timestamp and result for audit</note>
-    <note>Hardware error detection should catch failures during PIN operations</note>
-    <note>Device state validation should occur before unblock operation</note>
-    <note>Communication with Secure Element should include error handling</note>
-    <note>Unblock failure should not leave device in inconsistent state</note>
-    <note>Repeated failures should trigger escalation logic or additional security responses</note>
+    <note>Raised by unblockPin when PIN unblocking operation fails</note>
+    <note>PIN unblock function resets blocked PIN state</note>
+    <note>Device performs PIN recovery via PUK verification</note>
+    <note>Unblock failure prevents PIN recovery</note>
   </implementationContext>
 </exception>
