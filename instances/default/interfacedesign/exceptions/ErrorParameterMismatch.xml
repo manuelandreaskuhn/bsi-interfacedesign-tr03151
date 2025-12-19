@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exception id="ErrorParameterMismatch" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../_schema/exceptions.xsd">
+  <name>ErrorParameterMismatch</name>
+  <description>This exception is thrown when the parameters provided to a function do not match the expected types or constraints. The mismatch could be related to parameter type incompatibility, incorrect number of parameters, or invalid parameter combinations.</description>
+  <category>Parameter Validation</category>
+  <severity>High</severity>
+  
+  <javadoc>
+    <summary>This class defines the exception ErrorParameterMismatch that is thrown when function parameters do not match expected types or constraints.</summary>
+    <description>Indicates that a function was called with parameters that do not conform to the function's signature or constraints, such as wrong types, incorrect counts, or invalid combinations.</description>
+  </javadoc>
+  
+  <specification>
+    <source>BSI TR-03151-1</source>
+    <requirement>SHALL be raised when function parameters do not match the expected types or constraints</requirement>
+    <applicability>General exception - applicable to all functions with parameters</applicability>
+    <section>Parameter Validation</section>
+  </specification>
+  
+  <thrownBy>
+    <function>registerClient</function>
+    <function>startTransaction</function>
+    <function>updateTransaction</function>
+    <function>finishTransaction</function>
+    <function>configureLogging</function>
+  </thrownBy>
+  
+  <relatedExceptions>
+    <exception>ErrorParameterSyntax</exception>
+    <exception>ErrorParameterTooLong</exception>
+  </relatedExceptions>
+  
+  <triggerConditions>
+    <condition>
+      <description>Parameter type does not match expected type</description>
+      <trigger>A parameter of type A is passed where type B is expected</trigger>
+      <action>Validate all parameters before function execution</action>
+    </condition>
+    <condition>
+      <description>Incorrect number of parameters</description>
+      <trigger>Too many or too few parameters are provided</trigger>
+      <action>Check the function signature and provide correct number of parameters</action>
+    </condition>
+    <condition>
+      <description>Invalid parameter combination</description>
+      <trigger>A combination of valid parameters that together violate a constraint</trigger>
+      <action>Review parameter dependencies and constraints</action>
+    </condition>
+  </triggerConditions>
+  
+  <recovery>Verify the function signature, check parameter types and values, and retry the operation with correct parameters.</recovery>
+  
+  <example>
+    String clientId = "MyApp";
+    try {
+      seDevice.registerClient(clientId, 12345);  // 12345 is not a valid parameter
+    } catch (ErrorParameterMismatch e) {
+      System.err.println("Invalid parameter types provided");
+    }
+  </example>
+  
+  <note>This exception indicates a programming error and should not occur in production if parameters are properly validated before the function call</note>
+</exception>

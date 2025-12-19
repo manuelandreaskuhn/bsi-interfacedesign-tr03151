@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<enum id="TransactionState" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../_schema/enums.xsd">
+  <name>TransactionState</name>
+  <category>Transaction Management</category>
+  <description>Enumeration representing the possible states of a transaction during its lifecycle. A transaction progresses through these states from initialization to completion.</description>
+  
+  <values>
+    <value>
+      <name>initialized</name>
+      <numericValue>0</numericValue>
+      <description>Transaction has been initialized with startTransaction(). Initial state where the transaction is created but not yet active.</description>
+      <germanText>Transaktion wurde initialisiert</germanText>
+      <usage>Starting point of a transaction lifecycle</usage>
+    </value>
+    <value>
+      <name>active</name>
+      <numericValue>1</numericValue>
+      <description>Transaction is currently active and can receive updates via updateTransaction(). The transaction can process multiple updates in this state.</description>
+      <germanText>Transaktion ist aktiv</germanText>
+      <usage>Main state during transaction processing</usage>
+    </value>
+    <value>
+      <name>locked</name>
+      <numericValue>2</numericValue>
+      <description>Transaction is locked by calling lockTransactionLogging(). No further updates are allowed, but the transaction is not yet finished.</description>
+      <germanText>Transaktion ist gesperrt</germanText>
+      <usage>Intermediate state between active and finished</usage>
+    </value>
+    <value>
+      <name>finished</name>
+      <numericValue>3</numericValue>
+      <description>Transaction has been completed with finishTransaction(). The transaction is now sealed and cannot receive further updates.</description>
+      <germanText>Transaktion ist abgeschlossen</germanText>
+      <usage>Final state of a transaction lifecycle</usage>
+    </value>
+    <value>
+      <name>failed</name>
+      <numericValue>4</numericValue>
+      <description>Transaction has failed due to an error. The transaction cannot be recovered and must be discarded.</description>
+      <germanText>Transaktion ist fehlgeschlagen</germanText>
+      <usage>Error state when transaction processing fails</usage>
+      <deprecated>false</deprecated>
+    </value>
+  </values>
+  
+  <constraints>
+    <constraint>
+      <type>STATE_TRANSITION</type>
+      <description>Transitions must follow: initialized → active → (locked) → finished OR initialized → failed</description>
+    </constraint>
+  </constraints>
+  
+  <typeInfo>
+    <asn1Type>TransactionState ::= ENUMERATED {initialized(0), active(1), locked(2), finished(3), failed(4)}</asn1Type>
+    <javaType>enum TransactionState</javaType>
+    <encoding>DER</encoding>
+  </typeInfo>
+  
+  <note>The locked state is optional and may not be used in all implementations</note>
+</enum>

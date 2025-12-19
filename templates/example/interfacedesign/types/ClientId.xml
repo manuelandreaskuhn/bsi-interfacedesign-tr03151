@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='utf-8'?>
+<type id="ClientId" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../_schema/types.xsd">
+  <name>ClientId</name>
+  <category>Transaction Management</category>
+  <baseType>PrintableString</baseType>
+  <description>Represents the ID of a client application. The character set is restricted to a subset of ASN.1 PrintableString characters as defined in Appendix A of the specification. This ID is used to uniquely identify client applications in transaction logging.</description>
+  
+  <constraints>
+    <constraint>
+      <type>CHARACTER_SET</type>
+      <description>Only the following characters are allowed: Latin capital letters (A-Z), Latin small letters (a-z), Digits (0-9), SPACE, APOSTROPHE ('), LEFT PARENTHESIS ((), RIGHT PARENTHESIS ()), PLUS SIGN (+), COMMA (,), HYPHEN-MINUS (-), FULL STOP (.), SOLIDUS (/), COLON (:), EQUALS SIGN (=), QUESTION MARK (?)</description>
+    </constraint>
+    <constraint>
+      <type>LENGTH</type>
+      <description>Minimum length: 1 character, Maximum length: 128 characters</description>
+    </constraint>
+  </constraints>
+  
+  <asn1Definition>ClientId ::= PrintableString (SIZE (1..128))</asn1Definition>
+  
+  <usage>Used in transaction log messages to identify the client application that initiated a transaction operation. Each registered client must have a unique ClientId.</usage>
+  
+  <examples>
+    <example>MyApplication</example>
+    <example>Client-App-01</example>
+    <example>Banking/Service</example>
+  </examples>
+  
+  <note>The ClientId is case-sensitive and should be chosen to be human-readable for log analysis purposes</note>
+</type>

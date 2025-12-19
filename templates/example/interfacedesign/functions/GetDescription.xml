@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='utf-8'?>
+<function id="GetDescription" xmlns="http://www.bsi.bund.de/tr03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.bsi.bund.de/tr03151 ../../_schema/functions.xsd">
+  <name>GetDescription</name>
+  <category>Device Management</category>
+  <description>Retrieves the current description of the secure element device. This function allows an application to query the user-friendly description that was previously set for the device using SetDescription.</description>
+  
+  <detailedSteps>
+    <step>
+      <number>1</number>
+      <germanText>Das Gerät prüft, ob eine Beschreibung gespeichert ist</germanText>
+      <pseudocode>IF description_exists THEN proceed ELSE throw ErrorNoDataAvailable</pseudocode>
+      <successCase>
+        <condition>Eine Beschreibung wurde zuvor mit SetDescription gespeichert</condition>
+        <action>Fahre mit Schritt 2 fort</action>
+      </successCase>
+      <errorCase>
+        <exception>ErrorNoDataAvailable</exception>
+        <trigger>Keine Beschreibung wurde zuvor gespeichert</trigger>
+        <action>Beende die Funktion und werfe die Ausnahme</action>
+      </errorCase>
+    </step>
+    <step>
+      <number>2</number>
+      <germanText>Die gespeicherte Beschreibung wird gelesen</germanText>
+      <pseudocode>description := read_device_description()</pseudocode>
+      <successCase>
+        <condition>Beschreibung wurde erfolgreich gelesen</condition>
+        <action>Gebe die Beschreibung an den Aufrufer zurück</action>
+      </successCase>
+    </step>
+  </detailedSteps>
+  
+  <parameters>
+  </parameters>
+  
+  <returnValue>
+    <type>String</type>
+    <description>Die aktuelle Beschreibung des Geräts (max. 256 Zeichen)</description>
+  </returnValue>
+  
+  <exceptions>
+    <exception>ErrorFunctionNotSupported</exception>
+    <exception>ErrorNoDataAvailable</exception>
+    <exception>ErrorGetDescriptionFailed</exception>
+  </exceptions>
+  
+  <requirements>
+    <requirement>
+      <level>SHALL</level>
+      <description>Das Gerät MUSS die zuvor gesetzte Beschreibung zurückgeben</description>
+    </requirement>
+    <requirement>
+      <level>MAY</level>
+      <description>Die Implementierung MAY einen Standardwert zurückgeben, wenn keine Beschreibung gespeichert ist</description>
+    </requirement>
+  </requirements>
+  
+  <precondition>Das Gerät muss initialisiert sein</precondition>
+  <postcondition>Die Beschreibung wurde an den Aufrufer zurückgegeben oder eine Ausnahme wurde geworfen</postcondition>
+  
+  <note type="implementation">Beschreibungen werden üblicherweise im persistenten Speicher des Geräts gespeichert</note>
+  <note type="security">Die Beschreibung sollte keine sensitive Daten enthalten</note>
+</function>
