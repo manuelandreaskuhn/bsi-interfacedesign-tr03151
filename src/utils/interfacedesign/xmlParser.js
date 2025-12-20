@@ -715,7 +715,7 @@ async function parseExceptionDetail(filePath) {
     }
   }
 
-  // Extract execution sequence (steps with number attribute)
+  // Extract execution sequence (steps with number and name attributes)
   let executionSequence = [];
   if (exc.executionSequence && exc.executionSequence.step) {
     const steps = Array.isArray(exc.executionSequence.step) 
@@ -723,6 +723,7 @@ async function parseExceptionDetail(filePath) {
       : [exc.executionSequence.step];
     executionSequence = steps.map(s => ({
       number: s.number || '',
+      name: s.name || '',
       description: s._ || (typeof s === 'string' ? s : '') || ''
     }));
   }
@@ -771,6 +772,7 @@ async function parseExceptionDetail(filePath) {
     id: exc.id || exc.n || path.basename(filePath, '.xml'),
     name: exc.n || exc.name || '',
     category: exc.category || 'Uncategorized',
+    subcategory: exc.subcategory || '',
     severity: exc.severity || 'Medium',
     description: exc.description || '',
     javadoc,
