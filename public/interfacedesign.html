@@ -422,6 +422,8 @@
       const [loading, setLoading] = useState(true);
       const [searchTerm, setSearchTerm] = useState('');
       const [expandedCategories, setExpandedCategories] = useState({});
+      const [activeCategory, setActiveCategory] = useState(null);
+      const categoryRefs = useRef({});
 
       useEffect(() => {
         loadFunctions();
@@ -440,6 +442,9 @@
               expanded[cat] = true;
             });
             setExpandedCategories(expanded);
+            // Setze erste Kategorie als aktiv
+            const cats = Object.keys(result.grouped || {});
+            if (cats.length > 0) setActiveCategory(`func-cat-${cats[0].replace(/\s+/g, '-')}`);
           }
         } catch (err) {
           console.error('Error loading functions:', err);
@@ -471,6 +476,49 @@
         return filtered;
       }, [data, searchTerm]);
 
+      // Scroll-Spy: Beobachte welche Kategorie gerade sichtbar ist
+      useEffect(() => {
+        if (!data?.grouped) return;
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                setActiveCategory(entry.target.id);
+              }
+            });
+          },
+          {
+            root: null,
+            rootMargin: '-100px 0px -70% 0px',
+            threshold: 0
+          }
+        );
+
+        // Kurze Verzögerung um sicherzustellen, dass Refs gesetzt sind
+        const timer = setTimeout(() => {
+          Object.keys(categoryRefs.current).forEach(cat => {
+            const el = categoryRefs.current[cat];
+            if (el) observer.observe(el);
+          });
+        }, 100);
+
+        return () => {
+          clearTimeout(timer);
+          observer.disconnect();
+        };
+      }, [data, searchTerm]);
+
+      const scrollToCategory = (category) => {
+        const catId = `func-cat-${category.replace(/\s+/g, '-')}`;
+        const element = categoryRefs.current[catId];
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      };
+
+      const getCategoryId = (category) => `func-cat-${category.replace(/\s+/g, '-')}`;
+
       if (loading) {
         return (
           <div className="flex items-center justify-center h-64">
@@ -478,6 +526,10 @@
           </div>
         );
       }
+
+      const categories = Object.keys(filteredGroups);
+      const totalFunctions = Object.values(filteredGroups).flat();
+      const functionsWithSystemLog = totalFunctions.filter(f => f.hasSystemLog).length;
 
       return (
         <div className="p-6 fade-in">
@@ -503,72 +555,144 @@
               </div>
             </div>
 
-            {/* Function Groups */}
-            <div className="space-y-4">
-              {Object.entries(filteredGroups).map(([category, items]) => (
-                <div key={category} className="bg-white rounded-lg shadow overflow-hidden">
-                  {/* Category Header */}
-                  <div 
-                    className="category-header px-4 py-3 bg-gray-50 border-b cursor-pointer flex items-center justify-between"
-                    onClick={() => toggleCategory(category)}
-                  >
-                    <div className="flex items-center gap-3">
-                      <Icon 
-                        name={expandedCategories[category] ? 'chevron-down' : 'chevron-right'} 
-                        className="text-gray-400"
-                      />
-                      <span className="font-semibold text-gray-700">{category}</span>
-                      <span className="badge bg-blue-100 text-blue-700 rounded-full">{items.length}</span>
-                    </div>
+            {/* Main Content with TOC Sidebar */}
+            <div className="flex gap-6">
+              {/* Sticky TOC Sidebar */}
+              <div className="hidden lg:block w-64 flex-shrink-0">
+                <div className="sticky top-4">
+                  <div className="bg-white rounded-lg shadow p-4">
+                    <h3 className="font-semibold text-gray-700 mb-3 flex items-center text-sm">
+                      <Icon name="list" className="mr-2 text-blue-500" />
+                      Kategorien
+                      <span className="ml-auto text-xs text-gray-400">{categories.length}</span>
+                    </h3>
+                    <nav className="space-y-1 max-h-[calc(100vh-200px)] overflow-y-auto">
+                      {categories.map(category => {
+                        const catId = getCategoryId(category);
+                        const isActive = activeCategory === catId;
+                        const itemCount = filteredGroups[category]?.length || 0;
+                        
+                        return (
+                          <button
+                            key={category}
+                            onClick={() => scrollToCategory(category)}
+                            className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-all flex items-center justify-between group ${
+                              isActive 
+                                ? 'bg-blue-50 text-blue-700 font-medium border-l-3 border-blue-500' 
+                                : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                            }`}
+                          >
+                            <span className="truncate flex-1">{category}</span>
+                            <span className={`ml-2 px-1.5 py-0.5 rounded text-xs ${
+                              isActive ? 'bg-blue-200 text-blue-800' : 'bg-gray-100 text-gray-500 group-hover:bg-gray-200'
+                            }`}>
+                              {itemCount}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </nav>
                   </div>
 
-                  {/* Function Items */}
-                  {expandedCategories[category] && (
-                    <div className="divide-y">
-                      {items.map(func => (
-                        <div 
-                          key={func.id}
-                          className="p-4 hover:bg-gray-50 cursor-pointer transition-colors"
-                          onClick={() => onSelectItem && onSelectItem('function', func)}
-                        >
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1">
-                              <div className="flex items-center gap-2">
-                                <code className="text-blue-600 font-semibold">{func.name}</code>
-                                {func.hasSystemLog && (
-                                  <span className="badge bg-green-100 text-green-700 rounded">
-                                    <Icon name="file-alt" className="mr-1" />SystemLog
-                                  </span>
-                                )}
-                              </div>
-                              <p className="text-sm text-gray-600 mt-1 line-clamp-2">{func.description}</p>
-                              <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
-                                <span>
-                                  <Icon name="sign-in-alt" className="mr-1" />
-                                  {func.parameterCount} Parameter
-                                </span>
-                                <span>
-                                  <Icon name="sign-out-alt" className="mr-1" />
-                                  {func.returnValue?.type || 'void'}
-                                </span>
-                                <span>
-                                  <Icon name="list-ol" className="mr-1" />
-                                  {func.stepCount} Schritte
-                                </span>
-                                <span>
-                                  <Icon name="exclamation-circle" className="mr-1" />
-                                  {func.exceptionCount} Exceptions
-                                </span>
+                  {/* Quick Stats */}
+                  <div className="bg-white rounded-lg shadow p-4 mt-4">
+                    <h3 className="font-semibold text-gray-700 mb-3 text-sm">Statistik</h3>
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between p-2 bg-blue-50 rounded">
+                        <span className="text-sm text-blue-700">Funktionen</span>
+                        <span className="font-bold text-blue-800">{totalFunctions.length}</span>
+                      </div>
+                      <div className="flex items-center justify-between p-2 bg-green-50 rounded">
+                        <span className="text-sm text-green-700 flex items-center">
+                          <Icon name="file-alt" className="mr-1" />
+                          Mit SystemLog
+                        </span>
+                        <span className="font-bold text-green-800">{functionsWithSystemLog}</span>
+                      </div>
+                      <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                        <span className="text-sm text-gray-600">Kategorien</span>
+                        <span className="font-bold text-gray-700">{categories.length}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Function List */}
+              <div className="flex-1 min-w-0 space-y-4">
+                {Object.entries(filteredGroups).map(([category, items]) => {
+                  const catId = getCategoryId(category);
+                  return (
+                    <div 
+                      key={category} 
+                      id={catId}
+                      ref={el => categoryRefs.current[catId] = el}
+                      className="bg-white rounded-lg shadow overflow-hidden scroll-mt-4"
+                    >
+                      {/* Category Header */}
+                      <div 
+                        className="category-header px-4 py-3 bg-gray-50 border-b cursor-pointer flex items-center justify-between"
+                        onClick={() => toggleCategory(category)}
+                      >
+                        <div className="flex items-center gap-3">
+                          <Icon 
+                            name={expandedCategories[category] ? 'chevron-down' : 'chevron-right'} 
+                            className="text-gray-400"
+                          />
+                          <span className="font-semibold text-gray-700">{category}</span>
+                          <span className="badge bg-blue-100 text-blue-700 rounded-full">{items.length}</span>
+                        </div>
+                      </div>
+
+                      {/* Function Items */}
+                      {expandedCategories[category] && (
+                        <div className="divide-y">
+                          {items.map(func => (
+                            <div 
+                              key={func.id}
+                              className="p-4 hover:bg-gray-50 cursor-pointer transition-colors"
+                              onClick={() => onSelectItem && onSelectItem('function', func)}
+                            >
+                              <div className="flex items-start justify-between">
+                                <div className="flex-1">
+                                  <div className="flex items-center gap-2">
+                                    <code className="text-blue-600 font-semibold">{func.name}</code>
+                                    {func.hasSystemLog && (
+                                      <span className="badge bg-green-100 text-green-700 rounded">
+                                        <Icon name="file-alt" className="mr-1" />SystemLog
+                                      </span>
+                                    )}
+                                  </div>
+                                  <p className="text-sm text-gray-600 mt-1 line-clamp-2">{func.description}</p>
+                                  <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
+                                    <span>
+                                      <Icon name="sign-in-alt" className="mr-1" />
+                                      {func.parameterCount} Parameter
+                                    </span>
+                                    <span>
+                                      <Icon name="sign-out-alt" className="mr-1" />
+                                      {func.returnValue?.type || 'void'}
+                                    </span>
+                                    <span>
+                                      <Icon name="list-ol" className="mr-1" />
+                                      {func.stepCount} Schritte
+                                    </span>
+                                    <span>
+                                      <Icon name="exclamation-circle" className="mr-1" />
+                                      {func.exceptionCount} Exceptions
+                                    </span>
+                                  </div>
+                                </div>
+                                <Icon name="chevron-right" className="text-gray-300" />
                               </div>
                             </div>
-                            <Icon name="chevron-right" className="text-gray-300" />
-                          </div>
+                          ))}
                         </div>
-                      ))}
+                      )}
                     </div>
-                  )}
-                </div>
-              ))}
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
@@ -3124,6 +3248,9 @@
       const [searchTerm, setSearchTerm] = useState('');
       const [filterSeverity, setFilterSeverity] = useState('all');
       const [expandedCategories, setExpandedCategories] = useState({});
+      const [activeCategory, setActiveCategory] = useState(null);
+      const contentRef = useRef(null);
+      const categoryRefs = useRef({});
 
       useEffect(() => {
         loadExceptions();
@@ -3141,6 +3268,9 @@
               expanded[cat] = true;
             });
             setExpandedCategories(expanded);
+            // Setze erste Kategorie als aktiv
+            const cats = Object.keys(result.grouped || {});
+            if (cats.length > 0) setActiveCategory(`cat-${cats[0].replace(/\s+/g, '-')}`);
           }
         } catch (err) {
           console.error('Error loading exceptions:', err);
@@ -3194,6 +3324,49 @@
         return filtered;
       }, [data, searchTerm, filterSeverity]);
 
+      // Scroll-Spy: Beobachte welche Kategorie gerade sichtbar ist
+      useEffect(() => {
+        if (!data?.grouped) return;
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                setActiveCategory(entry.target.id);
+              }
+            });
+          },
+          {
+            root: null,
+            rootMargin: '-100px 0px -70% 0px',
+            threshold: 0
+          }
+        );
+
+        // Kurze Verzögerung um sicherzustellen, dass Refs gesetzt sind
+        const timer = setTimeout(() => {
+          Object.keys(categoryRefs.current).forEach(cat => {
+            const el = categoryRefs.current[cat];
+            if (el) observer.observe(el);
+          });
+        }, 100);
+
+        return () => {
+          clearTimeout(timer);
+          observer.disconnect();
+        };
+      }, [data, searchTerm, filterSeverity]);
+
+      const scrollToCategory = (category) => {
+        const catId = `cat-${category.replace(/\s+/g, '-')}`;
+        const element = categoryRefs.current[catId];
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      };
+
+      const getCategoryId = (category) => `cat-${category.replace(/\s+/g, '-')}`;
+
       if (loading) {
         return (
           <div className="flex items-center justify-center h-64">
@@ -3201,6 +3374,8 @@
           </div>
         );
       }
+
+      const categories = Object.keys(filteredGroups);
 
       return (
         <div className="p-6 fade-in">
@@ -3241,58 +3416,125 @@
               </div>
             </div>
 
-            {/* Exception Groups */}
-            <div className="space-y-4">
-              {Object.entries(filteredGroups).map(([category, items]) => (
-                <div key={category} className="bg-white rounded-lg shadow overflow-hidden">
-                  <div 
-                    className="category-header px-4 py-3 bg-gray-50 border-b cursor-pointer flex items-center justify-between"
-                    onClick={() => toggleCategory(category)}
-                  >
-                    <div className="flex items-center gap-3">
-                      <Icon 
-                        name={expandedCategories[category] ? 'chevron-down' : 'chevron-right'} 
-                        className="text-gray-400"
-                      />
-                      <span className="font-semibold text-gray-700">{category}</span>
-                      <span className="badge bg-red-100 text-red-700 rounded-full">{items.length}</span>
-                    </div>
+            {/* Main Content with TOC Sidebar */}
+            <div className="flex gap-6">
+              {/* Sticky TOC Sidebar */}
+              <div className="hidden lg:block w-64 flex-shrink-0">
+                <div className="sticky top-4">
+                  <div className="bg-white rounded-lg shadow p-4">
+                    <h3 className="font-semibold text-gray-700 mb-3 flex items-center text-sm">
+                      <Icon name="list" className="mr-2 text-red-500" />
+                      Kategorien
+                      <span className="ml-auto text-xs text-gray-400">{categories.length}</span>
+                    </h3>
+                    <nav className="space-y-1 max-h-[calc(100vh-200px)] overflow-y-auto">
+                      {categories.map(category => {
+                        const catId = getCategoryId(category);
+                        const isActive = activeCategory === catId;
+                        const itemCount = filteredGroups[category]?.length || 0;
+                        
+                        return (
+                          <button
+                            key={category}
+                            onClick={() => scrollToCategory(category)}
+                            className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-all flex items-center justify-between group ${
+                              isActive 
+                                ? 'bg-red-50 text-red-700 font-medium border-l-3 border-red-500' 
+                                : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                            }`}
+                          >
+                            <span className="truncate flex-1">{category}</span>
+                            <span className={`ml-2 px-1.5 py-0.5 rounded text-xs ${
+                              isActive ? 'bg-red-200 text-red-800' : 'bg-gray-100 text-gray-500 group-hover:bg-gray-200'
+                            }`}>
+                              {itemCount}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </nav>
                   </div>
 
-                  {expandedCategories[category] && (
-                    <div className="divide-y">
-                      {items.map(exc => {
+                  {/* Quick Stats */}
+                  <div className="bg-white rounded-lg shadow p-4 mt-4">
+                    <h3 className="font-semibold text-gray-700 mb-3 text-sm">Statistik</h3>
+                    <div className="grid grid-cols-2 gap-2 text-center">
+                      {['Critical', 'High', 'Medium', 'Low'].map(sev => {
+                        const count = Object.values(filteredGroups).flat().filter(e => e.severity === sev).length;
+                        if (count === 0) return null;
                         return (
-                          <div 
-                            key={exc.id}
-                            className="p-4 hover:bg-gray-50 cursor-pointer transition-colors"
-                            onClick={() => onSelectItem && onSelectItem('exception', exc)}
-                          >
-                            <div className="flex items-start justify-between">
-                              <div className="flex-1">
-                                <div className="flex items-center gap-2">
-                                  <code className="text-red-600 font-semibold">{exc.name}</code>
-                                  <span className={`badge rounded ${getSeverityClasses(exc.severity)}`}>
-                                    {exc.severity}
-                                  </span>
-                                </div>
-                                <p className="text-sm text-gray-600 mt-1 line-clamp-2">{exc.description}</p>
-                                {exc.thrownByCount > 0 && (
-                                  <div className="flex items-center gap-2 mt-2 text-xs text-gray-500">
-                                    <Icon name="code" className="mr-1" />
-                                    Verwendet in {exc.thrownByCount} Funktion{exc.thrownByCount !== 1 ? 'en' : ''}
-                                  </div>
-                                )}
-                              </div>
-                              <Icon name="chevron-right" className="text-gray-300" />
-                            </div>
+                          <div key={sev} className={`p-2 rounded ${getSeverityClasses(sev)}`}>
+                            <div className="text-lg font-bold">{count}</div>
+                            <div className="text-xs">{sev}</div>
                           </div>
                         );
                       })}
                     </div>
-                  )}
+                  </div>
                 </div>
-              ))}
+              </div>
+
+              {/* Exception List */}
+              <div className="flex-1 min-w-0 space-y-4" ref={contentRef}>
+                {Object.entries(filteredGroups).map(([category, items]) => {
+                  const catId = getCategoryId(category);
+                  return (
+                    <div 
+                      key={category} 
+                      id={catId}
+                      ref={el => categoryRefs.current[catId] = el}
+                      className="bg-white rounded-lg shadow overflow-hidden scroll-mt-4"
+                    >
+                      <div 
+                        className="category-header px-4 py-3 bg-gray-50 border-b cursor-pointer flex items-center justify-between"
+                        onClick={() => toggleCategory(category)}
+                      >
+                        <div className="flex items-center gap-3">
+                          <Icon 
+                            name={expandedCategories[category] ? 'chevron-down' : 'chevron-right'} 
+                            className="text-gray-400"
+                          />
+                          <span className="font-semibold text-gray-700">{category}</span>
+                          <span className="badge bg-red-100 text-red-700 rounded-full">{items.length}</span>
+                        </div>
+                      </div>
+
+                      {expandedCategories[category] && (
+                        <div className="divide-y">
+                          {items.map(exc => {
+                            return (
+                              <div 
+                                key={exc.id}
+                                className="p-4 hover:bg-gray-50 cursor-pointer transition-colors"
+                                onClick={() => onSelectItem && onSelectItem('exception', exc)}
+                              >
+                                <div className="flex items-start justify-between">
+                                  <div className="flex-1">
+                                    <div className="flex items-center gap-2">
+                                      <code className="text-red-600 font-semibold">{exc.name}</code>
+                                      <span className={`badge rounded ${getSeverityClasses(exc.severity)}`}>
+                                        {exc.severity}
+                                      </span>
+                                    </div>
+                                    <p className="text-sm text-gray-600 mt-1 line-clamp-2">{exc.description}</p>
+                                    {exc.thrownByCount > 0 && (
+                                      <div className="flex items-center gap-2 mt-2 text-xs text-gray-500">
+                                        <Icon name="code" className="mr-1" />
+                                        Verwendet in {exc.thrownByCount} Funktion{exc.thrownByCount !== 1 ? 'en' : ''}
+                                      </div>
+                                    )}
+                                  </div>
+                                  <Icon name="chevron-right" className="text-gray-300" />
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
