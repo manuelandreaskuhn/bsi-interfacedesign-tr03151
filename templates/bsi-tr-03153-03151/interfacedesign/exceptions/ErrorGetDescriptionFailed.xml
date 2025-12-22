@@ -2,7 +2,7 @@
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorGetDescriptionFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorGetDescriptionFailed</name>
   <description>This exception is thrown if the SE API function getDescription fails to retrieve the short description text of the device. The function attempts to obtain the device's descriptive identifier or display name from the Secure Element, but the retrieval process fails before the description can be determined and returned.</description>
-  <category>Device Information</category>
+  <category>Device Management</category>
   <subcategory>Description Retrieval</subcategory>
   <severity>Medium</severity>
   <javadoc>

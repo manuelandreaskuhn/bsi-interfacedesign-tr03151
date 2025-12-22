@@ -2874,12 +2874,12 @@
                     {/* Javadoc */}
                     {data.javadoc && (data.javadoc.summary || data.javadoc.description) && (
                       <div className="bg-white rounded-lg shadow p-4">
-                        <h3 className="font-semibold text-gray-800 mb-2 flex items-center text-sm">
+                        <h3 className="font-semibold text-gray-800 mb-2 flex items-center text-base">
                           <Icon name="book" className="mr-2 text-indigo-500" />
                           Javadoc
                         </h3>
                         {data.javadoc.summary && (
-                          <p className="text-gray-600 text-sm">{data.javadoc.summary}</p>
+                          <p className="text-gray-600 text-sm font-bold">{data.javadoc.summary}</p>
                         )}
                         {data.javadoc.description && data.javadoc.description !== data.javadoc.summary && (
                           <p className="text-gray-500 text-xs mt-2">{data.javadoc.description}</p>
@@ -2905,7 +2905,7 @@
                     {/* Specification */}
                     {data.specification && (
                       <div className="bg-white rounded-lg shadow p-4">
-                        <h3 className="font-semibold text-gray-800 mb-2 flex items-center text-sm">
+                        <h3 className="font-semibold text-gray-800 mb-2 flex items-center text-base">
                           <Icon name="file-contract" className="mr-2 text-purple-500" />
                           Spezifikation
                         </h3>
@@ -2923,15 +2923,15 @@
                             </div>
                           )}
                         </div>
-                        {data.specification.requirement && (
-                          <div className="mt-3 p-2 bg-purple-50 rounded text-xs text-gray-700 border-l-2 border-purple-400">
-                            {data.specification.requirement}
-                          </div>
-                        )}
                         {data.specification.applicability && (
-                          <p className="mt-2 text-xs text-gray-500">
+                          <p className="mt-2 text-sm text-gray-500">
                             <span className="font-medium">Anwendbarkeit:</span> {data.specification.applicability}
                           </p>
+                        )}
+                        {data.specification.requirement && (
+                          <div className="mt-3 p-2 bg-purple-50 rounded text-sm text-gray-700 border-l-2 border-purple-400">
+                            {data.specification.requirement}
+                          </div>
                         )}
                       </div>
                     )}
@@ -2939,19 +2939,19 @@
                     {/* Notes & Implementation Context combined */}
                     {((data.notes && data.notes.length > 0) || (data.implementationContext && data.implementationContext.length > 0)) && (
                       <div className="bg-white rounded-lg shadow p-4">
-                        <h3 className="font-semibold text-gray-800 mb-2 flex items-center text-sm">
+                        <h3 className="font-semibold text-gray-800 mb-2 flex items-center text-base">
                           <Icon name="sticky-note" className="mr-2 text-yellow-500" />
                           Hinweise & Kontext
                         </h3>
                         <div className="space-y-2">
                           {data.notes && data.notes.map((note, idx) => (
-                            <div key={`note-${idx}`} className="flex items-start gap-2 text-xs text-gray-600">
+                            <div key={`note-${idx}`} className="flex items-start gap-2 text-sm text-gray-600">
                               <Icon name="angle-right" className="text-yellow-400 mt-0.5 flex-shrink-0" />
                               <span>{note}</span>
                             </div>
                           ))}
                           {data.implementationContext && data.implementationContext.map((note, idx) => (
-                            <div key={`impl-${idx}`} className="flex items-start gap-2 text-xs text-gray-500">
+                            <div key={`impl-${idx}`} className="flex items-start gap-2 text-sm text-gray-500">
                               <Icon name="cog" className="text-teal-400 mt-0.5 flex-shrink-0" />
                               <span>{note}</span>
                             </div>
@@ -2968,22 +2968,22 @@
                     {/* Trigger Conditions */}
                     {data.triggerConditions && data.triggerConditions.length > 0 && (
                       <div className="bg-white rounded-lg shadow p-4">
-                        <h3 className="font-semibold text-gray-800 mb-3 flex items-center text-sm">
+                        <h3 className="font-semibold text-gray-800 mb-3 flex items-center text-base">
                           <Icon name="bolt" className="mr-2 text-yellow-500" />
                           Auslösebedingungen
                           <span className="ml-2 px-2 py-0.5 bg-yellow-100 text-yellow-700 text-xs rounded-full">
                             {data.triggerConditions.length}
                           </span>
                         </h3>
-                        <div className="space-y-3">
+                        <div className="space-y-3 grid grid-cols-3 gap-4">
                           {data.triggerConditions.map((cond, idx) => (
-                            <div key={idx} className="p-3 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg border-l-3 border-yellow-400">
+                            <div key={idx} className="p-3 rounded-lg border-l-2 border-yellow-400 group">
                               {cond.scenario && (
                                 <div className="font-medium text-yellow-800 text-sm mb-1">{cond.scenario}</div>
                               )}
-                              <p className="text-gray-700 text-xs">{cond.description}</p>
+                              <p className="text-gray-700 text-sm">{cond.description}</p>
                               {cond.trigger && (
-                                <div className="mt-2 p-2 bg-white/60 rounded text-xs text-gray-600">
+                                <div className="mt-2 rounded text-xs text-gray-500 hidden group-hover:block">
                                   <span className="font-medium text-orange-600">Trigger:</span> {cond.trigger}
                                 </div>
                               )}
@@ -2996,7 +2996,7 @@
                     {/* Execution Sequence */}
                     {data.executionSequence && data.executionSequence.length > 0 && (
                       <div className="bg-white rounded-lg shadow p-4">
-                        <h3 className="font-semibold text-gray-800 mb-3 flex items-center text-sm">
+                        <h3 className="font-semibold text-gray-800 mb-3 flex items-center text-base">
                           <Icon name="list-ol" className="mr-2 text-indigo-500" />
                           Ausführungssequenz
                           <span className="ml-2 px-2 py-0.5 bg-indigo-100 text-indigo-700 text-xs rounded-full">
@@ -3011,11 +3011,11 @@
                             return (
                               <div 
                                 key={idx} 
-                                className={`flex items-start gap-2 p-2 rounded text-xs ${
+                                className={`flex items-start gap-2 p-2 rounded text-sm ${
                                   isError ? 'bg-red-50 text-red-700' : 'bg-gray-50 text-gray-700'
                                 }`}
                               >
-                                <span className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
+                                <span className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${
                                   isError ? 'bg-red-200 text-red-800' : 'bg-indigo-100 text-indigo-700'
                                 }`}>
                                   {step.number || idx + 1}
@@ -3039,7 +3039,7 @@
                     {/* Recovery */}
                     {data.recovery && (
                       <div className="bg-white rounded-lg shadow p-4">
-                        <h3 className="font-semibold text-gray-800 mb-3 flex items-center text-sm">
+                        <h3 className="font-semibold text-gray-800 mb-3 flex items-center text-base">
                           <Icon name="first-aid" className="mr-2 text-green-500" />
                           Wiederherstellung
                         </h3>
@@ -3051,22 +3051,22 @@
                         {data.recovery.action && (
                           <div className="p-2 bg-green-50 rounded border-l-2 border-green-400 mb-2">
                             <span className="text-xs font-medium text-green-700">Empfohlene Aktion:</span>
-                            <p className="text-gray-700 text-xs mt-1">{data.recovery.action}</p>
+                            <p className="text-gray-700 text-sm mt-1">{data.recovery.action}</p>
                           </div>
                         )}
                         
                         {data.recovery.alternativePath && (
                           <div className="p-2 bg-blue-50 rounded border-l-2 border-blue-400 mb-2">
                             <span className="text-xs font-medium text-blue-700">Alternativer Pfad:</span>
-                            <p className="text-gray-700 text-xs mt-1">{data.recovery.alternativePath}</p>
+                            <p className="text-gray-700 text-sm mt-1">{data.recovery.alternativePath}</p>
                           </div>
                         )}
                         
                         {data.recovery.steps && data.recovery.steps.length > 0 && (
                           <ol className="space-y-1">
                             {data.recovery.steps.map((step, idx) => (
-                              <li key={idx} className="flex items-start gap-2 text-xs text-gray-700">
-                                <span className="flex-shrink-0 w-5 h-5 rounded-full bg-green-100 text-green-700 flex items-center justify-center text-xs font-medium">
+                              <li key={idx} className="flex items-start gap-2 text-sm text-gray-700">
+                                <span className="flex-shrink-0 w-5 h-5 rounded-full bg-green-100 text-green-700 flex items-center justify-center text-sm font-medium">
                                   {idx + 1}
                                 </span>
                                 <span>{step}</span>
@@ -3080,7 +3080,7 @@
                     {/* Postconditionality */}
                     {data.postconditionality && data.postconditionality.length > 0 && (
                       <div className="bg-white rounded-lg shadow p-4">
-                        <h3 className="font-semibold text-gray-800 mb-3 flex items-center text-sm">
+                        <h3 className="font-semibold text-gray-800 mb-3 flex items-center text-base">
                           <Icon name="flag-checkered" className="mr-2 text-purple-500" />
                           Zustand nach Exception
                           <span className="ml-2 px-2 py-0.5 bg-purple-100 text-purple-700 text-xs rounded-full">
@@ -3089,11 +3089,11 @@
                         </h3>
                         <div className="space-y-2">
                           {data.postconditionality.map((state, idx) => (
-                            <div key={idx} className="p-2 bg-purple-50 rounded border-l-2 border-purple-400">
+                            <div key={idx} className="p-2 rounded border-l-2 border-purple-400">
                               {state.name && (
-                                <span className="text-xs font-semibold text-purple-700 block mb-1">{state.name}</span>
+                                <span className="text-sm font-semibold text-purple-700 block mb-1">{state.name}</span>
                               )}
-                              <span className="text-gray-700 text-xs">{state.description || state}</span>
+                              <span className="text-gray-700 text-sm">{state.description || state}</span>
                             </div>
                           ))}
                         </div>
@@ -3103,7 +3103,7 @@
                     {/* Related Exceptions */}
                     {data.relatedExceptions && data.relatedExceptions.length > 0 && (
                       <div className="bg-white rounded-lg shadow p-4">
-                        <h3 className="font-semibold text-gray-800 mb-3 flex items-center text-sm">
+                        <h3 className="font-semibold text-gray-800 mb-3 flex items-center text-base">
                           <Icon name="link" className="mr-2 text-orange-500" />
                           Verwandte Exceptions
                         </h3>
@@ -3112,7 +3112,7 @@
                             <span 
                               key={idx}
                               onClick={() => onNavigateToException && onNavigateToException(typeof exc === 'string' ? exc : exc.name)}
-                              className="px-2 py-1 bg-red-50 text-red-700 rounded text-xs cursor-pointer hover:bg-red-100 transition-colors"
+                              className="px-2 py-1 bg-red-50 text-red-700 rounded text-sm cursor-pointer hover:bg-red-100 transition-colors"
                             >
                               {typeof exc === 'string' ? exc : exc.name}
                             </span>
@@ -3129,7 +3129,7 @@
                     {/* Usage Scenarios */}
                     {data.usage && data.usage.length > 0 && (
                       <div className="bg-white rounded-lg shadow p-4">
-                        <h3 className="font-semibold text-gray-800 mb-3 flex items-center text-sm">
+                        <h3 className="font-semibold text-gray-800 mb-3 flex items-center text-base">
                           <Icon name="flask" className="mr-2 text-cyan-500" />
                           Anwendungsszenarien
                           <span className="ml-2 px-2 py-0.5 bg-cyan-100 text-cyan-700 text-xs rounded-full">
@@ -3138,9 +3138,16 @@
                         </h3>
                         <div className="space-y-3">
                           {data.usage.map((scenario, idx) => (
-                            <div key={idx} className="p-3 bg-gradient-to-r from-cyan-50 to-blue-50 rounded-lg border border-cyan-100">
+                            <div key={idx} className="p-3 rounded-lg border-l-2 border-cyan-400">
                               <h4 className="font-medium text-cyan-800 text-sm mb-2">{scenario.name}</h4>
-                              <p className="text-gray-700 text-xs mb-2">{scenario.description}</p>
+                              {scenario.errorContext && (
+                                <p className="text-sm text-orange-600 italic">
+                                  <Icon name="exclamation-triangle" className="mr-1" />
+                                  {scenario.errorContext}
+                                </p>
+                              )}
+                              
+                              <p className="text-gray-600 text-sm mb-2">{scenario.description}</p>
                               
                               {scenario.relatedFunctions && (
                                 <div className="flex flex-wrap gap-1 mb-2">
@@ -3150,13 +3157,6 @@
                                     </span>
                                   ))}
                                 </div>
-                              )}
-                              
-                              {scenario.errorContext && (
-                                <p className="text-xs text-orange-600 italic">
-                                  <Icon name="exclamation-triangle" className="mr-1" />
-                                  {scenario.errorContext}
-                                </p>
                               )}
                               
                               {scenario.example && (
