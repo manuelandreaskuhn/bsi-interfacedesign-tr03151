@@ -82,21 +82,25 @@
     <note>Topics: Certificate Management, Logging Operations, Certificate Validation, Secure Element Operations</note>
   </notes>
   <usage>
-    <scenario name="Certificate Expiration Detection">
-      <description>Catch ErrorCertificateExpired to detect when the logging certificate has expired and plan for renewal.</description>
-      <example>try { device.updateTime(newTime); } catch (ErrorCertificateExpired e) { logger.warn("Logging certificate expired, schedule renewal: " + e.getMessage()); }</example>
+    <scenario name="Scenario 1: Certificate Expiration Detection and Notification">
+      <description>A logging operation completes successfully and raises ErrorCertificateExpired. The application catches this exception, identifies that the logging certificate has expired, and logs a warning message for system administrators indicating that certificate renewal is needed.</description>
+      <relatedFunctions>updateTime, finishTransaction, configureLogging, initialize</relatedFunctions>
+      <errorContext>Certificate expiration detected during logging - renewal required</errorContext>
     </scenario>
-    <scenario name="Graceful Degradation">
-      <description>Continue operation on ErrorCertificateExpired since the log message was stored successfully, but track the certificate issue.</description>
-      <example>try { device.finishTransaction(txId); } catch (ErrorCertificateExpired e) { recordCertificateExpiration(e); continueProcessing(); }</example>
+    <scenario name="Scenario 2: Graceful Degradation with Certificate Monitoring">
+      <description>An application continues normal operation on ErrorCertificateExpired since the log message was stored successfully. The application tracks certificate expiration occurrences and triggers a certificate management procedure when a threshold is reached.</description>
+      <relatedFunctions>startTransaction, updateTransaction, finishTransaction</relatedFunctions>
+      <errorContext>Operation succeeded despite expired certificate - tracking certificate validity state</errorContext>
     </scenario>
-    <scenario name="Certificate Management">
-      <description>Use ErrorCertificateExpired as a trigger for certificate management procedures.</description>
-      <example>catch (ErrorCertificateExpired e) { if (shouldRenewCertificate()) { device.updateCertificate(newCert); } }</example>
+    <scenario name="Scenario 3: Proactive Certificate Management">
+      <description>The application monitors certificate expiration by catching ErrorCertificateExpired exceptions. When the exception is raised, the application queries the device for certificate information, calculates remaining validity, and schedules certificate renewal operations accordingly.</description>
+      <relatedFunctions>updateTime, configureLogging, registerClient</relatedFunctions>
+      <errorContext>Certificate management - expiration awareness - renewal scheduling</errorContext>
     </scenario>
-    <scenario name="Audit Trail">
-      <description>Log ErrorCertificateExpired occurrences for compliance and audit purposes.</description>
-      <example>catch (ErrorCertificateExpired e) { auditLog.record("Certificate expired during logging: " + e.getMessage(), System.currentTimeMillis()); }</example>
+    <scenario name="Scenario 4: Audit Trail and Compliance Logging">
+      <description>ErrorCertificateExpired exceptions are logged to an audit trail for compliance purposes. The application records each occurrence with timestamp, affected function, and certificate details to maintain comprehensive security and compliance records.</description>
+      <relatedFunctions>all logging functions with certificate creation</relatedFunctions>
+      <errorContext>Audit trail recording - compliance logging - certificate lifecycle tracking</errorContext>
     </scenario>
   </usage>
   <implementationContext>
