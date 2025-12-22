@@ -15,6 +15,72 @@ const parser = new xml2js.Parser({
 });
 
 /**
+ * Extract multilingual text from an XML element
+ * Supports: 
+ *   - <element><text xml:lang="de">...</text><text xml:lang="en">...</text></element>
+ *   - <element>Direct text content</element> (fallback)
+ * 
+ * @param {any} element - The XML element (parsed by xml2js)
+ * @returns {Object} - Object with language keys: { de: "...", en: "...", _default: "..." }
+ */
+function extractMultiLangText(element) {
+  if (!element) return { _default: '' };
+  
+  // If element is a string, return it as default
+  if (typeof element === 'string') {
+    return { _default: element, de: element, en: element };
+  }
+  
+  // Check for <text xml:lang="..."> structure
+  if (element.text) {
+    const texts = Array.isArray(element.text) ? element.text : [element.text];
+    const result = { _default: '' };
+    
+    texts.forEach(t => {
+      if (typeof t === 'string') {
+        // Plain text without lang attribute
+        result._default = t;
+      } else if (t) {
+        // Extract language from xml:lang attribute (xml2js merges attrs)
+        const lang = t['xml:lang'] || t.lang || t['$']?.['xml:lang'] || t['$']?.lang;
+        const content = t._ || t['#text'] || (typeof t === 'string' ? t : '');
+        
+        if (lang) {
+          result[lang] = content;
+          if (!result._default) result._default = content;
+        } else if (content) {
+          result._default = content;
+        }
+      }
+    });
+    
+    // Set fallbacks: if one language is missing, use the other
+    if (!result.de && result.en) result.de = result.en;
+    if (!result.en && result.de) result.en = result.de;
+    if (!result._default) result._default = result.de || result.en || '';
+    
+    return result;
+  }
+  
+  // Fallback: element is direct text content or has _ property
+  const directText = element._ || element['#text'] || 
+                     (typeof element === 'object' ? '' : String(element));
+  return { _default: directText, de: directText, en: directText };
+}
+
+/**
+ * Helper to get text for a specific language with fallback
+ * @param {Object} multiLangObj - Object from extractMultiLangText
+ * @param {string} lang - Language code ('de' or 'en')
+ * @returns {string} - Text in requested language or fallback
+ */
+function getTextForLang(multiLangObj, lang = 'de') {
+  if (!multiLangObj) return '';
+  if (typeof multiLangObj === 'string') return multiLangObj;
+  return multiLangObj[lang] || multiLangObj._default || multiLangObj.de || multiLangObj.en || '';
+}
+
+/**
  * Parse a single XML file
  * @param {string} filePath - Path to XML file
  * @returns {Promise<Object>} - Parsed XML object
@@ -554,15 +620,15 @@ async function parseException(filePath) {
   return {
     id: exc.id || exc.n || path.basename(filePath, '.xml'),
     name: exc.n || exc.name || '',
-    category: exc.category || 'Uncategorized',
+    category: extractMultiLangText(exc.category),
     severity: exc.severity || 'Medium',
-    description: exc.description || '',
+    description: extractMultiLangText(exc.description),
     javadoc: exc.javadoc ? {
-      summary: exc.javadoc.summary || ''
+      summary: extractMultiLangText(exc.javadoc.summary)
     } : null,
     specification: exc.specification ? {
       source: exc.specification.source || '',
-      requirement: exc.specification.requirement || ''
+      requirement: extractMultiLangText(exc.specification.requirement)
     } : null,
     thrownBy,
     thrownByCount: thrownBy.length,
@@ -597,43 +663,44 @@ async function parseExceptionDetail(filePath) {
       : [exc.relatedExceptions.exception];
     relatedExceptions = relExc.map(e => {
       if (typeof e === 'string') {
-        // Check if it contains a description after " - "
         const parts = e.split(' - ');
         return {
           name: parts[0].trim(),
-          description: parts[1] ? parts[1].trim() : ''
+          description: extractMultiLangText(parts[1] ? parts[1].trim() : '')
         };
       }
       return {
         name: e.name || e.n || e,
-        description: e.description || ''
+        description: extractMultiLangText(e.description)
       };
     });
   }
 
-  // Extract trigger conditions with all fields
+  // Extract trigger conditions with all fields (multilingual)
   let triggerConditions = [];
   if (exc.triggerConditions && exc.triggerConditions.condition) {
     const conditions = Array.isArray(exc.triggerConditions.condition)
       ? exc.triggerConditions.condition
       : [exc.triggerConditions.condition];
     triggerConditions = conditions.map(c => ({
-      scenario: c.scenario || '',
-      description: c.description || '',
-      trigger: c.trigger || '',
-      action: c.action || ''
+      scenario: extractMultiLangText(c.scenario),
+      description: extractMultiLangText(c.description),
+      trigger: extractMultiLangText(c.trigger),
+      action: extractMultiLangText(c.action)
     }));
   }
 
-  // Extract notes (can be under exc.note or exc.notes.note)
+  // Extract notes (can be under exc.note or exc.notes.note) - multilingual
   let notes = [];
   if (exc.note) {
-    notes = Array.isArray(exc.note) ? exc.note : [exc.note];
+    const noteArr = Array.isArray(exc.note) ? exc.note : [exc.note];
+    notes = noteArr.map(n => extractMultiLangText(n));
   } else if (exc.notes && exc.notes.note) {
-    notes = Array.isArray(exc.notes.note) ? exc.notes.note : [exc.notes.note];
+    const noteArr = Array.isArray(exc.notes.note) ? exc.notes.note : [exc.notes.note];
+    notes = noteArr.map(n => extractMultiLangText(n));
   }
 
-  // Extract javadoc with constructors
+  // Extract javadoc with constructors (multilingual)
   let javadoc = null;
   if (exc.javadoc) {
     let throws = [];
@@ -656,20 +723,20 @@ async function parseExceptionDetail(filePath) {
             const pars = Array.isArray(c.parameter) ? c.parameter : [c.parameter];
             params = pars.map(p => ({
               name: (p.$ && p.$.name) || p.name || '',
-              description: p._ || p.description || (typeof p === 'string' ? p : '')
+              description: extractMultiLangText(p._ || p.description || p)
             }));
           }
           return {
             signature: c.signature || '',
-            description: c.description || '',
+            description: extractMultiLangText(c.description),
             parameters: params
           };
         });
     }
     
     javadoc = {
-      summary: exc.javadoc.summary || '',
-      description: exc.javadoc.description || '',
+      summary: extractMultiLangText(exc.javadoc.summary),
+      description: extractMultiLangText(exc.javadoc.description),
       throws,
       constructors,
       since: exc.javadoc.since || '',
@@ -677,7 +744,7 @@ async function parseExceptionDetail(filePath) {
     };
   }
 
-  // Extract specification
+  // Extract specification (multilingual for requirement and applicability)
   let specification = null;
   if (exc.specification) {
     let references = [];
@@ -689,33 +756,34 @@ async function parseExceptionDetail(filePath) {
     specification = {
       source: exc.specification.source || '',
       section: exc.specification.section || '',
-      requirement: exc.specification.requirement || '',
-      applicability: exc.specification.applicability || '',
+      requirement: extractMultiLangText(exc.specification.requirement),
+      applicability: extractMultiLangText(exc.specification.applicability),
       references
     };
   }
 
-  // Extract recovery (can be string, or object with description/action/alternativePath/step)
+  // Extract recovery (multilingual)
   let recovery = null;
   if (exc.recovery) {
     if (typeof exc.recovery === 'string') {
-      recovery = { description: exc.recovery };
+      recovery = { description: extractMultiLangText(exc.recovery) };
     } else {
-      // Extract steps if present
+      // Extract steps if present (multilingual)
       let steps = [];
       if (exc.recovery.step) {
-        steps = Array.isArray(exc.recovery.step) ? exc.recovery.step : [exc.recovery.step];
+        const stepArr = Array.isArray(exc.recovery.step) ? exc.recovery.step : [exc.recovery.step];
+        steps = stepArr.map(s => extractMultiLangText(s));
       }
       recovery = {
-        description: exc.recovery.description || '',
-        action: exc.recovery.action || '',
-        alternativePath: exc.recovery.alternativePath || '',
+        description: extractMultiLangText(exc.recovery.description),
+        action: extractMultiLangText(exc.recovery.action),
+        alternativePath: extractMultiLangText(exc.recovery.alternativePath),
         steps
       };
     }
   }
 
-  // Extract execution sequence (steps with number and name attributes)
+  // Extract execution sequence (steps with number and name attributes) - multilingual description
   let executionSequence = [];
   if (exc.executionSequence && exc.executionSequence.step) {
     const steps = Array.isArray(exc.executionSequence.step) 
@@ -724,11 +792,11 @@ async function parseExceptionDetail(filePath) {
     executionSequence = steps.map(s => ({
       number: s.number || '',
       name: s.name || '',
-      description: s._ || (typeof s === 'string' ? s : '') || ''
+      description: extractMultiLangText(s._ || s)
     }));
   }
 
-  // Extract postconditionality (state elements - can be string or object with name)
+  // Extract postconditionality (state elements - multilingual)
   let postconditionality = [];
   if (exc.postconditionality && exc.postconditionality.state) {
     const states = Array.isArray(exc.postconditionality.state)
@@ -736,45 +804,46 @@ async function parseExceptionDetail(filePath) {
       : [exc.postconditionality.state];
     postconditionality = states.map(s => {
       if (typeof s === 'string') {
-        return { name: '', description: s };
+        return { name: '', description: extractMultiLangText(s) };
       }
       return {
         name: s.name || '',
-        description: s._ || s.description || (typeof s === 'string' ? s : '') || ''
+        description: extractMultiLangText(s._ || s.description || s)
       };
     });
   }
 
-  // Extract usage scenarios (with optional relatedFunctions and errorContext)
+  // Extract usage scenarios (multilingual)
   let usage = [];
   if (exc.usage && exc.usage.scenario) {
     const scenarios = Array.isArray(exc.usage.scenario)
       ? exc.usage.scenario
       : [exc.usage.scenario];
     usage = scenarios.map(s => ({
-      name: s.name || '',
-      description: s.description || '',
-      example: s.example || '',
-      relatedFunctions: s.relatedFunctions || '',
-      errorContext: s.errorContext || ''
+      name: s.name || '', // name stays technical/single-language
+      description: extractMultiLangText(s.description),
+      example: s.example || '', // code example stays single-language
+      relatedFunctions: s.relatedFunctions || '', // function names stay single-language
+      errorContext: extractMultiLangText(s.errorContext)
     }));
   }
 
-  // Extract implementation context notes (renamed from deviceVariability)
+  // Extract implementation context notes (multilingual)
   let implementationContext = [];
   if (exc.implementationContext && exc.implementationContext.note) {
-    implementationContext = Array.isArray(exc.implementationContext.note)
+    const noteArr = Array.isArray(exc.implementationContext.note)
       ? exc.implementationContext.note
       : [exc.implementationContext.note];
+    implementationContext = noteArr.map(n => extractMultiLangText(n));
   }
 
   return {
     id: exc.id || exc.n || path.basename(filePath, '.xml'),
     name: exc.n || exc.name || '',
-    category: exc.category || 'Uncategorized',
-    subcategory: exc.subcategory || '',
+    category: extractMultiLangText(exc.category),
+    subcategory: extractMultiLangText(exc.subcategory),
     severity: exc.severity || 'Medium',
-    description: exc.description || '',
+    description: extractMultiLangText(exc.description),
     javadoc,
     specification,
     thrownBy,
@@ -839,9 +908,9 @@ async function getOverview(basePath) {
     const items = await loadCategory(basePath, category);
     overview[category].count = items.length;
     
-    // Group by category/subcategory
+    // Group by category/subcategory (use default text for grouping key)
     items.forEach(item => {
-      const cat = item.category || 'Uncategorized';
+      const cat = getTextForLang(item.category, 'de') || 'Uncategorized';
       if (!overview[category].categories[cat]) {
         overview[category].categories[cat] = 0;
       }

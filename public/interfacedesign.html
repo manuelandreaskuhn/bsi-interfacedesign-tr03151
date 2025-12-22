@@ -62,6 +62,19 @@
       return `/api/${instance}/interfacedesign${endpoint}`;
     };
 
+    /**
+     * Get text for a specific language from a multilingual object
+     * Supports: { de: "...", en: "...", _default: "..." } or plain string
+     * @param {Object|string} obj - Multilingual object or plain string
+     * @param {string} lang - Language code ('de' or 'en')
+     * @returns {string} - Text in requested language or fallback
+     */
+    const getText = (obj, lang = 'de') => {
+      if (!obj) return '';
+      if (typeof obj === 'string') return obj;
+      return obj[lang] || obj._default || obj.de || obj.en || '';
+    };
+
     // ============================================
     // URL Routing Helpers
     // ============================================
@@ -2729,11 +2742,14 @@
     // Exception Detail View Component
     // ============================================
 
-    const ExceptionDetailView = ({ instance, exceptionId, onBack, onNavigateToFunction, onNavigateToException }) => {
+    const ExceptionDetailView = ({ instance, exceptionId, onBack, onNavigateToFunction, onNavigateToException, language = 'de' }) => {
       const [data, setData] = useState(null);
       const [loading, setLoading] = useState(true);
       const [error, setError] = useState(null);
       const [activeTab, setActiveTab] = useState('overview');
+
+      // Helper to get text in current language
+      const t = (obj) => getText(obj, language);
 
       useEffect(() => {
         loadException();
@@ -2820,9 +2836,9 @@
                     <div>
                       <h1 className="text-xl font-bold">{data.name}</h1>
                       <div className="flex items-center gap-2 mt-1 flex-wrap">
-                        <span className="px-2 py-0.5 bg-white/20 rounded text-xs">{data.category}</span>
-                        {data.subcategory && (
-                          <span className="px-2 py-0.5 bg-white/10 rounded text-xs">{data.subcategory}</span>
+                        <span className="px-2 py-0.5 bg-white/20 rounded text-xs">{t(data.category)}</span>
+                        {data.subcategory && t(data.subcategory) && (
+                          <span className="px-2 py-0.5 bg-white/10 rounded text-xs">{t(data.subcategory)}</span>
                         )}
                       </div>
                     </div>
@@ -2833,7 +2849,7 @@
                     </span>
                     {data.thrownBy && data.thrownBy.length > 0 && (
                       <span className="px-3 py-1 bg-white/10 rounded-full text-xs">
-                        {data.thrownBy.length} Funktionen
+                        {data.thrownBy.length} {language === 'de' ? 'Funktionen' : 'Functions'}
                       </span>
                     )}
                   </div>
@@ -2842,7 +2858,7 @@
 
               {/* Description - compact */}
               <div className="p-4 bg-gray-50 border-b">
-                <p className="text-gray-700 text-sm leading-relaxed">{data.description}</p>
+                <p className="text-gray-700 text-sm leading-relaxed">{t(data.description)}</p>
               </div>
 
               {/* Tabs */}
@@ -2872,28 +2888,28 @@
                 {activeTab === 'overview' && (
                   <div className="space-y-4">
                     {/* Javadoc */}
-                    {data.javadoc && (data.javadoc.summary || data.javadoc.description) && (
+                    {data.javadoc && (t(data.javadoc.summary) || t(data.javadoc.description)) && (
                       <div className="bg-white rounded-lg shadow p-4">
                         <h3 className="font-semibold text-gray-800 mb-2 flex items-center text-base">
                           <Icon name="book" className="mr-2 text-indigo-500" />
                           Javadoc
                         </h3>
-                        {data.javadoc.summary && (
-                          <p className="text-gray-600 text-sm font-bold">{data.javadoc.summary}</p>
+                        {t(data.javadoc.summary) && (
+                          <p className="text-gray-600 text-sm font-bold">{t(data.javadoc.summary)}</p>
                         )}
-                        {data.javadoc.description && data.javadoc.description !== data.javadoc.summary && (
-                          <p className="text-gray-500 text-xs mt-2">{data.javadoc.description}</p>
+                        {t(data.javadoc.description) && t(data.javadoc.description) !== t(data.javadoc.summary) && (
+                          <p className="text-gray-500 text-xs mt-2">{t(data.javadoc.description)}</p>
                         )}
                         {data.javadoc.constructors && data.javadoc.constructors.length > 0 && (
                           <details className="mt-3">
                             <summary className="text-xs font-medium text-indigo-600 cursor-pointer hover:text-indigo-800">
-                              {data.javadoc.constructors.length} Konstruktoren anzeigen
+                              {data.javadoc.constructors.length} {language === 'de' ? 'Konstruktoren anzeigen' : 'Show constructors'}
                             </summary>
                             <div className="mt-2 space-y-2 pl-3 border-l-2 border-indigo-100">
                               {data.javadoc.constructors.map((con, idx) => (
                                 <div key={idx} className="text-xs">
                                   <code className="text-purple-600 bg-purple-50 px-1 rounded">{con.signature}</code>
-                                  {con.description && <p className="text-gray-500 mt-1">{con.description}</p>}
+                                  {t(con.description) && <p className="text-gray-500 mt-1">{t(con.description)}</p>}
                                 </div>
                               ))}
                             </div>
@@ -2907,30 +2923,30 @@
                       <div className="bg-white rounded-lg shadow p-4">
                         <h3 className="font-semibold text-gray-800 mb-2 flex items-center text-base">
                           <Icon name="file-contract" className="mr-2 text-purple-500" />
-                          Spezifikation
+                          {language === 'de' ? 'Spezifikation' : 'Specification'}
                         </h3>
                         <div className="grid grid-cols-2 gap-3 text-sm">
                           {data.specification.source && (
                             <div>
-                              <span className="text-xs text-gray-400 uppercase">Quelle</span>
+                              <span className="text-xs text-gray-400 uppercase">{language === 'de' ? 'Quelle' : 'Source'}</span>
                               <p className="text-gray-700">{data.specification.source}</p>
                             </div>
                           )}
                           {data.specification.section && (
                             <div>
-                              <span className="text-xs text-gray-400 uppercase">Abschnitt</span>
+                              <span className="text-xs text-gray-400 uppercase">{language === 'de' ? 'Abschnitt' : 'Section'}</span>
                               <p className="text-gray-700 font-mono text-xs">{data.specification.section}</p>
                             </div>
                           )}
                         </div>
-                        {data.specification.applicability && (
+                        {t(data.specification.applicability) && (
                           <p className="mt-2 text-sm text-gray-500">
-                            <span className="font-medium">Anwendbarkeit:</span> {data.specification.applicability}
+                            <span className="font-medium">{language === 'de' ? 'Anwendbarkeit:' : 'Applicability:'}</span> {t(data.specification.applicability)}
                           </p>
                         )}
-                        {data.specification.requirement && (
+                        {t(data.specification.requirement) && (
                           <div className="mt-3 p-2 bg-purple-50 rounded text-sm text-gray-700 border-l-2 border-purple-400">
-                            {data.specification.requirement}
+                            {t(data.specification.requirement)}
                           </div>
                         )}
                       </div>
@@ -2941,19 +2957,19 @@
                       <div className="bg-white rounded-lg shadow p-4">
                         <h3 className="font-semibold text-gray-800 mb-2 flex items-center text-base">
                           <Icon name="sticky-note" className="mr-2 text-yellow-500" />
-                          Hinweise & Kontext
+                          {language === 'de' ? 'Hinweise & Kontext' : 'Notes & Context'}
                         </h3>
                         <div className="space-y-2">
                           {data.notes && data.notes.map((note, idx) => (
                             <div key={`note-${idx}`} className="flex items-start gap-2 text-sm text-gray-600">
                               <Icon name="angle-right" className="text-yellow-400 mt-0.5 flex-shrink-0" />
-                              <span>{note}</span>
+                              <span>{t(note)}</span>
                             </div>
                           ))}
                           {data.implementationContext && data.implementationContext.map((note, idx) => (
                             <div key={`impl-${idx}`} className="flex items-start gap-2 text-sm text-gray-500">
                               <Icon name="cog" className="text-teal-400 mt-0.5 flex-shrink-0" />
-                              <span>{note}</span>
+                              <span>{t(note)}</span>
                             </div>
                           ))}
                         </div>
@@ -2970,7 +2986,7 @@
                       <div className="bg-white rounded-lg shadow p-4">
                         <h3 className="font-semibold text-gray-800 mb-3 flex items-center text-base">
                           <Icon name="bolt" className="mr-2 text-yellow-500" />
-                          Auslösebedingungen
+                          {language === 'de' ? 'Auslösebedingungen' : 'Trigger Conditions'}
                           <span className="ml-2 px-2 py-0.5 bg-yellow-100 text-yellow-700 text-xs rounded-full">
                             {data.triggerConditions.length}
                           </span>
@@ -2978,13 +2994,13 @@
                         <div className="space-y-3 grid grid-cols-3 gap-4">
                           {data.triggerConditions.map((cond, idx) => (
                             <div key={idx} className="p-3 rounded-lg border-l-2 border-yellow-400 group">
-                              {cond.scenario && (
-                                <div className="font-medium text-yellow-800 text-sm mb-1">{cond.scenario}</div>
+                              {t(cond.scenario) && (
+                                <div className="font-medium text-yellow-800 text-sm mb-1">{t(cond.scenario)}</div>
                               )}
-                              <p className="text-gray-700 text-sm">{cond.description}</p>
-                              {cond.trigger && (
+                              <p className="text-gray-700 text-sm">{t(cond.description)}</p>
+                              {t(cond.trigger) && (
                                 <div className="mt-2 rounded text-xs text-gray-500 hidden group-hover:block">
-                                  <span className="font-medium text-orange-600">Trigger:</span> {cond.trigger}
+                                  <span className="font-medium text-orange-600">Trigger:</span> {t(cond.trigger)}
                                 </div>
                               )}
                             </div>
@@ -2998,15 +3014,16 @@
                       <div className="bg-white rounded-lg shadow p-4">
                         <h3 className="font-semibold text-gray-800 mb-3 flex items-center text-base">
                           <Icon name="list-ol" className="mr-2 text-indigo-500" />
-                          Ausführungssequenz
+                          {language === 'de' ? 'Ausführungssequenz' : 'Execution Sequence'}
                           <span className="ml-2 px-2 py-0.5 bg-indigo-100 text-indigo-700 text-xs rounded-full">
-                            {data.executionSequence.length} Schritte
+                            {data.executionSequence.length} {language === 'de' ? 'Schritte' : 'Steps'}
                           </span>
                         </h3>
                         <div className="space-y-1">
                           {data.executionSequence.map((step, idx) => {
-                            const isError = step.description.toLowerCase().includes('error') || 
-                                           step.description.includes('→') ||
+                            const stepDesc = t(step.description);
+                            const isError = stepDesc.toLowerCase().includes('error') || 
+                                           stepDesc.includes('→') ||
                                            (step.number && step.number.includes('a'));
                             return (
                               <div 
@@ -3022,7 +3039,7 @@
                                 </span>
                                 <div className="flex-1">
                                   {step.name && <span className="font-medium">{step.name}: </span>}
-                                  {step.description}
+                                  {stepDesc}
                                 </div>
                               </div>
                             );
@@ -3041,24 +3058,24 @@
                       <div className="bg-white rounded-lg shadow p-4">
                         <h3 className="font-semibold text-gray-800 mb-3 flex items-center text-base">
                           <Icon name="first-aid" className="mr-2 text-green-500" />
-                          Wiederherstellung
+                          {language === 'de' ? 'Wiederherstellung' : 'Recovery'}
                         </h3>
                         
-                        {data.recovery.description && (
-                          <p className="text-gray-600 text-sm mb-3">{data.recovery.description}</p>
+                        {t(data.recovery.description) && (
+                          <p className="text-gray-600 text-sm mb-3">{t(data.recovery.description)}</p>
                         )}
                         
-                        {data.recovery.action && (
+                        {t(data.recovery.action) && (
                           <div className="p-2 bg-green-50 rounded border-l-2 border-green-400 mb-2">
-                            <span className="text-xs font-medium text-green-700">Empfohlene Aktion:</span>
-                            <p className="text-gray-700 text-sm mt-1">{data.recovery.action}</p>
+                            <span className="text-xs font-medium text-green-700">{language === 'de' ? 'Empfohlene Aktion:' : 'Recommended Action:'}</span>
+                            <p className="text-gray-700 text-sm mt-1">{t(data.recovery.action)}</p>
                           </div>
                         )}
                         
-                        {data.recovery.alternativePath && (
+                        {t(data.recovery.alternativePath) && (
                           <div className="p-2 bg-blue-50 rounded border-l-2 border-blue-400 mb-2">
-                            <span className="text-xs font-medium text-blue-700">Alternativer Pfad:</span>
-                            <p className="text-gray-700 text-sm mt-1">{data.recovery.alternativePath}</p>
+                            <span className="text-xs font-medium text-blue-700">{language === 'de' ? 'Alternativer Pfad:' : 'Alternative Path:'}</span>
+                            <p className="text-gray-700 text-sm mt-1">{t(data.recovery.alternativePath)}</p>
                           </div>
                         )}
                         
@@ -3069,7 +3086,7 @@
                                 <span className="flex-shrink-0 w-5 h-5 rounded-full bg-green-100 text-green-700 flex items-center justify-center text-sm font-medium">
                                   {idx + 1}
                                 </span>
-                                <span>{step}</span>
+                                <span>{t(step)}</span>
                               </li>
                             ))}
                           </ol>
@@ -3082,7 +3099,7 @@
                       <div className="bg-white rounded-lg shadow p-4">
                         <h3 className="font-semibold text-gray-800 mb-3 flex items-center text-base">
                           <Icon name="flag-checkered" className="mr-2 text-purple-500" />
-                          Zustand nach Exception
+                          {language === 'de' ? 'Zustand nach Exception' : 'Postcondition State'}
                           <span className="ml-2 px-2 py-0.5 bg-purple-100 text-purple-700 text-xs rounded-full">
                             {data.postconditionality.length}
                           </span>
@@ -3093,7 +3110,7 @@
                               {state.name && (
                                 <span className="text-sm font-semibold text-purple-700 block mb-1">{state.name}</span>
                               )}
-                              <span className="text-gray-700 text-sm">{state.description || state}</span>
+                              <span className="text-gray-700 text-sm">{t(state.description) || t(state)}</span>
                             </div>
                           ))}
                         </div>
@@ -3105,7 +3122,7 @@
                       <div className="bg-white rounded-lg shadow p-4">
                         <h3 className="font-semibold text-gray-800 mb-3 flex items-center text-base">
                           <Icon name="link" className="mr-2 text-orange-500" />
-                          Verwandte Exceptions
+                          {language === 'de' ? 'Verwandte Exceptions' : 'Related Exceptions'}
                         </h3>
                         <div className="flex flex-wrap gap-2">
                           {data.relatedExceptions.map((exc, idx) => (
@@ -3131,7 +3148,7 @@
                       <div className="bg-white rounded-lg shadow p-4">
                         <h3 className="font-semibold text-gray-800 mb-3 flex items-center text-base">
                           <Icon name="flask" className="mr-2 text-cyan-500" />
-                          Anwendungsszenarien
+                          {language === 'de' ? 'Anwendungsszenarien' : 'Usage Scenarios'}
                           <span className="ml-2 px-2 py-0.5 bg-cyan-100 text-cyan-700 text-xs rounded-full">
                             {data.usage.length}
                           </span>
@@ -3140,14 +3157,14 @@
                           {data.usage.map((scenario, idx) => (
                             <div key={idx} className="p-3 rounded-lg border-l-2 border-cyan-400">
                               <h4 className="font-medium text-cyan-800 text-sm mb-2">{scenario.name}</h4>
-                              {scenario.errorContext && (
+                              {t(scenario.errorContext) && (
                                 <p className="text-sm text-orange-600 italic">
                                   <Icon name="exclamation-triangle" className="mr-1" />
-                                  {scenario.errorContext}
+                                  {t(scenario.errorContext)}
                                 </p>
                               )}
                               
-                              <p className="text-gray-600 text-sm mb-2">{scenario.description}</p>
+                              <p className="text-gray-600 text-sm mb-2">{t(scenario.description)}</p>
                               
                               {scenario.relatedFunctions && (
                                 <div className="flex flex-wrap gap-1 mb-2">
@@ -3175,7 +3192,7 @@
                       <div className="bg-white rounded-lg shadow p-4">
                         <h3 className="font-semibold text-gray-800 mb-2 flex items-center text-sm">
                           <Icon name="code" className="mr-2 text-amber-500" />
-                          Beispielcode
+                          {language === 'de' ? 'Beispielcode' : 'Example Code'}
                         </h3>
                         <pre className="bg-gray-900 rounded p-3 overflow-x-auto">
                           <code className="text-green-400 text-xs">{data.example}</code>
@@ -3193,7 +3210,7 @@
                   <div className="bg-white rounded-lg shadow p-4">
                     <h3 className="font-semibold text-gray-800 mb-2 flex items-center text-sm">
                       <Icon name="code" className="mr-2 text-blue-500" />
-                      Funktionen
+                      {language === 'de' ? 'Funktionen' : 'Functions'}
                       <span className="ml-auto px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full">
                         {data.thrownBy.length}
                       </span>
@@ -3217,16 +3234,16 @@
                 <div className={`rounded-lg p-4 ${severityColor.light} ${severityColor.border} border`}>
                   <div className="text-center">
                     <div className={`text-2xl font-bold ${severityColor.text}`}>{data.severity}</div>
-                    <div className="text-xs text-gray-500 mt-1">Schweregrad</div>
+                    <div className="text-xs text-gray-500 mt-1">{language === 'de' ? 'Schweregrad' : 'Severity'}</div>
                   </div>
                   <div className="mt-3 pt-3 border-t border-current/10 grid grid-cols-2 gap-2 text-center">
                     <div>
                       <div className="text-lg font-semibold text-gray-700">{data.thrownBy?.length || 0}</div>
-                      <div className="text-xs text-gray-500">Funktionen</div>
+                      <div className="text-xs text-gray-500">{language === 'de' ? 'Funktionen' : 'Functions'}</div>
                     </div>
                     <div>
                       <div className="text-lg font-semibold text-gray-700">{data.relatedExceptions?.length || 0}</div>
-                      <div className="text-xs text-gray-500">Verwandt</div>
+                      <div className="text-xs text-gray-500">{language === 'de' ? 'Verwandt' : 'Related'}</div>
                     </div>
                   </div>
                 </div>
@@ -3242,7 +3259,7 @@
     // Exceptions List Component
     // ============================================
 
-    const ExceptionsView = ({ instance, onSelectItem }) => {
+    const ExceptionsView = ({ instance, onSelectItem, language = 'de' }) => {
       const [data, setData] = useState(null);
       const [loading, setLoading] = useState(true);
       const [searchTerm, setSearchTerm] = useState('');
@@ -3251,6 +3268,9 @@
       const [activeCategory, setActiveCategory] = useState(null);
       const contentRef = useRef(null);
       const categoryRefs = useRef({});
+
+      // Helper to get text in current language
+      const t = (obj) => getText(obj, language);
 
       useEffect(() => {
         loadExceptions();
@@ -3311,9 +3331,10 @@
         const filtered = {};
         Object.entries(data.grouped).forEach(([cat, items]) => {
           const matchingItems = items.filter(item => {
+            const descText = getText(item.description, language);
             const matchesSearch = !searchTerm || 
               item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              item.description?.toLowerCase().includes(searchTerm.toLowerCase());
+              descText.toLowerCase().includes(searchTerm.toLowerCase());
             const matchesSeverity = filterSeverity === 'all' || item.severity === filterSeverity;
             return matchesSearch && matchesSeverity;
           });
@@ -3516,11 +3537,14 @@
                                         {exc.severity}
                                       </span>
                                     </div>
-                                    <p className="text-sm text-gray-600 mt-1 line-clamp-2">{exc.description}</p>
+                                    <p className="text-sm text-gray-600 mt-1 line-clamp-2">{t(exc.description)}</p>
                                     {exc.thrownByCount > 0 && (
                                       <div className="flex items-center gap-2 mt-2 text-xs text-gray-500">
                                         <Icon name="code" className="mr-1" />
-                                        Verwendet in {exc.thrownByCount} Funktion{exc.thrownByCount !== 1 ? 'en' : ''}
+                                        {language === 'de' 
+                                          ? `Verwendet in ${exc.thrownByCount} Funktion${exc.thrownByCount !== 1 ? 'en' : ''}`
+                                          : `Used in ${exc.thrownByCount} function${exc.thrownByCount !== 1 ? 's' : ''}`
+                                        }
                                       </div>
                                     )}
                                   </div>
@@ -3557,6 +3581,7 @@
       const [overview, setOverview] = useState(null);
       const [hasTestCases, setHasTestCases] = useState(false);
       const [selectedItem, setSelectedItem] = useState(initialRoute.selectedItem);
+      const [language, setLanguage] = useState('de'); // Default language is German
       
       // Initialize
       useEffect(() => {
@@ -3744,7 +3769,7 @@
               />
             );
           case 'exceptions':
-            return <ExceptionsView instance={instance} onSelectItem={handleSelectItem} />;
+            return <ExceptionsView instance={instance} onSelectItem={handleSelectItem} language={language} />;
           case 'exception-detail':
             return (
               <ExceptionDetailView 
@@ -3753,6 +3778,7 @@
                 onBack={handleBackFromDetail}
                 onNavigateToFunction={handleNavigateToFunction}
                 onNavigateToException={handleNavigateToException}
+                language={language}
               />
             );
           default:
@@ -3794,6 +3820,16 @@
               </div>
 
               <div className="flex items-center gap-4">
+                {/* Language Switcher */}
+                <button
+                  onClick={() => setLanguage(lang => lang === 'de' ? 'en' : 'de')}
+                  className="flex items-center gap-1 px-2 py-1 bg-emerald-600 hover:bg-emerald-500 rounded text-sm transition-colors"
+                  title={language === 'de' ? 'Switch to English' : 'Zu Deutsch wechseln'}
+                >
+                  <Icon name="globe" />
+                  <span className="font-medium">{language.toUpperCase()}</span>
+                </button>
+
                 {/* Link to TestCases - only show if testcases module is active */}
                 {hasTestCases && (
                   <a

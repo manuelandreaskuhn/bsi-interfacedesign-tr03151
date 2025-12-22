@@ -11,6 +11,18 @@ const xmlParser = require('../../utils/interfacedesign/xmlParser');
 const router = express.Router();
 
 /**
+ * Helper to extract text from multilingual object
+ * @param {Object|string} obj - Multilingual object or plain string
+ * @param {string} lang - Language code (default 'de')
+ * @returns {string} - Text in requested language or fallback
+ */
+function getText(obj, lang = 'de') {
+  if (!obj) return '';
+  if (typeof obj === 'string') return obj;
+  return obj[lang] || obj._default || obj.de || obj.en || '';
+}
+
+/**
  * GET /:instance/interfacedesign/overview
  * Get overview of all categories with counts
  */
@@ -170,18 +182,20 @@ router.get('/:instance/interfacedesign/exceptions', async (req, res) => {
 
     const exceptions = await xmlParser.loadCategory(basePath, 'exceptions');
     
-    // Sort by category, then by name
+    // Sort by category (using default text), then by name
     exceptions.sort((a, b) => {
-      if (a.category !== b.category) {
-        return a.category.localeCompare(b.category);
+      const catA = getText(a.category);
+      const catB = getText(b.category);
+      if (catA !== catB) {
+        return catA.localeCompare(catB);
       }
       return a.name.localeCompare(b.name);
     });
 
-    // Group by category
+    // Group by category (using default text as key)
     const grouped = {};
     exceptions.forEach(e => {
-      const cat = e.category || 'Uncategorized';
+      const cat = getText(e.category) || 'Uncategorized';
       if (!grouped[cat]) {
         grouped[cat] = [];
       }
