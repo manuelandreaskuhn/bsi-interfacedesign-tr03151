@@ -820,10 +820,19 @@ async function parseExceptionDetail(filePath) {
       ? exc.usage.scenario
       : [exc.usage.scenario];
     usage = scenarios.map(s => {
-      // Safely extract string values (xml2js might create objects)
+      // Safely extract string values - supports both plain strings and xml:lang structure
       const getStringValue = (val) => {
         if (!val) return '';
         if (typeof val === 'string') return val;
+        // Check for xml:lang structure (same as extractMultiLangText but returns string)
+        if (val.text) {
+          const texts = Array.isArray(val.text) ? val.text : [val.text];
+          for (const t of texts) {
+            if (typeof t === 'string') return t;
+            if (t && (t._ || t['#text'])) return t._ || t['#text'];
+          }
+          return '';
+        }
         return val._ || val['#text'] || String(val);
       };
       
@@ -831,7 +840,7 @@ async function parseExceptionDetail(filePath) {
         name: s.name || '', // name stays technical/single-language
         description: extractMultiLangText(s.description),
         example: getStringValue(s.example), // code example stays single-language
-        relatedFunctions: getStringValue(s.relatedFunctions), // function names stay single-language
+        relatedFunctions: getStringValue(s.relatedFunctions), // function names - same in all languages
         errorContext: extractMultiLangText(s.errorContext)
       };
     });
