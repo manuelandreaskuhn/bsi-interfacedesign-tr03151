@@ -1,19 +1,34 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes'?>
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorDisableSecureElementFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorDisableSecureElementFailed</name>
-  <description>This exception is thrown if the deactivation of the Secure Element failed during execution of the disableSecureElement function. The exception represents a critical failure in the device's ability to deactivate and disable the Secure Element's cryptographic and logging functionality. ErrorDisableSecureElementFailed is raised when the disableSecureElement function invokes the Secure Element's deactivation command but the Secure Element cannot complete the deactivation process due to a hardware failure, firmware error, communication breakdown, or internal Secure Element malfunction. This exception indicates that the Secure Element remains in an enabled, operational state and all of its functionality continues to be fully accessible and functional. The exception is raised after validation checks but before the deactivation log entry is created, preventing any state change or audit trail entry from being recorded.</description>
+  <description>
+    <text xml:lang="en">This exception is thrown if the deactivation of the Secure Element failed during execution of the disableSecureElement function. The exception represents a critical failure in the device's ability to deactivate and disable the Secure Element's cryptographic and logging functionality. ErrorDisableSecureElementFailed is raised when the disableSecureElement function invokes the Secure Element's deactivation command but the Secure Element cannot complete the deactivation process due to a hardware failure, firmware error, communication breakdown, or internal Secure Element malfunction. This exception indicates that the Secure Element remains in an enabled, operational state and all of its functionality continues to be fully accessible and functional. The exception is raised after validation checks but before the deactivation log entry is created, preventing any state change or audit trail entry from being recorded.</text>
+    <text xml:lang="de">Diese Ausnahme wird ausgelöst, wenn die Deaktivierung des Secure Element während der Ausführung der Funktion disableSecureElement fehlgeschlagen ist. Die Ausnahme stellt einen kritischen Fehler in der Fähigkeit des Geräts dar, die kryptografischen und Protokollierungsfunktionen des Secure Element zu deaktivieren. ErrorDisableSecureElementFailed wird ausgelöst, wenn die Funktion disableSecureElement den Deaktivierungsbefehl des Secure Element aufruft, aber das Secure Element den Deaktivierungsprozess aufgrund eines Hardwarefehlers, Firmware-Fehlers, Kommunikationsfehlers oder einer internen Secure-Element-Funktionsstörung nicht abschließen kann. Diese Ausnahme zeigt an, dass das Secure Element in einem aktivierten, betriebsbereiten Zustand bleibt und alle seine Funktionen weiterhin vollständig zugänglich und funktioniert sind. Die Ausnahme wird nach Validierungsprüfungen, aber bevor der Deaktivierungs-Log-Eintrag erstellt wird, ausgelöst und verhindert, dass Änderungen am Zustand oder Audit-Trail-Einträge aufgezeichnet werden.</text>
+  </description>
   <category>Secure Element Operation</category>
   <subcategory>SE Control</subcategory>
   <severity>Critical</severity>
   <javadoc>
-    <summary>This class defines the exception ErrorDisableSecureElementFailed that is thrown if the deactivation of the Secure Element failed.</summary>
-    <description>The disableSecureElement function invokes the Secure Element's deactivation functionality. This exception is raised when the Secure Element cannot be successfully deactivated. Once raised, the Secure Element remains in an enabled state and all its functionality continues to be accessible. After this exception is raised, the function exits without storing the log message. No further modifications to the device state are made - only the attempted deactivation of the Secure Element failed.</description>
+    <summary>
+      <text xml:lang="en">This class defines the exception ErrorDisableSecureElementFailed that is thrown if the deactivation of the Secure Element failed.</text>
+      <text xml:lang="de">Diese Klasse definiert die Ausnahme ErrorDisableSecureElementFailed, die ausgelöst wird, wenn die Deaktivierung des Secure Element fehlgeschlagen ist.</text>
+    </summary>
+    <description>
+      <text xml:lang="en">The disableSecureElement function invokes the Secure Element's deactivation functionality. This exception is raised when the Secure Element cannot be successfully deactivated. Once raised, the Secure Element remains in an enabled state and all its functionality continues to be accessible. After this exception is raised, the function exits without storing the log message. No further modifications to the device state are made - only the attempted deactivation of the Secure Element failed.</text>
+      <text xml:lang="de">Die Funktion disableSecureElement ruft die Deaktivierungsfunktionalität des Secure Element auf. Diese Ausnahme wird ausgelöst, wenn das Secure Element nicht erfolgreich deaktiviert werden kann. Nach der Auslösung bleibt das Secure Element in einem aktivierten Zustand und alle seine Funktionen bleiben zugänglich. Nach dieser Ausnahme wird die Funktion beendet, ohne die Protokollnachricht zu speichern. Keine weiteren Änderungen am Gerätezustand werden vorgenommen - nur der Versuch, das Secure Element zu deaktivieren, ist fehlgeschlagen.</text>
+    </description>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>
     <section>3.3.6 Core Functionality - disableSecureElement</section>
-    <requirement>The function disableSecureElement SHALL invoke the functionality of the Secure Element for its deactivation. If the deactivation of the Secure Element fails, the function SHALL raise the exception ErrorDisableSecureElementFailed and exit the function. The Secure Element deactivation failure indicates that none of its functionality can be disabled as intended, leaving the Secure Element in an enabled state.</requirement>
-    <applicability>Secure Element deactivation operations - Core functionality disableSecureElement only</applicability>
+    <requirement>
+      <text xml:lang="en">The function disableSecureElement SHALL invoke the functionality of the Secure Element for its deactivation. If the deactivation of the Secure Element fails, the function SHALL raise the exception ErrorDisableSecureElementFailed and exit the function. The Secure Element deactivation failure indicates that none of its functionality can be disabled as intended, leaving the Secure Element in an enabled state.</text>
+      <text xml:lang="de">Die Funktion disableSecureElement soll die Funktionalität des Secure Element für seine Deaktivierung aufrufen. Wenn die Deaktivierung des Secure Element fehlschlägt, soll die Funktion die Ausnahme ErrorDisableSecureElementFailed auslösen und die Funktion beenden. Der Fehler bei der Deaktivierung des Secure Element zeigt an, dass keine seiner Funktionen wie beabsichtigt deaktiviert werden kann, wodurch das Secure Element in einem aktivierten Zustand verbleibt.</text>
+    </requirement>
+    <applicability>
+      <text xml:lang="en">Secure Element deactivation operations - Core functionality disableSecureElement only</text>
+      <text xml:lang="de">Secure-Element-Deaktivierungsvorgänge - nur Kernfunktionalität disableSecureElement</text>
+    </applicability>
     <reference>disableSecureElement – Function (3.3.6)</reference>
   </specification>
   <thrownBy>
@@ -21,51 +36,147 @@
   </thrownBy>
   <triggerConditions>
     <condition>
-      <scenario>Secure Element hardware deactivation failure</scenario>
-      <description>The Secure Element's deactivation command is invoked, but the Secure Element hardware fails to complete the deactivation sequence due to a hardware malfunction, power issue, or internal hardware error that prevents state transition to disabled status.</description>
-      <trigger>Secure Element hardware failure or malfunction during deactivation command execution</trigger>
+      <scenario>
+        <text xml:lang="en">Secure Element hardware deactivation failure</text>
+        <text xml:lang="de">Fehler bei der Hardware-Deaktivierung des Secure Element</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">The Secure Element's deactivation command is invoked, but the Secure Element hardware fails to complete the deactivation sequence due to a hardware malfunction, power issue, or internal hardware error that prevents state transition to disabled status.</text>
+        <text xml:lang="de">Der Deaktivierungsbefehl des Secure Element wird aufgerufen, aber die Secure-Element-Hardware scheitert daran, die Deaktivierungssequenz aufgrund einer Hardware-Funktionsstörung, eines Stromproblems oder eines internen Hardwarefehlers abzuschließen, der die Zustandsumstellung zum deaktivierten Status verhindert.</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">Secure Element hardware failure or malfunction during deactivation command execution</text>
+        <text xml:lang="de">Secure-Element-Hardwarefehler oder Funktionsstörung während der Deaktivierungsbefehlsausführung</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Secure Element firmware error during deactivation</scenario>
-      <description>The Secure Element's firmware encounters an error or exception during deactivation processing. Firmware bugs, memory corruption, or firmware state inconsistency prevent the deactivation operation from completing.</description>
-      <trigger>Secure Element firmware error or exception during deactivation sequence</trigger>
+      <scenario>
+        <text xml:lang="en">Secure Element firmware error during deactivation</text>
+        <text xml:lang="de">Firmware-Fehler des Secure Element während der Deaktivierung</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">The Secure Element's firmware encounters an error or exception during deactivation processing. Firmware bugs, memory corruption, or firmware state inconsistency prevent the deactivation operation from completing.</text>
+        <text xml:lang="de">Die Firmware des Secure Element stößt auf einen Fehler oder eine Ausnahme während der Deaktivierungsverarbeitung. Firmware-Bugs, Speicherbeschädigung oder Firmware-Statusinkonsistenz verhindern, dass der Deaktivierungsvorgang abgeschlossen wird.</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">Secure Element firmware error or exception during deactivation sequence</text>
+        <text xml:lang="de">Firmware-Fehler oder Ausnahme des Secure Element während der Deaktivierungssequenz</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Communication failure between device and Secure Element</scenario>
-      <description>The device successfully sends the deactivation command to the Secure Element, but the communication channel fails before the response can be received. The device cannot determine whether the Secure Element completed deactivation or not.</description>
-      <trigger>Communication failure or timeout during deactivation command execution</trigger>
+      <scenario>
+        <text xml:lang="en">Communication failure between device and Secure Element</text>
+        <text xml:lang="de">Kommunikationsfehler zwischen Gerät und Secure Element</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">The device successfully sends the deactivation command to the Secure Element, but the communication channel fails before the response can be received. The device cannot determine whether the Secure Element completed deactivation or not.</text>
+        <text xml:lang="de">Das Gerät sendet erfolgreich den Deaktivierungsbefehl an das Secure Element, aber der Kommunikationskanal fällt aus, bevor die Antwort empfangen werden kann. Das Gerät kann nicht feststellen, ob das Secure Element die Deaktivierung abgeschlossen hat oder nicht.</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">Communication failure or timeout during deactivation command execution</text>
+        <text xml:lang="de">Kommunikationsfehler oder Timeout während der Deaktivierungsbefehlsausführung</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Secure Element in protected or locked state preventing deactivation</scenario>
-      <description>The Secure Element has entered a protected state, security lockdown, or operational mode that prevents deactivation. This may occur due to security policies, suspicious activity detection, or emergency protocols.</description>
-      <trigger>Secure Element in protected state that prevents deactivation</trigger>
+      <scenario>
+        <text xml:lang="en">Secure Element in protected or locked state preventing deactivation</text>
+        <text xml:lang="de">Secure Element im geschützten oder gesperrten Zustand, der Deaktivierung verhindert</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">The Secure Element has entered a protected state, security lockdown, or operational mode that prevents deactivation. This may occur due to security policies, suspicious activity detection, or emergency protocols.</text>
+        <text xml:lang="de">Das Secure Element ist in einen geschützten Zustand, eine Sicherheitssperre oder einen Betriebsmodus eingetreten, der Deaktivierung verhindert. Dies kann aufgrund von Sicherheitsrichtlinien, Erkennung verdächtiger Aktivitäten oder Notfallprotokolle auftreten.</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">Secure Element in protected state that prevents deactivation</text>
+        <text xml:lang="de">Secure Element im geschützten Zustand, der Deaktivierung verhindert</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Secure Element physical disconnection mid-operation</scenario>
-      <description>The Secure Element becomes physically disconnected or loses power during the deactivation sequence. The deactivation operation fails due to the hardware suddenly becoming unavailable.</description>
-      <trigger>Secure Element physically disconnected or powered off during deactivation</trigger>
+      <scenario>
+        <text xml:lang="en">Secure Element physical disconnection mid-operation</text>
+        <text xml:lang="de">Physische Trennung des Secure Element während des Vorgangs</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">The Secure Element becomes physically disconnected or loses power during the deactivation sequence. The deactivation operation fails due to the hardware suddenly becoming unavailable.</text>
+        <text xml:lang="de">Das Secure Element wird während der Deaktivierungssequenz physisch getrennt oder verliert Strom. Der Deaktivierungsvorgang scheitert, weil die Hardware plötzlich nicht verfügbar wird.</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">Secure Element physically disconnected or powered off during deactivation</text>
+        <text xml:lang="de">Secure Element während der Deaktivierung physisch getrennt oder ausgeschaltet</text>
+      </trigger>
     </condition>
   </triggerConditions>
   <executionSequence>
-    <step number="1" name="Function Invocation">User or application calls disableSecureElement function with no parameters required</step>
-    <step number="2" name="Authentication Check">The function checks authentication status if required by the implementation guideline to ensure the caller is authorized</step>
-    <step number="3" name="Authorization Check">The function checks authorization to verify the caller has permission to disable the Secure Element</step>
-    <step number="4" name="Device Initialization Verification">The function verifies that the device is in an initialized state and ready for operations</step>
-    <step number="5" name="Time Synchronization Check">The function verifies that device time is synchronized if required for Secure Element operations</step>
-    <step number="6" name="Secure Element Deactivation Command">The function sends a deactivation command to the Secure Element and waits for completion</step>
-    <step number="6a" name="Deactivation Success Path">If the Secure Element successfully completes deactivation, execution continues to step 7 (not taken in this exception case)</step>
-    <step number="6b" name="Deactivation Failure Path">If the Secure Element cannot complete deactivation (hardware error, firmware failure, communication loss, or protected state), execution branches to exception handling at step 7b</step>
-    <step number="7a" name="Log Message Creation">Upon successful deactivation, the function creates a log message recording the Secure Element deactivation event (not taken in this exception case)</step>
-    <step number="7b" name="Exception Context Preparation">Upon deactivation failure, exception context is prepared including Secure Element error details, device state information, and timestamp</step>
-    <step number="8" name="Exception Instance Creation">ErrorDisableSecureElementFailed exception instance is created with appropriate error message indicating Secure Element deactivation failure</step>
-    <step number="9" name="Exception Propagation">Exception is raised and propagated up the call stack without creating or storing any deactivation log entry</step>
-    <step number="10" name="Device State Verification">The Secure Element remains in an enabled state with all functionality operational. No state changes have been made.</step>
+    <step number="1" name="Function Invocation">
+      <text xml:lang="en">User or application calls disableSecureElement function with no parameters required</text>
+      <text xml:lang="de">Benutzer oder Anwendung ruft die Funktion disableSecureElement ohne erforderliche Parameter auf</text>
+    </step>
+    <step number="2" name="Authentication Check">
+      <text xml:lang="en">The function checks authentication status if required by the implementation guideline to ensure the caller is authorized</text>
+      <text xml:lang="de">Die Funktion prüft den Authentifizierungsstatus, falls von der Implementierungsrichtlinie erforderlich, um sicherzustellen, dass der Aufrufer autorisiert ist</text>
+    </step>
+    <step number="3" name="Authorization Check">
+      <text xml:lang="en">The function checks authorization to verify the caller has permission to disable the Secure Element</text>
+      <text xml:lang="de">Die Funktion prüft die Autorisierung, um zu verifizieren, dass der Aufrufer die Berechtigung hat, das Secure Element zu deaktivieren</text>
+    </step>
+    <step number="4" name="Device Initialization Verification">
+      <text xml:lang="en">The function verifies that the device is in an initialized state and ready for operations</text>
+      <text xml:lang="de">Die Funktion stellt sicher, dass das Gerät in einem initialisierten Zustand ist und bereit für Operationen ist</text>
+    </step>
+    <step number="5" name="Time Synchronization Check">
+      <text xml:lang="en">The function verifies that device time is synchronized if required for Secure Element operations</text>
+      <text xml:lang="de">Die Funktion verifiziert, dass die Gerätezeit synchronisiert wird, falls für Secure-Element-Operationen erforderlich</text>
+    </step>
+    <step number="6" name="Secure Element Deactivation Command">
+      <text xml:lang="en">The function sends a deactivation command to the Secure Element and waits for completion</text>
+      <text xml:lang="de">Die Funktion sendet einen Deaktivierungsbefehl an das Secure Element und wartet auf Vollendung</text>
+    </step>
+    <step number="6a" name="Deactivation Success Path">
+      <text xml:lang="en">If the Secure Element successfully completes deactivation, execution continues to step 7 (not taken in this exception case)</text>
+      <text xml:lang="de">Falls das Secure Element die Deaktivierung erfolgreich abschließt, wird die Ausführung zu Schritt 7 fortgesetzt (nicht in diesem Ausnahmefall)</text>
+    </step>
+    <step number="6b" name="Deactivation Failure Path">
+      <text xml:lang="en">If the Secure Element cannot complete deactivation (hardware error, firmware failure, communication loss, or protected state), execution branches to exception handling at step 7b</text>
+      <text xml:lang="de">Falls das Secure Element die Deaktivierung nicht abschließen kann (Hardwarefehler, Firmware-Fehler, Kommunikationsverlust oder geschützter Zustand), wird die Ausführung zur Ausnahmeverarbeitung bei Schritt 7b verzweigt</text>
+    </step>
+    <step number="7a" name="Log Message Creation">
+      <text xml:lang="en">Upon successful deactivation, the function creates a log message recording the Secure Element deactivation event (not taken in this exception case)</text>
+      <text xml:lang="de">Bei erfolgreicher Deaktivierung erstellt die Funktion eine Protokollnachricht, die das Deaktivierungsereignis des Secure Element aufzeichnet (nicht in diesem Ausnahmefall)</text>
+    </step>
+    <step number="7b" name="Exception Context Preparation">
+      <text xml:lang="en">Upon deactivation failure, exception context is prepared including Secure Element error details, device state information, and timestamp</text>
+      <text xml:lang="de">Bei Deaktivierungsfehler wird der Ausnahmekontekt vorbereitet, einschließlich Secure-Element-Fehlerdetails, Gerätestatusinformationen und Zeitstempel</text>
+    </step>
+    <step number="8" name="Exception Instance Creation">
+      <text xml:lang="en">ErrorDisableSecureElementFailed exception instance is created with appropriate error message indicating Secure Element deactivation failure</text>
+      <text xml:lang="de">ErrorDisableSecureElementFailed-Ausnahminstanz wird mit einer angemessenen Fehlermeldung erstellt, die den Deaktivierungsfehler des Secure Element anzeigt</text>
+    </step>
+    <step number="9" name="Exception Propagation">
+      <text xml:lang="en">Exception is raised and propagated up the call stack without creating or storing any deactivation log entry</text>
+      <text xml:lang="de">Die Ausnahme wird ausgelöst und über den Call-Stack propagiert, ohne Deaktivierungs-Log-Einträge zu erstellen oder zu speichern</text>
+    </step>
+    <step number="10" name="Device State Verification">
+      <text xml:lang="en">The Secure Element remains in an enabled state with all functionality operational. No state changes have been made.</text>
+      <text xml:lang="de">Das Secure Element bleibt in einem aktivierten Zustand mit allen funktionierenden Funktionen. Es wurden keine Zustandsveränderungen vorgenommen.</text>
+    </step>
   </executionSequence>
   <recovery>
-    <step>Verify device is initialized</step>
-    <step>Check Secure Element status and connectivity</step>
-    <step>Retry disable operation</step>
-    <step>Contact device support if SE disable remains unavailable</step>
+    <step>
+      <text xml:lang="en">Verify device is initialized</text>
+      <text xml:lang="de">Stellen Sie sicher, dass das Gerät initialisiert ist</text>
+    </step>
+    <step>
+      <text xml:lang="en">Check Secure Element status and connectivity</text>
+      <text xml:lang="de">Prüfen Sie den Secure-Element-Status und die Konnektivität</text>
+    </step>
+    <step>
+      <text xml:lang="en">Retry disable operation</text>
+      <text xml:lang="de">Wiederholen Sie den Deaktivierungsvorgang</text>
+    </step>
+    <step>
+      <text xml:lang="en">Contact device support if SE disable remains unavailable</text>
+      <text xml:lang="de">Wenden Sie sich an den Gerätesupport, wenn die SE-Deaktivierung nicht verfügbar bleibt</text>
+    </step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorFunctionFailed</exception>
@@ -75,44 +186,116 @@
     <exception>ErrorSecureElementDisabled</exception>
   </relatedExceptions>
   <postconditionality>
-    <state name="Secure Element State">Secure Element remains ENABLED with all cryptographic, signing, and logging functionality operational and accessible. Deactivation has not occurred.</state>
-    <state name="Deactivation Log State">No deactivation log entry has been created or stored. The deactivation event is not recorded in the audit trail due to the deactivation failure before logging.</state>
-    <state name="Device Functionality State">Device functions continue to execute normally. Functions requiring Secure Element remain fully operational. Export functions and other Secure Element-dependent operations can continue.</state>
-    <state name="Device State Consistency">Device state remains completely unchanged. No modifications to internal state, configuration, or data structures have occurred as a result of the failed deactivation attempt.</state>
-    <state name="Export Operations">Export functions remain available and operational (as noted in the specification: "Functions requiring Secure Element are not involved in export operations").</state>
-    <state name="Function Exit">The function exits abnormally via exception propagation without completing any device state modifications or audit trail entries</state>
+    <state name="Secure Element State">
+      <text xml:lang="en">Secure Element remains ENABLED with all cryptographic, signing, and logging functionality operational and accessible. Deactivation has not occurred.</text>
+      <text xml:lang="de">Das Secure Element bleibt AKTIVIERT mit allen kryptografischen, Signatur- und Protokollierungsfunktionen operativ und zugänglich. Deaktivierung hat nicht stattgefunden.</text>
+    </state>
+    <state name="Deactivation Log State">
+      <text xml:lang="en">No deactivation log entry has been created or stored. The deactivation event is not recorded in the audit trail due to the deactivation failure before logging.</text>
+      <text xml:lang="de">Es wurde kein Deaktivierungs-Log-Eintrag erstellt oder gespeichert. Das Deaktivierungsereignis wird nicht im Audit-Trail aufgezeichnet, da der Deaktivierungsfehler vor der Protokollierung auftritt.</text>
+    </state>
+    <state name="Device Functionality State">
+      <text xml:lang="en">Device functions continue to execute normally. Functions requiring Secure Element remain fully operational. Export functions and other Secure Element-dependent operations can continue.</text>
+      <text xml:lang="de">Gerätefünktionen führen weiterhin normal aus. Funktionen, die Secure Element erfordern, bleiben vollständig funktionsfähig. Export-Funktionen und andere Secure-Element-abhängige Vorgänge können fortgesetzt werden.</text>
+    </state>
+    <state name="Device State Consistency">
+      <text xml:lang="en">Device state remains completely unchanged. No modifications to internal state, configuration, or data structures have occurred as a result of the failed deactivation attempt.</text>
+      <text xml:lang="de">Der Gerätezustand bleibt völlig unverändert. Es wurden keine Änderungen am internen Zustand, der Konfiguration oder den Datenstrukturen als Ergebnis des fehlgeschlagenen Deaktivierungsversuchs vorgenommen.</text>
+    </state>
+    <state name="Export Operations">
+      <text xml:lang="en">Export functions remain available and operational (as noted in the specification: "Functions requiring Secure Element are not involved in export operations").</text>
+      <text xml:lang="de">Export-Funktionen bleiben verfügbar und betriebsbereit (wie in der Spezifikation angegeben: "Funktionen, die Secure Element erfordern, sind nicht an Export-Vorgängen beteiligt").</text>
+    </state>
+    <state name="Function Exit">
+      <text xml:lang="en">The function exits abnormally via exception propagation without completing any device state modifications or audit trail entries</text>
+      <text xml:lang="de">Die Funktion wird abnormal über Ausnahmepropagation beendet, ohne Gerätezustandsänderungen oder Audit-Trail-Einträge abzuschließen</text>
+    </state>
   </postconditionality>
   <notes>
-    <note>Indication: Attempt to disable the Secure Element failed - device remains in current state</note>
-    <note>Topics: Secure Element Management, Device Control, Security Operations, SE State</note>
+    <note>
+      <text xml:lang="en">Indication: Attempt to disable the Secure Element failed - device remains in current state</text>
+      <text xml:lang="de">Anzeichen: Versuch, das Secure Element zu deaktivieren, fehlgeschlagen - Gerät bleibt im aktuellen Zustand</text>
+    </note>
+    <note>
+      <text xml:lang="en">Topics: Secure Element Management, Device Control, Security Operations, SE State</text>
+      <text xml:lang="de">Themen: Secure-Element-Verwaltung, Gerätekontrolle, Sicherheitsvorgänge, SE-Status</text>
+    </note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Secure Element Hardware Failure During Deactivation">
-      <description>A device performs a normal shutdown sequence and attempts to disable the Secure Element. The Secure Element encounters an internal hardware failure during the deactivation sequence and cannot complete the operation.</description>
-      <relatedFunctions>disableSecureElement, getDeviceHealth, getComponentVersions</relatedFunctions>
-      <errorContext>Hardware malfunction detected during critical deactivation operation</errorContext>
+      <description>
+        <text xml:lang="en">A device performs a normal shutdown sequence and attempts to disable the Secure Element. The Secure Element encounters an internal hardware failure during the deactivation sequence and cannot complete the operation.</text>
+        <text xml:lang="de">Ein Gerät führt eine normale Herunterfahrsequenz durch und versucht, das Secure Element zu deaktivieren. Das Secure Element stößt auf einen internen Hardwarefehler während der Deaktivierungssequenz und kann den Vorgang nicht abschließen.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">disableSecureElement, getDeviceHealth, getComponentVersions</text>
+        <text xml:lang="de">disableSecureElement, getDeviceHealth, getComponentVersions</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Hardware malfunction detected during critical deactivation operation</text>
+        <text xml:lang="de">Hardwarefehler erkannt während des kritischen Deaktivierungsvorgangs</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 2: Secure Element Communication Loss Mid-Operation">
-      <description>The device sends the deactivation command to the Secure Element, but the communication channel fails before the response can be received. The device cannot determine whether the Secure Element completed deactivation.</description>
-      <relatedFunctions>disableSecureElement, getDeviceHealth</relatedFunctions>
-      <errorContext>Communication failure during critical hardware operation</errorContext>
+      <description>
+        <text xml:lang="en">The device sends the deactivation command to the Secure Element, but the communication channel fails before the response can be received. The device cannot determine whether the Secure Element completed deactivation.</text>
+        <text xml:lang="de">Das Gerät sendet den Deaktivierungsbefehl an das Secure Element, aber der Kommunikationskanal fällt aus, bevor die Antwort empfangen werden kann. Das Gerät kann nicht feststellen, ob das Secure Element die Deaktivierung abgeschlossen hat.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">disableSecureElement, getDeviceHealth</text>
+        <text xml:lang="de">disableSecureElement, getDeviceHealth</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Communication failure during critical hardware operation</text>
+        <text xml:lang="de">Kommunikationsfehler während des kritischen Hardwarevorgangs</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 3: Secure Element in Protected State Preventing Deactivation">
-      <description>The Secure Element has entered a protected or locked state due to security policies or suspicious activity detection. Deactivation is prevented by security restrictions, and this exception indicates the security lockdown.</description>
-      <relatedFunctions>disableSecureElement, getDeviceHealth, authenticateUser</relatedFunctions>
-      <errorContext>Security policy enforcement preventing intended deactivation</errorContext>
+      <description>
+        <text xml:lang="en">The Secure Element has entered a protected or locked state due to security policies or suspicious activity detection. Deactivation is prevented by security restrictions, and this exception indicates the security lockdown.</text>
+        <text xml:lang="de">Das Secure Element ist aufgrund von Sicherheitsrichtlinien oder Erkennung verdächtiger Aktivitäten in einen geschützten oder gesperrten Zustand eingetreten. Die Deaktivierung wird durch Sicherheitsbeschränkungen verhindert, und diese Ausnahme zeigt die Sicherheitssperre an.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">disableSecureElement, getDeviceHealth, authenticateUser</text>
+        <text xml:lang="de">disableSecureElement, getDeviceHealth, authenticateUser</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Security policy enforcement preventing intended deactivation</text>
+        <text xml:lang="de">Durchsetzung der Sicherheitsrichtlinie, um beabsichtigte Deaktivierung zu verhindern</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 4: Persistent Deactivation Failure Requiring Service">
-      <description>Repeated deactivation attempts fail consistently. After diagnostics confirm Secure Element hardware damage or firmware corruption, the device is marked for professional service or replacement while continuing to operate with Secure Element enabled.</description>
-      <relatedFunctions>disableSecureElement, getDeviceHealth, getComponentVersions</relatedFunctions>
-      <errorContext>Persistent hardware failure requiring professional intervention</errorContext>
+      <description>
+        <text xml:lang="en">Repeated deactivation attempts fail consistently. After diagnostics confirm Secure Element hardware damage or firmware corruption, the device is marked for professional service or replacement while continuing to operate with Secure Element enabled.</text>
+        <text xml:lang="de">Wiederholte Deaktivierungsversuche scheitern konsistent. Nachdem Diagnosen Hardware-Beschädigung oder Firmware-Beschädigung des Secure Element bestätigt haben, wird das Gerät für professionellen Service oder Ersatz markiert und funktioniert weiterhin mit aktiviertem Secure Element.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">disableSecureElement, getDeviceHealth, getComponentVersions</text>
+        <text xml:lang="de">disableSecureElement, getDeviceHealth, getComponentVersions</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Persistent hardware failure requiring professional intervention</text>
+        <text xml:lang="de">Persistenter Hardwarefehler, der professionelle Intervention erfordert</text>
+      </errorContext>
     </scenario>
   </usage>
   <implementationContext>
-    <note>Raised by disableSecureElement when SE disable operation fails</note>
-    <note>Secure Element state management controls device cryptographic capabilities</note>
-    <note>Device attempts to transition SE to disabled state</note>
-    <note>SE disable failure prevents security configuration change</note>
+    <note>
+      <text xml:lang="en">Raised by disableSecureElement when SE disable operation fails</text>
+      <text xml:lang="de">Wird von disableSecureElement ausgelöst, wenn der SE-Deaktivierungsvorgang fehlschlägt</text>
+    </note>
+    <note>
+      <text xml:lang="en">Secure Element state management controls device cryptographic capabilities</text>
+      <text xml:lang="de">Die Verwaltung des Secure-Element-Zustands steuert die kryptografischen Kapaziztäten des Geräts</text>
+    </note>
+    <note>
+      <text xml:lang="en">Device attempts to transition SE to disabled state</text>
+      <text xml:lang="de">Das Gerät versucht, das SE in einen deaktivierten Zustand überzuführen</text>
+    </note>
+    <note>
+      <text xml:lang="en">SE disable failure prevents security configuration change</text>
+      <text xml:lang="de">SE-Deaktivierungsfehler verhindert Sicherheitskonfigurationänderung</text>
+    </note>
   </implementationContext>
 </exception>
 

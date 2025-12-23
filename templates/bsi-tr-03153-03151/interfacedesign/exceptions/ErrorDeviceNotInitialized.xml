@@ -1,7 +1,10 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes'?>
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorDeviceNotInitialized" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorDeviceNotInitialized</name>
-  <description>This exception is thrown by any SE API function if the device is not initialized but the function requires the device to be initialized. The exception represents a critical mandatory prerequisite violation that prevents all SE API operations that depend on device initialization. ErrorDeviceNotInitialized is raised when an application invokes any of 44 SE API functions that require the device to be in an initialized state, but the device has not yet been successfully initialized or a previous initialization attempt failed. This exception enforces the fundamental architectural requirement that the initialize function must be called once and complete successfully before any other API functionality can be accessed. The exception is raised immediately upon entry to any dependent function when the device initialization state is verified to be uninitialized, preventing any function operations from proceeding.</description>
+  <description>
+    <text xml:lang="en">This exception is thrown by any SE API function if the device is not initialized but the function requires the device to be initialized. The exception represents a critical mandatory prerequisite violation that prevents all SE API operations that depend on device initialization. ErrorDeviceNotInitialized is raised when an application invokes any of 44 SE API functions that require the device to be in an initialized state, but the device has not yet been successfully initialized or a previous initialization attempt failed. This exception enforces the fundamental architectural requirement that the initialize function must be called once and complete successfully before any other API functionality can be accessed. The exception is raised immediately upon entry to any dependent function when the device initialization state is verified to be uninitialized, preventing any function operations from proceeding.</text>
+    <text xml:lang="de">Diese Ausnahme wird von jeder SE-API-Funktion ausgelöst, wenn das Gerät nicht initialisiert ist, aber die Funktion erfordert, dass das Gerät initialisiert ist. Die Ausnahme stellt eine kritische obligatorische Verstoß gegen eine Voraussetzung dar, die alle SE-API-Operationen verhindert, die von der Geräteinitialisierung abhängen. ErrorDeviceNotInitialized wird ausgelöst, wenn eine Anwendung eine der 44 SE-API-Funktionen aufruft, die erfordern, dass sich das Gerät in einem initialisierten Zustand befindet, aber das Gerät wurde noch nicht erfolgreich initialisiert oder ein vorheriger Initialisierungsversuch ist fehlgeschlagen. Diese Ausnahme erzwingt die grundlegende architektonische Anforderung, dass die Initialisierungsfunktion einmal aufgerufen und erfolgreich abgeschlossen werden muss, bevor andere API-Funktionalitäten zugegriffen werden können. Die Ausnahme wird unmittelbar nach Eintritt in jede abhängige Funktion ausgelöst, wenn der Geräteinitialisierungszustand als nicht initialisiert verifiziert wird, was verhindert, dass Funktionsvorgänge fortgesetzt werden.</text>
+  </description>
   <category>Common Exception</category>
   <severity>Critical</severity>
   <thrownBy>
@@ -46,44 +49,107 @@
     <function>updateTransaction</function>
   </thrownBy>
   <javadoc>
-    <summary>This class defines the exception ErrorDeviceNotInitialized that is thrown by any SE API function if the device is not initialized but the function requires the device to be initialized.</summary>
-    <description>A function requiring device initialization has been invoked when the device has not yet been initialized. This exception indicates a mandatory prerequisite violation - the initialize function must be called once and complete successfully before any other API functions that require device initialization can be executed. The device must be in an initialized state for the vast majority of API functions to operate correctly.</description>
+    <summary>
+      <text xml:lang="en">This class defines the exception ErrorDeviceNotInitialized that is thrown by any SE API function if the device is not initialized but the function requires the device to be initialized.</text>
+      <text xml:lang="de">Diese Klasse definiert die Ausnahme ErrorDeviceNotInitialized, die von einer SE-API-Funktion ausgelöst wird, wenn das Gerät nicht initialisiert ist, aber die Funktion erfordert, dass das Gerät initialisiert ist.</text>
+    </summary>
+    <description>
+      <text xml:lang="en">A function requiring device initialization has been invoked when the device has not yet been initialized. This exception indicates a mandatory prerequisite violation - the initialize function must be called once and complete successfully before any other API functions that require device initialization can be executed. The device must be in an initialized state for the vast majority of API functions to operate correctly.</text>
+      <text xml:lang="de">Eine Funktion, die eine Geräteinitialisierung erfordert, wurde aufgerufen, wenn das Gerät noch nicht initialisiert wurde. Diese Ausnahme zeigt einen obligatorischen Verstoß gegen eine Voraussetzung an - die Initialisierungsfunktion muss einmal aufgerufen und erfolgreich abgeschlossen werden, bevor eine andere API-Funktionen, die eine Geräteinitialisierung erfordern, ausgeführt werden können. Das Gerät muss sich in einem initialisierten Zustand befinden, damit die große Mehrheit der API-Funktionen ordnungsgemäß funktioniert.</text>
+    </description>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>
     <section>3.1.2.2</section>
-    <requirement>The exception ErrorDeviceNotInitialized SHALL be implemented by all functions that require the device to be initialized before a correct usage of the function. This exception SHALL be raised when any function depending on device initialization is invoked before the initialize function has been successfully completed.</requirement>
-    <applicability>Common exception - mandatory prerequisite enforcement for all API functions requiring initialization</applicability>
+    <requirement>
+      <text xml:lang="en">The exception ErrorDeviceNotInitialized SHALL be implemented by all functions that require the device to be initialized before a correct usage of the function. This exception SHALL be raised when any function depending on device initialization is invoked before the initialize function has been successfully completed.</text>
+      <text xml:lang="de">Die Ausnahme ErrorDeviceNotInitialized soll von allen Funktionen implementiert werden, die erfordern, dass das Gerät initialisiert ist, bevor die Funktion ordnungsgemäß verwendet wird. Diese Ausnahme soll ausgelöst werden, wenn eine Funktion, die von der Geräteinitialisierung abhängt, aufgerufen wird, bevor die Initialisierungsfunktion erfolgreich abgeschlossen wurde.</text>
+    </requirement>
+    <applicability>
+      <text xml:lang="en">Common exception - mandatory prerequisite enforcement for all API functions requiring initialization</text>
+      <text xml:lang="de">Allgemeine Ausnahme - obligatorische Voraussetzungsdurchsetzung für alle API-Funktionen, die eine Initialisierung erfordern</text>
+    </applicability>
     <reference>initialize – Core functionality (3.3.1)</reference>
   </specification>
   <triggerConditions>
     <condition>
-      <scenario>Dependent function invoked before any initialization</scenario>
-      <description>An application immediately attempts to call an SE API function that requires device initialization (such as startTransaction, getDeviceHealth, or registerClient) without first calling initialize. The device has never been initialized.</description>
-      <trigger>Any initialization-dependent function called when device initialization state is uninitialized</trigger>
+      <scenario>
+        <text xml:lang="en">Dependent function invoked before any initialization</text>
+        <text xml:lang="de">Abhängige Funktion aufgerufen, bevor eine Initialisierung erfolgt</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">An application immediately attempts to call an SE API function that requires device initialization (such as startTransaction, getDeviceHealth, or registerClient) without first calling initialize. The device has never been initialized.</text>
+        <text xml:lang="de">Eine Anwendung versucht sofort, eine SE-API-Funktion aufzurufen, die eine Geräteinitialisierung erfordert (z. B. startTransaction, getDeviceHealth oder registerClient), ohne zuerst initialize aufzurufen. Das Gerät wurde nie initialisiert.</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">Any initialization-dependent function called when device initialization state is uninitialized</text>
+        <text xml:lang="de">Eine Funktion, die von der Initialisierung abhängt, wird aufgerufen, wenn der Geräteinitialisierungszustand nicht initialisiert ist</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Initialization never completed or was never attempted</scenario>
-      <description>The application was supposed to call initialize but failed to do so, either due to application logic error, missing initialization code, or incorrect error handling that masked initialization failure.</description>
-      <trigger>Device-dependent function invoked without prior successful initialize completion</trigger>
+      <scenario>
+        <text xml:lang="en">Initialization never completed or was never attempted</text>
+        <text xml:lang="de">Initialisierung wurde nicht abgeschlossen oder nie versucht</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">The application was supposed to call initialize but failed to do so, either due to application logic error, missing initialization code, or incorrect error handling that masked initialization failure.</text>
+        <text xml:lang="de">Die Anwendung sollte initialize aufrufen, ist aber fehlgeschlagen, entweder aufgrund eines Anwendungslogik-Fehlers, fehlenden Initialisierungscodes oder falscher Fehlerbehandlung, die einen Initialisierungsfehler maskiert.</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">Device-dependent function invoked without prior successful initialize completion</text>
+        <text xml:lang="de">Geräteabhängige Funktion aufgerufen ohne vorherige erfolgreiche Initialisierungsvollendung</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Device initialization failure not properly handled</scenario>
-      <description>The initialize function was called and raised ErrorDeviceInitializationFailed or returned failure, but the application incorrectly treated this as a success or proceeded to use the device despite initialization failure.</description>
-      <trigger>Dependent function invoked after failed initialization attempt</trigger>
+      <scenario>
+        <text xml:lang="en">Device initialization failure not properly handled</text>
+        <text xml:lang="de">Geräteinitialisierungsfehler nicht ordnungsgemäß bearbeitet</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">The initialize function was called and raised ErrorDeviceInitializationFailed or returned failure, but the application incorrectly treated this as a success or proceeded to use the device despite initialization failure.</text>
+        <text xml:lang="de">Die Initialisierungsfunktion wurde aufgerufen und hat ErrorDeviceInitializationFailed ausgelöst oder hat Fehler zurückgegeben, aber die Anwendung hat dies falsch als Erfolg behandelt oder verwendet das Gerät trotz Initialisierungsfehler.</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">Dependent function invoked after failed initialization attempt</text>
+        <text xml:lang="de">Abhängige Funktion aufgerufen nach fehlgeschlagenem Initialisierungsversuch</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Device state corruption or loss between initialization and use</scenario>
-      <description>The device was successfully initialized, but the internal initialization state flags were corrupted or lost due to a crash, firmware issue, or storage failure. The device appears uninitialized despite previous successful initialization.</description>
-      <trigger>Dependent function detects initialization state loss or corruption</trigger>
+      <scenario>
+        <text xml:lang="en">Device state corruption or loss between initialization and use</text>
+        <text xml:lang="de">Gerätestatusbeschädigung oder Verlust zwischen Initialisierung und Verwendung</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">The device was successfully initialized, but the internal initialization state flags were corrupted or lost due to a crash, firmware issue, or storage failure. The device appears uninitialized despite previous successful initialization.</text>
+        <text xml:lang="de">Das Gerät wurde erfolgreich initialisiert, aber die internen Initialisierungszustandsflaggen wurden beschädigt oder verloren, aufgrund eines Absturzes, Firmware-Problems oder Speicherfehlers. Das Gerät erscheint nicht initialisiert trotz vorheriger erfolgreicher Initialisierung.</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">Dependent function detects initialization state loss or corruption</text>
+        <text xml:lang="de">Abhängige Funktion erkennt Initialisierungszustandsverlust oder Beschädigung</text>
+      </trigger>
     </condition>
   </triggerConditions>
   <recovery>
-    <step>Call initialize function before using device API</step>
-    <step>Wait for initialization to complete successfully</step>
-    <step>Verify initialize operation completed without errors</step>
-    <step>Ensure application initialization flow is correct</step>
-    <step>Check device logs for initialization errors</step>
+    <step>
+      <text xml:lang="en">Call initialize function before using device API</text>
+      <text xml:lang="de">Rufen Sie die Initialisierungsfunktion auf, bevor Sie die Geräte-API verwenden</text>
+    </step>
+    <step>
+      <text xml:lang="en">Wait for initialization to complete successfully</text>
+      <text xml:lang="de">Warten Sie, bis die Initialisierung erfolgreich abgeschlossen ist</text>
+    </step>
+    <step>
+      <text xml:lang="en">Verify initialize operation completed without errors</text>
+      <text xml:lang="de">Stellen Sie sicher, dass die Initialisierungsoperation ohne Fehler abgeschlossen wurde</text>
+    </step>
+    <step>
+      <text xml:lang="en">Ensure application initialization flow is correct</text>
+      <text xml:lang="de">Stellen Sie sicher, dass der Anwendungsinitialisierungsfluss korrekt ist</text>
+    </step>
+    <step>
+      <text xml:lang="en">Check device logs for initialization errors</text>
+      <text xml:lang="de">Prüfen Sie die Geräteprotokolle auf Initialisierungsfehler</text>
+    </step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorDeviceInitializationFailed</exception>
@@ -91,54 +157,150 @@
     <exception>ErrorFunctionFailed</exception>
   </relatedExceptions>
   <executionSequence>
-    <step number="1" name="Function Invocation">Entry point is reached for any of the 44 device-dependent API functions (such as startTransaction, registerClient, getDeviceHealth, etc.)</step>
-    <step number="2" name="Initialization State Check">The function immediately checks whether the device is in an initialized state by examining the device initialization status flags</step>
-    <step number="3a" name="Device Initialized">If the device is initialized, execution proceeds to the function's main operation logic (not taken in this exception case)</step>
-    <step number="3b" name="Device Not Initialized">If the device is not initialized, execution branches to exception handling at step 4</step>
-    <step number="4" name="Exception Context Preparation">Exception context is prepared including the function name that was invoked, the device uninitialized state, and timestamp of the error</step>
-    <step number="5" name="Exception Instance Creation">ErrorDeviceNotInitialized exception instance is created with appropriate error message indicating that initialization is required before the function can execute</step>
-    <step number="6" name="Exception Propagation">Exception is raised and propagated up the call stack to the calling application without performing any function operations</step>
-    <step number="7" name="Device State Unchanged">The device remains in its current state with no changes resulting from the attempted function call</step>
+    <step number="1" name="Function Invocation">
+      <text xml:lang="en">Entry point is reached for any of the 44 device-dependent API functions (such as startTransaction, registerClient, getDeviceHealth, etc.)</text>
+      <text xml:lang="de">Der Einstiegspunkt wird für eine der 44 geräteabhängigen API-Funktionen erreicht (z. B. startTransaction, registerClient, getDeviceHealth usw.)</text>
+    </step>
+    <step number="2" name="Initialization State Check">
+      <text xml:lang="en">The function immediately checks whether the device is in an initialized state by examining the device initialization status flags</text>
+      <text xml:lang="de">Die Funktion prüft sofort, ob sich das Gerät in einem initialisierten Zustand befindet, indem sie die Geräteinitialisierungszustandsflaggen untersucht</text>
+    </step>
+    <step number="3a" name="Device Initialized">
+      <text xml:lang="en">If the device is initialized, execution proceeds to the function's main operation logic (not taken in this exception case)</text>
+      <text xml:lang="de">Falls das Gerät initialisiert ist, wird die Ausführung zur Hauptoperationslogik der Funktion fortgesetzt (nicht in diesem Ausnahmefall)</text>
+    </step>
+    <step number="3b" name="Device Not Initialized">
+      <text xml:lang="en">If the device is not initialized, execution branches to exception handling at step 4</text>
+      <text xml:lang="de">Falls das Gerät nicht initialisiert ist, wird die Ausführung zur Ausnahmeverarbeitung in Schritt 4 verzweigt</text>
+    </step>
+    <step number="4" name="Exception Context Preparation">
+      <text xml:lang="en">Exception context is prepared including the function name that was invoked, the device uninitialized state, and timestamp of the error</text>
+      <text xml:lang="de">Der Ausnahmekontekt wird vorbereitet, einschließlich des Funktionsnamens, der aufgerufen wurde, des nicht initialisierten Gerätezustands und des Fehlerzeitstempels</text>
+    </step>
+    <step number="5" name="Exception Instance Creation">
+      <text xml:lang="en">ErrorDeviceNotInitialized exception instance is created with appropriate error message indicating that initialization is required before the function can execute</text>
+      <text xml:lang="de">ErrorDeviceNotInitialized-Ausnahminstanz wird mit einer angemessenen Fehlermeldung erstellt, die anzeigt, dass eine Initialisierung erforderlich ist, bevor die Funktion ausgeführt werden kann</text>
+    </step>
+    <step number="6" name="Exception Propagation">
+      <text xml:lang="en">Exception is raised and propagated up the call stack to the calling application without performing any function operations</text>
+      <text xml:lang="de">Die Ausnahme wird ausgelöst und über den Call-Stack an die aufrufende Anwendung propagiert, ohne Funktionsvorgänge auszuführen</text>
+    </step>
+    <step number="7" name="Device State Unchanged">
+      <text xml:lang="en">The device remains in its current state with no changes resulting from the attempted function call</text>
+      <text xml:lang="de">Das Gerät bleibt in seinem aktuellen Zustand, ohne Änderungen aufgrund des versuchten Funktionsaufrufs</text>
+    </step>
   </executionSequence>
   <postconditionality>
-    <state name="Exception State">An ErrorDeviceNotInitialized exception has been created and raised, indicating that the device initialization prerequisite has not been met</state>
-    <state name="Device Operational State">The device remains in an uninitialized state, unavailable for API operations. No device functionality is accessible.</state>
-    <state name="Device Initialization Status">The device remains uninitialized. No initialization has been started or completed. The device requires explicit initialization via the initialize function.</state>
-    <state name="Internal State">No changes have been made to device internal state, configuration, or data structures. The device state is completely unchanged by the failed function call attempt.</state>
-    <state name="Function Execution">The intended function has not been executed. None of its operations have been performed. The function exits immediately upon initialization state verification.</state>
-    <state name="Application Responsibility">The application must call the initialize function before any further operations can proceed. This is a mandatory step that cannot be bypassed or deferred.</state>
+    <state name="Exception State">
+      <text xml:lang="en">An ErrorDeviceNotInitialized exception has been created and raised, indicating that the device initialization prerequisite has not been met</text>
+      <text xml:lang="de">Eine ErrorDeviceNotInitialized-Ausnahme wurde erstellt und ausgelöst, die anzeigt, dass die Geräteinitialisierungsvoraussetzung nicht erfüllt wurde</text>
+    </state>
+    <state name="Device Operational State">
+      <text xml:lang="en">The device remains in an uninitialized state, unavailable for API operations. No device functionality is accessible.</text>
+      <text xml:lang="de">Das Gerät bleibt in einem nicht initialisierten Zustand, nicht verfügbar für API-Operationen. Keine Gerätefähigkeit ist zugänglich.</text>
+    </state>
+    <state name="Device Initialization Status">
+      <text xml:lang="en">The device remains uninitialized. No initialization has been started or completed. The device requires explicit initialization via the initialize function.</text>
+      <text xml:lang="de">Das Gerät bleibt nicht initialisiert. Es wurde keine Initialisierung gestartet oder abgeschlossen. Das Gerät erfordert eine explizite Initialisierung über die Initialisierungsfunktion.</text>
+    </state>
+    <state name="Internal State">
+      <text xml:lang="en">No changes have been made to device internal state, configuration, or data structures. The device state is completely unchanged by the failed function call attempt.</text>
+      <text xml:lang="de">Es wurden keine Änderungen am internen Gerätezustand, der Konfiguration oder den Datenstrukturen vorgenommen. Der Gerätezustand bleibt völlig unbeeinflusst durch den versuchten Funktionsaufrufen.</text>
+    </state>
+    <state name="Function Execution">
+      <text xml:lang="en">The intended function has not been executed. None of its operations have been performed. The function exits immediately upon initialization state verification.</text>
+      <text xml:lang="de">Die beabsichtigte Funktion wurde nicht ausgeführt. Keine seiner Operationen wurden durchgeführt. Die Funktion wird unmittelbar nach der Initialisierungszustandsverifikation beendet.</text>
+    </state>
+    <state name="Application Responsibility">
+      <text xml:lang="en">The application must call the initialize function before any further operations can proceed. This is a mandatory step that cannot be bypassed or deferred.</text>
+      <text xml:lang="de">Die Anwendung muss die Initialisierungsfunktion aufrufen, bevor weitere Operationen fortgesetzt werden können. Dies ist ein obligatorischer Schritt, der nicht umgangen oder aufgeschoben werden kann.</text>
+    </state>
   </postconditionality>
   <notes>
-    <note>Indication: Operation attempted on a device that has not been initialized - device not ready</note>
-    <note>Topics: Device Initialization, Device State, Initialization Requirements, System Setup</note>
+    <note>
+      <text xml:lang="en">Indication: Operation attempted on a device that has not been initialized - device not ready</text>
+      <text xml:lang="de">Anzeichen: Operation auf einem Gerät versucht, das nicht initialisiert wurde - Gerät nicht bereit</text>
+    </note>
+    <note>
+      <text xml:lang="en">Topics: Device Initialization, Device State, Initialization Requirements, System Setup</text>
+      <text xml:lang="de">Themen: Geräteinitialisierung, Gerätezustand, Initialisierungsanforderungen, Systemeinrichtung</text>
+    </note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Missing Initialization in Application Startup">
-      <description>An application attempts to register a client (registerClient) without first calling initialize. The application skipped or forgot the initialization step in its startup sequence.</description>
-      <relatedFunctions>initialize, registerClient, getDeviceHealth</relatedFunctions>
-      <errorContext>Application startup bug where initialize was omitted from the startup sequence</errorContext>
+      <description>
+        <text xml:lang="en">An application attempts to register a client (registerClient) without first calling initialize. The application skipped or forgot the initialization step in its startup sequence.</text>
+        <text xml:lang="de">Eine Anwendung versucht, einen Client (registerClient) zu registrieren, ohne zuerst initialize aufzurufen. Die Anwendung hat den Initialisierungsschritt in ihrer Startsequenz übersehen oder vergessen.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">initialize, registerClient, getDeviceHealth</text>
+        <text xml:lang="de">initialize, registerClient, getDeviceHealth</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Application startup bug where initialize was omitted from the startup sequence</text>
+        <text xml:lang="de">Fehler beim Anwendungsstart, bei dem initialize aus der Startsequenz weggelassen wurde</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 2: Failed Initialization Not Properly Handled">
-      <description>The application called initialize, but the call failed with ErrorDeviceInitializationFailed. The application incorrectly treated this as success or masked the error, then attempted to use the device.</description>
-      <relatedFunctions>initialize, getDeviceHealth, authenticateUser</relatedFunctions>
-      <errorContext>Error handling bug where initialization failure was not properly detected</errorContext>
+      <description>
+        <text xml:lang="en">The application called initialize, but the call failed with ErrorDeviceInitializationFailed. The application incorrectly treated this as success or masked the error, then attempted to use the device.</text>
+        <text xml:lang="de">Die Anwendung rief initialize auf, aber der Aufruf scheiterte mit ErrorDeviceInitializationFailed. Die Anwendung behandelte dies falsch als Erfolg oder maskierte den Fehler und versuchte dann, das Gerät zu verwenden.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">initialize, getDeviceHealth, authenticateUser</text>
+        <text xml:lang="de">initialize, getDeviceHealth, authenticateUser</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Error handling bug where initialization failure was not properly detected</text>
+        <text xml:lang="de">Fehlerbehandlungs-Bug, bei dem der Initialisierungsfehler nicht ordnungsgemäß erkannt wurde</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 3: Device State Loss After Successful Initialization">
-      <description>A device was successfully initialized and used. Later, the device crashes or reboots, losing internal initialization state. Subsequent function calls fail with this exception, indicating the device must be re-initialized.</description>
-      <relatedFunctions>initialize, startTransaction, getDeviceHealth</relatedFunctions>
-      <errorContext>Device crash or state corruption requiring re-initialization</errorContext>
+      <description>
+        <text xml:lang="en">A device was successfully initialized and used. Later, the device crashes or reboots, losing internal initialization state. Subsequent function calls fail with this exception, indicating the device must be re-initialized.</text>
+        <text xml:lang="de">Ein Gerät wurde erfolgreich initialisiert und verwendet. Später stürzt das Gerät ab oder wird neu gestartet, wodurch der interne Initialisierungszustand verloren geht. Nachfolgende Funktionsaufrufe scheitern mit dieser Ausnahme, was anzeigt, dass das Gerät neu initialisiert werden muss.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">initialize, startTransaction, getDeviceHealth</text>
+        <text xml:lang="de">initialize, startTransaction, getDeviceHealth</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Device crash or state corruption requiring re-initialization</text>
+        <text xml:lang="de">Geräteabsturz oder Statusbeschädigung, die eine Neuinitialisierung erfordert</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 4: Multi-Device Management Without Proper Sequencing">
-      <description>An application manages multiple devices and attempts to use a device before initializing it, while other devices are properly initialized. The uninitialized device raises this exception.</description>
-      <relatedFunctions>initialize, getDeviceHealth, registerClient</relatedFunctions>
-      <errorContext>Multi-device management bug where device initialization sequencing was incorrect</errorContext>
+      <description>
+        <text xml:lang="en">An application manages multiple devices and attempts to use a device before initializing it, while other devices are properly initialized. The uninitialized device raises this exception.</text>
+        <text xml:lang="de">Eine Anwendung verwaltet mehrere Geräte und versucht, ein Gerät zu verwenden, bevor es initialisiert wird, während andere Geräte ordnungsgemäß initialisiert werden. Das nicht initialisierte Gerät löst diese Ausnahme aus.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">initialize, getDeviceHealth, registerClient</text>
+        <text xml:lang="de">initialize, getDeviceHealth, registerClient</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Multi-device management bug where device initialization sequencing was incorrect</text>
+        <text xml:lang="de">Fehler bei der Multigeräteverwaltung, bei dem die Abfolge der Geräteinitialisierung falsch war</text>
+      </errorContext>
     </scenario>
   </usage>
   <implementationContext>
-    <note>Raised by functions when device initialization prerequisite not met</note>
-    <note>Most functions require device initialized state for operation</note>
-    <note>Device state tracking enforces initialization requirement</note>
-    <note>Application must call initialize before using most API functions</note>
+    <note>
+      <text xml:lang="en">Raised by functions when device initialization prerequisite not met</text>
+      <text xml:lang="de">Wird von Funktionen ausgelöst, wenn die Geräteinitialisierungsvoraussetzung nicht erfüllt ist</text>
+    </note>
+    <note>
+      <text xml:lang="en">Most functions require device initialized state for operation</text>
+      <text xml:lang="de">Die meisten Funktionen erfordern den initialisierten Gerätezustand für den Betrieb</text>
+    </note>
+    <note>
+      <text xml:lang="en">Device state tracking enforces initialization requirement</text>
+      <text xml:lang="de">Die Gerätestatusverrführung erzwingt die Initialisierungsanforderung</text>
+    </note>
+    <note>
+      <text xml:lang="en">Application must call initialize before using most API functions</text>
+      <text xml:lang="de">Die Anwendung muss initialize aufrufen, bevor sie die meisten API-Funktionen verwendet</text>
+    </note>
   </implementationContext>
 </exception>
 

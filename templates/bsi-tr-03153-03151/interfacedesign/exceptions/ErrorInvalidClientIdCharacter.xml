@@ -1,19 +1,34 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes'?>
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorInvalidClientIdCharacter" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorInvalidClientIdCharacter</name>
-  <description>This exception is thrown if a provided clientId parameter contains characters that violate the allowed character set or format specification for client identifiers. The function attempts to process a client operation with a supplied clientId, but the identifier contains invalid or disallowed characters, causing the operation to fail validation.</description>
+  <description>
+    <text xml:lang="en">This exception is thrown if a provided clientId parameter contains characters that violate the allowed character set or format specification for client identifiers. The function attempts to process a client operation with a supplied clientId, but the identifier contains invalid or disallowed characters, causing the operation to fail validation.</text>
+    <text xml:lang="de">Diese Ausnahme wird ausgelöst, wenn ein bereitgestellter clientId-Parameter Zeichen enthält, die den zulässigen Zeichensatz oder die Formatspezifikation für Client-Bezeichner verletzen. Die Funktion versucht, eine Client-Operation mit einer bereitgestellten clientId zu verarbeiten, aber der Bezeichner enthält ungültige oder unzulässige Zeichen, was dazu führt, dass die Operation die Validierung fehlschlägt.</text>
+  </description>
   <category>Client Management</category>
   <subcategory>Input Validation</subcategory>
   <severity>High</severity>
   <javadoc>
-    <summary>This class defines the exception ErrorInvalidClientIdCharacter that is thrown if the provided clientId contains characters not allowed by the specification.</summary>
-    <description>This exception is thrown when a client operation receives a clientId parameter containing characters that violate the allowed character set specification for client identifiers. Client ID format is tightly constrained for security and compatibility purposes - only specific character sets are permitted by the SE API specification. ErrorInvalidClientIdCharacter indicates that the supplied clientId contains characters outside the allowed character set (such as special characters, control characters, non-ASCII characters, or other disallowed symbols). When this exception occurs, the client operation (registration, deregistration, transaction initiation) fails validation and is rejected without affecting the device state. Recovery requires supplying a clientId with only valid characters according to the specification.</description>
+    <summary>
+      <text xml:lang="en">This class defines the exception ErrorInvalidClientIdCharacter that is thrown if the provided clientId contains characters not allowed by the specification.</text>
+      <text xml:lang="de">Diese Klasse definiert die Ausnahme ErrorInvalidClientIdCharacter, die ausgelöst wird, wenn die bereitgestellte clientId Zeichen enthält, die durch die Spezifikation nicht zulässig sind.</text>
+    </summary>
+    <description>
+      <text xml:lang="en">This exception is thrown when a client operation receives a clientId parameter containing characters that violate the allowed character set specification for client identifiers. Client ID format is tightly constrained for security and compatibility purposes - only specific character sets are permitted by the SE API specification. ErrorInvalidClientIdCharacter indicates that the supplied clientId contains characters outside the allowed character set (such as special characters, control characters, non-ASCII characters, or other disallowed symbols). When this exception occurs, the client operation (registration, deregistration, transaction initiation) fails validation and is rejected without affecting the device state. Recovery requires supplying a clientId with only valid characters according to the specification.</text>
+      <text xml:lang="de">Diese Ausnahme wird ausgelöst, wenn eine Client-Operation einen clientId-Parameter erhält, der Zeichen enthält, die die zulässige Zeichensatz-Spezifikation für Client-Bezeichner verletzen. Das Client-ID-Format ist aus Sicherheits- und Kompatibilitätsgründen streng begrenzt - nur bestimmte Zeichensätze werden durch die SE API-Spezifikation zugelassen. ErrorInvalidClientIdCharacter zeigt an, dass die bereitgestellte clientId Zeichen außerhalb des zulässigen Zeichensatzes enthält (wie Sonderzeichen, Steuerzeichen, Nicht-ASCII-Zeichen oder andere unzulässige Symbole). Wenn diese Ausnahme auftritt, fehlschlägt die Client-Operation (Registrierung, Abmeldung, Transaktionsinitiation) die Validierung und wird abgelehnt, ohne den Gerätezustand zu beeinflussen. Die Wiederherstellung erfordert die Bereitstellung einer clientId mit nur gültigen Zeichen gemäß der Spezifikation.</text>
+    </description>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>
     <section>3.1.1 Client Management - Client ID Format Requirements</section>
-    <requirement>The clientId parameter used in client registration, deregistration, and transaction operations SHALL contain only characters from the allowed character set specified in the TR-03151-1 standard. The clientId parameter format is strictly constrained to a defined character set (typically alphanumeric and specific special characters). If a clientId parameter contains characters outside the allowed set, the operation SHALL raise the exception ErrorInvalidClientIdCharacter and reject the operation. The character set validation is a mandatory input validation requirement for all client operations.</requirement>
-    <applicability>Client operations using clientId parameter - registerClient, deregisterClient, startTransaction, updateTransaction, finishTransaction functions</applicability>
+    <requirement>
+      <text xml:lang="en">The clientId parameter used in client registration, deregistration, and transaction operations SHALL contain only characters from the allowed character set specified in the TR-03151-1 standard. The clientId parameter format is strictly constrained to a defined character set (typically alphanumeric and specific special characters). If a clientId parameter contains characters outside the allowed set, the operation SHALL raise the exception ErrorInvalidClientIdCharacter and reject the operation. The character set validation is a mandatory input validation requirement for all client operations.</text>
+      <text xml:lang="de">Der clientId-Parameter, der in Client-Registrierungs-, Abmeldungs- und Transaktionsvorgängen verwendet wird, soll nur Zeichen aus dem in der Norm TR-03151-1 angegebenen zulässigen Zeichensatz enthalten. Das clientId-Parameter-Format ist streng auf einen definierten Zeichensatz begrenzt (typischerweise alphanumerische und bestimmte Sonderzeichen). Falls der clientId-Parameter Zeichen außerhalb des zulässigen Satzes enthält, soll die Operation die Ausnahme ErrorInvalidClientIdCharacter auslösen und die Operation ablehnen. Die Zeichensatz-Validierung ist eine obligatorische Eingabe-Validierungsanforderung für alle Client-Operationen.</text>
+    </requirement>
+    <applicability>
+      <text xml:lang="en">Client operations using clientId parameter - registerClient, deregisterClient, startTransaction, updateTransaction, finishTransaction functions</text>
+      <text xml:lang="de">Client-Operationen mit clientId-Parameter - Funktionen registerClient, deregisterClient, startTransaction, updateTransaction, finishTransaction</text>
+    </applicability>
     <reference>Client ID Format Specification (3.1.1)</reference>
   </specification>
   <thrownBy>
@@ -25,50 +40,143 @@
   </thrownBy>
   <triggerConditions>
     <condition>
-      <scenario>ClientId contains disallowed special characters</scenario>
-      <description>The provided clientId contains special characters that are not in the allowed character set specification</description>
-      <trigger>The user/application provides a clientId containing special characters (e.g., @, #, $, %, ^, &amp;, *, (), [], {}, etc.) that violate the character set specification. When the client operation validates the clientId format, these disallowed characters are detected and ErrorInvalidClientIdCharacter is raised.</trigger>
+      <scenario>
+        <text xml:lang="en">ClientId contains disallowed special characters</text>
+        <text xml:lang="de">ClientId enthält unzulässige Sonderzeichen</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">The provided clientId contains special characters that are not in the allowed character set specification</text>
+        <text xml:lang="de">Die bereitgestellte clientId enthält Sonderzeichen, die nicht in der zulässigen Zeichensatz-Spezifikation enthalten sind</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">The user/application provides a clientId containing special characters (e.g., @, #, $, %, ^, &amp;, *, (), [], {}, etc.) that violate the character set specification. When the client operation validates the clientId format, these disallowed characters are detected and ErrorInvalidClientIdCharacter is raised.</text>
+        <text xml:lang="de">Der Benutzer/die Anwendung stellt eine clientId bereit, die Sonderzeichen enthält (z. B. @, #, $, %, ^, &amp;, *, (), [], {}, usw.), die die Zeichensatz-Spezifikation verletzen. Wenn die Client-Operation das clientId-Format validiert, werden diese unzulässigen Zeichen erkannt und ErrorInvalidClientIdCharacter wird ausgelöst.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>ClientId contains control characters or whitespace</scenario>
-      <description>The clientId contains control characters (newline, tab, carriage return) or whitespace characters that are not allowed</description>
-      <trigger>The clientId contains control characters (\n, \t, \r) or whitespace (space, tab) that are outside the allowed character set. When format validation occurs, these characters are detected and ErrorInvalidClientIdCharacter is raised.</trigger>
+      <scenario>
+        <text xml:lang="en">ClientId contains control characters or whitespace</text>
+        <text xml:lang="de">ClientId enthält Steuerzeichen oder Leerzeichen</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">The clientId contains control characters (newline, tab, carriage return) or whitespace characters that are not allowed</text>
+        <text xml:lang="de">Die clientId enthält Steuerzeichen (Zeilenumbruch, Tabulator, Wagenrücklauf) oder Leerzeichen, die nicht zulässig sind</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">The clientId contains control characters (\n, \t, \r) or whitespace (space, tab) that are outside the allowed character set. When format validation occurs, these characters are detected and ErrorInvalidClientIdCharacter is raised.</text>
+        <text xml:lang="de">Die clientId enthält Steuerzeichen (\n, \t, \r) oder Leerzeichen (Leerzeichen, Tabulator), die außerhalb des zulässigen Zeichensatzes liegen. Wenn die Formatvalidierung erfolgt, werden diese Zeichen erkannt und ErrorInvalidClientIdCharacter wird ausgelöst.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>ClientId contains non-ASCII or international characters</scenario>
-      <description>The clientId contains non-ASCII characters, Unicode characters, or international/locale-specific characters not in the allowed set</description>
-      <trigger>The clientId contains characters outside the ASCII range (UTF-8 multi-byte sequences, accented characters, non-Latin alphabets, CJK characters, etc.). When character validation checks the allowed character set, these non-ASCII characters are detected and ErrorInvalidClientIdCharacter is raised.</trigger>
+      <scenario>
+        <text xml:lang="en">ClientId contains non-ASCII or international characters</text>
+        <text xml:lang="de">ClientId enthält Nicht-ASCII- oder internationale Zeichen</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">The clientId contains non-ASCII characters, Unicode characters, or international/locale-specific characters not in the allowed set</text>
+        <text xml:lang="de">Die clientId enthält Nicht-ASCII-Zeichen, Unicode-Zeichen oder internationale/locale-spezifische Zeichen, die nicht im zulässigen Satz enthalten sind</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">The clientId contains characters outside the ASCII range (UTF-8 multi-byte sequences, accented characters, non-Latin alphabets, CJK characters, etc.). When character validation checks the allowed character set, these non-ASCII characters are detected and ErrorInvalidClientIdCharacter is raised.</text>
+        <text xml:lang="de">Die clientId enthält Zeichen außerhalb des ASCII-Bereichs (UTF-8 Multi-Byte-Sequenzen, Zeichen mit Akzent, nicht-lateinische Alphabete, CJK-Zeichen, usw.). Wenn die Zeichenvalidierung den zulässigen Zeichensatz prüft, werden diese Nicht-ASCII-Zeichen erkannt und ErrorInvalidClientIdCharacter wird ausgelöst.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>ClientId contains path traversal or injection attack characters</scenario>
-      <description>The clientId contains characters commonly used in path traversal or injection attacks (forward slash, backslash, null byte)</description>
-      <trigger>The clientId contains characters like / (forward slash), \ (backslash), or null bytes that could represent security vulnerabilities. When the security-oriented character validation occurs, these dangerous characters are detected and ErrorInvalidClientIdCharacter is raised to prevent injection attacks.</trigger>
+      <scenario>
+        <text xml:lang="en">ClientId contains path traversal or injection attack characters</text>
+        <text xml:lang="de">ClientId enthält Pfad-Traversal- oder Injection-Angriffs-Zeichen</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">The clientId contains characters commonly used in path traversal or injection attacks (forward slash, backslash, null byte)</text>
+        <text xml:lang="de">Die clientId enthält Zeichen, die häufig bei Pfad-Traversal- oder Injection-Angriffen verwendet werden (Schrägstrich, Rückwslash, Null-Byte)</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">The clientId contains characters like / (forward slash), \ (backslash), or null bytes that could represent security vulnerabilities. When the security-oriented character validation occurs, these dangerous characters are detected and ErrorInvalidClientIdCharacter is raised to prevent injection attacks.</text>
+        <text xml:lang="de">Die clientId enthält Zeichen wie / (Schrägstrich), \ (Rückgänge), oder Null-Bytes, die Sicherheitslücken darstellen können. Wenn die sicherheitsorientierte Zeichenvalidierung auftritt, werden diese gefährlichen Zeichen erkannt und ErrorInvalidClientIdCharacter wird ausgelöst, um Injection-Angriffe zu verhindern.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>ClientId contains mixed or incompatible character encodings</scenario>
-      <description>The clientId contains characters from different character encodings or invalid encoding sequences</description>
-      <trigger>The clientId contains a mix of character encodings or invalid UTF-8 sequences that result in characters outside the allowed set. When format validation processes the clientId, the encoding issues are detected and ErrorInvalidClientIdCharacter is raised.</trigger>
+      <scenario>
+        <text xml:lang="en">ClientId contains mixed or incompatible character encodings</text>
+        <text xml:lang="de">ClientId enthält gemischte oder inkompatible Zeichenkodierungen</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">The clientId contains characters from different character encodings or invalid encoding sequences</text>
+        <text xml:lang="de">Die clientId enthält Zeichen aus verschiedenen Zeichenkodierungen oder ungültige Kodierungssequenzen</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">The clientId contains a mix of character encodings or invalid UTF-8 sequences that result in characters outside the allowed set. When format validation processes the clientId, the encoding issues are detected and ErrorInvalidClientIdCharacter is raised.</text>
+        <text xml:lang="de">Die clientId enthält eine Mischung aus Zeichenkodierungen oder ungültige UTF-8-Sequenzen, die Zeichen außerhalb des zulässigen Satzes ergeben. Wenn die Formatvalidierung die clientId verarbeitet, werden die Kodierungsprobleme erkannt und ErrorInvalidClientIdCharacter wird ausgelöst.</text>
+      </trigger>
     </condition>
   </triggerConditions>
   <executionSequence>
-    <step number="1">User/application calls a client operation function (registerClient, deregisterClient, startTransaction, etc.) with clientId parameter</step>
-    <step number="2">Function receives the clientId parameter from the caller</step>
-    <step number="3">Function performs preliminary input validation on the clientId (length check, null check)</step>
-    <step number="4">Function validates clientId character set - checks each character against the allowed character set specification</step>
-    <step number="4a">If any character in clientId is found outside the allowed character set → ErrorInvalidClientIdCharacter raised, function exits</step>
-    <step number="4b">If any disallowed special character, control character, or non-ASCII character is detected → ErrorInvalidClientIdCharacter raised, function exits</step>
-    <step number="5">If character validation passes, function continues with additional parameter validation</step>
-    <step number="6">Function checks authorization and device state</step>
-    <step number="7">Function initiates Secure Element communication for the client operation</step>
-    <step number="8">Function transmits the validated client operation with clientId to the Secure Element</step>
-    <step number="9">Function processes the Secure Element response</step>
-    <step number="10">Function returns success status to the caller</step>
+    <step number="1">
+      <text xml:lang="en">User/application calls a client operation function (registerClient, deregisterClient, startTransaction, etc.) with clientId parameter</text>
+      <text xml:lang="de">Benutzer/Anwendung ruft eine Client-Operationsfunktion (registerClient, deregisterClient, startTransaction, usw.) mit clientId-Parameter auf</text>
+    </step>
+    <step number="2">
+      <text xml:lang="en">Function receives the clientId parameter from the caller</text>
+      <text xml:lang="de">Funktion erhält den clientId-Parameter vom Aufrufer</text>
+    </step>
+    <step number="3">
+      <text xml:lang="en">Function performs preliminary input validation on the clientId (length check, null check)</text>
+      <text xml:lang="de">Funktion führt voräufige Eingabe-Validierung auf der clientId durch (Längenprüfung, Null-Prüfung)</text>
+    </step>
+    <step number="4">
+      <text xml:lang="en">Function validates clientId character set - checks each character against the allowed character set specification</text>
+      <text xml:lang="de">Funktion validiert clientId-Zeichensatz - prüft jedes Zeichen gegen die zulässige Zeichensatz-Spezifikation</text>
+    </step>
+    <step number="4a">
+      <text xml:lang="en">If any character in clientId is found outside the allowed character set → ErrorInvalidClientIdCharacter raised, function exits</text>
+      <text xml:lang="de">Falls ein Zeichen in clientId außerhalb des zulässigen Zeichensatzes gefunden wird → ErrorInvalidClientIdCharacter ausgelöst, Funktion beendet</text>
+    </step>
+    <step number="4b">
+      <text xml:lang="en">If any disallowed special character, control character, or non-ASCII character is detected → ErrorInvalidClientIdCharacter raised, function exits</text>
+      <text xml:lang="de">Falls ein unzulässiges Sonderzeichen, Steuerzeichen oder Nicht-ASCII-Zeichen erkannt wird → ErrorInvalidClientIdCharacter ausgelöst, Funktion beendet</text>
+    </step>
+    <step number="5">
+      <text xml:lang="en">If character validation passes, function continues with additional parameter validation</text>
+      <text xml:lang="de">Falls Zeichenvalidierung erfolgreich ist, setzt die Funktion mit zusätzlicher Parametervalidierung fort</text>
+    </step>
+    <step number="6">
+      <text xml:lang="en">Function checks authorization and device state</text>
+      <text xml:lang="de">Funktion prüft Autorisierung und Gerätezustand</text>
+    </step>
+    <step number="7">
+      <text xml:lang="en">Function initiates Secure Element communication for the client operation</text>
+      <text xml:lang="de">Funktion initiiert Secure Element-Kommunikation für die Client-Operation</text>
+    </step>
+    <step number="8">
+      <text xml:lang="en">Function transmits the validated client operation with clientId to the Secure Element</text>
+      <text xml:lang="de">Funktion übersendet die validierte Client-Operation mit clientId an das Secure Element</text>
+    </step>
+    <step number="9">
+      <text xml:lang="en">Function processes the Secure Element response</text>
+      <text xml:lang="de">Funktion verarbeitet die Secure Element-Antwort</text>
+    </step>
+    <step number="10">
+      <text xml:lang="en">Function returns success status to the caller</text>
+      <text xml:lang="de">Funktion gibt Erfolgsstatus an den Aufrufer zurück</text>
+    </step>
   </executionSequence>
   <recovery>
-    <step>Review clientId format requirements in specification</step>
-    <step>Remove or replace invalid characters from clientId</step>
-    <step>Use valid clientId containing only allowed characters</step>
-    <step>Retry registration with corrected clientId</step>
+    <step>
+      <text xml:lang="en">Review clientId format requirements in specification</text>
+      <text xml:lang="de">Anforderungen zum clientId-Format in der Spezifikation überprüfen</text>
+    </step>
+    <step>
+      <text xml:lang="en">Remove or replace invalid characters from clientId</text>
+      <text xml:lang="de">Ungültige Zeichen aus clientId entfernen oder ersetzen</text>
+    </step>
+    <step>
+      <text xml:lang="en">Use valid clientId containing only allowed characters</text>
+      <text xml:lang="de">Verwenden Sie eine gültige clientId, die nur zulässige Zeichen enthält</text>
+    </step>
+    <step>
+      <text xml:lang="en">Retry registration with corrected clientId</text>
+      <text xml:lang="de">Wiederholen Sie die Registrierung mit korrigiertem clientId</text>
+    </step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorInvalidClientIdLength</exception>
@@ -78,44 +186,116 @@
     <exception>ErrorClientAlreadyRegistered</exception>
   </relatedExceptions>
   <postconditionality>
-    <state name="Device State Unchanged">Device state remains completely unchanged. The rejected client operation does not modify any device state, client registrations, transactions, or configuration. All SE API state remains consistent.</state>
-    <state name="Client Operation Not Performed">The client operation (registration, deregistration, transaction initiation) is not performed and has no effect. No client is registered, deregistered, or transaction is created. The operation is rejected at input validation.</state>
-    <state name="ClientId Not Stored">The invalid clientId is not stored, recorded, or processed by the device. The clientId is rejected before any processing occurs.</state>
-    <state name="No Device-Secure Element Interaction">The operation does not reach the Secure Element communication stage. The error is detected and raised before any device-to-Secure Element interaction occurs.</state>
-    <state name="Function Fails Without Side Effects">The client operation fails cleanly without any partial effects or side effects. No state corruption or incomplete operations result from the invalid clientId.</state>
-    <state name="Recovery Preconditions Met">The application can immediately retry the operation with a corrected clientId. No recovery procedures or administrative intervention is required - the error is user/application data error.</state>
+    <state name="Device State Unchanged">
+      <text xml:lang="en">Device state remains completely unchanged. The rejected client operation does not modify any device state, client registrations, transactions, or configuration. All SE API state remains consistent.</text>
+      <text xml:lang="de">Der Gerätezustand bleibt vollständig unverändert. Die abgelehnte Client-Operation ändert keinen Gerätezustand, keine Client-Registrierungen, Transaktionen oder Konfiguration. Alle SE API-Zustände bleiben konsistent.</text>
+    </state>
+    <state name="Client Operation Not Performed">
+      <text xml:lang="en">The client operation (registration, deregistration, transaction initiation) is not performed and has no effect. No client is registered, deregistered, or transaction is created. The operation is rejected at input validation.</text>
+      <text xml:lang="de">Die Client-Operation (Registrierung, Abmeldung, Transaktionsinitiation) wird nicht durchgeführt und hat keine Auswirkung. Kein Client wird registriert, abgemeldet oder Transaktion erstellt. Die Operation wird bei der Eingabe-Validierung abgelehnt.</text>
+    </state>
+    <state name="ClientId Not Stored">
+      <text xml:lang="en">The invalid clientId is not stored, recorded, or processed by the device. The clientId is rejected before any processing occurs.</text>
+      <text xml:lang="de">Die ungültige clientId wird nicht gespeichert, aufgezeichnet oder vom Gerät verarbeitet. Die clientId wird vor jeder Verarbeitung abgelehnt.</text>
+    </state>
+    <state name="No Device-Secure Element Interaction">
+      <text xml:lang="en">The operation does not reach the Secure Element communication stage. The error is detected and raised before any device-to-Secure Element interaction occurs.</text>
+      <text xml:lang="de">Die Operation erreicht nicht die Secure Element-Kommunikationsstufe. Der Fehler wird erkannt und ausgelöst, bevor eine Gerät-zu-Secure Element-Interaktion auftritt.</text>
+    </state>
+    <state name="Function Fails Without Side Effects">
+      <text xml:lang="en">The client operation fails cleanly without any partial effects or side effects. No state corruption or incomplete operations result from the invalid clientId.</text>
+      <text xml:lang="de">Die Client-Operation schlägt sauber fehl, ohne Teileffekte oder Nebenwirkungen. Keine Zustandskorruption oder unvollständige Operationen resultieren aus der ungültigen clientId.</text>
+    </state>
+    <state name="Recovery Preconditions Met">
+      <text xml:lang="en">The application can immediately retry the operation with a corrected clientId. No recovery procedures or administrative intervention is required - the error is user/application data error.</text>
+      <text xml:lang="de">Die Anwendung kann die Operation sofort mit einer korrigierten clientId wiederholen. Keine Wiederherstellungsverfahren oder administrative Eingriffe erforderlich - der Fehler ist ein Benutzer-/Anwendungsdatenfehler.</text>
+    </state>
   </postconditionality>
   <notes>
-    <note>Indication: Client ID contains invalid characters - client ID format does not meet requirements</note>
-    <note>Topics: Client Management, Input Validation, Client Identification, Parameter Validation</note>
+    <note>
+      <text xml:lang="en">Indication: Client ID contains invalid characters - client ID format does not meet requirements</text>
+      <text xml:lang="de">Anzeichen: Client-ID enthält ungültige Zeichen - Client-ID-Format erfüllt nicht die Anforderungen</text>
+    </note>
+    <note>
+      <text xml:lang="en">Topics: Client Management, Input Validation, Client Identification, Parameter Validation</text>
+      <text xml:lang="de">Themen: Client-Verwaltung, Eingabe-Validierung, Client-Identifizierung, Parameter-Validierung</text>
+    </note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Client Registration with Format Validation">
-      <description>An application registers a new client with the Secure Element. The application calls registerClient with a clientId parameter. If the clientId contains invalid characters, ErrorInvalidClientIdCharacter is raised. The application must validate the clientId format before registration and handle validation errors.</description>
-      <relatedFunctions>registerClient, deregisterClient</relatedFunctions>
-      <errorContext>Invalid clientId character format prevents client registration</errorContext>
+      <description>
+        <text xml:lang="en">An application registers a new client with the Secure Element. The application calls registerClient with a clientId parameter. If the clientId contains invalid characters, ErrorInvalidClientIdCharacter is raised. The application must validate the clientId format before registration and handle validation errors.</text>
+        <text xml:lang="de">Eine Anwendung registriert einen neuen Client beim Secure Element. Die Anwendung ruft registerClient mit einem clientId-Parameter auf. Falls die clientId ungültige Zeichen enthält, wird ErrorInvalidClientIdCharacter ausgelöst. Die Anwendung muss das clientId-Format vor der Registrierung validieren und Validierungsfehler behandeln.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">registerClient, deregisterClient</text>
+        <text xml:lang="de">registerClient, deregisterClient</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Invalid clientId character format prevents client registration</text>
+        <text xml:lang="de">Ungültiges clientId-Zeichenformat verhindert Client-Registrierung</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 2: Transaction Initiation with ClientId Validation">
-      <description>An application initiates a new transaction specifying the client performing the transaction. The application calls startTransaction with a clientId parameter. If the clientId contains invalid characters, ErrorInvalidClientIdCharacter is raised. The transaction cannot be created without a properly formatted clientId.</description>
-      <relatedFunctions>startTransaction, updateTransaction, finishTransaction</relatedFunctions>
-      <errorContext>Invalid clientId prevents transaction creation</errorContext>
+      <description>
+        <text xml:lang="en">An application initiates a new transaction specifying the client performing the transaction. The application calls startTransaction with a clientId parameter. If the clientId contains invalid characters, ErrorInvalidClientIdCharacter is raised. The transaction cannot be created without a properly formatted clientId.</text>
+        <text xml:lang="de">Eine Anwendung initiiert eine neue Transaktion, die den Client angibt, der die Transaktion durchführt. Die Anwendung ruft startTransaction mit einem clientId-Parameter auf. Falls die clientId ungültige Zeichen enthält, wird ErrorInvalidClientIdCharacter ausgelöst. Die Transaktion kann ohne korrekt formatiertes clientId nicht erstellt werden.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">startTransaction, updateTransaction, finishTransaction</text>
+        <text xml:lang="de">startTransaction, updateTransaction, finishTransaction</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Invalid clientId prevents transaction creation</text>
+        <text xml:lang="de">Ungültige clientId verhindert Transaktionserstellung</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 3: ClientId Input Processing and Validation Pipeline">
-      <description>An application processes clientIds from external sources (configuration files, user input, network data). The application validates each clientId before using it in SE API calls. When an invalid clientId is encountered, ErrorInvalidClientIdCharacter is raised, and the application logs the error and skips the invalid clientId.</description>
-      <relatedFunctions>registerClient, startTransaction</relatedFunctions>
-      <errorContext>Validation of externally-supplied clientIds for format compliance</errorContext>
+      <description>
+        <text xml:lang="en">An application processes clientIds from external sources (configuration files, user input, network data). The application validates each clientId before using it in SE API calls. When an invalid clientId is encountered, ErrorInvalidClientIdCharacter is raised, and the application logs the error and skips the invalid clientId.</text>
+        <text xml:lang="de">Eine Anwendung verarbeitet clientIds aus externen Quellen (Konfigurationsdateien, Benutzereingabe, Netzwerkdaten). Die Anwendung validiert jede clientId, bevor sie in SE API-Aufrufen verwendet wird. Wenn ein ungültiger clientId auftritt, wird ErrorInvalidClientIdCharacter ausgelöst, und die Anwendung protokolliert den Fehler und überspringt den ungültigen clientId.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">registerClient, startTransaction</text>
+        <text xml:lang="de">registerClient, startTransaction</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Validation of externally-supplied clientIds for format compliance</text>
+        <text xml:lang="de">Validierung von extern bereitgestellten clientIds für Format-Kompatibilität</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 4: Secure ClientId Generation and Format Assurance">
-      <description>An application implements secure clientId generation to ensure all generated clientIds comply with the format specification. The application generates clientIds using only characters from the allowed set. When processing user-supplied clientIds alongside generated ones, the application validates format and raises ErrorInvalidClientIdCharacter for invalid user input.</description>
-      <relatedFunctions>registerClient, startTransaction</relatedFunctions>
-      <errorContext>ClientId format validation during mixed generated and user-supplied clientId processing</errorContext>
+      <description>
+        <text xml:lang="en">An application implements secure clientId generation to ensure all generated clientIds comply with the format specification. The application generates clientIds using only characters from the allowed set. When processing user-supplied clientIds alongside generated ones, the application validates format and raises ErrorInvalidClientIdCharacter for invalid user input.</text>
+        <text xml:lang="de">Eine Anwendung implementiert sichere clientId-Generierung, um sicherzustellen, dass alle generierten clientIds die Formatspezifikation einhalten. Die Anwendung generiert clientIds nur unter Verwendung von Zeichen aus dem zulässigen Satz. Bei der Verarbeitung von Benutzer-bereitgestellten clientIds neben generierten Ids validiert die Anwendung das Format und löst ErrorInvalidClientIdCharacter für ungültige Benutzereingabe aus.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">registerClient, startTransaction</text>
+        <text xml:lang="de">registerClient, startTransaction</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">ClientId format validation during mixed generated and user-supplied clientId processing</text>
+        <text xml:lang="de">ClientId-Format-Validierung während gemischter generierter und Benutzer-bereitgestellter clientId-Verarbeitung</text>
+      </errorContext>
     </scenario>
   </usage>
   <implementationContext>
-    <note>Raised by client registration functions when clientId contains invalid characters</note>
-    <note>Client identification validation enforces character restrictions</note>
-    <note>Device requires clientId to conform to specific format</note>
-    <note>Invalid character prevents client registration</note>
+    <note>
+      <text xml:lang="en">Raised by client registration functions when clientId contains invalid characters</text>
+      <text xml:lang="de">Wird von Client-Registrierungsfunktionen ausgelöst, wenn clientId ungültige Zeichen enthält</text>
+    </note>
+    <note>
+      <text xml:lang="en">Client identification validation enforces character restrictions</text>
+      <text xml:lang="de">Client-Identifizierungs-Validierung erzwingt Zeichenbeschränkungen</text>
+    </note>
+    <note>
+      <text xml:lang="en">Device requires clientId to conform to specific format</text>
+      <text xml:lang="de">Gerät erfordert clientId zur Einhaltung eines bestimmten Formats</text>
+    </note>
+    <note>
+      <text xml:lang="en">Invalid character prevents client registration</text>
+      <text xml:lang="de">Ungültiges Zeichen verhindert Client-Registrierung</text>
+    </note>
   </implementationContext>
 </exception>
 

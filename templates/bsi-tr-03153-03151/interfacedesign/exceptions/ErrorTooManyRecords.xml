@@ -1,19 +1,34 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes'?>
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorTooManyRecords" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorTooManyRecords</name>
-  <description>This exception is thrown if a data export query would return more records than the maximum specified by the caller. Export operations (exportLogMessages, exportFilteredTransactionLogs) allow callers to specify a maximum number of records to retrieve in a single operation to manage memory usage and response size. If the query matches more records than this maximum, ErrorTooManyRecords is raised to indicate the result set is too large. The caller must refine the query parameters or request records in smaller batches to retrieve all matching data. This prevents memory exhaustion and excessive response sizes from large result sets.</description>
+  <description>
+    <text xml:lang="en">This exception is thrown if a data export query would return more records than the maximum specified by the caller. Export operations (exportLogMessages, exportFilteredTransactionLogs) allow callers to specify a maximum number of records to retrieve in a single operation to manage memory usage and response size. If the query matches more records than this maximum, ErrorTooManyRecords is raised to indicate the result set is too large. The caller must refine the query parameters or request records in smaller batches to retrieve all matching data. This prevents memory exhaustion and excessive response sizes from large result sets.</text>
+    <text xml:lang="de">Diese Ausnahme wird ausgelöst, wenn eine Datenexportabfrage mehr Datensätze zurückgeben würde als das vom Aufrufer angegebene Maximum. Exportoperationen (exportLogMessages, exportFilteredTransactionLogs) ermöglichen es Aufrufern, die maximale Anzahl der Datensätze anzugeben, die in einer einzelnen Operation abgerufen werden sollen, um die Speichernutzung und Antwortgröße zu verwalten. Falls die Abfrage mehr Datensätze als dieses Maximum abgleicht, wird ErrorTooManyRecords ausgelöst, um anzuzeigen, dass der Ergebnissatz zu groß ist. Der Aufrufer muss die Abfrageparameter verfeinern oder Datensätze in kleineren Stapeln anfordern, um alle passenden Daten abzurufen. Dies verhindert Speichererschopfung und übermäßige Antwortgrößen aus großen Ergebnissätzen.</text>
+  </description>
   <category>Data Export</category>
   <subcategory>Record Limit Exceeded</subcategory>
   <severity>Medium</severity>
   <javadoc>
-    <summary>This class defines the exception ErrorTooManyRecords that is thrown if export query results exceed the specified maximum record count.</summary>
-    <description>This exception is thrown when a data export operation would return more records than the maximum number specified by the caller. Export operations (exportLogMessages, exportFilteredTransactionLogs) allow specifying a maximum record count parameter to control result set size and memory usage. ErrorTooManyRecords indicates that the number of matching records exceeds this maximum. The exception helps prevent memory exhaustion and excessive response sizes from returning too many records at once. Common causes include: query parameters too broad, maximum record count too low, or large number of matching records in database. ErrorTooManyRecords is a Medium severity exception because the query is valid but the result set is too large. Recovery requires refining query parameters to be more specific or requesting records in smaller batches using pagination.</description>
+    <summary>
+      <text xml:lang="en">This class defines the exception ErrorTooManyRecords that is thrown if export query results exceed the specified maximum record count.</text>
+      <text xml:lang="de">Diese Klasse definiert die Ausnahme ErrorTooManyRecords, die ausgelöst wird, wenn Exportabfrageergebnisse die angegebene maximale Datensatzanzahl überschreiten.</text>
+    </summary>
+    <description>
+      <text xml:lang="en">This exception is thrown when a data export operation would return more records than the maximum number specified by the caller. Export operations (exportLogMessages, exportFilteredTransactionLogs) allow specifying a maximum record count parameter to control result set size and memory usage. ErrorTooManyRecords indicates that the number of matching records exceeds this maximum. The exception helps prevent memory exhaustion and excessive response sizes from returning too many records at once. Common causes include: query parameters too broad, maximum record count too low, or large number of matching records in database. ErrorTooManyRecords is a Medium severity exception because the query is valid but the result set is too large. Recovery requires refining query parameters to be more specific or requesting records in smaller batches using pagination.</text>
+      <text xml:lang="de">Diese Ausnahme wird ausgelöst, wenn eine Datenexportoperation mehr Datensätze zurückgeben würde als die maximale Anzahl, die vom Aufrufer angegeben wurde. Exportoperationen (exportLogMessages, exportFilteredTransactionLogs) ermöglichen das Angeben eines Parameters für die maximale Datensatzanzahl, um die Ergebnissatzgröße und Speichernutzung zu steuern. ErrorTooManyRecords zeigt an, dass die Anzahl der passenden Datensätze dieses Maximum überschreitet. Die Ausnahme hilft, Speichererschopfung und übermäßige Antwortgrößen durch die Rückgabe zu vieler Datensätze auf einmal zu verhindern. Häufige Ursachen sind: Abfrageparameter zu breit, maximale Datensatzanzahl zu niedrig oder große Anzahl von passenden Datensätzen in der Datenbank. ErrorTooManyRecords ist eine Ausnahme mit mittlerem Schweregrad, da die Abfrage gültig ist, der Ergebnissatz aber zu groß ist. Die Wiederherstellung erfordert das Verfeinern von Abfrageparametern, um sie spezifischer zu machen, oder die Anforderung von Datensätzen in kleineren Stapeln mit Seitennummerierung.</text>
+    </description>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>
     <section>3.3.3 Logging Operations - exportLogMessages and exportFilteredTransactionLogs</section>
-    <requirement>The export functions (exportLogMessages, exportFilteredTransactionLogs) allow callers to specify a maximum number of records to return in a single export operation. This parameter limits result set size for memory management and response size control. If the query matches more records than the specified maximum, the function SHALL raise ErrorTooManyRecords instead of exceeding the maximum. The caller must either refine query parameters to reduce the result set size or implement pagination by requesting records in smaller batches. The maximum record count parameter is essential for protecting against large result set exhaustion.</requirement>
-    <applicability>Export operations with record limits: exportLogMessages, exportFilteredTransactionLogs</applicability>
+    <requirement>
+      <text xml:lang="en">The export functions (exportLogMessages, exportFilteredTransactionLogs) allow callers to specify a maximum number of records to return in a single export operation. This parameter limits result set size for memory management and response size control. If the query matches more records than the specified maximum, the function SHALL raise ErrorTooManyRecords instead of exceeding the maximum. The caller must either refine query parameters to reduce the result set size or implement pagination by requesting records in smaller batches. The maximum record count parameter is essential for protecting against large result set exhaustion.</text>
+      <text xml:lang="de">Die Exportfunktionen (exportLogMessages, exportFilteredTransactionLogs) ermöglichen es Aufrufern, die maximale Anzahl der Datensätze anzugeben, die in einer einzelnen Exportoperation zurückgegeben werden sollen. Dieser Parameter begrenzt die Ergebnissatzgröße für die Speicherverwaltung und Antwortgrößenkontrolle. Falls die Abfrage mehr Datensätze als das angegebene Maximum abgleicht, SOLL die Funktion ErrorTooManyRecords auslösen, anstatt das Maximum zu überschreiten. Der Aufrufer muss entweder die Abfrageparameter verfeinern, um die Ergebnissatzgröße zu reduzieren, oder eine Seitennummerierung implementieren, indem er Datensätze in kleineren Stapeln anfordert. Der Parameter für die maximale Datensatzanzahl ist wesentlich für den Schutz vor großer Ergebnissatzerschopfung.</text>
+    </requirement>
+    <applicability>
+      <text xml:lang="en">Export operations with record limits: exportLogMessages, exportFilteredTransactionLogs</text>
+      <text xml:lang="de">Exportoperationen mit Datensatzgrenzen: exportLogMessages, exportFilteredTransactionLogs</text>
+    </applicability>
     <reference>Logging Operations (3.3.3), exportLogMessages – Function (3.3.3), exportFilteredTransactionLogs – Function (3.3.3)</reference>
   </specification>
   <thrownBy>
@@ -22,51 +37,147 @@
   </thrownBy>
   <triggerConditions>
     <condition>
-      <scenario>Export query matches more records than maximum specified</scenario>
-      <description>Query parameters result in more matching records than the maximum allowed</description>
-      <trigger>An exportLogMessages call specifies maxRecords=100 but the query matches 500 records. The device detects result set exceeds maximum and raises ErrorTooManyRecords.</trigger>
+      <scenario>
+        <text xml:lang="en">Export query matches more records than maximum specified</text>
+        <text xml:lang="de">Exportabfrage passt zu mehr Datensätzen als das angegebene Maximum</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">Query parameters result in more matching records than the maximum allowed</text>
+        <text xml:lang="de">Abfrageparameter führen zu mehr passenden Datensätzen als das maximal zulässige</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">An exportLogMessages call specifies maxRecords=100 but the query matches 500 records. The device detects result set exceeds maximum and raises ErrorTooManyRecords.</text>
+        <text xml:lang="de">Ein exportLogMessages-Aufruf gibt maxRecords=100 an, aber die Abfrage passt zu 500 Datensätzen. Das Gerät erkennt, dass der Ergebnissatz das Maximum überschreitet, und löst ErrorTooManyRecords aus.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Maximum record count too low for query scope</scenario>
-      <description>The maximum record limit is too restrictive for the specified query</description>
-      <trigger>An exportFilteredTransactionLogs call with broad date range matches 10,000 records but maxRecords=50. Result exceeds maximum and ErrorTooManyRecords is raised.</trigger>
+      <scenario>
+        <text xml:lang="en">Maximum record count too low for query scope</text>
+        <text xml:lang="de">Maximale Datensatzanzahl zu niedrig für Abfragebereich</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">The maximum record limit is too restrictive for the specified query</text>
+        <text xml:lang="de">Die maximale Datensatzgrenze ist für die angegebene Abfrage zu restriktiv</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">An exportFilteredTransactionLogs call with broad date range matches 10,000 records but maxRecords=50. Result exceeds maximum and ErrorTooManyRecords is raised.</text>
+        <text xml:lang="de">Ein exportFilteredTransactionLogs-Aufruf mit breitem Datumsbereich passt zu 10.000 Datensätzen, aber maxRecords=50. Das Ergebnis überschreitet das Maximum und ErrorTooManyRecords wird ausgelöst.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Query parameters too broad or unspecific</scenario>
-      <description>Query parameters don't narrow results sufficiently</description>
-      <trigger>An exportLogMessages call without date filters matches thousands of records exceeding the specified maximum. ErrorTooManyRecords is raised indicating query is too broad.</trigger>
+      <scenario>
+        <text xml:lang="en">Query parameters too broad or unspecific</text>
+        <text xml:lang="de">Abfrageparameter zu breit oder unspezifisch</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">Query parameters don't narrow results sufficiently</text>
+        <text xml:lang="de">Abfrageparameter schmälern die Ergebnisse nicht ausreichend ein</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">An exportLogMessages call without date filters matches thousands of records exceeding the specified maximum. ErrorTooManyRecords is raised indicating query is too broad.</text>
+        <text xml:lang="de">Ein exportLogMessages-Aufruf ohne Datumsfilter passt zu Tausenden von Datensätzen, die das angegebene Maximum überschreiten. ErrorTooManyRecords wird ausgelöst, was anzeigt, dass die Abfrage zu breit ist.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Large database exceeds expected record count</scenario>
-      <description>The database contains more records than anticipated</description>
-      <trigger>An exportFilteredTransactionLogs call designed for small result set matches more records than expected. The maximum is exceeded and ErrorTooManyRecords is raised.</trigger>
+      <scenario>
+        <text xml:lang="en">Large database exceeds expected record count</text>
+        <text xml:lang="de">Große Datenbank überschreitet erwartete Datensatzanzahl</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">The database contains more records than anticipated</text>
+        <text xml:lang="de">Die Datenbank enthält mehr Datensätze als erwartet</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">An exportFilteredTransactionLogs call designed for small result set matches more records than expected. The maximum is exceeded and ErrorTooManyRecords is raised.</text>
+        <text xml:lang="de">Ein exportFilteredTransactionLogs-Aufruf für kleine Ergebnissatz passt zu mehr Datensätzen als erwartet. Das Maximum wird überschritten und ErrorTooManyRecords wird ausgelöst.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Pagination not implemented for large result sets</scenario>
-      <description>Caller attempts to retrieve entire result set in single request without pagination</description>
-      <trigger>An exportLogMessages call without pagination attempts to retrieve all records at once. Result exceeds maximum and ErrorTooManyRecords is raised to prevent memory exhaustion.</trigger>
+      <scenario>
+        <text xml:lang="en">Pagination not implemented for large result sets</text>
+        <text xml:lang="de">Seitennummerierung nicht implementiert für große Ergebnissätze</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">Caller attempts to retrieve entire result set in single request without pagination</text>
+        <text xml:lang="de">Aufrufer versucht, den gesamten Ergebnissatz in einer einzelnen Anforderung ohne Seitennummerierung abzurufen</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">An exportLogMessages call without pagination attempts to retrieve all records at once. Result exceeds maximum and ErrorTooManyRecords is raised to prevent memory exhaustion.</text>
+        <text xml:lang="de">Ein exportLogMessages-Aufruf ohne Seitennummerierung versucht, alle Datensätze auf einmal abzurufen. Das Ergebnis überschreitet das Maximum und ErrorTooManyRecords wird ausgelöst, um Speichererschopfung zu verhindern.</text>
+      </trigger>
     </condition>
   </triggerConditions>
   <executionSequence>
-    <step number="1">User/application calls export operation with query and maxRecords parameter (e.g., exportLogMessages)</step>
-    <step number="2">Function validates input parameters including maxRecords limit</step>
-    <step number="2a">If maxRecords invalid (too low or negative) → may raise ErrorParameterSyntax</step>
-    <step number="2b">If maxRecords valid → proceed to step 3</step>
-    <step number="3">Function initiates communication with Secure Element</step>
-    <step number="4">Secure Element receives export request with query and maxRecords</step>
-    <step number="5">Secure Element evaluates query against stored records</step>
-    <step number="6">Secure Element counts matching records</step>
-    <step number="6a">If matching records &lt;= maxRecords → proceed to step 7</step>
-    <step number="6b">If matching records &gt; maxRecords → ErrorTooManyRecords raised, operation aborted</step>
-    <step number="7">Secure Element retrieves matching records up to maxRecords limit</step>
-    <step number="8">Secure Element formats and returns selected records to function</step>
-    <step number="9">Function returns records to caller</step>
+    <step number="1">
+      <text xml:lang="en">User/application calls export operation with query and maxRecords parameter (e.g., exportLogMessages)</text>
+      <text xml:lang="de">Benutzer/Anwendung ruft Exportoperation mit Abfrage- und maxRecords-Parameter auf (z.B. exportLogMessages)</text>
+    </step>
+    <step number="2">
+      <text xml:lang="en">Function validates input parameters including maxRecords limit</text>
+      <text xml:lang="de">Funktion validiert Eingabeparameter einschließlich maxRecords-Grenze</text>
+    </step>
+    <step number="2a">
+      <text xml:lang="en">If maxRecords invalid (too low or negative) → may raise ErrorParameterSyntax</text>
+      <text xml:lang="de">Wenn maxRecords ungültig (zu niedrig oder negativ) → kann ErrorParameterSyntax auslösen</text>
+    </step>
+    <step number="2b">
+      <text xml:lang="en">If maxRecords valid → proceed to step 3</text>
+      <text xml:lang="de">Wenn maxRecords gültig → fahren Sie mit Schritt 3 fort</text>
+    </step>
+    <step number="3">
+      <text xml:lang="en">Function initiates communication with Secure Element</text>
+      <text xml:lang="de">Funktion initiiert Kommunikation mit Secure Element</text>
+    </step>
+    <step number="4">
+      <text xml:lang="en">Secure Element receives export request with query and maxRecords</text>
+      <text xml:lang="de">Secure Element empfängt Exportanforderung mit Abfrage und maxRecords</text>
+    </step>
+    <step number="5">
+      <text xml:lang="en">Secure Element evaluates query against stored records</text>
+      <text xml:lang="de">Secure Element wertet Abfrage gegen gespeicherte Datensätze aus</text>
+    </step>
+    <step number="6">
+      <text xml:lang="en">Secure Element counts matching records</text>
+      <text xml:lang="de">Secure Element zählt passende Datensätze</text>
+    </step>
+    <step number="6a">
+      <text xml:lang="en">If matching records &lt;= maxRecords → proceed to step 7</text>
+      <text xml:lang="de">Wenn passende Datensätze &lt;= maxRecords → fahren Sie mit Schritt 7 fort</text>
+    </step>
+    <step number="6b">
+      <text xml:lang="en">If matching records &gt; maxRecords → ErrorTooManyRecords raised, operation aborted</text>
+      <text xml:lang="de">Wenn passende Datensätze &gt; maxRecords → ErrorTooManyRecords ausgelöst, Operation abgebrochen</text>
+    </step>
+    <step number="7">
+      <text xml:lang="en">Secure Element retrieves matching records up to maxRecords limit</text>
+      <text xml:lang="de">Secure Element ruft passende Datensätze bis zur maxRecords-Grenze ab</text>
+    </step>
+    <step number="8">
+      <text xml:lang="en">Secure Element formats and returns selected records to function</text>
+      <text xml:lang="de">Secure Element formatiert und gibt ausgewählte Datensätze an Funktion zurück</text>
+    </step>
+    <step number="9">
+      <text xml:lang="en">Function returns records to caller</text>
+      <text xml:lang="de">Funktion gibt Datensätze an Aufrufer zurück</text>
+    </step>
   </executionSequence>
   <recovery>
-    <step>Refine search criteria to reduce result set size</step>
-    <step>Use pagination or filtering to limit returned records</step>
-    <step>Export data in multiple batches</step>
-    <step>Review export result limits in specification</step>
+    <step>
+      <text xml:lang="en">Refine search criteria to reduce result set size</text>
+      <text xml:lang="de">Verfeinern Sie die Suchkriterien, um die Ergebnissatzgröße zu reduzieren</text>
+    </step>
+    <step>
+      <text xml:lang="en">Use pagination or filtering to limit returned records</text>
+      <text xml:lang="de">Verwenden Sie Seitennummerierung oder Filter, um zurückgegebene Datensätze zu begrenzen</text>
+    </step>
+    <step>
+      <text xml:lang="en">Export data in multiple batches</text>
+      <text xml:lang="de">Exportieren Sie Daten in mehreren Stapeln</text>
+    </step>
+    <step>
+      <text xml:lang="en">Review export result limits in specification</text>
+      <text xml:lang="de">Betrachten Sie Exportergebnislimits in der Spezifikation</text>
+    </step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorNoDataAvailable</exception>
@@ -75,44 +186,104 @@
     <exception>ErrorFunctionFailed</exception>
   </relatedExceptions>
   <postconditionality>
-    <state name="Records Not Exported">The export operation is not completed.</state>
-    <state name="Result Set Not Returned">No records are returned to the caller.</state>
-    <state name="Query Not Executed">The query is evaluated but results are not returned due to exceeding maximum.</state>
-    <state name="Caller Receives Exception">The function returns ErrorTooManyRecords exception instead of record data.</state>
-    <state name="Caller Must Refine Query">The caller must adjust parameters to reduce result set size.</state>
-    <state name="Pagination Required">The caller must implement pagination to retrieve results in batches.</state>
+    <state name="Records Not Exported">
+      <text xml:lang="en">The export operation is not completed.</text>
+      <text xml:lang="de">Die Exportoperation wird nicht abgeschlossen.</text>
+    </state>
+    <state name="Result Set Not Returned">
+      <text xml:lang="en">No records are returned to the caller.</text>
+      <text xml:lang="de">Keine Datensätze werden an den Aufrufer zurückgegeben.</text>
+    </state>
+    <state name="Query Not Executed">
+      <text xml:lang="en">The query is evaluated but results are not returned due to exceeding maximum.</text>
+      <text xml:lang="de">Die Abfrage wird bewertet, aber die Ergebnisse werden aufgrund des Überschreitens des Maximums nicht zurückgegeben.</text>
+    </state>
+    <state name="Caller Receives Exception">
+      <text xml:lang="en">The function returns ErrorTooManyRecords exception instead of record data.</text>
+      <text xml:lang="de">Die Funktion gibt die Ausnahme ErrorTooManyRecords anstelle von Datensatzdaten zurück.</text>
+    </state>
+    <state name="Caller Must Refine Query">
+      <text xml:lang="en">The caller must adjust parameters to reduce result set size.</text>
+      <text xml:lang="de">Der Aufrufer muss Parameter anpassen, um die Ergebnissatzgröße zu reduzieren.</text>
+    </state>
+    <state name="Pagination Required">
+      <text xml:lang="en">The caller must implement pagination to retrieve results in batches.</text>
+      <text xml:lang="de">Der Aufrufer muss Seitennummerierung implementieren, um Ergebnisse in Stapeln abzurufen.</text>
+    </state>
   </postconditionality>
   <notes>
-    <note>Indication: Query result contains too many records - result set exceeds limits</note>
-    <note>Topics: Data Retrieval, Result Management, Query Operations, Resource Limits</note>
+    <note>
+      <text xml:lang="en">Indication: Query result contains too many records - result set exceeds limits</text>
+      <text xml:lang="de">Anzeichen: Abfrageergebnis enthält zu viele Datensätze - Ergebnissatz überschreitet Grenzen</text>
+    </note>
+    <note>
+      <text xml:lang="en">Topics: Data Retrieval, Result Management, Query Operations, Resource Limits</text>
+      <text xml:lang="de">Themen: Datenabruf, Ergebnissverwaltung, Abfrageoperationen, Ressourcengrenzen</text>
+    </note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Export with Result Set Exceeding Maximum">
-      <description>An administrator calls exportLogMessages to export all transaction logs without specifying date range. The query matches 50,000 records but maxRecords=1000. ErrorTooManyRecords is raised. Administrator refines query with date range to narrow results.</description>
+      <description>
+        <text xml:lang="en">An administrator calls exportLogMessages to export all transaction logs without specifying date range. The query matches 50,000 records but maxRecords=1000. ErrorTooManyRecords is raised. Administrator refines query with date range to narrow results.</text>
+        <text xml:lang="de">Ein Administrator ruft exportLogMessages auf, um alle Transaktionsprotokolle ohne Datumsbereich zu exportieren. Die Abfrage passt zu 50.000 Datensätzen, aber maxRecords=1000. ErrorTooManyRecords wird ausgelöst. Administrator verfeinert die Abfrage mit Datumsbereich, um die Ergebnisse einzugrenzen.</text>
+      </description>
       <relatedFunctions>exportLogMessages, deleteLogMessages</relatedFunctions>
-      <errorContext>Broad export query returns too many records - requires refinement</errorContext>
+      <errorContext>
+        <text xml:lang="en">Broad export query returns too many records - requires refinement</text>
+        <text xml:lang="de">Breite Exportabfrage gibt zu viele Datensätze zurück - erfordert Verfeinerung</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 2: Pagination Implementation for Large Exports">
-      <description>Export procedure implements pagination by making multiple exportFilteredTransactionLogs calls with date range offsets. When first call returns ErrorTooManyRecords, procedure adjusts date range and retries smaller batches.</description>
+      <description>
+        <text xml:lang="en">Export procedure implements pagination by making multiple exportFilteredTransactionLogs calls with date range offsets. When first call returns ErrorTooManyRecords, procedure adjusts date range and retries smaller batches.</text>
+        <text xml:lang="de">Exportprozedur implementiert Seitennummerierung durch mehrere exportFilteredTransactionLogs-Aufrufe mit Datumbereichs-Offsets. Wenn der erste Aufruf ErrorTooManyRecords zurückgibt, passt die Prozedur den Datumsbereich an und wiederholt kleinere Stapel.</text>
+      </description>
       <relatedFunctions>exportFilteredTransactionLogs</relatedFunctions>
-      <errorContext>Pagination used to handle large result sets in manageable batches</errorContext>
+      <errorContext>
+        <text xml:lang="en">Pagination used to handle large result sets in manageable batches</text>
+        <text xml:lang="de">Seitennummerierung verwendet, um große Ergebnissätze in verwaltbaren Stapeln zu handhaben</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 3: Query Refinement to Reduce Result Set">
-      <description>An analysis tool calls exportLogMessages but receives ErrorTooManyRecords. Tool refines query by adding date range and status filters. Retry with refined parameters succeeds with manageable result set.</description>
+      <description>
+        <text xml:lang="en">An analysis tool calls exportLogMessages but receives ErrorTooManyRecords. Tool refines query by adding date range and status filters. Retry with refined parameters succeeds with manageable result set.</text>
+        <text xml:lang="de">Ein Analysetool ruft exportLogMessages auf, erhält aber ErrorTooManyRecords. Das Tool verfeinert die Abfrage durch Hinzufügen von Datumsbereich und Statusfiltern. Wiederholung mit verfeinerten Parametern ist erfolgreich mit verwaltbarem Ergebnissatz.</text>
+      </description>
       <relatedFunctions>exportLogMessages</relatedFunctions>
-      <errorContext>Query refinement reduces result set to within limits</errorContext>
+      <errorContext>
+        <text xml:lang="en">Query refinement reduces result set to within limits</text>
+        <text xml:lang="de">Abfrageverfeinerung reduziert Ergebnissatz auf innerhalb der Grenzen</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 4: Archive Export with Batch Processing">
-      <description>Archive procedure exports logs in batches. First exportLogMessages call for month 1 succeeds. For month 2 with more activity, call returns ErrorTooManyRecords. Procedure splits month into weeks and retries in smaller batches.</description>
+      <description>
+        <text xml:lang="en">Archive procedure exports logs in batches. First exportLogMessages call for month 1 succeeds. For month 2 with more activity, call returns ErrorTooManyRecords. Procedure splits month into weeks and retries in smaller batches.</text>
+        <text xml:lang="de">Archivprozedur exportiert Logs in Stapeln. Der erste exportLogMessages-Aufruf für Monat 1 ist erfolgreich. Für Monat 2 mit mehr Aktivität gibt der Aufruf ErrorTooManyRecords zurück. Die Prozedur teilt den Monat in Wochen und wiederholt in kleineren Stapeln.</text>
+      </description>
       <relatedFunctions>exportLogMessages</relatedFunctions>
-      <errorContext>Archive procedure adapts to varying record counts using batch processing</errorContext>
+      <errorContext>
+        <text xml:lang="en">Archive procedure adapts to varying record counts using batch processing</text>
+        <text xml:lang="de">Archivprozedur passt sich unterschiedlichen Datensatzbzählen durch Batch-Verarbeitung an</text>
+      </errorContext>
     </scenario>
   </usage>
   <implementationContext>
-    <note>Raised by exportFilteredTransactionLogs when result set exceeds limits</note>
-    <note>Result set size validation limits returned data volume</note>
-    <note>Device prevents returning excessive result sets</note>
-    <note>Large result prevents complete data retrieval</note>
+    <note>
+      <text xml:lang="en">Raised by exportFilteredTransactionLogs when result set exceeds limits</text>
+      <text xml:lang="de">Wird durch exportFilteredTransactionLogs ausgelöst, wenn Ergebnissatz Grenzen überschreitet</text>
+    </note>
+    <note>
+      <text xml:lang="en">Result set size validation limits returned data volume</text>
+      <text xml:lang="de">Validierung der Ergebnissatzgröße begrenzt das zurückgegebene Datenvolumen</text>
+    </note>
+    <note>
+      <text xml:lang="en">Device prevents returning excessive result sets</text>
+      <text xml:lang="de">Gerät verhindert die Rückgabe übermäßiger Ergebnissätze</text>
+    </note>
+    <note>
+      <text xml:lang="en">Large result prevents complete data retrieval</text>
+      <text xml:lang="de">Großes Ergebnis verhindert vollständige Datenabrufung</text>
+    </note>
   </implementationContext>
 </exception>
 

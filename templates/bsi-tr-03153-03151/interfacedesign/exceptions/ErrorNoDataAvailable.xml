@@ -1,19 +1,34 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes'?>
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorNoDataAvailable" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorNoDataAvailable</name>
-  <description>This exception is thrown if the SE API export functions cannot find any data matching the provided selection or filter criteria. The functions exportLogMessages or exportFilteredTransactionLogs attempt to export stored data (log messages, transaction records, or other logged information) based on the caller's filtering or selection parameters, but no data in the Secure Element's storage matches those selection criteria. ErrorNoDataAvailable indicates that the export query returned an empty result set - the requested data simply does not exist or has been purged from the device.</description>
+  <description>
+    <text xml:lang="en">This exception is thrown if the SE API export functions cannot find any data matching the provided selection or filter criteria. The functions exportLogMessages or exportFilteredTransactionLogs attempt to export stored data (log messages, transaction records, or other logged information) based on the caller's filtering or selection parameters, but no data in the Secure Element's storage matches those selection criteria. ErrorNoDataAvailable indicates that the export query returned an empty result set - the requested data simply does not exist or has been purged from the device.</text>
+    <text xml:lang="de">Diese Ausnahme wird ausgelöst, wenn die SE API Exportfunktionen keine Daten finden, die den bereitgestellten Auswahl- oder Filterkriterien entsprechen. Die Funktionen exportLogMessages oder exportFilteredTransactionLogs versuchen, gespeicherte Daten (Protokollmeldungen, Transaktionsdatensätze oder andere protokollierte Informationen) auf Grundlage der Filterungs- oder Auswahlparameter des Aufrufers zu exportieren, aber es gibt keine Daten im Speicher des Secure Element, die diesen Auswahlkriterien entsprechen. ErrorNoDataAvailable zeigt an, dass die Exportabfrage ein leeres Ergebnis zurückgab - die angeforderten Daten existieren einfach nicht oder wurden vom Gerät gelöscht.</text>
+  </description>
   <category>Data Export</category>
   <subcategory>No Match Condition</subcategory>
   <severity>Medium</severity>
   <javadoc>
-    <summary>This class defines the exception ErrorNoDataAvailable that is thrown if no data has been found for the provided selection in the context of the export of stored data.</summary>
-    <description>This exception is thrown when export functions attempt to retrieve and export stored data based on selection criteria but find that no data matches the specified criteria. Functions such as exportLogMessages and exportFilteredTransactionLogs accept filtering parameters (e.g., date range, event type, client ID, transaction ID) to specify which stored data should be exported. ErrorNoDataAvailable is raised when the Secure Element searches its storage using these criteria and finds zero matching records. This is an expected condition when no data matches the filter, not an error condition - it indicates the export operation cannot proceed because there is no matching data to export. Recovery requires adjusting the selection criteria (expanding date ranges, removing filters, etc.) to find matching data, or confirming that the expected data has not been logged or has been deleted.</description>
+    <summary>
+      <text xml:lang="en">This class defines the exception ErrorNoDataAvailable that is thrown if no data has been found for the provided selection in the context of the export of stored data.</text>
+      <text xml:lang="de">Diese Klasse definiert die Ausnahme ErrorNoDataAvailable, die ausgelöst wird, wenn keine Daten für die bereitgestellte Auswahl im Kontext des Exports gespeicherter Daten gefunden wurden.</text>
+    </summary>
+    <description>
+      <text xml:lang="en">This exception is thrown when export functions attempt to retrieve and export stored data based on selection criteria but find that no data matches the specified criteria. Functions such as exportLogMessages and exportFilteredTransactionLogs accept filtering parameters (e.g., date range, event type, client ID, transaction ID) to specify which stored data should be exported. ErrorNoDataAvailable is raised when the Secure Element searches its storage using these criteria and finds zero matching records. This is an expected condition when no data matches the filter, not an error condition - it indicates the export operation cannot proceed because there is no matching data to export. Recovery requires adjusting the selection criteria (expanding date ranges, removing filters, etc.) to find matching data, or confirming that the expected data has not been logged or has been deleted.</text>
+      <text xml:lang="de">Diese Ausnahme wird ausgelöst, wenn Exportfunktionen versuchen, gespeicherte Daten auf Grundlage von Auswahlkriterien abzurufen und zu exportieren, aber stellen fest, dass keine Daten den angegebenen Kriterien entsprechen. Funktionen wie exportLogMessages und exportFilteredTransactionLogs akzeptieren Filterparameter (z. B. Datumsbereich, Ereignistyp, Client-ID, Transaktions-ID), um anzugeben, welche gespeicherten Daten exportiert werden sollen. ErrorNoDataAvailable wird ausgelöst, wenn das Secure Element seinen Speicher mit diesen Kriterien durchsucht und null Übereinstimmungsdatensätze findet. Dies ist eine erwartete Bedingung, wenn keine Daten dem Filter entsprechen, keine Fehlerbedingung - sie zeigt an, dass der Exportvorgang nicht fortgesetzt werden kann, da keine passenden Daten zum Exportieren vorhanden sind. Die Wiederherstellung erfordert die Anpassung der Auswahlkriterien (Erweitern von Datumsbereichen, Entfernen von Filtern usw.), um passende Daten zu finden, oder die Bestätigung, dass die erwarteten Daten nicht protokolliert oder gelöscht wurden.</text>
+    </description>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>
     <section>3.3.2 Data Export Operations - exportLogMessages and exportFilteredTransactionLogs</section>
-    <requirement>The functions exportLogMessages and exportFilteredTransactionLogs SHALL search the Secure Element's storage for data matching the provided selection or filter criteria and export matching data. If the Secure Element searches the storage based on the provided selection criteria and finds no matching data (i.e., the result set is empty), the functions SHALL raise the exception ErrorNoDataAvailable. This exception indicates that no data matches the selection criteria - it is an expected condition, not a device error.</requirement>
-    <applicability>Data export operations - exportLogMessages and exportFilteredTransactionLogs functions only, when filter criteria return no matches</applicability>
+    <requirement>
+      <text xml:lang="en">The functions exportLogMessages and exportFilteredTransactionLogs SHALL search the Secure Element's storage for data matching the provided selection or filter criteria and export matching data. If the Secure Element searches the storage based on the provided selection criteria and finds no matching data (i.e., the result set is empty), the functions SHALL raise the exception ErrorNoDataAvailable. This exception indicates that no data matches the selection criteria - it is an expected condition, not a device error.</text>
+      <text xml:lang="de">Die Funktionen exportLogMessages und exportFilteredTransactionLogs sollen den Speicher des Secure Element nach Daten durchsuchen, die den bereitgestellten Auswahl- oder Filterkriterien entsprechen, und passende Daten exportieren. Falls das Secure Element den Speicher auf Grundlage der bereitgestellten Auswahlkriterien durchsucht und keine passenden Daten findet (d. h., das Ergebnis ist leer), sollen die Funktionen die Ausnahme ErrorNoDataAvailable auslösen. Diese Ausnahme zeigt an, dass keine Daten den Auswahlkriterien entsprechen - es ist eine erwartete Bedingung, kein Gerätefehler.</text>
+    </requirement>
+    <applicability>
+      <text xml:lang="en">Data export operations - exportLogMessages and exportFilteredTransactionLogs functions only, when filter criteria return no matches</text>
+      <text xml:lang="de">Datenexportoperationen - nur Funktionen exportLogMessages und exportFilteredTransactionLogs, wenn Filterkriterien keine Übereinstimmungen zurückgeben</text>
+    </applicability>
     <reference>exportLogMessages – Function (3.3.2); exportFilteredTransactionLogs – Function (3.3.2)</reference>
   </specification>
   <thrownBy>
@@ -22,50 +37,143 @@
   </thrownBy>
   <triggerConditions>
     <condition>
-      <scenario>Filter criteria outside available data range</scenario>
-      <description>The selection criteria (date range, time window, event type) does not match any stored data</description>
-      <trigger>The application calls exportLogMessages with a date range (e.g., January 1-10, 2020) but the Secure Element only contains log entries from 2025. The export function searches for matching records in the specified date range, finds none, and raises ErrorNoDataAvailable.</trigger>
+      <scenario>
+        <text xml:lang="en">Filter criteria outside available data range</text>
+        <text xml:lang="de">Filterkriterien außerhalb des verfügbaren Datenbereichs</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">The selection criteria (date range, time window, event type) does not match any stored data</text>
+        <text xml:lang="de">Die Auswahlkriterien (Datumsbereich, Zeitfenster, Ereignistyp) entsprechen keinen gespeicherten Daten</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">The application calls exportLogMessages with a date range (e.g., January 1-10, 2020) but the Secure Element only contains log entries from 2025. The export function searches for matching records in the specified date range, finds none, and raises ErrorNoDataAvailable.</text>
+        <text xml:lang="de">Die Anwendung ruft exportLogMessages mit einem Datumsbereich auf (z. B. 1.-10. Januar 2020), aber das Secure Element enthält nur Protokolleinträge aus 2025. Die Exportfunktion sucht nach Übereinstimmungsdatensätzen im angegebenen Datumsbereich, findet keine und löst ErrorNoDataAvailable aus.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Storage is empty or purged</scenario>
-      <description>The Secure Element's data storage contains no records at all or all records have been deleted</description>
-      <trigger>The device was recently initialized or all stored data has been deleted via purge operations. An export function attempts to export data but finds no records matching any criteria. ErrorNoDataAvailable is raised.</trigger>
+      <scenario>
+        <text xml:lang="en">Storage is empty or purged</text>
+        <text xml:lang="de">Speicher ist leer oder wurde gelöscht</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">The Secure Element's data storage contains no records at all or all records have been deleted</text>
+        <text xml:lang="de">Der Datenspeicher des Secure Element enthält überhaupt keine Datensätze oder alle Datensätze wurden gelöscht</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">The device was recently initialized or all stored data has been deleted via purge operations. An export function attempts to export data but finds no records matching any criteria. ErrorNoDataAvailable is raised.</text>
+        <text xml:lang="de">Das Gerät wurde kürzlich initialisiert oder alle gespeicherten Daten wurden über Löschvorgänge gelöscht. Eine Exportfunktion versucht, Daten zu exportieren, findet aber keine Datensätze, die Kriterien entsprechen. ErrorNoDataAvailable wird ausgelöst.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Event type filter matches no logged events</scenario>
-      <description>The filter specifies a particular event type that has never occurred or does not exist in the stored logs</description>
-      <trigger>The application calls exportLogMessages with a filter specifying event type "EventTypeX" but this event type has never been logged. The export function searches the logs for this event type and finds no matching entries. ErrorNoDataAvailable is raised.</trigger>
+      <scenario>
+        <text xml:lang="en">Event type filter matches no logged events</text>
+        <text xml:lang="de">Ereignistypfilter entspricht keinen protokollierten Ereignissen</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">The filter specifies a particular event type that has never occurred or does not exist in the stored logs</text>
+        <text xml:lang="de">Der Filter gibt einen bestimmten Ereignistyp an, der noch nie aufgetreten ist oder nicht in den gespeicherten Protokollen vorhanden ist</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">The application calls exportLogMessages with a filter specifying event type "EventTypeX" but this event type has never been logged. The export function searches the logs for this event type and finds no matching entries. ErrorNoDataAvailable is raised.</text>
+        <text xml:lang="de">Die Anwendung ruft exportLogMessages mit einem Filter auf, der Ereignistyp "EventTypeX" angibt, aber dieser Ereignistyp wurde noch nie protokolliert. Die Exportfunktion durchsucht die Protokolle nach diesem Ereignistyp und findet keine Übereinstimmungseinträge. ErrorNoDataAvailable wird ausgelöst.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Client ID filter matches no transactions</scenario>
-      <description>The filter specifies a client ID that has no associated transaction records</description>
-      <trigger>The application calls exportFilteredTransactionLogs with a filter for client ID "UnknownClient" that does not exist in the transaction logs. The export function searches for transactions by this client and finds none. ErrorNoDataAvailable is raised.</trigger>
+      <scenario>
+        <text xml:lang="en">Client ID filter matches no transactions</text>
+        <text xml:lang="de">Client-ID-Filter entspricht keinen Transaktionen</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">The filter specifies a client ID that has no associated transaction records</text>
+        <text xml:lang="de">Der Filter gibt eine Client-ID an, die keine zugehörigen Transaktionsdatensätze hat</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">The application calls exportFilteredTransactionLogs with a filter for client ID "UnknownClient" that does not exist in the transaction logs. The export function searches for transactions by this client and finds none. ErrorNoDataAvailable is raised.</text>
+        <text xml:lang="de">Die Anwendung ruft exportFilteredTransactionLogs mit einem Filter für die Client-ID "UnknownClient" auf, die in den Transaktionsprotokollen nicht vorhanden ist. Die Exportfunktion sucht nach Transaktionen dieses Clients und findet keine. ErrorNoDataAvailable wird ausgelöst.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Combined filter criteria produce empty result set</scenario>
-      <description>Multiple filter conditions together produce an empty result (while each individual filter might match some data)</description>
-      <trigger>The application calls exportFilteredTransactionLogs with complex filter criteria combining date range AND client ID AND transaction state. While data exists for each filter individually, the combination of all filters matches no records. ErrorNoDataAvailable is raised.</trigger>
+      <scenario>
+        <text xml:lang="en">Combined filter criteria produce empty result set</text>
+        <text xml:lang="de">Kombinierte Filterkriterien produzieren eine leere Ergebnismenge</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">Multiple filter conditions together produce an empty result (while each individual filter might match some data)</text>
+        <text xml:lang="de">Mehrere Filterbedingungen zusammen produzieren ein leeres Ergebnis (während jeder einzelne Filter möglicherweise einige Daten abgleichen könnte)</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">The application calls exportFilteredTransactionLogs with complex filter criteria combining date range AND client ID AND transaction state. While data exists for each filter individually, the combination of all filters matches no records. ErrorNoDataAvailable is raised.</text>
+        <text xml:lang="de">Die Anwendung ruft exportFilteredTransactionLogs mit komplexen Filterkriterien auf, die Datumsbereich UND Client-ID UND Transaktionszustand kombinieren. Obwohl Daten für jeden Filter einzeln vorhanden sind, entspricht die Kombination aller Filter keine Datensätze. ErrorNoDataAvailable wird ausgelöst.</text>
+      </trigger>
     </condition>
   </triggerConditions>
   <executionSequence>
-    <step number="1">User/application calls exportLogMessages or exportFilteredTransactionLogs function with selection/filter parameters</step>
-    <step number="2">Function validates input parameters including filter criteria, date ranges, event types, client IDs, etc.</step>
-    <step number="3">Function checks authorization and device state for data export operations</step>
-    <step number="4">Function initiates communication with Secure Element and prepares export query</step>
-    <step number="5">Function transmits export/search command with filter criteria to Secure Element</step>
-    <step number="6">Secure Element searches its data storage for records matching the filter criteria</step>
-    <step number="6a">If matching data is found → proceed to step 7</step>
-    <step number="6b">If NO matching data is found (empty result set) → ErrorNoDataAvailable raised, function exits</step>
-    <step number="7">Function receives matching data from Secure Element</step>
-    <step number="8">Function formats and packages data for export</step>
-    <step number="9">Function closes communication channel with Secure Element</step>
-    <step number="10">Function returns exported data to caller</step>
+    <step number="1">
+      <text xml:lang="en">User/application calls exportLogMessages or exportFilteredTransactionLogs function with selection/filter parameters</text>
+      <text xml:lang="de">Benutzer/Anwendung ruft exportLogMessages oder exportFilteredTransactionLogs Funktion mit Auswahl-/Filterparametern auf</text>
+    </step>
+    <step number="2">
+      <text xml:lang="en">Function validates input parameters including filter criteria, date ranges, event types, client IDs, etc.</text>
+      <text xml:lang="de">Funktion validiert Eingabeparameter einschließlich Filterkriterien, Datumsbereiche, Ereignistypen, Client-IDs usw.</text>
+    </step>
+    <step number="3">
+      <text xml:lang="en">Function checks authorization and device state for data export operations</text>
+      <text xml:lang="de">Funktion prüft Autorisierung und Gerätezustand für Datenexportoperationen</text>
+    </step>
+    <step number="4">
+      <text xml:lang="en">Function initiates communication with Secure Element and prepares export query</text>
+      <text xml:lang="de">Funktion initiiert Kommunikation mit Secure Element und bereitet Exportabfrage vor</text>
+    </step>
+    <step number="5">
+      <text xml:lang="en">Function transmits export/search command with filter criteria to Secure Element</text>
+      <text xml:lang="de">Funktion übersendet Export-/Suchbefehl mit Filterkriterien an Secure Element</text>
+    </step>
+    <step number="6">
+      <text xml:lang="en">Secure Element searches its data storage for records matching the filter criteria</text>
+      <text xml:lang="de">Secure Element durchsucht seinen Datenspeicher nach Datensätzen, die den Filterkriterien entsprechen</text>
+    </step>
+    <step number="6a">
+      <text xml:lang="en">If matching data is found → proceed to step 7</text>
+      <text xml:lang="de">Falls Übereinstimmungsdaten gefunden werden → fahren Sie mit Schritt 7 fort</text>
+    </step>
+    <step number="6b">
+      <text xml:lang="en">If NO matching data is found (empty result set) → ErrorNoDataAvailable raised, function exits</text>
+      <text xml:lang="de">Falls KEINE Übereinstimmungsdaten gefunden werden (leeres Ergebnis) → ErrorNoDataAvailable ausgelöst, Funktion beendet</text>
+    </step>
+    <step number="7">
+      <text xml:lang="en">Function receives matching data from Secure Element</text>
+      <text xml:lang="de">Funktion erhält Übereinstimmungsdaten vom Secure Element</text>
+    </step>
+    <step number="8">
+      <text xml:lang="en">Function formats and packages data for export</text>
+      <text xml:lang="de">Funktion formatiert und verpackt Daten für den Export</text>
+    </step>
+    <step number="9">
+      <text xml:lang="en">Function closes communication channel with Secure Element</text>
+      <text xml:lang="de">Funktion schließt Kommunikationskanal mit Secure Element</text>
+    </step>
+    <step number="10">
+      <text xml:lang="en">Function returns exported data to caller</text>
+      <text xml:lang="de">Funktion gibt exportierte Daten an Aufrufer zurück</text>
+    </step>
   </executionSequence>
   <recovery>
-    <step>Verify search parameters match data that exists</step>
-    <step>Check if data exists using appropriate query functions</step>
-    <step>Adjust search criteria to match available data</step>
-    <step>Ensure sufficient data has been created before querying</step>
+    <step>
+      <text xml:lang="en">Verify search parameters match data that exists</text>
+      <text xml:lang="de">Stellen Sie sicher, dass Suchparameter den vorhandenen Daten entsprechen</text>
+    </step>
+    <step>
+      <text xml:lang="en">Check if data exists using appropriate query functions</text>
+      <text xml:lang="de">Prüfen Sie, ob Daten mit geeigneten Abfragefunktionen vorhanden sind</text>
+    </step>
+    <step>
+      <text xml:lang="en">Adjust search criteria to match available data</text>
+      <text xml:lang="de">Passen Sie Suchkriterien an, um verfügbaren Daten zu entsprechen</text>
+    </step>
+    <step>
+      <text xml:lang="en">Ensure sufficient data has been created before querying</text>
+      <text xml:lang="de">Stellen Sie sicher, dass ausreichend Daten vor der Abfrage erstellt wurden</text>
+    </step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorExportLoggingCertificateFailed</exception>
@@ -75,44 +183,116 @@
     <exception>ErrorFunctionFailed</exception>
   </relatedExceptions>
   <postconditionality>
-    <state name="No Data Exported">No data is exported or returned to the caller. The export operation produces no output because no matching data exists to export.</state>
-    <state name="Storage Unchanged">The device's data storage remains completely unchanged by the failed export attempt. Storage contents and all data remain in their pre-call state.</state>
-    <state name="Device State Unmodified">The device's overall state is unmodified by the exception. The export operation is read-only and does not modify device state.</state>
-    <state name="Data Integrity Preserved">All data in the device's storage remains intact and unaffected. The absence of matching data does not compromise data that exists outside the filter criteria.</state>
-    <state name="Alternative Queries Possible">The caller can retry the export operation with different filter criteria to potentially find matching data.</state>
-    <state name="No Cascading Effects">The failed export operation does not trigger cascading failures or secondary exceptions.</state>
+    <state name="No Data Exported">
+      <text xml:lang="en">No data is exported or returned to the caller. The export operation produces no output because no matching data exists to export.</text>
+      <text xml:lang="de">Keine Daten werden exportiert oder an den Aufrufer zurückgegeben. Der Exportvorgang erzeugt keine Ausgabe, da keine passenden Daten zum Exportieren vorhanden sind.</text>
+    </state>
+    <state name="Storage Unchanged">
+      <text xml:lang="en">The device's data storage remains completely unchanged by the failed export attempt. Storage contents and all data remain in their pre-call state.</text>
+      <text xml:lang="de">Der Datenspeicher des Geräts bleibt durch den fehlgeschlagenen Exportversuch vollständig unverändert. Speicherinhalt und alle Daten bleiben in ihrem Zustand vor dem Aufruf.</text>
+    </state>
+    <state name="Device State Unmodified">
+      <text xml:lang="en">The device's overall state is unmodified by the exception. The export operation is read-only and does not modify device state.</text>
+      <text xml:lang="de">Der Gesamtzustand des Geräts wird durch die Ausnahme nicht geändert. Der Exportvorgang ist schreibgeschützt und ändert den Gerätezustand nicht.</text>
+    </state>
+    <state name="Data Integrity Preserved">
+      <text xml:lang="en">All data in the device's storage remains intact and unaffected. The absence of matching data does not compromise data that exists outside the filter criteria.</text>
+      <text xml:lang="de">Alle Daten im Speicher des Geräts bleiben intakt und unbeeinflusst. Das Fehlen von Übereinstimmungsdaten beeinträchtigt keine Daten, die außerhalb der Filterkriterien vorhanden sind.</text>
+    </state>
+    <state name="Alternative Queries Possible">
+      <text xml:lang="en">The caller can retry the export operation with different filter criteria to potentially find matching data.</text>
+      <text xml:lang="de">Der Aufrufer kann den Exportvorgang mit unterschiedlichen Filterkriterien erneut versuchen, um möglicherweise passende Daten zu finden.</text>
+    </state>
+    <state name="No Cascading Effects">
+      <text xml:lang="en">The failed export operation does not trigger cascading failures or secondary exceptions.</text>
+      <text xml:lang="de">Der fehlgeschlagene Exportvorgang löst keine Kaskadenfehlschlag oder sekundäre Ausnahmen aus.</text>
+    </state>
   </postconditionality>
   <notes>
-    <note>Indication: No data is available for the requested operation - data not found</note>
-    <note>Topics: Data Retrieval, Data Availability, Search Operations, Information Retrieval</note>
+    <note>
+      <text xml:lang="en">Indication: No data is available for the requested operation - data not found</text>
+      <text xml:lang="de">Anzeichen: Keine Daten für den angeforderten Vorgang verfügbar - Daten nicht gefunden</text>
+    </note>
+    <note>
+      <text xml:lang="en">Topics: Data Retrieval, Data Availability, Search Operations, Information Retrieval</text>
+      <text xml:lang="de">Themen: Datenabruf, Datenverfügbarkeit, Suchoperationen, Informationsabruf</text>
+    </note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Audit Log Export with Date Range Specification">
-      <description>An audit system attempts to export transaction logs for a specific date range (e.g., "December 1-10, 2025"). When exportFilteredTransactionLogs raises ErrorNoDataAvailable, it indicates no transactions occurred on the device during that date range. The system responds by expanding the date range or checking if transactions actually occurred during the specified period.</description>
-      <relatedFunctions>exportLogMessages, exportFilteredTransactionLogs</relatedFunctions>
-      <errorContext>Date range filter criteria match no data</errorContext>
+      <description>
+        <text xml:lang="en">An audit system attempts to export transaction logs for a specific date range (e.g., "December 1-10, 2025"). When exportFilteredTransactionLogs raises ErrorNoDataAvailable, it indicates no transactions occurred on the device during that date range. The system responds by expanding the date range or checking if transactions actually occurred during the specified period.</text>
+        <text xml:lang="de">Ein Auditsystem versucht, Transaktionsprotokolle für einen bestimmten Datumsbereich zu exportieren (z. B. "1.-10. Dezember 2025"). Wenn exportFilteredTransactionLogs ErrorNoDataAvailable auslöst, zeigt dies an, dass während dieses Datumsbereichs keine Transaktionen auf dem Gerät aufgetreten sind. Das System antwortet, indem der Datumsbereich erweitert wird oder überprüft wird, ob Transaktionen während des angegebenen Zeitraums tatsächlich aufgetreten sind.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">exportLogMessages, exportFilteredTransactionLogs</text>
+        <text xml:lang="de">exportLogMessages, exportFilteredTransactionLogs</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Date range filter criteria match no data</text>
+        <text xml:lang="de">Datumsbereichfilterkriterien entsprechen keinen Daten</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 2: Event Type Filtering with Selective Data Discovery">
-      <description>A monitoring application attempts to export only specific event types (e.g., "PinEntry" events). When ErrorNoDataAvailable is raised, it indicates either that no such events have been logged or that all such events have been deleted. The application adapts by trying broader event type filters or querying available event types first.</description>
-      <relatedFunctions>exportLogMessages, getEventTypesForLogging</relatedFunctions>
-      <errorContext>Event type filter produces empty result set</errorContext>
+      <description>
+        <text xml:lang="en">A monitoring application attempts to export only specific event types (e.g., "PinEntry" events). When ErrorNoDataAvailable is raised, it indicates either that no such events have been logged or that all such events have been deleted. The application adapts by trying broader event type filters or querying available event types first.</text>
+        <text xml:lang="de">Eine Überwachungsanwendung versucht, nur spezifische Ereignistypen zu exportieren (z. B. "PinEntry" Ereignisse). Wenn ErrorNoDataAvailable ausgelöst wird, zeigt dies an, dass entweder keine solchen Ereignisse protokolliert wurden oder alle solchen Ereignisse gelöscht wurden. Die Anwendung passt sich an, indem sie breitere Ereignistypfilter versucht oder zuerst verfügbare Ereignistypen abfragt.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">exportLogMessages, getEventTypesForLogging</text>
+        <text xml:lang="de">exportLogMessages, getEventTypesForLogging</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Event type filter produces empty result set</text>
+        <text xml:lang="de">Ereignistypfilter erzeugt leere Ergebnismenge</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 3: Transaction Log Export with Complex Filtering">
-      <description>An enterprise system exports transaction logs with complex filter criteria (date range AND client ID AND transaction state). When exportFilteredTransactionLogs raises ErrorNoDataAvailable, it indicates that while data may exist for individual filter criteria, the combination of all filters matches no records. The system responds by progressively loosening filters to identify which criteria eliminate all matching data.</description>
-      <relatedFunctions>exportFilteredTransactionLogs, exportLogMessages</relatedFunctions>
-      <errorContext>Combined filter criteria eliminate all matching data</errorContext>
+      <description>
+        <text xml:lang="en">An enterprise system exports transaction logs with complex filter criteria (date range AND client ID AND transaction state). When exportFilteredTransactionLogs raises ErrorNoDataAvailable, it indicates that while data may exist for individual filter criteria, the combination of all filters matches no records. The system responds by progressively loosening filters to identify which criteria eliminate all matching data.</text>
+        <text xml:lang="de">Ein Unternehmens-System exportiert Transaktionsprotokolle mit komplexen Filterkriterien (Datumsbereich UND Client-ID UND Transaktionszustand). Wenn exportFilteredTransactionLogs ErrorNoDataAvailable auslöst, zeigt dies an, dass zwar Daten für einzelne Filterkriterien vorhanden sein können, die Kombination aller Filter jedoch keine Datensätze abgleicht. Das System antwortet, indem Filter schrittweise gelockert werden, um zu ermitteln, welche Kriterien alle Übereinstimmungsdaten beseitigen.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">exportFilteredTransactionLogs, exportLogMessages</text>
+        <text xml:lang="de">exportFilteredTransactionLogs, exportLogMessages</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Combined filter criteria eliminate all matching data</text>
+        <text xml:lang="de">Kombinierte Filterkriterien beseitigen alle Übereinstimmungsdaten</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 4: Device Status Verification After Initialization or Purge">
-      <description>After device initialization or data purge operations, an application attempts to export existing data. When ErrorNoDataAvailable is raised, it confirms that the device storage is empty (as expected after purge or new initialization). The application can then proceed with validation or configuration knowing the device state.</description>
-      <relatedFunctions>exportLogMessages, exportFilteredTransactionLogs, deleteLogMessages</relatedFunctions>
-      <errorContext>Empty storage confirmed - expected condition after purge or initialization</errorContext>
+      <description>
+        <text xml:lang="en">After device initialization or data purge operations, an application attempts to export existing data. When ErrorNoDataAvailable is raised, it confirms that the device storage is empty (as expected after purge or new initialization). The application can then proceed with validation or configuration knowing the device state.</text>
+        <text xml:lang="de">Nach der Geräteinitialisierung oder Datenbereinigungs-Vorgängen versucht eine Anwendung, vorhandene Daten zu exportieren. Wenn ErrorNoDataAvailable ausgelöst wird, bestätigt dies, dass der Gerätespeicher leer ist (wie nach einer Bereinigung oder Neuinitialisierung erwartet). Die Anwendung kann dann mit Validierung oder Konfiguration fortfahren und den Gerätezustand kennen.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">exportLogMessages, exportFilteredTransactionLogs, deleteLogMessages</text>
+        <text xml:lang="de">exportLogMessages, exportFilteredTransactionLogs, deleteLogMessages</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Empty storage confirmed - expected condition after purge or initialization</text>
+        <text xml:lang="de">Leerer Speicher bestätigt - erwartete Bedingung nach Bereinigung oder Initialisierung</text>
+      </errorContext>
     </scenario>
   </usage>
   <implementationContext>
-    <note>Raised by export and query functions when no data matches criteria</note>
-    <note>Search operation returns empty result set</note>
-    <note>No matching data exists for specified parameters</note>
-    <note>Query execution completes without finding matching records</note>
+    <note>
+      <text xml:lang="en">Raised by export and query functions when no data matches criteria</text>
+      <text xml:lang="de">Wird von Export- und Abfragefunktionen ausgelöst, wenn keine Daten den Kriterien entsprechen</text>
+    </note>
+    <note>
+      <text xml:lang="en">Search operation returns empty result set</text>
+      <text xml:lang="de">Suchoperation gibt leere Ergebnismenge zurück</text>
+    </note>
+    <note>
+      <text xml:lang="en">No matching data exists for specified parameters</text>
+      <text xml:lang="de">Es gibt keine passenden Daten für angegebene Parameter</text>
+    </note>
+    <note>
+      <text xml:lang="en">Query execution completes without finding matching records</text>
+      <text xml:lang="de">Abfrageausfühhrung wird abgeschlossen, ohne Übereinstimmungsdatensätze zu finden</text>
+    </note>
   </implementationContext>
 </exception>
 

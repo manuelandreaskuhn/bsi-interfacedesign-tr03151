@@ -1,7 +1,10 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes'?>
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorTransactionCounterOverflow" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorTransactionCounterOverflow</name>
-  <description>This exception is thrown if the transaction counter has reached its logical maximum value and cannot be incremented further. The transaction counter maintains a numeric record of executed transactions with a defined maximum value (typically a large 64-bit or 128-bit integer). After many transactions, the counter value approaches or reaches this logical maximum. Once at maximum, the counter cannot increment further without overflow. ErrorTransactionCounterOverflow is a Critical severity exception because it indicates the counter is exhausted and all transaction functionality must stop. The counter has reached the end of its lifecycle. Device replacement or counter reset procedure is required to restore transaction functionality, though resetting the counter may compromise transaction authenticity and audit trail integrity.</description>
+  <description>
+    <text xml:lang="en">This exception is thrown if the transaction counter has reached its logical maximum value and cannot be incremented further. The transaction counter maintains a numeric record of executed transactions with a defined maximum value (typically a large 64-bit or 128-bit integer). After many transactions, the counter value approaches or reaches this logical maximum. Once at maximum, the counter cannot increment further without overflow. ErrorTransactionCounterOverflow is a Critical severity exception because it indicates the counter is exhausted and all transaction functionality must stop. The counter has reached the end of its lifecycle. Device replacement or counter reset procedure is required to restore transaction functionality, though resetting the counter may compromise transaction authenticity and audit trail integrity.</text>
+    <text xml:lang="de">Diese Ausnahme wird ausgelöst, wenn der Transaktionszähler seinen logischen Maximalwert erreicht hat und nicht weiter erhöht werden kann. Der Transaktionszähler verwaltet einen numerischen Datensatz der ausgeführten Transaktionen mit einem definierten Maximalwert (typischerweise eine große 64-Bit- oder 128-Bit-Ganzzahl). Nach vielen Transaktionen nähert sich der Zählerwert diesem logischen Maximalwert oder erreicht ihn. Einmal am Maximum kann der Zähler nicht weiter erhöht werden, ohne Überlauf zu verursachen. ErrorTransactionCounterOverflow ist eine Ausnahme mit kritischem Schweregrad, da sie anzeigt, dass der Zähler erschöpft ist und alle Transaktionsfunktionen gestoppt werden müssen. Der Zähler hat das Ende seines Lebenszyklus erreicht. Geräteerneuerung oder Zählerreset-Prozedur ist erforderlich, um die Transaktionsfunktion wiederherzustellen, obwohl das Zurücksetzen des Zählers die Transaktionsauthentizität und Audit-Trail-Integrität gefährden kann.</text>
+  </description>
   <category>Transaction Management</category>
   <subcategory>Counter Overflow</subcategory>
   <severity>Critical</severity>
@@ -9,65 +12,179 @@
     <function>startTransaction</function>
   </thrownBy>
   <javadoc>
-    <summary>This class defines the exception ErrorTransactionCounterOverflow that is thrown if the transaction counter has reached its logical maximum value.</summary>
-    <description>This exception is thrown when the transaction counter reaches its logical maximum value and cannot be incremented further. The transaction counter maintains a numeric record of executed transactions with a defined maximum representable value. This maximum is a logical limit based on counter data type size (typically 64-bit or 128-bit integer). After many transactions over extended operational lifetime, the counter approaches and eventually reaches this logical maximum. Once at maximum, the counter cannot increment without overflow. ErrorTransactionCounterOverflow is a Critical severity exception because transaction functionality is completely blocked. The counter has reached the end of its lifecycle. All transaction operations (startTransaction, updateTransaction, finishTransaction) cannot proceed. Device replacement or counter reset is required, though reset compromises transaction authenticity. ErrorTransactionCounterOverflow indicates a device reaching end-of-life operational capacity.</description>
+    <summary>
+      <text xml:lang="en">This class defines the exception ErrorTransactionCounterOverflow that is thrown if the transaction counter has reached its logical maximum value.</text>
+      <text xml:lang="de">Diese Klasse definiert die Ausnahme ErrorTransactionCounterOverflow, die ausgelöst wird, wenn der Transaktionszähler seinen logischen Maximalwert erreicht hat.</text>
+    </summary>
+    <description>
+      <text xml:lang="en">This exception is thrown when the transaction counter reaches its logical maximum value and cannot be incremented further. The transaction counter maintains a numeric record of executed transactions with a defined maximum representable value. This maximum is a logical limit based on counter data type size (typically 64-bit or 128-bit integer). After many transactions over extended operational lifetime, the counter approaches and eventually reaches this logical maximum. Once at maximum, the counter cannot increment without overflow. ErrorTransactionCounterOverflow is a Critical severity exception because transaction functionality is completely blocked. The counter has reached the end of its lifecycle. All transaction operations (startTransaction, updateTransaction, finishTransaction) cannot proceed. Device replacement or counter reset is required, though reset compromises transaction authenticity. ErrorTransactionCounterOverflow indicates a device reaching end-of-life operational capacity.</text>
+      <text xml:lang="de">Diese Ausnahme wird ausgelöst, wenn der Transaktionszähler seinen logischen Maximalwert erreicht und nicht weiter erhöht werden kann. Der Transaktionszähler verwaltet einen numerischen Datensatz der ausgeführten Transaktionen mit einem definierten darstellbaren Maximalwert. Dieses Maximum ist eine logische Grenze, die auf der Zähler-Datentypgröße basiert (typischerweise 64-Bit- oder 128-Bit-Ganzzahl). Nach vielen Transaktionen über eine lange Betriebsdauer nähert sich der Zähler diesem logischen Maximum und erreicht es schließlich. Einmal am Maximum kann der Zähler nicht ohne Überlauf erhöht werden. ErrorTransactionCounterOverflow ist eine Ausnahme mit kritischem Schweregrad, da die Transaktionsfunktion völlig blockiert ist. Der Zähler hat das Ende seines Lebenszyklus erreicht. Alle Transaktionsoperationen (startTransaction, updateTransaction, finishTransaction) können nicht fortgesetzt werden. Geräteerneuerung oder Zählerreset ist erforderlich, obwohl Reset die Transaktionsauthentizität gefährdet. ErrorTransactionCounterOverflow zeigt ein Gerät an, das die End-of-Life-Betriebskapazität erreicht hat.</text>
+    </description>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>
     <section>3.2.2 Transaction Management - Transaction Counter Lifecycle</section>
-    <requirement>The transaction counter maintains a numeric record of executed transactions with a defined logical maximum value based on counter data type. When the counter reaches this logical maximum and cannot increment further without overflow, the Secure Element SHALL raise ErrorTransactionCounterOverflow and block all transaction operations. This Critical severity exception indicates the counter has reached the end of its operational lifecycle. Device replacement or counter reset procedure is required to restore transaction functionality. However, counter reset compromises transaction authenticity and audit trail continuity. ErrorTransactionCounterOverflow represents device end-of-life operational capacity.</requirement>
-    <applicability>All transaction operations when counter at logical maximum: startTransaction, updateTransaction, finishTransaction</applicability>
+    <requirement>
+      <text xml:lang="en">The transaction counter maintains a numeric record of executed transactions with a defined logical maximum value based on counter data type. When the counter reaches this logical maximum and cannot increment further without overflow, the Secure Element SHALL raise ErrorTransactionCounterOverflow and block all transaction operations. This Critical severity exception indicates the counter has reached the end of its operational lifecycle. Device replacement or counter reset procedure is required to restore transaction functionality. However, counter reset compromises transaction authenticity and audit trail continuity. ErrorTransactionCounterOverflow represents device end-of-life operational capacity.</text>
+      <text xml:lang="de">Der Transaktionszähler verwaltet einen numerischen Datensatz der ausgeführten Transaktionen mit einem definierten logischen Maximalwert basierend auf dem Zähler-Datentyp. Wenn der Zähler diesen logischen Maximalwert erreicht und nicht weiter erhöht werden kann, ohne Überlauf zu verursachen, SOLL das Secure Element ErrorTransactionCounterOverflow auslösen und alle Transaktionsoperationen blockieren. Diese Ausnahme mit kritischem Schweregrad zeigt an, dass der Zähler das Ende seines Betriebslebenszyklus erreicht hat. Geräteerneuerung oder Zählerreset-Prozedur ist erforderlich, um die Transaktionsfunktion wiederherzustellen. Ein Zählerreset gefährdet jedoch die Transaktionsauthentizität und Audit-Trail-Kontinuität. ErrorTransactionCounterOverflow repräsentiert die Betriebskapazität des Geräts am Ende des Lebens.</text>
+    </requirement>
+    <applicability>
+      <text xml:lang="en">All transaction operations when counter at logical maximum: startTransaction, updateTransaction, finishTransaction</text>
+      <text xml:lang="de">Alle Transaktionsoperationen, wenn Zähler am logischen Maximum: startTransaction, updateTransaction, finishTransaction</text>
+    </applicability>
     <reference>Transaction Management (3.2.2), Transaction Counter Lifecycle (3.2.2), startTransaction – Function (3.2.2), updateTransaction – Function (3.2.2), finishTransaction – Function (3.2.2)</reference>
   </specification>
   <triggerConditions>
     <condition>
-      <scenario>Counter reaches logical maximum value after many transactions</scenario>
-      <description>Counter value increments to maximum representable value (e.g., 2^64-1 or 2^128-1)</description>
-      <trigger>After billions or trillions of transactions over decades of operation, counter reaches maximum value. Next startTransaction call detects counter at maximum and raises ErrorTransactionCounterOverflow.</trigger>
+      <scenario>
+        <text xml:lang="en">Counter reaches logical maximum value after many transactions</text>
+        <text xml:lang="de">Zähler erreicht logischen Maximalwert nach vielen Transaktionen</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">Counter value increments to maximum representable value (e.g., 2^64-1 or 2^128-1)</text>
+        <text xml:lang="de">Zählerwert erhöht sich auf den maximal darstellbaren Wert (z.B. 2^64-1 oder 2^128-1)</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">After billions or trillions of transactions over decades of operation, counter reaches maximum value. Next startTransaction call detects counter at maximum and raises ErrorTransactionCounterOverflow.</text>
+        <text xml:lang="de">Nach Milliarden oder Billionen von Transaktionen über Jahrzehnte hinweg erreicht der Zähler den Maximalwert. Der nächste startTransaction-Aufruf erkennt den Zähler am Maximum und löst ErrorTransactionCounterOverflow aus.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Overflow detection during counter increment operation</scenario>
-      <description>Counter increment operation would cause overflow</description>
-      <trigger>updateTransaction attempts to increment counter from maximum value. Device detects overflow condition and raises ErrorTransactionCounterOverflow instead of wrapping or corrupting counter.</trigger>
+      <scenario>
+        <text xml:lang="en">Overflow detection during counter increment operation</text>
+        <text xml:lang="de">Erkennungsüberlauf während der Zählererhöhungsoperation</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">Counter increment operation would cause overflow</text>
+        <text xml:lang="de">Zählererhöhungsoperation würde Überlauf verursachen</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">updateTransaction attempts to increment counter from maximum value. Device detects overflow condition and raises ErrorTransactionCounterOverflow instead of wrapping or corrupting counter.</text>
+        <text xml:lang="de">updateTransaction versucht, den Zähler vom Maximalwert zu erhöhen. Das Gerät erkennt die Überlaufbedingung und löst ErrorTransactionCounterOverflow aus, anstatt den Zähler zu umschließen oder zu beschädigen.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Counter overflow check during transaction initiation</scenario>
-      <description>Transaction initialization includes overflow validation</description>
-      <trigger>finishTransaction checks counter state before recording final transaction entry. Counter is at maximum. Device raises ErrorTransactionCounterOverflow to prevent overflow.</trigger>
+      <scenario>
+        <text xml:lang="en">Counter overflow check during transaction initiation</text>
+        <text xml:lang="de">Zähler-Überflaufprüfung während der Transaktionsinitialisierung</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">Transaction initialization includes overflow validation</text>
+        <text xml:lang="de">Die Transaktionsinitialisierung enthält eine Überlaufvalidierung</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">finishTransaction checks counter state before recording final transaction entry. Counter is at maximum. Device raises ErrorTransactionCounterOverflow to prevent overflow.</text>
+        <text xml:lang="de">finishTransaction prüft den Zählerzustand, bevor der endgültige Transaktionseintrag aufgezeichnet wird. Der Zähler ist am Maximum. Das Gerät löst ErrorTransactionCounterOverflow aus, um Überlauf zu verhindern.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Device diagnostics reveal counter at maximum</scenario>
-      <description>Diagnostics testing detects counter at logical maximum</description>
-      <trigger>Administrator runs device status check or diagnostics. Results show counter at maximum value. Subsequent transaction operations raise ErrorTransactionCounterOverflow.</trigger>
+      <scenario>
+        <text xml:lang="en">Device diagnostics reveal counter at maximum</text>
+        <text xml:lang="de">Gerätediagnose zeigt Zähler am Maximum</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">Diagnostics testing detects counter at logical maximum</text>
+        <text xml:lang="de">Diagnostest erkennt Zähler am logischen Maximum</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">Administrator runs device status check or diagnostics. Results show counter at maximum value. Subsequent transaction operations raise ErrorTransactionCounterOverflow.</text>
+        <text xml:lang="de">Administrator führt Gerätestatusprprüfung oder Diagnose aus. Die Ergebnisse zeigen den Zähler am Maximalwert. Nachfolgende Transaktionsoperationen lösen ErrorTransactionCounterOverflow aus.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Counter saturation after extended operational lifetime</scenario>
-      <description>Counter value saturates after years or decades of device operation</description>
-      <trigger>Device in production for extended period reaches counter maximum. Repeated transactions eventually saturate counter. ErrorTransactionCounterOverflow raised to indicate end-of-life.</trigger>
+      <scenario>
+        <text xml:lang="en">Counter saturation after extended operational lifetime</text>
+        <text xml:lang="de">Zählerspeicherung nach langer Betriebsdauer</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">Counter value saturates after years or decades of device operation</text>
+        <text xml:lang="de">Zählerwert sättigt sich nach Jahren oder Jahrzehnten des Gerätebetriebs</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">Device in production for extended period reaches counter maximum. Repeated transactions eventually saturate counter. ErrorTransactionCounterOverflow raised to indicate end-of-life.</text>
+        <text xml:lang="de">Gerät in der Produktion für eine längere Zeit erreicht Zählerhochststand. Wiederholte Transaktionen sättigen schließlich den Zähler. ErrorTransactionCounterOverflow wird ausgelöst, um das Ende des Lebens anzuzeigen.</text>
+      </trigger>
     </condition>
   </triggerConditions>
   <executionSequence>
-    <step number="1">User/application calls transaction operation (e.g., startTransaction, updateTransaction, finishTransaction)</step>
-    <step number="2">Function validates input parameters and operations prerequisites</step>
-    <step number="3">Function initiates communication with Secure Element</step>
-    <step number="4">Secure Element receives transaction operation request</step>
-    <step number="5">Secure Element checks transaction counter current value</step>
-    <step number="5a">If counter at maximum value → ErrorTransactionCounterOverflow raised, operation aborted</step>
-    <step number="5b">If counter below maximum → proceed to step 6</step>
-    <step number="6">Secure Element prepares transaction record for counter</step>
-    <step number="7">Secure Element validates counter can be incremented</step>
-    <step number="7a">If increment would cause overflow → ErrorTransactionCounterOverflow raised</step>
-    <step number="7b">If increment safe → proceed to step 8</step>
-    <step number="8">Secure Element increments counter value</step>
-    <step number="9">Secure Element writes updated counter and transaction record</step>
-    <step number="10">Secure Element returns success to function</step>
-    <step number="11">Function returns to caller indicating transaction recorded with updated counter</step>
+    <step number="1">
+      <text xml:lang="en">User/application calls transaction operation (e.g., startTransaction, updateTransaction, finishTransaction)</text>
+      <text xml:lang="de">Benutzer/Anwendung ruft Transaktionsoperation auf (z.B. startTransaction, updateTransaction, finishTransaction)</text>
+    </step>
+    <step number="2">
+      <text xml:lang="en">Function validates input parameters and operations prerequisites</text>
+      <text xml:lang="de">Funktion validiert Eingabeparameter und Operationsvorbedingungen</text>
+    </step>
+    <step number="3">
+      <text xml:lang="en">Function initiates communication with Secure Element</text>
+      <text xml:lang="de">Funktion initiiert Kommunikation mit Secure Element</text>
+    </step>
+    <step number="4">
+      <text xml:lang="en">Secure Element receives transaction operation request</text>
+      <text xml:lang="de">Secure Element empfängt Transaktionsoperationsanforderung</text>
+    </step>
+    <step number="5">
+      <text xml:lang="en">Secure Element checks transaction counter current value</text>
+      <text xml:lang="de">Secure Element prüft den aktuellen Transaktionszählerwert</text>
+    </step>
+    <step number="5a">
+      <text xml:lang="en">If counter at maximum value → ErrorTransactionCounterOverflow raised, operation aborted</text>
+      <text xml:lang="de">Wenn Zähler am Maximalwert → ErrorTransactionCounterOverflow ausgelöst, Operation abgebrochen</text>
+    </step>
+    <step number="5b">
+      <text xml:lang="en">If counter below maximum → proceed to step 6</text>
+      <text xml:lang="de">Wenn Zähler unter Maximum → fahren Sie mit Schritt 6 fort</text>
+    </step>
+    <step number="6">
+      <text xml:lang="en">Secure Element prepares transaction record for counter</text>
+      <text xml:lang="de">Secure Element bereitet Transaktionsdatensatz für Zähler vor</text>
+    </step>
+    <step number="7">
+      <text xml:lang="en">Secure Element validates counter can be incremented</text>
+      <text xml:lang="de">Secure Element validiert, dass Zähler erhöht werden kann</text>
+    </step>
+    <step number="7a">
+      <text xml:lang="en">If increment would cause overflow → ErrorTransactionCounterOverflow raised</text>
+      <text xml:lang="de">Wenn Erhöhung Überlauf verursachen würde → ErrorTransactionCounterOverflow ausgelöst</text>
+    </step>
+    <step number="7b">
+      <text xml:lang="en">If increment safe → proceed to step 8</text>
+      <text xml:lang="de">Wenn Erhöhung sicher → fahren Sie mit Schritt 8 fort</text>
+    </step>
+    <step number="8">
+      <text xml:lang="en">Secure Element increments counter value</text>
+      <text xml:lang="de">Secure Element erhöht Zählerwert</text>
+    </step>
+    <step number="9">
+      <text xml:lang="en">Secure Element writes updated counter and transaction record</text>
+      <text xml:lang="de">Secure Element schreibt aktualisierten Zähler und Transaktionsdatensatz</text>
+    </step>
+    <step number="10">
+      <text xml:lang="en">Secure Element returns success to function</text>
+      <text xml:lang="de">Secure Element gibt Erfolg an Funktion zurück</text>
+    </step>
+    <step number="11">
+      <text xml:lang="en">Function returns to caller indicating transaction recorded with updated counter</text>
+      <text xml:lang="de">Funktion kehrt zu Aufrufer zurück und zeigt an, dass Transaktion mit aktualisiertem Zähler aufgezeichnet wurde</text>
+    </step>
   </executionSequence>
   <recovery>
-    <step>Check counter approaching maximum</step>
-    <step>Monitor counter and plan for overflow condition</step>
-    <step>Stop creating transactions before overflow occurs</step>
-    <step>Implement overflow mitigation strategies</step>
+    <step>
+      <text xml:lang="en">Check counter approaching maximum</text>
+      <text xml:lang="de">Prüfen Sie den Zähler, der sich dem Maximum nähert</text>
+    </step>
+    <step>
+      <text xml:lang="en">Monitor counter and plan for overflow condition</text>
+      <text xml:lang="de">Monitore den Zähler und planen Sie für Überlaufbedingung</text>
+    </step>
+    <step>
+      <text xml:lang="en">Stop creating transactions before overflow occurs</text>
+      <text xml:lang="de">Beenden Sie die Erstellung von Transaktionen, bevor Überlauf auftritt</text>
+    </step>
+    <step>
+      <text xml:lang="en">Implement overflow mitigation strategies</text>
+      <text xml:lang="de">Implementieren Sie Strategien zur Überlaufminderung</text>
+    </step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorTransactionCounterExhausted</exception>
@@ -76,44 +193,104 @@
     <exception>ErrorDeviceNotInitialized</exception>
   </relatedExceptions>
   <postconditionality>
-    <state name="Transaction Operations Blocked">All transaction operations cannot proceed (startTransaction, updateTransaction, finishTransaction).</state>
-    <state name="Counter Not Incremented">Counter value remains at maximum without incrementing.</state>
-    <state name="Transaction Not Recorded">Transaction record is not written due to counter overflow protection.</state>
-    <state name="Device End-of-Life Reached">Device has reached end of operational lifecycle for transaction functionality.</state>
-    <state name="Critical Exception Returned">Function returns ErrorTransactionCounterOverflow Critical exception to caller.</state>
-    <state name="Replacement or Reset Required">Device replacement or counter reset procedure is required to restore functionality.</state>
+    <state name="Transaction Operations Blocked">
+      <text xml:lang="en">All transaction operations cannot proceed (startTransaction, updateTransaction, finishTransaction).</text>
+      <text xml:lang="de">Alle Transaktionsoperationen können nicht fortgesetzt werden (startTransaction, updateTransaction, finishTransaction).</text>
+    </state>
+    <state name="Counter Not Incremented">
+      <text xml:lang="en">Counter value remains at maximum without incrementing.</text>
+      <text xml:lang="de">Zählerwert bleibt am Maximum, ohne sich zu erhöhen.</text>
+    </state>
+    <state name="Transaction Not Recorded">
+      <text xml:lang="en">Transaction record is not written due to counter overflow protection.</text>
+      <text xml:lang="de">Transaktionsdatensatz wird aufgrund des Zähler-Überlaufschutzes nicht geschrieben.</text>
+    </state>
+    <state name="Device End-of-Life Reached">
+      <text xml:lang="en">Device has reached end of operational lifecycle for transaction functionality.</text>
+      <text xml:lang="de">Das Gerät hat das Ende des Betriebslebenszyklus für Transaktionsfunktionen erreicht.</text>
+    </state>
+    <state name="Critical Exception Returned">
+      <text xml:lang="en">Function returns ErrorTransactionCounterOverflow Critical exception to caller.</text>
+      <text xml:lang="de">Funktion gibt die kritische Ausnahme ErrorTransactionCounterOverflow an den Aufrufer zurück.</text>
+    </state>
+    <state name="Replacement or Reset Required">
+      <text xml:lang="en">Device replacement or counter reset procedure is required to restore functionality.</text>
+      <text xml:lang="de">Geräteerneuerung oder Zählerreset-Prozedur ist erforderlich, um die Funktionalität wiederherzustellen.</text>
+    </state>
   </postconditionality>
   <notes>
-    <note>Indication: Transaction counter would overflow - maximum capacity exceeded</note>
-    <note>Topics: Transaction Management, Counter Management, Resource Limits, Overflow Protection</note>
+    <note>
+      <text xml:lang="en">Indication: Transaction counter would overflow - maximum capacity exceeded</text>
+      <text xml:lang="de">Anzeichen: Transaktionszähler würde Überlauf verursachen - maximale Kapazität überschritten</text>
+    </note>
+    <note>
+      <text xml:lang="en">Topics: Transaction Management, Counter Management, Resource Limits, Overflow Protection</text>
+      <text xml:lang="de">Themen: Transaktionsverwaltung, Zählerverwaltung, Ressourcengrenzen, Überlaufschutz</text>
+    </note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Counter Reaches Maximum After Extended Operation">
-      <description>A device has executed trillions of transactions over many years of continuous operation. Transaction counter value reaches its logical maximum (e.g., 2^64-1). Operator attempts new transaction via startTransaction. Device detects counter at maximum and raises ErrorTransactionCounterOverflow. Operator recognizes device has reached end-of-life and schedules replacement.</description>
+      <description>
+        <text xml:lang="en">A device has executed trillions of transactions over many years of continuous operation. Transaction counter value reaches its logical maximum (e.g., 2^64-1). Operator attempts new transaction via startTransaction. Device detects counter at maximum and raises ErrorTransactionCounterOverflow. Operator recognizes device has reached end-of-life and schedules replacement.</text>
+        <text xml:lang="de">Ein Gerät hat über viele Jahre hinweg Billionen von Transaktionen mit kontinuierlichem Betrieb ausgeführt. Der Transaktionszählerwert erreicht seinen logischen Maximalwert (z.B. 2^64-1). Der Benutzer versucht, eine neue Transaktion über startTransaction auszuführen. Das Gerät erkennt den Zähler am Maximum und löst ErrorTransactionCounterOverflow aus. Der Benutzer erkennt, dass das Gerät das Ende seines Lebens erreicht hat, und plant die Erneuerung.</text>
+      </description>
       <relatedFunctions>startTransaction, updateTransaction, finishTransaction</relatedFunctions>
-      <errorContext>Counter overflow after extended operational lifetime - device end-of-life</errorContext>
+      <errorContext>
+        <text xml:lang="en">Counter overflow after extended operational lifetime - device end-of-life</text>
+        <text xml:lang="de">ZählerÜberlauf nach langer Betriebsdauer - Gerät Ende des Lebens</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 2: Overflow Detection During Counter Increment">
-      <description>Transaction counter is near maximum value. updateTransaction increments counter to maximum. Next finishTransaction checks counter before recording transaction. Overflow detection identifies counter cannot be incremented further. ErrorTransactionCounterOverflow is raised to prevent undefined behavior from wrap-around.</description>
+      <description>
+        <text xml:lang="en">Transaction counter is near maximum value. updateTransaction increments counter to maximum. Next finishTransaction checks counter before recording transaction. Overflow detection identifies counter cannot be incremented further. ErrorTransactionCounterOverflow is raised to prevent undefined behavior from wrap-around.</text>
+        <text xml:lang="de">Der Transaktionszähler liegt nahe am Maximalwert. updateTransaction erhöht den Zähler auf das Maximum. Die nächste finishTransaction prüft den Zähler vor der Aufzeichnung der Transaktion. Die Überlauferkennung stellt fest, dass der Zähler nicht weiter erhöht werden kann. ErrorTransactionCounterOverflow wird ausgelöst, um undefinietes Verhalten durch Umwicklung zu verhindern.</text>
+      </description>
       <relatedFunctions>updateTransaction, finishTransaction</relatedFunctions>
-      <errorContext>Overflow prevention protects counter integrity during normal operation</errorContext>
+      <errorContext>
+        <text xml:lang="en">Overflow prevention protects counter integrity during normal operation</text>
+        <text xml:lang="de">Der Überlaufschutz schützt die Zählerintegrität während des normalen Betriebs</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 3: Device Monitoring Predicts Overflow">
-      <description>Device administration tools regularly monitor counter value and calculate remaining transaction capacity. When counter reaches 99% of maximum (e.g., 0.99 * 2^64), alert is generated. Administrator receives notification of imminent overflow and plans device replacement before ErrorTransactionCounterOverflow occurs.</description>
+      <description>
+        <text xml:lang="en">Device administration tools regularly monitor counter value and calculate remaining transaction capacity. When counter reaches 99% of maximum (e.g., 0.99 * 2^64), alert is generated. Administrator receives notification of imminent overflow and plans device replacement before ErrorTransactionCounterOverflow occurs.</text>
+        <text xml:lang="de">Geräteverwaltungstools überwachen regelmäßig den Zählerwert und berechnen die verbleibende Transaktionskapazität. Wenn der Zähler 99% des Maximums erreicht (z.B. 0,99 * 2^64), wird eine Warnung generiert. Der Administrator erhält eine Benachrichtigung über bevorstehendes Überlauf und plant die Geräteerneuerung, bevor ErrorTransactionCounterOverflow auftritt.</text>
+      </description>
       <relatedFunctions>startTransaction, updateTransaction, finishTransaction</relatedFunctions>
-      <errorContext>Proactive monitoring enables planned device replacement before overflow</errorContext>
+      <errorContext>
+        <text xml:lang="en">Proactive monitoring enables planned device replacement before overflow</text>
+        <text xml:lang="de">Die proaktive Überwachung ermöglicht die geplante Geräteerneuerung vor dem Überlauf</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 4: Diagnostics Reveal Counter at Maximum">
-      <description>Administrator runs comprehensive device diagnostics as part of maintenance audit. Diagnostics report shows counter value is at logical maximum. While device currently operational, any new transaction will raise ErrorTransactionCounterOverflow. Administrator immediately initiates device replacement to prevent service interruption.</description>
+      <description>
+        <text xml:lang="en">Administrator runs comprehensive device diagnostics as part of maintenance audit. Diagnostics report shows counter value is at logical maximum. While device currently operational, any new transaction will raise ErrorTransactionCounterOverflow. Administrator immediately initiates device replacement to prevent service interruption.</text>
+        <text xml:lang="de">Der Administrator führt eine umfassende Gerätediagnose im Rahmen einer Wartungsüberprüfung durch. Der Diagnosebericht zeigt, dass der Zählerwert am logischen Maximum liegt. Während das Gerät derzeit funktioniert, werden alle neuen Transaktionen ErrorTransactionCounterOverflow auslösen. Der Administrator beginnt sofort mit der Geräteerneuerung, um Dienstunterbrechungen zu verhindern.</text>
+      </description>
       <relatedFunctions>startTransaction, updateTransaction, finishTransaction</relatedFunctions>
-      <errorContext>Diagnostics discovery of counter maximum triggers preventive replacement</errorContext>
+      <errorContext>
+        <text xml:lang="en">Diagnostics discovery of counter maximum triggers preventive replacement</text>
+        <text xml:lang="de">Die Diagnoseerkennung des Zählerhochstands löst die vorbeugende Erneuerung aus</text>
+      </errorContext>
     </scenario>
   </usage>
   <implementationContext>
-    <note>Raised by startTransaction when transaction counter would overflow</note>
-    <note>Overflow protection prevents counter wrap-around</note>
-    <note>Device detects impending counter maximum</note>
-    <note>Overflow condition blocks new transactions</note>
+    <note>
+      <text xml:lang="en">Raised by startTransaction when transaction counter would overflow</text>
+      <text xml:lang="de">Wird durch startTransaction ausgelöst, wenn Transaktionszähler Überlauf verursachen würde</text>
+    </note>
+    <note>
+      <text xml:lang="en">Overflow protection prevents counter wrap-around</text>
+      <text xml:lang="de">Der Überlaufschutz verhindert das Umwickeln des Zählers</text>
+    </note>
+    <note>
+      <text xml:lang="en">Device detects impending counter maximum</text>
+      <text xml:lang="de">Gerät erkennt bevorstehendes Zählerhochstland</text>
+    </note>
+    <note>
+      <text xml:lang="en">Overflow condition blocks new transactions</text>
+      <text xml:lang="de">Die Überlaufbedingung blockiert neue Transaktionen</text>
+    </note>
   </implementationContext>
 </exception>
 

@@ -1,19 +1,34 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes'?>
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorLockTransactionLoggingFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorLockTransactionLoggingFailed</name>
-  <description>This exception is thrown if the SE API function lockTransactionLogging fails to lock the transaction logging functionality on the Secure Element. The function attempts to transition the transaction logging system into a locked state to prevent further log entries from being recorded, but the locking operation encounters a failure condition that prevents this transition from being completed successfully. ErrorLockTransactionLoggingFailed indicates that the transaction logging system remains in its current state (unlocked or partially locked) and cannot be reliably transitioned to the locked state.</description>
+  <description>
+    <text xml:lang="en">This exception is thrown if the SE API function lockTransactionLogging fails to lock the transaction logging functionality on the Secure Element. The function attempts to transition the transaction logging system into a locked state to prevent further log entries from being recorded, but the locking operation encounters a failure condition that prevents this transition from being completed successfully. ErrorLockTransactionLoggingFailed indicates that the transaction logging system remains in its current state (unlocked or partially locked) and cannot be reliably transitioned to the locked state.</text>
+    <text xml:lang="de">Diese Ausnahme wird ausgelöst, wenn die SE API Funktion lockTransactionLogging nicht die Transaktionsprotokollierungsfunktionalität auf dem Secure Element sperren kann. Die Funktion versucht, das Transaktionsprotokollierungssystem in einen gesperrten Zustand überzuführen, um zu verhindern, dass weitere Protokolleinträge aufgezeichnet werden, aber die Sperrungsoperation trifft auf eine Fehlerbedingung, die verhindert, dass dieser Übergang erfolgreich abgeschlossen wird. ErrorLockTransactionLoggingFailed zeigt an, dass das Transaktionsprotokollierungssystem in seinem aktuellen Zustand bleibt (entsperrt oder teilweise gesperrt) und nicht zuverlässig in den gesperrten Zustand übergeführt werden kann.</text>
+  </description>
   <category>Transaction Logging</category>
   <subcategory>Lock Management</subcategory>
   <severity>High</severity>
   <javadoc>
-    <summary>This class defines the exception ErrorLockTransactionLoggingFailed that is thrown if the transaction logging lock operation fails.</summary>
-    <description>This exception is thrown when the lockTransactionLogging function cannot successfully lock the transaction logging functionality on the Secure Element. The lockTransactionLogging operation is used to prevent any further transaction log entries from being recorded or modified. When this operation fails, it indicates that the transaction logging system could not be transitioned to the locked state, leaving the logging system in an indeterminate or potentially unsafe state. ErrorLockTransactionLoggingFailed is raised to inform the caller that the requested lock operation did not complete and the transaction logging system cannot be guaranteed to be in a locked (read-only) state. Recovery requires investigating the cause of the lock operation failure and retrying the operation, or potentially using alternative transaction logging management functions.</description>
+    <summary>
+      <text xml:lang="en">This class defines the exception ErrorLockTransactionLoggingFailed that is thrown if the transaction logging lock operation fails.</text>
+      <text xml:lang="de">Diese Klasse definiert die Ausnahme ErrorLockTransactionLoggingFailed, die ausgelöst wird, wenn die Transaktionsprotokollierungs-Sperrungsoperation fehlschlägt.</text>
+    </summary>
+    <description>
+      <text xml:lang="en">This exception is thrown when the lockTransactionLogging function cannot successfully lock the transaction logging functionality on the Secure Element. The lockTransactionLogging operation is used to prevent any further transaction log entries from being recorded or modified. When this operation fails, it indicates that the transaction logging system could not be transitioned to the locked state, leaving the logging system in an indeterminate or potentially unsafe state. ErrorLockTransactionLoggingFailed is raised to inform the caller that the requested lock operation did not complete and the transaction logging system cannot be guaranteed to be in a locked (read-only) state. Recovery requires investigating the cause of the lock operation failure and retrying the operation, or potentially using alternative transaction logging management functions.</text>
+      <text xml:lang="de">Diese Ausnahme wird ausgelöst, wenn die Funktion lockTransactionLogging die Transaktionsprotokollierungsfunktionalität auf dem Secure Element nicht erfolgreich sperren kann. Die lockTransactionLogging-Operation wird verwendet, um zu verhindern, dass weitere Transaktionsprotokolleinträge aufgezeichnet oder geändert werden. Wenn diese Operation fehlschlägt, zeigt dies an, dass das Transaktionsprotokollierungssystem nicht in den gesperrten Zustand übergeführt werden konnte, wodurch das Protokollierungssystem in einem unbestimmten oder potenziell unsicheren Zustand verbleibt. ErrorLockTransactionLoggingFailed wird ausgelöst, um den Aufrufer darauf hinzuweisen, dass die angeforderte Sperrungsoperation nicht abgeschlossen wurde und das Transaktionsprotokollierungssystem nicht garantiert im gesperrten (schreibgeschützten) Zustand ist. Die Wiederherstellung erfordert die Untersuchung der Ursache des Sperrungsoperationsfehlers und das Wiederholen der Operation oder potenziell die Verwendung alternativer Transaktionsprotokollierungsverwaltungsfunktionen.</text>
+    </description>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>
     <section>3.3.3 Transaction Logging Management - lockTransactionLogging</section>
-    <requirement>The function lockTransactionLogging SHALL attempt to lock the transaction logging functionality on the Secure Element to prevent further transaction log entries from being recorded or modified. If the lock operation cannot be successfully completed due to communication failure, device error, permission restriction, or other failure condition, the function SHALL raise the exception ErrorLockTransactionLoggingFailed. The transaction logging system state remains unchanged if the lock operation fails - no partial locking shall occur.</requirement>
-    <applicability>Transaction logging lock operations - lockTransactionLogging function only</applicability>
+    <requirement>
+      <text xml:lang="en">The function lockTransactionLogging SHALL attempt to lock the transaction logging functionality on the Secure Element to prevent further transaction log entries from being recorded or modified. If the lock operation cannot be successfully completed due to communication failure, device error, permission restriction, or other failure condition, the function SHALL raise the exception ErrorLockTransactionLoggingFailed. The transaction logging system state remains unchanged if the lock operation fails - no partial locking shall occur.</text>
+      <text xml:lang="de">Die Funktion lockTransactionLogging soll versuchen, die Transaktionsprotokollierungsfunktionalität auf dem Secure Element zu sperren, um zu verhindern, dass weitere Transaktionsprotokolleinträge aufgezeichnet oder geändert werden. Falls die Sperrungsoperation nicht erfolgreich abgeschlossen werden kann, z. B. aufgrund von Kommunikationsfehler, Gerättefehler, Berechtigungsbeschränkung oder anderen Fehlerbedingungen, soll die Funktion die Ausnahme ErrorLockTransactionLoggingFailed auslösen. Der Zustand des Transaktionsprotokollierungssystems bleibt unverändert, wenn die Sperrungsoperation fehlschlägt - es darf keine teilweise Sperrung auftreten.</text>
+    </requirement>
+    <applicability>
+      <text xml:lang="en">Transaction logging lock operations - lockTransactionLogging function only</text>
+      <text xml:lang="de">Transaktionsprotokollierungs-Sperrungsoperationen - nur Funktion lockTransactionLogging</text>
+    </applicability>
     <reference>lockTransactionLogging – Function (3.3.3)</reference>
   </specification>
   <thrownBy>
@@ -21,54 +36,159 @@
   </thrownBy>
   <triggerConditions>
     <condition>
-      <scenario>Secure Element communication failure during lock operation</scenario>
-      <description>Communication with the Secure Element fails while attempting to transmit or receive the lock command</description>
-      <trigger>The lockTransactionLogging function initiates communication with the Secure Element to send the lock command, but the connection is lost, timeout occurs, or transmission fails. The Secure Element does not receive the complete lock command or the response is not received by the caller. The lock operation cannot be confirmed and ErrorLockTransactionLoggingFailed is raised.</trigger>
+      <scenario>
+        <text xml:lang="en">Secure Element communication failure during lock operation</text>
+        <text xml:lang="de">Secure Element Kommunikationsfehler während Sperrungsoperation</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">Communication with the Secure Element fails while attempting to transmit or receive the lock command</text>
+        <text xml:lang="de">Kommunikation mit dem Secure Element scheitert beim Versuch, den Sperrungsbefehl zu übertragen oder zu empfangen</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">The lockTransactionLogging function initiates communication with the Secure Element to send the lock command, but the connection is lost, timeout occurs, or transmission fails. The Secure Element does not receive the complete lock command or the response is not received by the caller. The lock operation cannot be confirmed and ErrorLockTransactionLoggingFailed is raised.</text>
+        <text xml:lang="de">Die Funktion lockTransactionLogging initiiert Kommunikation mit dem Secure Element, um den Sperrungsbefehl zu senden, aber die Verbindung wird unterbrochen, Timeout tritt auf oder Übertragung scheitert. Das Secure Element empfängt den vollständigen Sperrungsbefehl nicht oder die Antwort wird nicht vom Aufrufer empfangen. Die Sperrungsoperation kann nicht bestätigt werden und ErrorLockTransactionLoggingFailed wird ausgelöst.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Secure Element reports lock operation failure</scenario>
-      <description>The Secure Element receives and processes the lock command but reports a failure status</description>
-      <trigger>The Secure Element successfully receives the lockTransactionLogging command but cannot execute it due to internal error, resource limitation, or device state incompatibility. The device responds with a failure status code, causing ErrorLockTransactionLoggingFailed to be raised.</trigger>
+      <scenario>
+        <text xml:lang="en">Secure Element reports lock operation failure</text>
+        <text xml:lang="de">Secure Element meldet Sperrungsoperationsfehler</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">The Secure Element receives and processes the lock command but reports a failure status</text>
+        <text xml:lang="de">Das Secure Element empfängt und verarbeitet den Sperrungsbefehl, meldet aber einen Fehlerstatus</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">The Secure Element successfully receives the lockTransactionLogging command but cannot execute it due to internal error, resource limitation, or device state incompatibility. The device responds with a failure status code, causing ErrorLockTransactionLoggingFailed to be raised.</text>
+        <text xml:lang="de">Das Secure Element empfängt erfolgreich den lockTransactionLogging-Befehl, kann ihn aber nicht ausführen, da interner Fehler, Ressourcenbegränzung oder Gerätezustand-Inkompatibilität besteht. Das Gerät antwortet mit einem Fehlerstatus-Code und verursacht, dass ErrorLockTransactionLoggingFailed ausgelöst wird.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Insufficient permissions or access control restrictions</scenario>
-      <description>The caller lacks the necessary permissions or credentials to lock the transaction logging functionality</description>
-      <trigger>The lockTransactionLogging function checks authorization requirements and determines that the caller does not have permission to lock transaction logging. The operation is rejected and ErrorLockTransactionLoggingFailed is raised.</trigger>
+      <scenario>
+        <text xml:lang="en">Insufficient permissions or access control restrictions</text>
+        <text xml:lang="de">Unzureichende Berechtigungen oder Zugriffskontrollbeschränkungen</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">The caller lacks the necessary permissions or credentials to lock the transaction logging functionality</text>
+        <text xml:lang="de">Der Aufrufer verfügt nicht über die erforderlichen Berechtigungen oder Anmeldedaten, um die Transaktionsprotokollierungsfunktionalität zu sperren</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">The lockTransactionLogging function checks authorization requirements and determines that the caller does not have permission to lock transaction logging. The operation is rejected and ErrorLockTransactionLoggingFailed is raised.</text>
+        <text xml:lang="de">Die Funktion lockTransactionLogging prüft Autorisierungsanforderungen und stellt fest, dass der Aufrufer keine Berechtigung zum Sperren der Transaktionsprotokollierung hat. Die Operation wird abgelehnt und ErrorLockTransactionLoggingFailed wird ausgelöst.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Transaction logging system in incompatible state</scenario>
-      <description>The transaction logging system is in a state that prevents the lock operation from being executed</description>
-      <trigger>The Secure Element's transaction logging system is disabled, uninitialized, or in a state incompatible with lock operations. The lock command cannot be executed and ErrorLockTransactionLoggingFailed is raised.</trigger>
+      <scenario>
+        <text xml:lang="en">Transaction logging system in incompatible state</text>
+        <text xml:lang="de">Transaktionsprotokollierungssystem in inkompatiblem Zustand</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">The transaction logging system is in a state that prevents the lock operation from being executed</text>
+        <text xml:lang="de">Das Transaktionsprotokollierungssystem befindet sich in einem Zustand, der verhindert, dass die Sperrungsoperation ausgeführt wird</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">The Secure Element's transaction logging system is disabled, uninitialized, or in a state incompatible with lock operations. The lock command cannot be executed and ErrorLockTransactionLoggingFailed is raised.</text>
+        <text xml:lang="de">Das Transaktionsprotokollierungssystem des Secure Element ist deaktiviert, nicht initialisiert oder befindet sich in einem Zustand, der mit Sperrungsoperationen inkompatibel ist. Der Sperrungsbefehl kann nicht ausgeführt werden und ErrorLockTransactionLoggingFailed wird ausgelöst.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Device resource exhaustion affecting lock management</scenario>
-      <description>The device lacks sufficient resources to complete the lock operation</description>
-      <trigger>The device is low on memory, processing capacity, or other resources required to execute the lock operation. The lock operation fails due to resource constraints and ErrorLockTransactionLoggingFailed is raised.</trigger>
+      <scenario>
+        <text xml:lang="en">Device resource exhaustion affecting lock management</text>
+        <text xml:lang="de">Geräteressourcenerschöpfung, die Sperrungsverwaltung beeinflusst</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">The device lacks sufficient resources to complete the lock operation</text>
+        <text xml:lang="de">Das Gerät hat nicht genügend Ressourcen, um die Sperrungsoperation abzuschließen</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">The device is low on memory, processing capacity, or other resources required to execute the lock operation. The lock operation fails due to resource constraints and ErrorLockTransactionLoggingFailed is raised.</text>
+        <text xml:lang="de">Das Gerät hat wenig Speicher, Verarbeitungskapazität oder andere erforderliche Ressourcen zur Durchführung der Sperrungsoperation. Die Sperrungsoperation scheitert aufgrund von Ressourcenbeschränkungen und ErrorLockTransactionLoggingFailed wird ausgelöst.</text>
+      </trigger>
     </condition>
   </triggerConditions>
   <executionSequence>
-    <step number="1">User/application calls lockTransactionLogging function to lock transaction logging</step>
-    <step number="2">Function validates authorization and checks caller permissions for logging management</step>
-    <step number="3">Function checks device state and transaction logging subsystem state</step>
-    <step number="3a">If device state is incompatible with lock operations → ErrorLockTransactionLoggingFailed raised, function exits</step>
-    <step number="3b">If device state is compatible → proceed to step 4</step>
-    <step number="4">Function initiates communication with Secure Element</step>
-    <step number="5">Function transmits lockTransactionLogging command to Secure Element</step>
-    <step number="5a">If communication fails or timeout occurs → ErrorLockTransactionLoggingFailed raised, function exits</step>
-    <step number="5b">If communication succeeds → proceed to step 6</step>
-    <step number="6">Function receives response from Secure Element</step>
-    <step number="6a">If Secure Element reports lock success → proceed to step 7</step>
-    <step number="6b">If Secure Element reports lock failure → ErrorLockTransactionLoggingFailed raised, function exits</step>
-    <step number="7">Function verifies the lock status on Secure Element</step>
-    <step number="8">Function closes communication channel with Secure Element</step>
-    <step number="9">Function updates internal transaction logging state to reflect locked status</step>
-    <step number="10">Function returns successfully with transaction logging now locked</step>
+    <step number="1">
+      <text xml:lang="en">User/application calls lockTransactionLogging function to lock transaction logging</text>
+      <text xml:lang="de">Benutzer/Anwendung ruft lockTransactionLogging-Funktion auf, um die Transaktionsprotokollierung zu sperren</text>
+    </step>
+    <step number="2">
+      <text xml:lang="en">Function validates authorization and checks caller permissions for logging management</text>
+      <text xml:lang="de">Funktion validiert Autorisierung und prüft Berechtigungen des Aufrufers für die Protokollverwaltung</text>
+    </step>
+    <step number="3">
+      <text xml:lang="en">Function checks device state and transaction logging subsystem state</text>
+      <text xml:lang="de">Funktion prüft Gerätezustand und Status des Transaktionsprotokollierungs-Subsystems</text>
+    </step>
+    <step number="3a">
+      <text xml:lang="en">If device state is incompatible with lock operations → ErrorLockTransactionLoggingFailed raised, function exits</text>
+      <text xml:lang="de">Falls Gerätezustand mit Sperrungsoperationen inkompatibel ist → ErrorLockTransactionLoggingFailed ausgelöst, Funktion beendet</text>
+    </step>
+    <step number="3b">
+      <text xml:lang="en">If device state is compatible → proceed to step 4</text>
+      <text xml:lang="de">Falls Gerätezustand kompatibel ist → fahren Sie mit Schritt 4 fort</text>
+    </step>
+    <step number="4">
+      <text xml:lang="en">Function initiates communication with Secure Element</text>
+      <text xml:lang="de">Funktion initiiert Kommunikation mit Secure Element</text>
+    </step>
+    <step number="5">
+      <text xml:lang="en">Function transmits lockTransactionLogging command to Secure Element</text>
+      <text xml:lang="de">Funktion übersendet lockTransactionLogging-Befehl an Secure Element</text>
+    </step>
+    <step number="5a">
+      <text xml:lang="en">If communication fails or timeout occurs → ErrorLockTransactionLoggingFailed raised, function exits</text>
+      <text xml:lang="de">Falls Kommunikation fehlschlägt oder Timeout auftritt → ErrorLockTransactionLoggingFailed ausgelöst, Funktion beendet</text>
+    </step>
+    <step number="5b">
+      <text xml:lang="en">If communication succeeds → proceed to step 6</text>
+      <text xml:lang="de">Falls Kommunikation erfolgreich ist → fahren Sie mit Schritt 6 fort</text>
+    </step>
+    <step number="6">
+      <text xml:lang="en">Function receives response from Secure Element</text>
+      <text xml:lang="de">Funktion erhält Antwort vom Secure Element</text>
+    </step>
+    <step number="6a">
+      <text xml:lang="en">If Secure Element reports lock success → proceed to step 7</text>
+      <text xml:lang="de">Falls Secure Element Sperrungserfolg meldet → fahren Sie mit Schritt 7 fort</text>
+    </step>
+    <step number="6b">
+      <text xml:lang="en">If Secure Element reports lock failure → ErrorLockTransactionLoggingFailed raised, function exits</text>
+      <text xml:lang="de">Falls Secure Element Sperrungsfehlschlag meldet → ErrorLockTransactionLoggingFailed ausgelöst, Funktion beendet</text>
+    </step>
+    <step number="7">
+      <text xml:lang="en">Function verifies the lock status on Secure Element</text>
+      <text xml:lang="de">Funktion verifiziert den Sperrungsstatus auf dem Secure Element</text>
+    </step>
+    <step number="8">
+      <text xml:lang="en">Function closes communication channel with Secure Element</text>
+      <text xml:lang="de">Funktion schließt Kommunikationskanal mit Secure Element</text>
+    </step>
+    <step number="9">
+      <text xml:lang="en">Function updates internal transaction logging state to reflect locked status</text>
+      <text xml:lang="de">Funktion aktualisiert internen Transaktionsprotokollierungsstatus, um gesperrten Status widerzuspiegeln</text>
+    </step>
+    <step number="10">
+      <text xml:lang="en">Function returns successfully with transaction logging now locked</text>
+      <text xml:lang="de">Funktion gibt erfolgreich zurück mit jetzt gesperrter Transaktionsprotokollierung</text>
+    </step>
   </executionSequence>
   <recovery>
-    <step>Verify device is initialized</step>
-    <step>Ensure no open transactions exist</step>
-    <step>Retry lock operation after finishing transactions</step>
-    <step>Check device status and SE connectivity</step>
+    <step>
+      <text xml:lang="en">Verify device is initialized</text>
+      <text xml:lang="de">Verifizieren Sie, dass das Gerät initialisiert ist</text>
+    </step>
+    <step>
+      <text xml:lang="en">Ensure no open transactions exist</text>
+      <text xml:lang="de">Stellen Sie sicher, dass keine offenen Transaktionen vorhanden sind</text>
+    </step>
+    <step>
+      <text xml:lang="en">Retry lock operation after finishing transactions</text>
+      <text xml:lang="de">Sperrungsoperation nach Abschluss von Transaktionen wiederholen</text>
+    </step>
+    <step>
+      <text xml:lang="en">Check device status and SE connectivity</text>
+      <text xml:lang="de">Prüfen Sie Gerätestatus und SE-Konnektivität</text>
+    </step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorUnlockTransactionLoggingFailed</exception>
@@ -78,44 +198,116 @@
     <exception>ErrorFunctionFailed</exception>
   </relatedExceptions>
   <postconditionality>
-    <state name="Transaction Logging Lock Status Unchanged">The transaction logging system remains in its state prior to the failed lock operation. If it was unlocked before, it remains unlocked. If it was in a partial state, it remains in that state. The lock operation produces no state change.</state>
-    <state name="Transaction Logging Accessible for New Entries">Because the lock operation failed, the transaction logging system is still capable of accepting and recording new transaction log entries. The failure to lock means logging continues to function normally.</state>
-    <state name="Device State Unmodified">The device's overall state remains unchanged by the lock operation failure. No cascading side effects or device state modifications occur as a result of the exception.</state>
-    <state name="Authorization State Unaffected">The caller's authorization state and permissions remain unchanged. The failure to lock does not affect the caller's ability to invoke other functions.</state>
-    <state name="Logging Data Integrity Maintained">Existing transaction log entries remain intact and unmodified. The failed lock operation does not compromise or modify any previously recorded logging data.</state>
-    <state name="Error Reporting Available">The device and lock management subsystem remain operational. Error details and diagnostic information about the lock failure are available for investigation.</state>
+    <state name="Transaction Logging Lock Status Unchanged">
+      <text xml:lang="en">The transaction logging system remains in its state prior to the failed lock operation. If it was unlocked before, it remains unlocked. If it was in a partial state, it remains in that state. The lock operation produces no state change.</text>
+      <text xml:lang="de">Das Transaktionsprotokollierungssystem bleibt in seinem Zustand vor der fehlgeschlagenen Sperrungsoperation. Falls es vorher entsperrt war, bleibt es entsperrt. Falls es in einem Teilzustand war, bleibt es in diesem Zustand. Die Sperrungsoperation verursacht keine Zustandsänderung.</text>
+    </state>
+    <state name="Transaction Logging Accessible for New Entries">
+      <text xml:lang="en">Because the lock operation failed, the transaction logging system is still capable of accepting and recording new transaction log entries. The failure to lock means logging continues to function normally.</text>
+      <text xml:lang="de">Da die Sperrungsoperation fehlgeschlagen ist, kann das Transaktionsprotokollierungssystem weiterhin neue Transaktionsprotokolleinträge akzeptieren und aufzeichnen. Das Versagen der Sperrung bedeutet, dass die Protokollierung normal funktioniert weiter.</text>
+    </state>
+    <state name="Device State Unmodified">
+      <text xml:lang="en">The device's overall state remains unchanged by the lock operation failure. No cascading side effects or device state modifications occur as a result of the exception.</text>
+      <text xml:lang="de">Der Gesamtzustand des Geräts bleibt durch die Sperrungsoperations-Fehlschlag unverändert. Keine Kaskaden-Nebenwirkungen oder Gerätezustandänderungen treten als Ergebnis der Ausnahme auf.</text>
+    </state>
+    <state name="Authorization State Unaffected">
+      <text xml:lang="en">The caller's authorization state and permissions remain unchanged. The failure to lock does not affect the caller's ability to invoke other functions.</text>
+      <text xml:lang="de">Der Autorisierungszustand und die Berechtigungen des Aufrufers bleiben unverändert. Das Versagen der Sperrung wirkt sich nicht auf die Fähigkeit des Aufrufers aus, andere Funktionen aufzurufen.</text>
+    </state>
+    <state name="Logging Data Integrity Maintained">
+      <text xml:lang="en">Existing transaction log entries remain intact and unmodified. The failed lock operation does not compromise or modify any previously recorded logging data.</text>
+      <text xml:lang="de">Bestehende Transaktionsprotokolleinträge bleiben intakt und unmodifiziert. Die fehlgeschlagene Sperrungsoperation gefährdet oder ändert keine zuvor aufgezeichneten Protokolldaten.</text>
+    </state>
+    <state name="Error Reporting Available">
+      <text xml:lang="en">The device and lock management subsystem remain operational. Error details and diagnostic information about the lock failure are available for investigation.</text>
+      <text xml:lang="de">Das Gerät und das Sperrungsverwaltungs-Subsystem bleiben betriebsbereit. Fehlerdetails und Diagnoseinformationen über den Sperrungsfehlschlag sind für die Untersuchung verfügbar.</text>
+    </state>
   </postconditionality>
   <notes>
-    <note>Indication: Locking of transaction logging failed - logging could not be locked</note>
-    <note>Topics: Transaction Logging, Logging Control, Lock Operations, Access Control</note>
+    <note>
+      <text xml:lang="en">Indication: Locking of transaction logging failed - logging could not be locked</text>
+      <text xml:lang="de">Anzeichen: Sperrung der Transaktionsprotokollierung fehlgeschlagen - Protokollierung konnte nicht gesperrt werden</text>
+    </note>
+    <note>
+      <text xml:lang="en">Topics: Transaction Logging, Logging Control, Lock Operations, Access Control</text>
+      <text xml:lang="de">Themen: Transaktionsprotokollierung, Protokollsteuerung, Sperrungsoperationen, Zugriffskontrolle</text>
+    </note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Device Decommissioning with Audit Trail Finalization">
-      <description>When a device is being decommissioned, the application locks the transaction logging to create an immutable audit trail for compliance and archival purposes. When ErrorLockTransactionLoggingFailed is raised, the decommissioning process cannot be completed and the device cannot be decommissioned without resolving the lock failure.</description>
-      <relatedFunctions>lockTransactionLogging, getTransactionLoggingState, exportLoggingCertificate</relatedFunctions>
-      <errorContext>Lock failure prevents device decommissioning and audit trail finalization</errorContext>
+      <description>
+        <text xml:lang="en">When a device is being decommissioned, the application locks the transaction logging to create an immutable audit trail for compliance and archival purposes. When ErrorLockTransactionLoggingFailed is raised, the decommissioning process cannot be completed and the device cannot be decommissioned without resolving the lock failure.</text>
+        <text xml:lang="de">Wenn ein Gerät außer Betrieb genommen wird, sperrt die Anwendung die Transaktionsprotokollierung, um einen unbekömmlichen Audit-Trail für Compliance- und Archivierungszwecke zu erstellen. Wenn ErrorLockTransactionLoggingFailed ausgelöst wird, kann der Decommissioning-Prozess nicht abgeschlossen werden und das Gerät kann nicht außer Betrieb genommen werden, ohne den Sperrungsfehlschlag zu beheben.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">lockTransactionLogging, getTransactionLoggingState, exportLoggingCertificate</text>
+        <text xml:lang="de">lockTransactionLogging, getTransactionLoggingState, exportLoggingCertificate</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Lock failure prevents device decommissioning and audit trail finalization</text>
+        <text xml:lang="de">Sperrungsfehlschlag verhindert Gerätedecommissioning und Audit-Trail-Fertigstellung</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 2: Audit Trail Protection with Retry and Recovery">
-      <description>An application protects critical transaction logs by locking logging after completing a sensitive operation. When ErrorLockTransactionLoggingFailed is raised, the application implements retry logic with exponential backoff and queries device state to determine if the lock failure is transient or permanent before deciding on recovery strategy.</description>
-      <relatedFunctions>lockTransactionLogging, getTransactionLoggingState</relatedFunctions>
-      <errorContext>Lock failure triggers retry and diagnostics to identify root cause</errorContext>
+      <description>
+        <text xml:lang="en">An application protects critical transaction logs by locking logging after completing a sensitive operation. When ErrorLockTransactionLoggingFailed is raised, the application implements retry logic with exponential backoff and queries device state to determine if the lock failure is transient or permanent before deciding on recovery strategy.</text>
+        <text xml:lang="de">Eine Anwendung schützt kritische Transaktionsprotokolle durch Sperrung der Protokollierung nach dem Abschluss einer sensiblen Operation. Wenn ErrorLockTransactionLoggingFailed ausgelöst wird, implementiert die Anwendung Wiederholungslogik mit exponentiellem Rücktritt und fragt den Gerätezustand ab, um zu bestimmen, ob der Sperrungsfehlschlag vorläufig oder dauerhaft ist, bevor die Wiederherstellungsstrategie entschieden wird.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">lockTransactionLogging, getTransactionLoggingState</text>
+        <text xml:lang="de">lockTransactionLogging, getTransactionLoggingState</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Lock failure triggers retry and diagnostics to identify root cause</text>
+        <text xml:lang="de">Sperrungsfehlschlag löst Wiederholung und Diagnose aus, um die Grundursache zu identifizieren</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 3: Compliance Checkpoint with Lock Verification">
-      <description>A compliance-critical application reaches a processing checkpoint and attempts to lock transaction logging to finalize the audit trail for that checkpoint. When ErrorLockTransactionLoggingFailed is raised, the application cannot proceed and must investigate and resolve the lock failure before advancing to the next processing phase.</description>
-      <relatedFunctions>lockTransactionLogging, getTransactionLoggingState, deleteLogMessages</relatedFunctions>
-      <errorContext>Lock failure at compliance checkpoint prevents processing progression</errorContext>
+      <description>
+        <text xml:lang="en">A compliance-critical application reaches a processing checkpoint and attempts to lock transaction logging to finalize the audit trail for that checkpoint. When ErrorLockTransactionLoggingFailed is raised, the application cannot proceed and must investigate and resolve the lock failure before advancing to the next processing phase.</text>
+        <text xml:lang="de">Eine Compliance-kritische Anwendung erreicht einen Verarbeitungs-Checkpoint und versucht, die Transaktionsprotokollierung zu sperren, um den Audit-Trail für diesen Checkpoint zu finalisieren. Wenn ErrorLockTransactionLoggingFailed ausgelöst wird, kann die Anwendung nicht fortfahren und muss den Sperrungsfehlschlag untersuchen und beheben, bevor sie zur nächsten Verarbeitungsphase übergeht.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">lockTransactionLogging, getTransactionLoggingState, deleteLogMessages</text>
+        <text xml:lang="de">lockTransactionLogging, getTransactionLoggingState, deleteLogMessages</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Lock failure at compliance checkpoint prevents processing progression</text>
+        <text xml:lang="de">Sperrungsfehlschlag bei Compliance-Checkpoint verhindert Verarbeitungsfortschritt</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 4: Multi-Device Logging Management with Fallback">
-      <description>An enterprise system manages transaction logging across multiple devices and implements a policy to lock logging on each device at regular intervals. When ErrorLockTransactionLoggingFailed is raised on one device, the system logs the failure and potentially initiates device diagnostics or failover to alternate devices for critical transaction recording.</description>
-      <relatedFunctions>lockTransactionLogging, getTransactionLoggingState, exportLoggingCertificate</relatedFunctions>
-      <errorContext>Lock failure on one device triggers diagnostics and potential failover</errorContext>
+      <description>
+        <text xml:lang="en">An enterprise system manages transaction logging across multiple devices and implements a policy to lock logging on each device at regular intervals. When ErrorLockTransactionLoggingFailed is raised on one device, the system logs the failure and potentially initiates device diagnostics or failover to alternate devices for critical transaction recording.</text>
+        <text xml:lang="de">Ein Unternehmens-System verwaltet die Transaktionsprotokollierung über mehrere Geräte und implementiert eine Richtlinie zum Sperren der Protokollierung auf jedem Gerät in regelmäßigen Abständen. Wenn ErrorLockTransactionLoggingFailed auf einem Gerät ausgelöst wird, protokolliert das System den Fehler und initiiert potenziell Gerätediagnose oder Failover zu alternativen Geräten für die kritische Transaktionsaufzeichnung.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">lockTransactionLogging, getTransactionLoggingState, exportLoggingCertificate</text>
+        <text xml:lang="de">lockTransactionLogging, getTransactionLoggingState, exportLoggingCertificate</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Lock failure on one device triggers diagnostics and potential failover</text>
+        <text xml:lang="de">Sperrungsfehlschlag auf einem Gerät löst Diagnose und potenzielles Failover aus</text>
+      </errorContext>
     </scenario>
   </usage>
   <implementationContext>
-    <note>Raised by lockTransactionLogging when transaction log locking fails</note>
-    <note>Locking function prevents transaction log modifications</note>
-    <note>Device maintains transaction log lock state</note>
-    <note>Lock operation failure prevents logging freeze</note>
+    <note>
+      <text xml:lang="en">Raised by lockTransactionLogging when transaction log locking fails</text>
+      <text xml:lang="de">Wird von lockTransactionLogging ausgelöst, wenn das Transaktionsprotokoll-Sperren fehlschlägt</text>
+    </note>
+    <note>
+      <text xml:lang="en">Locking function prevents transaction log modifications</text>
+      <text xml:lang="de">Sperrungsfunktion verhindert Transaktionsprotokoll-Änderungen</text>
+    </note>
+    <note>
+      <text xml:lang="en">Device maintains transaction log lock state</text>
+      <text xml:lang="de">Gerät verwaltet Transaktionsprotokoll-Sperrungsstatus</text>
+    </note>
+    <note>
+      <text xml:lang="en">Lock operation failure prevents logging freeze</text>
+      <text xml:lang="de">Sperrungsoperations-Fehlschlag verhindert Protokolleinfrierung</text>
+    </note>
   </implementationContext>
 </exception>
 

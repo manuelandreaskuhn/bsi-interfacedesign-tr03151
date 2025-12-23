@@ -1,19 +1,34 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes'?>
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorTransactionLoggingNotLocked" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorTransactionLoggingNotLocked</name>
-  <description>This exception is thrown by the unlockTransactionLogging function if transaction logging functionality is not currently locked. The transaction logging system provides lock/unlock functionality to control when transactions can be recorded. The unlockTransactionLogging function is used to re-enable transaction recording after it has been locked for maintenance, audit, or security policy reasons. If unlockTransactionLogging is called when logging is already unlocked, ErrorTransactionLoggingNotLocked is raised to indicate the operation is invalid. ErrorTransactionLoggingNotLocked is a Medium severity exception because logging is already in the desired unlocked state, though the call itself is erroneous.</description>
+  <description>
+    <text xml:lang="en">This exception is thrown by the unlockTransactionLogging function if transaction logging functionality is not currently locked. The transaction logging system provides lock/unlock functionality to control when transactions can be recorded. The unlockTransactionLogging function is used to re-enable transaction recording after it has been locked for maintenance, audit, or security policy reasons. If unlockTransactionLogging is called when logging is already unlocked, ErrorTransactionLoggingNotLocked is raised to indicate the operation is invalid. ErrorTransactionLoggingNotLocked is a Medium severity exception because logging is already in the desired unlocked state, though the call itself is erroneous.</text>
+    <text xml:lang="de">Diese Ausnahme wird von der Funktion unlockTransactionLogging ausgelöst, wenn die Transaktionsprotokollierungsfunktion derzeit nicht gesperrt ist. Das Transaktionsprotokollierungssystem bietet Sperr-/Entsperrungsfunktionalität zur Kontrolle, wann Transaktionen aufgezeichnet werden können. Die Funktion unlockTransactionLogging wird verwendet, um die Transaktionsaufzeichnung nach dem Sperren für Wartungs-, Audit- oder Sicherheitsrichtliniengründe wieder zu aktivieren. Wenn unlockTransactionLogging aufgerufen wird, wenn die Protokollierung bereits entsperrt ist, wird ErrorTransactionLoggingNotLocked ausgelöst, um anzuzeigen, dass die Operation ungültig ist. ErrorTransactionLoggingNotLocked ist eine Ausnahme mit mittlerem Schweregrad, da sich die Protokollierung bereits im gewünschten entsperrten Zustand befindet, obwohl der Aufruf selbst fehlerhaft ist.</text>
+  </description>
   <category>Transaction Management</category>
   <subcategory>Logging Lock Management</subcategory>
   <severity>Medium</severity>
   <javadoc>
-    <summary>This class defines the exception ErrorTransactionLoggingNotLocked that is thrown by the SE API function unlockTransactionLogging if transaction logging is not currently locked.</summary>
-    <description>This exception is thrown when unlockTransactionLogging is called but transaction logging is not currently locked. Transaction logging provides lock/unlock functionality for administrative control. The unlockTransactionLogging function re-enables transaction recording after logging has been locked. If this function is called when logging is already unlocked, ErrorTransactionLoggingNotLocked is raised to indicate the operation is invalid. This prevents unnecessary unlock operations and alerts the caller that logging is not in the expected locked state. ErrorTransactionLoggingNotLocked is a Medium severity exception because logging is already operational, though the requested operation is erroneous. The caller should verify logging status before attempting to unlock.</description>
+    <summary>
+      <text xml:lang="en">This class defines the exception ErrorTransactionLoggingNotLocked that is thrown by the SE API function unlockTransactionLogging if transaction logging is not currently locked.</text>
+      <text xml:lang="de">Diese Klasse definiert die Ausnahme ErrorTransactionLoggingNotLocked, die von der SE-API-Funktion unlockTransactionLogging ausgelöst wird, wenn die Transaktionsprotokollierung derzeit nicht gesperrt ist.</text>
+    </summary>
+    <description>
+      <text xml:lang="en">This exception is thrown when unlockTransactionLogging is called but transaction logging is not currently locked. Transaction logging provides lock/unlock functionality for administrative control. The unlockTransactionLogging function re-enables transaction recording after logging has been locked. If this function is called when logging is already unlocked, ErrorTransactionLoggingNotLocked is raised to indicate the operation is invalid. This prevents unnecessary unlock operations and alerts the caller that logging is not in the expected locked state. ErrorTransactionLoggingNotLocked is a Medium severity exception because logging is already operational, though the requested operation is erroneous. The caller should verify logging status before attempting to unlock.</text>
+      <text xml:lang="de">Diese Ausnahme wird ausgelöst, wenn unlockTransactionLogging aufgerufen wird, aber die Transaktionsprotokollierung derzeit nicht gesperrt ist. Die Transaktionsprotokollierung bietet Sperr-/Entsperrungsfunktionalität für die Verwaltungskontrolle. Die Funktion unlockTransactionLogging reaktiviert die Transaktionsaufzeichnung, nachdem die Protokollierung gesperrt wurde. Wenn diese Funktion aufgerufen wird, wenn die Protokollierung bereits entsperrt ist, wird ErrorTransactionLoggingNotLocked ausgelöst, um anzuzeigen, dass die Operation ungültig ist. Dies verhütet unnötige Entsperrungsoperationen und benachrichtigt den Aufrufer, dass sich die Protokollierung nicht im erwarteten gesperrten Zustand befindet. ErrorTransactionLoggingNotLocked ist eine Ausnahme mit mittlerem Schweregrad, da die Protokollierung bereits funktionsfähig ist, obwohl die angeforderte Operation fehlerhaft ist. Der Aufrufer sollte den Protokollierungsstatus vor dem Entsperren überprüfen.</text>
+    </description>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>
     <section>3.2.2 Transaction Management - Logging Control Functions</section>
-    <requirement>The unlockTransactionLogging function re-enables transaction recording after logging has been locked. This function is used to exit lock states initiated by lockTransactionLogging or by security policy. If unlockTransactionLogging is called when transaction logging is not currently locked, the Secure Element SHALL raise ErrorTransactionLoggingNotLocked to indicate the operation is invalid. This prevents unnecessary unlock operations and alerts the caller that logging is not in the expected locked state. ErrorTransactionLoggingNotLocked is a Medium severity exception because logging is already operational and accessible. The caller should verify logging lock status before attempting unlock operations.</requirement>
-    <applicability>Logging unlock operations: unlockTransactionLogging</applicability>
+    <requirement>
+      <text xml:lang="en">The unlockTransactionLogging function re-enables transaction recording after logging has been locked. This function is used to exit lock states initiated by lockTransactionLogging or by security policy. If unlockTransactionLogging is called when transaction logging is not currently locked, the Secure Element SHALL raise ErrorTransactionLoggingNotLocked to indicate the operation is invalid. This prevents unnecessary unlock operations and alerts the caller that logging is not in the expected locked state. ErrorTransactionLoggingNotLocked is a Medium severity exception because logging is already operational and accessible. The caller should verify logging lock status before attempting unlock operations.</text>
+      <text xml:lang="de">Die Funktion unlockTransactionLogging reaktiviert die Transaktionsaufzeichnung, nachdem die Protokollierung gesperrt wurde. Diese Funktion wird verwendet, um Sperr zustände zu beenden, die von lockTransactionLogging oder von der Sicherheitsrichtlinie initiiert werden. Wenn unlockTransactionLogging aufgerufen wird, wenn die Transaktionsprotokollierung derzeit nicht gesperrt ist, SOLL das Secure Element ErrorTransactionLoggingNotLocked auslösen, um anzuzeigen, dass die Operation ungültig ist. Dies verhütet unnötige Entsperrungsoperationen und benachrichtigt den Aufrufer, dass sich die Protokollierung nicht im erwarteten gesperrten Zustand befindet. ErrorTransactionLoggingNotLocked ist eine Ausnahme mit mittlerem Schweregrad, da die Protokollierung bereits funktionsfähig und zugreifbar ist. Der Aufrufer sollte den Protokollierungssperrststatus vor dem Entsperren überprüfen.</text>
+    </requirement>
+    <applicability>
+      <text xml:lang="en">Logging unlock operations: unlockTransactionLogging</text>
+      <text xml:lang="de">Protokollierungsentsperre-Operationen: unlockTransactionLogging</text>
+    </applicability>
     <reference>Transaction Management (3.2.2), Logging Control Functions (3.2.2), unlockTransactionLogging – Function (3.2.2)</reference>
   </specification>
   <thrownBy>
@@ -21,52 +36,151 @@
   </thrownBy>
   <triggerConditions>
     <condition>
-      <scenario>Unlock called when logging already unlocked</scenario>
-      <description>unlockTransactionLogging called but logging is already in unlocked state</description>
-      <trigger>Administrator calls unlockTransactionLogging but logging was never locked. Device detects logging is not locked and raises ErrorTransactionLoggingNotLocked.</trigger>
+      <scenario>
+        <text xml:lang="en">Unlock called when logging already unlocked</text>
+        <text xml:lang="de">Entsperrung aufgerufen, wenn die Protokollierung bereits entsperrt ist</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">unlockTransactionLogging called but logging is already in unlocked state</text>
+        <text xml:lang="de">unlockTransactionLogging aufgerufen, aber die Protokollierung ist bereits im entsperrten Zustand</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">Administrator calls unlockTransactionLogging but logging was never locked. Device detects logging is not locked and raises ErrorTransactionLoggingNotLocked.</text>
+        <text xml:lang="de">Administrator ruft unlockTransactionLogging auf, aber die Protokollierung wurde niemals gesperrt. Das Gerät erkennt, dass die Protokollierung nicht gesperrt ist, und löst ErrorTransactionLoggingNotLocked aus.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Multiple unlock attempts after initial unlock</scenario>
-      <description>unlockTransactionLogging called multiple times sequentially</description>
-      <trigger>First unlock succeeds and logging is re-enabled. Administrator attempts second unlock without rechecking status. Device detects logging not locked and raises ErrorTransactionLoggingNotLocked on second attempt.</trigger>
+      <scenario>
+        <text xml:lang="en">Multiple unlock attempts after initial unlock</text>
+        <text xml:lang="de">Mehrere Entsperrungsversuche nach der ersten Entsperrung</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">unlockTransactionLogging called multiple times sequentially</text>
+        <text xml:lang="de">unlockTransactionLogging mehrmals hintereinander aufgerufen</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">First unlock succeeds and logging is re-enabled. Administrator attempts second unlock without rechecking status. Device detects logging not locked and raises ErrorTransactionLoggingNotLocked on second attempt.</text>
+        <text xml:lang="de">Die erste Entsperrung ist erfolgreich und die Protokollierung ist wieder aktiviert. Der Administrator versucht eine zweite Entsperrung, ohne den Status erneut zu prüfen. Das Gerät erkennt, dass die Protokollierung nicht gesperrt ist, und löst bei dem zweiten Versuch ErrorTransactionLoggingNotLocked aus.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Unlock called after automatic lock expiration</scenario>
-      <description>Temporary lock expires automatically before manual unlock attempted</description>
-      <trigger>Logging locked for maintenance. Timer-based lock auto-expires and logging re-enables. Administrator attempts manual unlock. Device detects lock already expired (logging unlocked) and raises ErrorTransactionLoggingNotLocked.</trigger>
+      <scenario>
+        <text xml:lang="en">Unlock called after automatic lock expiration</text>
+        <text xml:lang="de">Entsperrung aufgerufen nach automatischem Ablauf der Sperrung</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">Temporary lock expires automatically before manual unlock attempted</text>
+        <text xml:lang="de">Vorübergehende Sperrung läuft automatisch ab, bevor eine manuelle Entsperrung versucht wird</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">Logging locked for maintenance. Timer-based lock auto-expires and logging re-enables. Administrator attempts manual unlock. Device detects lock already expired (logging unlocked) and raises ErrorTransactionLoggingNotLocked.</text>
+        <text xml:lang="de">Protokollierung zur Wartung gesperrt. Timer-basierte Sperrung läuft automatisch ab und die Protokollierung wird wieder aktiviert. Der Administrator versucht die manuelle Entsperrung. Das Gerät erkennt, dass die Sperrung bereits abgelaufen ist (Protokollierung entsperrt) und löst ErrorTransactionLoggingNotLocked aus.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Unlock called after device reset resets lock state</scenario>
-      <description>Device reset clears lock state before unlock attempted</description>
-      <trigger>Logging locked for audit. Device restarts and clears temporary locks. Administrator attempts to unlock via command. Device detects logging not locked (reset cleared lock) and raises ErrorTransactionLoggingNotLocked.</trigger>
+      <scenario>
+        <text xml:lang="en">Unlock called after device reset resets lock state</text>
+        <text xml:lang="de">Entsperrung aufgerufen, nachdem der Geräteneustart den Sperrzustand zurückgesetzt hat</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">Device reset clears lock state before unlock attempted</text>
+        <text xml:lang="de">Der Geräteneustart löscht den Sperrzustand, bevor eine Entsperrung versucht wird</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">Logging locked for audit. Device restarts and clears temporary locks. Administrator attempts to unlock via command. Device detects logging not locked (reset cleared lock) and raises ErrorTransactionLoggingNotLocked.</text>
+        <text xml:lang="de">Protokollierung zur Audit gesperrt. Das Gerät wird neu gestartet und löscht vorübergehende Sperren. Der Administrator versucht, über einen Befehl zu entsperren. Das Gerät erkennt, dass die Protokollierung nicht gesperrt ist (Neustart gelöscht Sperre) und löst ErrorTransactionLoggingNotLocked aus.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Unlock in error after lock status verification shows already unlocked</scenario>
-      <description>Caller checks lock status, finds it unlocked, but requests unlock anyway in error</description>
-      <trigger>Application checks logging lock status, receives already-unlocked response. Application incorrectly attempts unlock anyway. Device raises ErrorTransactionLoggingNotLocked due to status mismatch.</trigger>
+      <scenario>
+        <text xml:lang="en">Unlock in error after lock status verification shows already unlocked</text>
+        <text xml:lang="de">Entsperrung in Fehler nach Sperrstatus-Verifikation zeigt bereits entsperrt</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">Caller checks lock status, finds it unlocked, but requests unlock anyway in error</text>
+        <text xml:lang="de">Aufrufer prüft Sperrstatus, findet ihn entsperrt, fordert aber ohnehin versehentlich Entsperrung an</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">Application checks logging lock status, receives already-unlocked response. Application incorrectly attempts unlock anyway. Device raises ErrorTransactionLoggingNotLocked due to status mismatch.</text>
+        <text xml:lang="de">Die Anwendung prüft den Protokollierungssperrststatus und erhält eine bereits entsperrt Antwort. Die Anwendung versucht dennoch verstörend zu entsperren. Das Gerät löst ErrorTransactionLoggingNotLocked aufgrund von Statusabweichung aus.</text>
+      </trigger>
     </condition>
   </triggerConditions>
   <executionSequence>
-    <step number="1">User/application calls unlockTransactionLogging function</step>
-    <step number="2">Function validates input parameters</step>
-    <step number="3">Function initiates communication with Secure Element</step>
-    <step number="4">Secure Element receives unlock transaction logging request</step>
-    <step number="5">Secure Element checks transaction logging lock status</step>
-    <step number="5a">If logging is locked → proceed to step 6</step>
-    <step number="5b">If logging is not locked → ErrorTransactionLoggingNotLocked raised, operation aborted</step>
-    <step number="6">Secure Element verifies authorization for unlock operation</step>
-    <step number="6a">If authorization valid → proceed to step 7</step>
-    <step number="6b">If authorization invalid → may raise ErrorParameterMismatch</step>
-    <step number="7">Secure Element clears logging lock flag</step>
-    <step number="8">Secure Element confirms logging now unlocked and operational</step>
-    <step number="9">Secure Element returns success to function</step>
-    <step number="10">Function returns to caller indicating logging successfully unlocked</step>
+    <step number="1">
+      <text xml:lang="en">User/application calls unlockTransactionLogging function</text>
+      <text xml:lang="de">Benutzer/Anwendung ruft die Funktion unlockTransactionLogging auf</text>
+    </step>
+    <step number="2">
+      <text xml:lang="en">Function validates input parameters</text>
+      <text xml:lang="de">Funktion validiert Eingabeparameter</text>
+    </step>
+    <step number="3">
+      <text xml:lang="en">Function initiates communication with Secure Element</text>
+      <text xml:lang="de">Funktion initiiert Kommunikation mit Secure Element</text>
+    </step>
+    <step number="4">
+      <text xml:lang="en">Secure Element receives unlock transaction logging request</text>
+      <text xml:lang="de">Secure Element empfängt Entsperr-Transaktionsprotokollierungsanforderung</text>
+    </step>
+    <step number="5">
+      <text xml:lang="en">Secure Element checks transaction logging lock status</text>
+      <text xml:lang="de">Secure Element prüft den Status der Transaktionsprotokollierungssperre</text>
+    </step>
+    <step number="5a">
+      <text xml:lang="en">If logging is locked → proceed to step 6</text>
+      <text xml:lang="de">Wenn Protokollierung gesperrt → fahren Sie mit Schritt 6 fort</text>
+    </step>
+    <step number="5b">
+      <text xml:lang="en">If logging is not locked → ErrorTransactionLoggingNotLocked raised, operation aborted</text>
+      <text xml:lang="de">Wenn Protokollierung nicht gesperrt → ErrorTransactionLoggingNotLocked ausgelöst, Operation abgebrochen</text>
+    </step>
+    <step number="6">
+      <text xml:lang="en">Secure Element verifies authorization for unlock operation</text>
+      <text xml:lang="de">Secure Element bestätigt die Berechtigung für die Entsperrungsoperation</text>
+    </step>
+    <step number="6a">
+      <text xml:lang="en">If authorization valid → proceed to step 7</text>
+      <text xml:lang="de">Wenn Berechtigung gültig → fahren Sie mit Schritt 7 fort</text>
+    </step>
+    <step number="6b">
+      <text xml:lang="en">If authorization invalid → may raise ErrorParameterMismatch</text>
+      <text xml:lang="de">Wenn Berechtigung ungültig → kann ErrorParameterMismatch auslösen</text>
+    </step>
+    <step number="7">
+      <text xml:lang="en">Secure Element clears logging lock flag</text>
+      <text xml:lang="de">Secure Element löscht das Protokollierungssperrflag</text>
+    </step>
+    <step number="8">
+      <text xml:lang="en">Secure Element confirms logging now unlocked and operational</text>
+      <text xml:lang="de">Secure Element bestätigt, dass Protokollierung jetzt entsperrt und funktionsfähig ist</text>
+    </step>
+    <step number="9">
+      <text xml:lang="en">Secure Element returns success to function</text>
+      <text xml:lang="de">Secure Element gibt Erfolg an Funktion zurück</text>
+    </step>
+    <step number="10">
+      <text xml:lang="en">Function returns to caller indicating logging successfully unlocked</text>
+      <text xml:lang="de">Funktion kehrt zu Aufrufer zurück und zeigt an, dass Protokollierung erfolgreich entsperrt wurde</text>
+    </step>
   </executionSequence>
   <recovery>
-    <step>Transaction logging is already unlocked</step>
-    <step>Locking may not be needed if already unlocked</step>
-    <step>Verify intended lock state</step>
-    <step>Check transaction logging configuration</step>
+    <step>
+      <text xml:lang="en">Transaction logging is already unlocked</text>
+      <text xml:lang="de">Die Transaktionsprotokollierung ist bereits entsperrt</text>
+    </step>
+    <step>
+      <text xml:lang="en">Locking may not be needed if already unlocked</text>
+      <text xml:lang="de">Eine Sperrung ist möglicherweise nicht erforderlich, wenn bereits entsperrt</text>
+    </step>
+    <step>
+      <text xml:lang="en">Verify intended lock state</text>
+      <text xml:lang="de">Bestätigen Sie den beabsichtigten Sperrzustand</text>
+    </step>
+    <step>
+      <text xml:lang="en">Check transaction logging configuration</text>
+      <text xml:lang="de">Prüfen Sie die Transaktionsprotokollierungskonfiguration</text>
+    </step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorTransactionLoggingLocked</exception>
@@ -75,44 +189,104 @@
     <exception>ErrorDeviceNotInitialized</exception>
   </relatedExceptions>
   <postconditionality>
-    <state name="Logging Remains Unlocked">Logging is already unlocked and remains operational.</state>
-    <state name="No State Change">Logging lock state is unchanged by operation.</state>
-    <state name="Operation Not Executed">Unlock operation is not executed because logging not locked.</state>
-    <state name="Medium Exception Returned">Function returns ErrorTransactionLoggingNotLocked Medium exception to caller.</state>
-    <state name="Transactions Already Enabled">Transaction recording is already enabled - no change needed.</state>
-    <state name="Caller Notified of Status">Caller receives notification that logging already unlocked.</state>
+    <state name="Logging Remains Unlocked">
+      <text xml:lang="en">Logging is already unlocked and remains operational.</text>
+      <text xml:lang="de">Die Protokollierung ist bereits entsperrt und bleibt funktionsfähig.</text>
+    </state>
+    <state name="No State Change">
+      <text xml:lang="en">Logging lock state is unchanged by operation.</text>
+      <text xml:lang="de">Der Protokollierungssperrststatus ist durch die Operation unverändert.</text>
+    </state>
+    <state name="Operation Not Executed">
+      <text xml:lang="en">Unlock operation is not executed because logging not locked.</text>
+      <text xml:lang="de">Die Entsperrungsoperation wird nicht ausgeführt, da die Protokollierung nicht gesperrt ist.</text>
+    </state>
+    <state name="Medium Exception Returned">
+      <text xml:lang="en">Function returns ErrorTransactionLoggingNotLocked Medium exception to caller.</text>
+      <text xml:lang="de">Funktion gibt die mittlere Ausnahme ErrorTransactionLoggingNotLocked an den Aufrufer zurück.</text>
+    </state>
+    <state name="Transactions Already Enabled">
+      <text xml:lang="en">Transaction recording is already enabled - no change needed.</text>
+      <text xml:lang="de">Die Transaktionsaufzeichnung ist bereits aktiviert - keine Änderung erforderlich.</text>
+    </state>
+    <state name="Caller Notified of Status">
+      <text xml:lang="en">Caller receives notification that logging already unlocked.</text>
+      <text xml:lang="de">Der Aufrufer erhält eine Benachrichtigung, dass die Protokollierung bereits entsperrt ist.</text>
+    </state>
   </postconditionality>
   <notes>
-    <note>Indication: Transaction logging is not locked when it should be - lock expected</note>
-    <note>Topics: Transaction Logging, Logging Control, Lock Operations, State Validation</note>
+    <note>
+      <text xml:lang="en">Indication: Transaction logging is not locked when it should be - lock expected</text>
+      <text xml:lang="de">Anzeichen: Die Transaktionsprotokollierung ist nicht gesperrt, wenn sie sein sollte - Sperre erwartet</text>
+    </note>
+    <note>
+      <text xml:lang="en">Topics: Transaction Logging, Logging Control, Lock Operations, State Validation</text>
+      <text xml:lang="de">Themen: Transaktionsprotokollierung, Protokollierungskontrolle, Sperroperationen, Zustandsvalidierung</text>
+    </note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Duplicate Unlock Attempt">
-      <description>Administrator locks logging for maintenance, then manually unlocks it. After completing maintenance, administrator attempts unlock again without checking lock status. Device detects logging is already unlocked and raises ErrorTransactionLoggingNotLocked. Administrator reviews log and recognizes logging is already operational.</description>
+      <description>
+        <text xml:lang="en">Administrator locks logging for maintenance, then manually unlocks it. After completing maintenance, administrator attempts unlock again without checking lock status. Device detects logging is already unlocked and raises ErrorTransactionLoggingNotLocked. Administrator reviews log and recognizes logging is already operational.</text>
+        <text xml:lang="de">Der Administrator sperrt die Protokollierung zur Wartung und entsperrt sie dann manuell. Nach Abschluss der Wartung versucht der Administrator, ohne Statusprüfung erneut zu entsperren. Das Gerät erkennt, dass die Protokollierung bereits entsperrt ist, und löst ErrorTransactionLoggingNotLocked aus. Der Administrator prüft das Protokoll und erkennt, dass die Protokollierung bereits funktionsfähig ist.</text>
+      </description>
       <relatedFunctions>unlockTransactionLogging, lockTransactionLogging</relatedFunctions>
-      <errorContext>Duplicate unlock prevention - logging already operational</errorContext>
+      <errorContext>
+        <text xml:lang="en">Duplicate unlock prevention - logging already operational</text>
+        <text xml:lang="de">Duplikat-Entsperrungsprävention - Protokollierung bereits funktionsfähig</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 2: Automatic Lock Expiration Before Manual Unlock">
-      <description>Logging locked with 10-minute timeout for maintenance. Maintenance takes 5 minutes. Lock automatically expires and logging re-enables. Administrator then manually attempts unlock without checking status. Device detects logging not locked and raises ErrorTransactionLoggingNotLocked.</description>
+      <description>
+        <text xml:lang="en">Logging locked with 10-minute timeout for maintenance. Maintenance takes 5 minutes. Lock automatically expires and logging re-enables. Administrator then manually attempts unlock without checking status. Device detects logging not locked and raises ErrorTransactionLoggingNotLocked.</text>
+        <text xml:lang="de">Protokollierung mit 10-Minuten-Timeout zur Wartung gesperrt. Die Wartung dauert 5 Minuten. Die Sperrung läuft automatisch ab und die Protokollierung wird wieder aktiviert. Der Administrator versucht dann manuell zu entsperren, ohne den Status zu prüfen. Das Gerät erkennt, dass die Protokollierung nicht gesperrt ist, und löst ErrorTransactionLoggingNotLocked aus.</text>
+      </description>
       <relatedFunctions>unlockTransactionLogging, lockTransactionLogging</relatedFunctions>
-      <errorContext>Automatic lock expiration prevents manual unlock need</errorContext>
+      <errorContext>
+        <text xml:lang="en">Automatic lock expiration prevents manual unlock need</text>
+        <text xml:lang="de">Automatischer Sperrablauf verhindert manuelle Entsperrbedarf</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 3: Device Reset Clears Temporary Lock">
-      <description>Logging locked for audit preservation. Device unexpectedly restarts. Restart clears temporary locks (but preserves permanent policy locks). Administrator attempts to unlock via command, unaware of reset. Device detects logging already unlocked from reset and raises ErrorTransactionLoggingNotLocked.</description>
+      <description>
+        <text xml:lang="en">Logging locked for audit preservation. Device unexpectedly restarts. Restart clears temporary locks (but preserves permanent policy locks). Administrator attempts to unlock via command, unaware of reset. Device detects logging already unlocked from reset and raises ErrorTransactionLoggingNotLocked.</text>
+        <text xml:lang="de">Protokollierung zur Audit-Erhaltung gesperrt. Das Gerät wird unerwartet neu gestartet. Der Neustart löscht vorübergehende Sperren (aber behält permanente Richtlinien sperren). Der Administrator versucht, über einen Befehl zu entsperren, ohne vom Neustart zu wissen. Das Gerät erkennt, dass die Protokollierung bereits vom Neustart entsperrt ist, und löst ErrorTransactionLoggingNotLocked aus.</text>
+      </description>
       <relatedFunctions>unlockTransactionLogging</relatedFunctions>
-      <errorContext>Device reset clears temporary lock - manual unlock unnecessary</errorContext>
+      <errorContext>
+        <text xml:lang="en">Device reset clears temporary lock - manual unlock unnecessary</text>
+        <text xml:lang="de">Geräteneustart löscht vorübergehende Sperre - manuelle Entsperrung unnötig</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 4: Application Checks Status Before Unlock">
-      <description>Application obtains logging lock status query, receives response indicating "not locked". Application receives error alert to attempt unlock. Application calls unlockTransactionLogging to ensure unlock. Device raises ErrorTransactionLoggingNotLocked due to already-unlocked status. Application error handling catches exception and continues normally.</description>
+      <description>
+        <text xml:lang="en">Application obtains logging lock status query, receives response indicating "not locked". Application receives error alert to attempt unlock. Application calls unlockTransactionLogging to ensure unlock. Device raises ErrorTransactionLoggingNotLocked due to already-unlocked status. Application error handling catches exception and continues normally.</text>
+        <text xml:lang="de">Die Anwendung erhält eine Abfrage zum Protokollierungssperrststatus und erhält eine Antwort, die "nicht gesperrt" anzeigt. Die Anwendung erhält eine Fehlerwarnmeldung, um zu versuchen, zu entsperren. Die Anwendung ruft unlockTransactionLogging auf, um die Entsperrung sicherzustellen. Das Gerät löst ErrorTransactionLoggingNotLocked auf Grund des bereits entsperrten Status aus. Die Fehlerbehandlung der Anwendung fängt die Ausnahme auf und fährt normal fort.</text>
+      </description>
       <relatedFunctions>unlockTransactionLogging</relatedFunctions>
-      <errorContext>Status check confirms unlock not needed - proper error handling</errorContext>
+      <errorContext>
+        <text xml:lang="en">Status check confirms unlock not needed - proper error handling</text>
+        <text xml:lang="de">Die Statusprüfung bestätigt, dass Entsperrung nicht erforderlich ist - ordnungsgemäße Fehlerbehandlung</text>
+      </errorContext>
     </scenario>
   </usage>
   <implementationContext>
-    <note>Raised by unlockTransactionLogging when logging not locked</note>
-    <note>State validation expects transaction logging locked state</note>
-    <note>Device prevents unlocking when logging already unlocked</note>
-    <note>Unlocked state prevents unlock operation</note>
+    <note>
+      <text xml:lang="en">Raised by unlockTransactionLogging when logging not locked</text>
+      <text xml:lang="de">Wird durch unlockTransactionLogging ausgelöst, wenn die Protokollierung nicht gesperrt ist</text>
+    </note>
+    <note>
+      <text xml:lang="en">State validation expects transaction logging locked state</text>
+      <text xml:lang="de">Die Zustandsvalidierung erwartet einen gesperrten Transaktionsprotokollierungszustand</text>
+    </note>
+    <note>
+      <text xml:lang="en">Device prevents unlocking when logging already unlocked</text>
+      <text xml:lang="de">Das Gerät verhütet die Entsperrung, wenn die Protokollierung bereits entsperrt ist</text>
+    </note>
+    <note>
+      <text xml:lang="en">Unlocked state prevents unlock operation</text>
+      <text xml:lang="de">Der entsperrte Zustand verhütet die Entsperrungsoperation</text>
+    </note>
   </implementationContext>
 </exception>
 

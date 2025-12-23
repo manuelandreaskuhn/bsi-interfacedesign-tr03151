@@ -1,19 +1,34 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes'?>
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorUnlockTransactionLoggingFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorUnlockTransactionLoggingFailed</name>
-  <description>This exception is thrown by the unlockTransactionLogging function when the operation fails to unlock transaction logging functionality. Transaction logging provides lock/unlock control to manage when transactions can be recorded. The unlockTransactionLogging function re-enables transaction recording after logging has been locked for maintenance or audit purposes. ErrorUnlockTransactionLoggingFailed is raised when the unlock operation cannot be completed successfully, which may occur due to authorization failures, hardware errors, device state issues, or other operational failures. ErrorUnlockTransactionLoggingFailed is a High severity exception because it prevents restoration of transaction recording capability.</description>
+  <description>
+    <text xml:lang="en">This exception is thrown by the unlockTransactionLogging function when the operation fails to unlock transaction logging functionality. Transaction logging provides lock/unlock control to manage when transactions can be recorded. The unlockTransactionLogging function re-enables transaction recording after logging has been locked for maintenance or audit purposes. ErrorUnlockTransactionLoggingFailed is raised when the unlock operation cannot be completed successfully, which may occur due to authorization failures, hardware errors, device state issues, or other operational failures. ErrorUnlockTransactionLoggingFailed is a High severity exception because it prevents restoration of transaction recording capability.</text>
+    <text xml:lang="de">Diese Ausnahme wird von der Funktion unlockTransactionLogging ausgelöst, wenn die Operation fehlschlägt, die Transaktionsprotokollierungsfunktionalität zu entsperren. Die Transaktionsprotokollierung bietet Sperr-/Entsperrungskontrolle, um zu verwalten, wann Transaktionen aufgezeichnet werden können. Die Funktion unlockTransactionLogging reaktiviert die Transaktionsaufzeichnung, nachdem die Protokollierung zu Wartungs- oder Auditzwecken gesperrt wurde. ErrorUnlockTransactionLoggingFailed wird ausgelöst, wenn die Entsperrungsoperation nicht erfolgreich abgeschlossen werden kann, was aufgrund von Autorisierungsfehlern, Hardwarefehlern, Gerätestatusfragen oder anderen Operationsfehlern auftreten kann. ErrorUnlockTransactionLoggingFailed ist eine Ausnahme mit hohem Schweregrad, da sie die Wiederherstellung der Transaktionsaufzeichnungsfunktion verhindert.</text>
+  </description>
   <category>Transaction Management</category>
   <subcategory>Logging Control Failure</subcategory>
   <severity>High</severity>
   <javadoc>
-    <summary>This class defines the exception ErrorUnlockTransactionLoggingFailed that is thrown by the unlockTransactionLogging function when the unlock operation fails.</summary>
-    <description>This exception is thrown when the unlockTransactionLogging function fails to unlock transaction logging functionality. Transaction logging can be locked administratively or by security policy for maintenance or audit purposes. The unlockTransactionLogging function re-enables transaction recording. If unlock verification fails, authorization is denied, hardware errors occur, or device issues prevent completion, ErrorUnlockTransactionLoggingFailed is raised. This indicates the unlock operation could not be successfully completed. Transaction logging remains locked and operations cannot be recorded. ErrorUnlockTransactionLoggingFailed is a High severity exception because transaction recording capability is unavailable. Recovery requires investigating failure cause and retrying with appropriate authorization or device corrections.</description>
+    <summary>
+      <text xml:lang="en">This class defines the exception ErrorUnlockTransactionLoggingFailed that is thrown by the unlockTransactionLogging function when the unlock operation fails.</text>
+      <text xml:lang="de">Diese Klasse definiert die Ausnahme ErrorUnlockTransactionLoggingFailed, die von der Funktion unlockTransactionLogging ausgelöst wird, wenn die Entsperrungsoperation fehlschlägt.</text>
+    </summary>
+    <description>
+      <text xml:lang="en">This exception is thrown when the unlockTransactionLogging function fails to unlock transaction logging functionality. Transaction logging can be locked administratively or by security policy for maintenance or audit purposes. The unlockTransactionLogging function re-enables transaction recording. If unlock verification fails, authorization is denied, hardware errors occur, or device issues prevent completion, ErrorUnlockTransactionLoggingFailed is raised. This indicates the unlock operation could not be successfully completed. Transaction logging remains locked and operations cannot be recorded. ErrorUnlockTransactionLoggingFailed is a High severity exception because transaction recording capability is unavailable. Recovery requires investigating failure cause and retrying with appropriate authorization or device corrections.</text>
+      <text xml:lang="de">Diese Ausnahme wird ausgelöst, wenn die Funktion unlockTransactionLogging fehlschlägt, die Transaktionsprotokollierungsfunktionalität zu entsperren. Die Transaktionsprotokollierung kann administrativ oder durch Sicherheitsrichtlinie zu Wartungs- oder Auditzwecken gesperrt werden. Die Funktion unlockTransactionLogging reaktiviert die Transaktionsaufzeichnung. Wenn die Entsperrungsüberprüfung fehlschlägt, die Autorisierung verweigert wird, Hardwarefehler auftreten oder Geräteprobleme den Abschluss verhindern, wird ErrorUnlockTransactionLoggingFailed ausgelöst. Dies zeigt an, dass die Entsperrungsoperation nicht erfolgreich abgeschlossen werden konnte. Die Transaktionsprotokollierung bleibt gesperrt und Operationen können nicht aufgezeichnet werden. ErrorUnlockTransactionLoggingFailed ist eine Ausnahme mit hohem Schweregrad, da die Transaktionsaufzeichnungsfunktion nicht verfügbar ist. Die Wiederherstellung erfordert Untersuchung der Fehlerursache und Wiederholung mit angemessener Autorisierung oder Gerätekorrektionen.</text>
+    </description>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>
     <section>3.2.2 Transaction Management - Logging Control Functions</section>
-    <requirement>The unlockTransactionLogging function re-enables transaction recording after logging has been locked. This function is used to exit lock states initiated by lockTransactionLogging or by security policy. If the unlock operation fails due to authorization denial, credential verification failure, hardware errors, or device state issues, the Secure Element SHALL raise ErrorUnlockTransactionLoggingFailed. This indicates the unlock operation could not be successfully completed and transaction logging remains locked. ErrorUnlockTransactionLoggingFailed is a High severity exception because transaction recording capability remains unavailable. Recovery requires investigating the failure cause and retrying with appropriate authorization or after correcting device state issues.</requirement>
-    <applicability>Logging unlock operations: unlockTransactionLogging</applicability>
+    <requirement>
+      <text xml:lang="en">The unlockTransactionLogging function re-enables transaction recording after logging has been locked. This function is used to exit lock states initiated by lockTransactionLogging or by security policy. If the unlock operation fails due to authorization denial, credential verification failure, hardware errors, or device state issues, the Secure Element SHALL raise ErrorUnlockTransactionLoggingFailed. This indicates the unlock operation could not be successfully completed and transaction logging remains locked. ErrorUnlockTransactionLoggingFailed is a High severity exception because transaction recording capability remains unavailable. Recovery requires investigating the failure cause and retrying with appropriate authorization or after correcting device state issues.</text>
+      <text xml:lang="de">Die Funktion unlockTransactionLogging reaktiviert die Transaktionsaufzeichnung, nachdem die Protokollierung gesperrt wurde. Diese Funktion wird verwendet, um Sperr zustände zu beenden, die von lockTransactionLogging oder durch Sicherheitsrichtlinie initiiert werden. Wenn die Entsperrungsoperation aufgrund von Autorisierungsverweigerung, Glaubwürdigkeitsverifikationsfehler, Hardwarefehlern oder Gerätestatusfragen fehlschlägt, MUSS das Secure Element ErrorUnlockTransactionLoggingFailed auslösen. Dies zeigt an, dass die Entsperrungsoperation nicht erfolgreich abgeschlossen werden konnte und die Transaktionsprotokollierung gesperrt bleibt. ErrorUnlockTransactionLoggingFailed ist eine Ausnahme mit hohem Schweregrad, da die Transaktionsaufzeichnungsfunktion nicht verfügbar bleibt. Die Wiederherstellung erfordert Untersuchung der Fehlerursache und Wiederholung mit angemessener Autorisierung oder nach Korrektur von Gerätestatusfragen.</text>
+    </requirement>
+    <applicability>
+      <text xml:lang="en">Logging unlock operations: unlockTransactionLogging</text>
+      <text xml:lang="de">Protokollierungsentsperre-Operationen: unlockTransactionLogging</text>
+    </applicability>
     <reference>Transaction Management (3.2.2), Logging Control Functions (3.2.2), unlockTransactionLogging – Function (3.2.2)</reference>
   </specification>
   <thrownBy>
@@ -21,58 +36,175 @@
   </thrownBy>
   <triggerConditions>
     <condition>
-      <scenario>Unlock authorization verification fails</scenario>
-      <description>Authorization credentials or verification for unlock operation invalid</description>
-      <trigger>Administrator calls unlockTransactionLogging but lacks authorization. Device verifies authorization, finds insufficient privileges. ErrorUnlockTransactionLoggingFailed raised.</trigger>
+      <scenario>
+        <text xml:lang="en">Unlock authorization verification fails</text>
+        <text xml:lang="de">Entsperr-Autorisierungsverifizierung fehlgeschlagen</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">Authorization credentials or verification for unlock operation invalid</text>
+        <text xml:lang="de">Autorisierungsanmeldedaten oder Verifizierung für Entsperrungsoperation ungültig</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">Administrator calls unlockTransactionLogging but lacks authorization. Device verifies authorization, finds insufficient privileges. ErrorUnlockTransactionLoggingFailed raised.</text>
+        <text xml:lang="de">Administrator ruft unlockTransactionLogging auf, hat aber keine Autorisierung. Gerät prüft Autorisierung, findet unzureichende Berechtigungen. ErrorUnlockTransactionLoggingFailed wird ausgelöst.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Hardware failure during unlock operation</scenario>
-      <description>Hardware error prevents proper unlock processing</description>
-      <trigger>unlockTransactionLogging operation encounters hardware error accessing logging control. Device cannot complete unlock due to hardware issue. ErrorUnlockTransactionLoggingFailed raised.</trigger>
+      <scenario>
+        <text xml:lang="en">Hardware failure during unlock operation</text>
+        <text xml:lang="de">Hardwarefehler während der Entsperrungsoperation</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">Hardware error prevents proper unlock processing</text>
+        <text xml:lang="de">Hardwarefehler verhindert ordnungsgemäße Entsperrungsverarbeitung</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">unlockTransactionLogging operation encounters hardware error accessing logging control. Device cannot complete unlock due to hardware issue. ErrorUnlockTransactionLoggingFailed raised.</text>
+        <text xml:lang="de">Der Vorgang unlockTransactionLogging stößt auf einen Hardwarefehler beim Zugriff auf Protokollierungskontrolle. Das Gerät kann die Entsperrung nicht abschließen, da ein Hardwareproblem vorliegt. ErrorUnlockTransactionLoggingFailed wird ausgelöst.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Device state incompatible with unlock operation</scenario>
-      <description>Device is in state that prevents unlock (not initialized, in diagnostics, etc.)</description>
-      <trigger>Administrator attempts unlockTransactionLogging but device is in diagnostic mode or secure element disabled. Device rejects unlock operation. ErrorUnlockTransactionLoggingFailed raised.</trigger>
+      <scenario>
+        <text xml:lang="en">Device state incompatible with unlock operation</text>
+        <text xml:lang="de">Gerätestatus nicht kompatibel mit Entsperrungsoperation</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">Device is in state that prevents unlock (not initialized, in diagnostics, etc.)</text>
+        <text xml:lang="de">Das Gerät befindet sich in einem Zustand, der eine Entsperrung verhindert (nicht initialisiert, in Diagnose usw.)</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">Administrator attempts unlockTransactionLogging but device is in diagnostic mode or secure element disabled. Device rejects unlock operation. ErrorUnlockTransactionLoggingFailed raised.</text>
+        <text xml:lang="de">Administrator versucht unlockTransactionLogging, aber das Gerät befindet sich im Diagnosemodus oder das Secure Element ist deaktiviert. Das Gerät lehnt die Entsperrungsoperation ab. ErrorUnlockTransactionLoggingFailed wird ausgelöst.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Secure element communication failure during unlock</scenario>
-      <description>Communication with Secure Element fails during unlock processing</description>
-      <trigger>unlockTransactionLogging operation experiences communication timeout or protocol error with Secure Element. Operation cannot complete. ErrorUnlockTransactionLoggingFailed raised.</trigger>
+      <scenario>
+        <text xml:lang="en">Secure element communication failure during unlock</text>
+        <text xml:lang="de">Secure Element-Kommunikationsfehler während der Entsperrung</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">Communication with Secure Element fails during unlock processing</text>
+        <text xml:lang="de">Die Kommunikation mit dem Secure Element schlägt während der Entsperrungsverarbeitung fehl</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">unlockTransactionLogging operation experiences communication timeout or protocol error with Secure Element. Operation cannot complete. ErrorUnlockTransactionLoggingFailed raised.</text>
+        <text xml:lang="de">Der Vorgang unlockTransactionLogging erlebt ein Kommunikations-Timeout oder einen Protokollfehler mit dem Secure Element. Der Vorgang kann nicht abgeschlossen werden. ErrorUnlockTransactionLoggingFailed wird ausgelöst.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Storage or persistence failure for lock state update</scenario>
-      <description>Device cannot update lock state in persistent storage</description>
-      <trigger>Unlock verification succeeds but device fails to update persistent lock state. Device rolls back operation. ErrorUnlockTransactionLoggingFailed raised.</trigger>
+      <scenario>
+        <text xml:lang="en">Storage or persistence failure for lock state update</text>
+        <text xml:lang="de">Speicher- oder Persistenzfehler für Sperrzustandsaktualisierung</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">Device cannot update lock state in persistent storage</text>
+        <text xml:lang="de">Das Gerät kann den Sperrzustand im persistenten Speicher nicht aktualisieren</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">Unlock verification succeeds but device fails to update persistent lock state. Device rolls back operation. ErrorUnlockTransactionLoggingFailed raised.</text>
+        <text xml:lang="de">Die Entsperrungsüberprüfung ist erfolgreich, aber das Gerät kann den persistenten Sperrzustand nicht aktualisieren. Das Gerät macht die Operation rückgängig. ErrorUnlockTransactionLoggingFailed wird ausgelöst.</text>
+      </trigger>
     </condition>
   </triggerConditions>
   <executionSequence>
-    <step number="1">User/application calls unlockTransactionLogging function</step>
-    <step number="2">Function validates input parameters</step>
-    <step number="3">Function initiates communication with Secure Element</step>
-    <step number="4">Secure Element receives unlock transaction logging request</step>
-    <step number="5">Secure Element checks authorization for unlock operation</step>
-    <step number="5a">If authorization invalid → ErrorUnlockTransactionLoggingFailed raised</step>
-    <step number="5b">If authorization valid → proceed to step 6</step>
-    <step number="6">Secure Element verifies unlock credential/password if required</step>
-    <step number="6a">If credential verification fails → ErrorUnlockTransactionLoggingFailed raised</step>
-    <step number="6b">If credential valid → proceed to step 7</step>
-    <step number="7">Secure Element checks device state compatibility</step>
-    <step number="7a">If device state incompatible → ErrorUnlockTransactionLoggingFailed raised</step>
-    <step number="7b">If device state compatible → proceed to step 8</step>
-    <step number="8">Secure Element updates logging lock state in storage</step>
-    <step number="8a">If storage update fails → ErrorUnlockTransactionLoggingFailed raised, rollback</step>
-    <step number="8b">If storage update succeeds → proceed to step 9</step>
-    <step number="9">Secure Element clears logging lock flag</step>
-    <step number="10">Secure Element logs unlock event for audit trail</step>
-    <step number="11">Secure Element returns success to function</step>
-    <step number="12">Function returns to caller indicating logging successfully unlocked</step>
+    <step number="1">
+      <text xml:lang="en">User/application calls unlockTransactionLogging function</text>
+      <text xml:lang="de">Benutzer/Anwendung ruft die Funktion unlockTransactionLogging auf</text>
+    </step>
+    <step number="2">
+      <text xml:lang="en">Function validates input parameters</text>
+      <text xml:lang="de">Funktion validiert Eingabeparameter</text>
+    </step>
+    <step number="3">
+      <text xml:lang="en">Function initiates communication with Secure Element</text>
+      <text xml:lang="de">Funktion initiiert Kommunikation mit Secure Element</text>
+    </step>
+    <step number="4">
+      <text xml:lang="en">Secure Element receives unlock transaction logging request</text>
+      <text xml:lang="de">Secure Element empfängt Entsperr-Transaktionsprotokollierungsanforderung</text>
+    </step>
+    <step number="5">
+      <text xml:lang="en">Secure Element checks authorization for unlock operation</text>
+      <text xml:lang="de">Secure Element prüft die Autorisierung für die Entsperrungsoperation</text>
+    </step>
+    <step number="5a">
+      <text xml:lang="en">If authorization invalid → ErrorUnlockTransactionLoggingFailed raised</text>
+      <text xml:lang="de">Wenn Autorisierung ungültig → ErrorUnlockTransactionLoggingFailed ausgelöst</text>
+    </step>
+    <step number="5b">
+      <text xml:lang="en">If authorization valid → proceed to step 6</text>
+      <text xml:lang="de">Wenn Autorisierung gültig → fahren Sie mit Schritt 6 fort</text>
+    </step>
+    <step number="6">
+      <text xml:lang="en">Secure Element verifies unlock credential/password if required</text>
+      <text xml:lang="de">Secure Element verifiziert Entsperr-Berechtigungsnachweis/Passwort, falls erforderlich</text>
+    </step>
+    <step number="6a">
+      <text xml:lang="en">If credential verification fails → ErrorUnlockTransactionLoggingFailed raised</text>
+      <text xml:lang="de">Wenn Berechtigungsnachweisverifizierung fehlschlägt → ErrorUnlockTransactionLoggingFailed ausgelöst</text>
+    </step>
+    <step number="6b">
+      <text xml:lang="en">If credential valid → proceed to step 7</text>
+      <text xml:lang="de">Wenn Berechtigungsnachweis gültig → fahren Sie mit Schritt 7 fort</text>
+    </step>
+    <step number="7">
+      <text xml:lang="en">Secure Element checks device state compatibility</text>
+      <text xml:lang="de">Secure Element prüft die Gerätestatuskompatibilität</text>
+    </step>
+    <step number="7a">
+      <text xml:lang="en">If device state incompatible → ErrorUnlockTransactionLoggingFailed raised</text>
+      <text xml:lang="de">Wenn Gerätestatus nicht kompatibel → ErrorUnlockTransactionLoggingFailed ausgelöst</text>
+    </step>
+    <step number="7b">
+      <text xml:lang="en">If device state compatible → proceed to step 8</text>
+      <text xml:lang="de">Wenn Gerätestatus kompatibel → fahren Sie mit Schritt 8 fort</text>
+    </step>
+    <step number="8">
+      <text xml:lang="en">Secure Element updates logging lock state in storage</text>
+      <text xml:lang="de">Secure Element aktualisiert den Protokollierungssperrzustand im Speicher</text>
+    </step>
+    <step number="8a">
+      <text xml:lang="en">If storage update fails → ErrorUnlockTransactionLoggingFailed raised, rollback</text>
+      <text xml:lang="de">Wenn Speicheraktualisierung fehlschlägt → ErrorUnlockTransactionLoggingFailed ausgelöst, zurücksetzen</text>
+    </step>
+    <step number="8b">
+      <text xml:lang="en">If storage update succeeds → proceed to step 9</text>
+      <text xml:lang="de">Wenn Speicheraktualisierung erfolgreich → fahren Sie mit Schritt 9 fort</text>
+    </step>
+    <step number="9">
+      <text xml:lang="en">Secure Element clears logging lock flag</text>
+      <text xml:lang="de">Secure Element löscht das Protokollierungssperrflag</text>
+    </step>
+    <step number="10">
+      <text xml:lang="en">Secure Element logs unlock event for audit trail</text>
+      <text xml:lang="de">Secure Element protokolliert Entsperrereignis für Audit-Protokoll</text>
+    </step>
+    <step number="11">
+      <text xml:lang="en">Secure Element returns success to function</text>
+      <text xml:lang="de">Secure Element gibt Erfolg an Funktion zurück</text>
+    </step>
+    <step number="12">
+      <text xml:lang="en">Function returns to caller indicating logging successfully unlocked</text>
+      <text xml:lang="de">Funktion kehrt zum Aufrufer zurück und zeigt an, dass die Protokollierung erfolgreich entsperrt wurde</text>
+    </step>
   </executionSequence>
   <recovery>
-    <step>Verify Secure Element is operational</step>
-    <step>Confirm transaction logging is currently locked</step>
-    <step>Retry unlock operation after confirming preconditions</step>
-    <step>Check device status if unlock unavailable</step>
+    <step>
+      <text xml:lang="en">Verify Secure Element is operational</text>
+      <text xml:lang="de">Stellen Sie sicher, dass Secure Element betriebsbereit ist</text>
+    </step>
+    <step>
+      <text xml:lang="en">Confirm transaction logging is currently locked</text>
+      <text xml:lang="de">Bestätigen Sie, dass die Transaktionsprotokollierung derzeit gesperrt ist</text>
+    </step>
+    <step>
+      <text xml:lang="en">Retry unlock operation after confirming preconditions</text>
+      <text xml:lang="de">Versuchen Sie die Entsperrungsoperation erneut, nachdem Sie die Vorbedingungen bestätigt haben</text>
+    </step>
+    <step>
+      <text xml:lang="en">Check device status if unlock unavailable</text>
+      <text xml:lang="de">Prüfen Sie den Gerätestatus, wenn Entsperrung nicht verfügbar ist</text>
+    </step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorTransactionLoggingNotLocked</exception>
@@ -81,44 +213,116 @@
     <exception>ErrorDeviceNotInitialized</exception>
   </relatedExceptions>
   <postconditionality>
-    <state name="Logging Remains Locked">Transaction logging is not unlocked - remains locked.</state>
-    <state name="Unlock Operation Not Completed">Unlock operation does not complete successfully.</state>
-    <state name="Lock State Unchanged">Logging lock state remains unchanged - locked persists.</state>
-    <state name="Transactions Cannot Be Recorded">Transaction operations cannot record transactions.</state>
-    <state name="High Exception Returned">Function returns ErrorUnlockTransactionLoggingFailed High exception to caller.</state>
-    <state name="Transaction Recording Remains Blocked">Transaction recording capability remains unavailable.</state>
+    <state name="Logging Remains Locked">
+      <text xml:lang="en">Transaction logging is not unlocked - remains locked.</text>
+      <text xml:lang="de">Die Transaktionsprotokollierung ist nicht entsperrt - bleibt gesperrt.</text>
+    </state>
+    <state name="Unlock Operation Not Completed">
+      <text xml:lang="en">Unlock operation does not complete successfully.</text>
+      <text xml:lang="de">Die Entsperrungsoperation wird nicht erfolgreich abgeschlossen.</text>
+    </state>
+    <state name="Lock State Unchanged">
+      <text xml:lang="en">Logging lock state remains unchanged - locked persists.</text>
+      <text xml:lang="de">Der Protokollierungssperrststatus bleibt unverändert - Sperrung bleibt bestehen.</text>
+    </state>
+    <state name="Transactions Cannot Be Recorded">
+      <text xml:lang="en">Transaction operations cannot record transactions.</text>
+      <text xml:lang="de">Transaktionsoperationen können Transaktionen nicht aufzeichnen.</text>
+    </state>
+    <state name="High Exception Returned">
+      <text xml:lang="en">Function returns ErrorUnlockTransactionLoggingFailed High exception to caller.</text>
+      <text xml:lang="de">Funktion gibt die hohe Ausnahme ErrorUnlockTransactionLoggingFailed an den Aufrufer zurück.</text>
+    </state>
+    <state name="Transaction Recording Remains Blocked">
+      <text xml:lang="en">Transaction recording capability remains unavailable.</text>
+      <text xml:lang="de">Die Transaktionsaufzeichnungsfunktion bleibt nicht verfügbar.</text>
+    </state>
   </postconditionality>
   <notes>
-    <note>Indication: Unlocking of transaction logging failed - logging remains locked</note>
-    <note>Topics: Transaction Logging, Logging Control, Lock Operations, Access Control</note>
+    <note>
+      <text xml:lang="en">Indication: Unlocking of transaction logging failed - logging remains locked</text>
+      <text xml:lang="de">Anzeichen: Entsperrung der Transaktionsprotokollierung fehlgeschlagen - Protokollierung bleibt gesperrt</text>
+    </note>
+    <note>
+      <text xml:lang="en">Topics: Transaction Logging, Logging Control, Lock Operations, Access Control</text>
+      <text xml:lang="de">Themen: Transaktionsprotokollierung, Protokollierungskontrolle, Sperroperationen, Zugriffskontrolle</text>
+    </note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Authorization Denial for Unlock">
-      <description>Administrator attempts to unlock transaction logging but lacks required authorization. Calls unlockTransactionLogging. Device verifies authorization, finds insufficient privileges. ErrorUnlockTransactionLoggingFailed raised. Administrator contacts management to request authorization upgrade, retries after obtaining necessary privileges.</description>
-      <relatedFunctions>unlockTransactionLogging, lockTransactionLogging</relatedFunctions>
-      <errorContext>Authorization verification failed - insufficient privileges for unlock</errorContext>
+      <description>
+        <text xml:lang="en">Administrator attempts to unlock transaction logging but lacks required authorization. Calls unlockTransactionLogging. Device verifies authorization, finds insufficient privileges. ErrorUnlockTransactionLoggingFailed raised. Administrator contacts management to request authorization upgrade, retries after obtaining necessary privileges.</text>
+        <text xml:lang="de">Administrator versucht, die Transaktionsprotokollierung zu entsperren, hat aber nicht die erforderliche Autorisierung. Ruft unlockTransactionLogging auf. Das Gerät verifiziert die Autorisierung und findet unzureichende Berechtigungen. ErrorUnlockTransactionLoggingFailed wird ausgelöst. Der Administrator kontaktiert das Management, um eine Autorisierungserhöhung anzufordern, und versucht nach Erhalt der erforderlichen Berechtigungen erneut.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">unlockTransactionLogging, lockTransactionLogging</text>
+        <text xml:lang="de">unlockTransactionLogging, lockTransactionLogging</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Authorization verification failed - insufficient privileges for unlock</text>
+        <text xml:lang="de">Autorisierungsverifizierung fehlgeschlagen - unzureichende Berechtigungen zum Entsperren</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 2: Hardware Error During Unlock">
-      <description>Administrator attempts to unlock logging with correct authorization. Device begins unlock operation. Hardware error occurs accessing logging control structures. Device cannot complete operation. ErrorUnlockTransactionLoggingFailed raised. Administrator contacts support for hardware investigation.</description>
-      <relatedFunctions>unlockTransactionLogging</relatedFunctions>
-      <errorContext>Hardware failure prevented unlock completion - device service needed</errorContext>
+      <description>
+        <text xml:lang="en">Administrator attempts to unlock logging with correct authorization. Device begins unlock operation. Hardware error occurs accessing logging control structures. Device cannot complete operation. ErrorUnlockTransactionLoggingFailed raised. Administrator contacts support for hardware investigation.</text>
+        <text xml:lang="de">Administrator versucht, die Protokollierung mit korrekter Autorisierung zu entsperren. Das Gerät beginnt mit der Entsperrungsoperation. Beim Zugriff auf Protokollierungskontrollstrukturen tritt ein Hardwarefehler auf. Das Gerät kann den Vorgang nicht abschließen. ErrorUnlockTransactionLoggingFailed wird ausgelöst. Der Administrator kontaktiert den Support für eine Hardwareuntersuchung.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">unlockTransactionLogging</text>
+        <text xml:lang="de">unlockTransactionLogging</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Hardware failure prevented unlock completion - device service needed</text>
+        <text xml:lang="de">Hardwarefehler verhinderte Entsperrungsvollendung - Gerätewartung erforderlich</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 3: Device State Prevents Unlock">
-      <description>Device is in maintenance/diagnostic mode. Administrator attempts unlockTransactionLogging. Device detects incompatible state for logging control operations. ErrorUnlockTransactionLoggingFailed raised. Administrator waits for maintenance completion, retries unlock after device returns to normal state.</description>
-      <relatedFunctions>unlockTransactionLogging</relatedFunctions>
-      <errorContext>Device state incompatible with unlock operation - retry after state change</errorContext>
+      <description>
+        <text xml:lang="en">Device is in maintenance/diagnostic mode. Administrator attempts unlockTransactionLogging. Device detects incompatible state for logging control operations. ErrorUnlockTransactionLoggingFailed raised. Administrator waits for maintenance completion, retries unlock after device returns to normal state.</text>
+        <text xml:lang="de">Das Gerät befindet sich im Wartungs-/Diagnosemodus. Der Administrator versucht unlockTransactionLogging. Das Gerät erkennt einen Zustand, der nicht mit Protokollierungskontrolloperationen kompatibel ist. ErrorUnlockTransactionLoggingFailed wird ausgelöst. Der Administrator wartet auf Wartungsvollendung und versucht die Entsperrung erneut, nachdem das Gerät in den Normalzustand zurückgekehrt ist.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">unlockTransactionLogging</text>
+        <text xml:lang="de">unlockTransactionLogging</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Device state incompatible with unlock operation - retry after state change</text>
+        <text xml:lang="de">Gerätestatus nicht kompatibel mit Entsperrungsoperation - nach Statusänderung erneut versuchen</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 4: Secure Element Communication Failure">
-      <description>Unlock procedure initiates but Secure Element communication fails during operation. Device detects protocol error. ErrorUnlockTransactionLoggingFailed raised. Administrator waits for Secure Element recovery and retries unlock operation.</description>
-      <relatedFunctions>unlockTransactionLogging</relatedFunctions>
-      <errorContext>Secure Element communication failure - retry after recovery</errorContext>
+      <description>
+        <text xml:lang="en">Unlock procedure initiates but Secure Element communication fails during operation. Device detects protocol error. ErrorUnlockTransactionLoggingFailed raised. Administrator waits for Secure Element recovery and retries unlock operation.</text>
+        <text xml:lang="de">Das Entsperrungsverfahren wird eingeleitet, aber die Secure Element-Kommunikation schlägt während des Vorgangs fehl. Das Gerät erkennt einen Protokollfehler. ErrorUnlockTransactionLoggingFailed wird ausgelöst. Der Administrator wartet auf die Wiederherstellung des Secure Element und versucht die Entsperrungsoperation erneut.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">unlockTransactionLogging</text>
+        <text xml:lang="de">unlockTransactionLogging</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Secure Element communication failure - retry after recovery</text>
+        <text xml:lang="de">Secure Element-Kommunikationsfehler - nach Wiederherstellung erneut versuchen</text>
+      </errorContext>
     </scenario>
   </usage>
   <implementationContext>
-    <note>Raised by unlockTransactionLogging when unlock operation fails</note>
-    <note>Unlock function enables transaction logging operations</note>
-    <note>Device transitions transaction logging to unlocked state</note>
-    <note>Unlock failure prevents logging resumption</note>
+    <note>
+      <text xml:lang="en">Raised by unlockTransactionLogging when unlock operation fails</text>
+      <text xml:lang="de">Wird von unlockTransactionLogging ausgelöst, wenn die Entsperrungsoperation fehlschlägt</text>
+    </note>
+    <note>
+      <text xml:lang="en">Unlock function enables transaction logging operations</text>
+      <text xml:lang="de">Die Entsperr-Funktion aktiviert Transaktionsprotokollierungsvorgänge</text>
+    </note>
+    <note>
+      <text xml:lang="en">Device transitions transaction logging to unlocked state</text>
+      <text xml:lang="de">Das Gerät überführt die Transaktionsprotokollierung in einen entsperrten Zustand</text>
+    </note>
+    <note>
+      <text xml:lang="en">Unlock failure prevents logging resumption</text>
+      <text xml:lang="de">Entsperrungsfehler verhindert die Wiederaufnahme der Protokollierung</text>
+    </note>
   </implementationContext>
 </exception>
 

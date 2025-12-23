@@ -1,7 +1,10 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes'?>
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorTransactionNumberNotFound" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorTransactionNumberNotFound</name>
-  <description>This exception is thrown if no data has been found for the provided transaction number(s) in the context of exporting or querying transaction data. Transaction numbers are unique identifiers for each executed transaction. When export or query functions search for specific transaction numbers that don't exist in the device's transaction records, ErrorTransactionNumberNotFound is raised. This can occur during data export operations that filter by transaction number or when querying the state of a specific transaction. ErrorTransactionNumberNotFound is a Medium severity exception because the query is valid but matches no records. The requested transaction number(s) may have never existed, been deleted, or the transaction number may be incorrect.</description>
+  <description>
+    <text xml:lang="en">This exception is thrown if no data has been found for the provided transaction number(s) in the context of exporting or querying transaction data. Transaction numbers are unique identifiers for each executed transaction. When export or query functions search for specific transaction numbers that don't exist in the device's transaction records, ErrorTransactionNumberNotFound is raised. This can occur during data export operations that filter by transaction number or when querying the state of a specific transaction. ErrorTransactionNumberNotFound is a Medium severity exception because the query is valid but matches no records. The requested transaction number(s) may have never existed, been deleted, or the transaction number may be incorrect.</text>
+    <text xml:lang="de">Diese Ausnahme wird ausgelöst, wenn keine Daten für die bereitgestellte(n) Transaktionsnummer(n) im Kontext des Exports oder der Abfrage von Transaktionsdaten gefunden wurden. Transaktionsnummern sind eindeutige Bezeichner für jede ausgeführte Transaktion. Wenn Export- oder Abfragefunktionen nach spezifischen Transaktionsnummern suchen, die in den Transaktionsdatensätzen des Geräts nicht vorhanden sind, wird ErrorTransactionNumberNotFound ausgelöst. Dies kann während Datenexportvorgängen auftreten, die nach Transaktionsnummer filtern, oder bei der Abfrage des Zustands einer bestimmten Transaktion. ErrorTransactionNumberNotFound ist eine Ausnahme mit mittlerem Schweregrad, da die Abfrage gültig ist, aber keine Datensätze findet. Die angeforderte(n) Transaktionsnummer(n) existierte möglicherweise nie, wurden gelöscht, oder die Transaktionsnummer könnte fehlerhaft sein.</text>
+  </description>
   <category>Transaction Management</category>
   <subcategory>Transaction Number Query</subcategory>
   <severity>Medium</severity>
@@ -12,64 +15,175 @@
     <function>updateTransaction</function>
   </thrownBy>
   <javadoc>
-    <summary>This class defines the exception ErrorTransactionNumberNotFound that is thrown if no data has been found for the provided transaction number(s).</summary>
-    <description>This exception is thrown when transaction export or query operations search for specific transaction number(s) that don't exist in the device's transaction records. Transaction numbers are unique identifiers for each executed transaction. Functions like exportFilteredTransactionLogs and getTransactionState accept transaction number parameters to search for or retrieve specific transactions. If the provided transaction number(s) don't match any records, ErrorTransactionNumberNotFound is raised. This indicates the transaction numbers may be incorrect, the transactions may have been deleted, or they may have never existed. ErrorTransactionNumberNotFound is a Medium severity exception because the query is valid but matches no results. The caller should verify transaction numbers are correct and exist before querying.</description>
+    <summary>
+      <text xml:lang="en">This class defines the exception ErrorTransactionNumberNotFound that is thrown if no data has been found for the provided transaction number(s).</text>
+      <text xml:lang="de">Diese Klasse definiert die Ausnahme ErrorTransactionNumberNotFound, die ausgelöst wird, wenn keine Daten für die bereitgestellte(n) Transaktionsnummer(n) gefunden wurden.</text>
+    </summary>
+    <description>
+      <text xml:lang="en">This exception is thrown when transaction export or query operations search for specific transaction number(s) that don't exist in the device's transaction records. Transaction numbers are unique identifiers for each executed transaction. Functions like exportFilteredTransactionLogs and getTransactionState accept transaction number parameters to search for or retrieve specific transactions. If the provided transaction number(s) don't match any records, ErrorTransactionNumberNotFound is raised. This indicates the transaction numbers may be incorrect, the transactions may have been deleted, or they may have never existed. ErrorTransactionNumberNotFound is a Medium severity exception because the query is valid but matches no results. The caller should verify transaction numbers are correct and exist before querying.</text>
+      <text xml:lang="de">Diese Ausnahme wird ausgelöst, wenn Transaction Export oder Abfragevorgänge nach spezifischen Transaktionsnummer(n) suchen, die in den Transaktionsdatensätzen des Geräts nicht vorhanden sind. Transaktionsnummern sind eindeutige Bezeichner für jede ausgeführte Transaktion. Funktionen wie exportFilteredTransactionLogs und getTransactionState akzeptieren Transaktionsnummerparameter, um bestimmte Transaktionen zu suchen oder abzurufen. Wenn die bereitgestellte(n) Transaktionsnummer(n) mit keinen Datensätzen übereinstimmen, wird ErrorTransactionNumberNotFound ausgelöst. Dies zeigt an, dass die Transaktionsnummern möglicherweise fehlerhaft sind, die Transaktionen möglicherweise gelöscht wurden oder möglicherweise nie existierten. ErrorTransactionNumberNotFound ist eine Ausnahme mit mittlerem Schweregrad, da die Abfrage gültig ist, aber keine Ergebnisse liefert. Der Aufrufer sollte vor der Abfrage überprüfen, dass die Transaktionsnummern korrekt und vorhanden sind.</text>
+    </description>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>
     <section>3.2.2 Transaction Management - Transaction Query Functions</section>
-    <requirement>Transaction data export and query functions accept transaction number parameters to filter or retrieve specific transactions. Transaction numbers are unique identifiers assigned to each transaction. If provided transaction number(s) don't match any records in the device's transaction storage, the function SHALL raise ErrorTransactionNumberNotFound. This indicates the transaction numbers may be incorrect, transactions may have been deleted, or they may never have existed. ErrorTransactionNumberNotFound is a Medium severity exception because the query is valid but matches no results. The caller should verify transaction numbers are correct or provide alternative query parameters.</requirement>
-    <applicability>Transaction number-based queries: exportFilteredTransactionLogs, getTransactionState</applicability>
+    <requirement>
+      <text xml:lang="en">Transaction data export and query functions accept transaction number parameters to filter or retrieve specific transactions. Transaction numbers are unique identifiers assigned to each transaction. If provided transaction number(s) don't match any records in the device's transaction storage, the function SHALL raise ErrorTransactionNumberNotFound. This indicates the transaction numbers may be incorrect, transactions may have been deleted, or they may never have existed. ErrorTransactionNumberNotFound is a Medium severity exception because the query is valid but matches no results. The caller should verify transaction numbers are correct or provide alternative query parameters.</text>
+      <text xml:lang="de">Transaktionsdaten-Export- und Abfragefunktionen akzeptieren Transaktionsnummerparameter zum Filtern oder Abrufen bestimmter Transaktionen. Transaktionsnummern sind eindeutige Bezeichner, die jeder Transaktion zugewiesen werden. Falls bereitgestellte Transaktionsnummer(n) mit keinen Datensätzen im Transaktionsspeicher des Geräts übereinstimmen, SOLL die Funktion ErrorTransactionNumberNotFound auslösen. Dies zeigt an, dass die Transaktionsnummern möglicherweise fehlerhaft sind, Transaktionen möglicherweise gelöscht wurden oder möglicherweise nie existierten. ErrorTransactionNumberNotFound ist eine Ausnahme mit mittlerem Schweregrad, da die Abfrage gültig ist, aber keine Ergebnisse liefert. Der Aufrufer sollte überprüfen, dass die Transaktionsnummern korrekt sind oder alternative Abfrageparameter angeben.</text>
+    </requirement>
+    <applicability>
+      <text xml:lang="en">Transaction number-based queries: exportFilteredTransactionLogs, getTransactionState</text>
+      <text xml:lang="de">Abfragen basierend auf Transaktionsnummern: exportFilteredTransactionLogs, getTransactionState</text>
+    </applicability>
     <reference>Transaction Management (3.2.2), Transaction Query Functions (3.2.2), exportFilteredTransactionLogs – Function (3.2.2), getTransactionState – Function (3.2.2)</reference>
   </specification>
   <triggerConditions>
     <condition>
-      <scenario>Export filters by transaction number that doesn't exist</scenario>
-      <description>exportFilteredTransactionLogs called with transaction number not in database</description>
-      <trigger>Application calls exportFilteredTransactionLogs with transactionNumber=99999. Device searches records, finds no matching transaction. ErrorTransactionNumberNotFound raised to indicate transaction doesn't exist.</trigger>
+      <scenario>
+        <text xml:lang="en">Export filters by transaction number that doesn't exist</text>
+        <text xml:lang="de">Export filtert nach Transaktionsnummer, die nicht existiert</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">exportFilteredTransactionLogs called with transaction number not in database</text>
+        <text xml:lang="de">exportFilteredTransactionLogs aufgerufen mit Transaktionsnummer nicht in Datenbank</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">Application calls exportFilteredTransactionLogs with transactionNumber=99999. Device searches records, finds no matching transaction. ErrorTransactionNumberNotFound raised to indicate transaction doesn't exist.</text>
+        <text xml:lang="de">Anwendung ruft exportFilteredTransactionLogs mit transactionNumber=99999 auf. Gerät durchsucht Datensätze, findet keine übereinstimmende Transaktion. ErrorTransactionNumberNotFound wird ausgelöst, um anzuzeigen, dass Transaktion nicht existiert.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Query transaction state for non-existent transaction</scenario>
-      <description>getTransactionState called with invalid or non-existent transaction number</description>
-      <trigger>Application calls getTransactionState with transactionNumber=50000. Device searches active and completed transaction records, finds no match. ErrorTransactionNumberNotFound raised.</trigger>
+      <scenario>
+        <text xml:lang="en">Query transaction state for non-existent transaction</text>
+        <text xml:lang="de">Abfrage des Transaktionszustands für nicht existierende Transaktion</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">getTransactionState called with invalid or non-existent transaction number</text>
+        <text xml:lang="de">getTransactionState aufgerufen mit ungültiger oder nicht existierender Transaktionsnummer</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">Application calls getTransactionState with transactionNumber=50000. Device searches active and completed transaction records, finds no match. ErrorTransactionNumberNotFound raised.</text>
+        <text xml:lang="de">Anwendung ruft getTransactionState mit transactionNumber=50000 auf. Gerät durchsucht aktive und abgeschlossene Transaktionsdatensätze, findet keine Übereinstimmung. ErrorTransactionNumberNotFound wird ausgelöst.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Transaction number provided but transaction deleted or archived</scenario>
-      <description>Transaction number was valid but transaction has been deleted or archived</description>
-      <trigger>Application attempts to export transaction number that existed but was deleted. Device searches current records, cannot find transaction. ErrorTransactionNumberNotFound raised.</trigger>
+      <scenario>
+        <text xml:lang="en">Transaction number provided but transaction deleted or archived</text>
+        <text xml:lang="de">Transaktionsnummer angegeben, aber Transaktion gelöscht oder archiviert</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">Transaction number was valid but transaction has been deleted or archived</text>
+        <text xml:lang="de">Transaktionsnummer war gültig, aber Transaktion wurde gelöscht oder archiviert</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">Application attempts to export transaction number that existed but was deleted. Device searches current records, cannot find transaction. ErrorTransactionNumberNotFound raised.</text>
+        <text xml:lang="de">Anwendung versucht, Transaktionsnummer zu exportieren, die existierte, aber gelöscht wurde. Gerät durchsucht aktuelle Datensätze, kann Transaktion nicht finden. ErrorTransactionNumberNotFound wird ausgelöst.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Incorrect or invalid transaction number format</scenario>
-      <description>Transaction number provided has incorrect format or is out of valid range</description>
-      <trigger>Application calls getTransactionState with malformed or out-of-range transaction number. Device rejects search, raises ErrorTransactionNumberNotFound.</trigger>
+      <scenario>
+        <text xml:lang="en">Incorrect or invalid transaction number format</text>
+        <text xml:lang="de">Falsches oder ungültiges Transaktionsnummernformat</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">Transaction number provided has incorrect format or is out of valid range</text>
+        <text xml:lang="de">Bereitgestellte Transaktionsnummer hat falsches Format oder liegt außerhalb des gültigen Bereichs</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">Application calls getTransactionState with malformed or out-of-range transaction number. Device rejects search, raises ErrorTransactionNumberNotFound.</text>
+        <text xml:lang="de">Anwendung ruft getTransactionState mit fehlerhaft formatierter oder außerhalb des Bereichs liegender Transaktionsnummer auf. Gerät lehnt Suche ab, löst ErrorTransactionNumberNotFound aus.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Transaction number from different device queried</scenario>
-      <description>Transaction number from different device attempted on current device</description>
-      <trigger>Administrator attempts to query transaction from Device A using number from Device B. Device A doesn't find matching transaction number. ErrorTransactionNumberNotFound raised.</trigger>
+      <scenario>
+        <text xml:lang="en">Transaction number from different device queried</text>
+        <text xml:lang="de">Transaktionsnummer von anderem Gerät abgefragt</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">Transaction number from different device attempted on current device</text>
+        <text xml:lang="de">Transaktionsnummer von anderem Gerät versucht auf aktuellem Gerät</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">Administrator attempts to query transaction from Device A using number from Device B. Device A doesn't find matching transaction number. ErrorTransactionNumberNotFound raised.</text>
+        <text xml:lang="de">Administrator versucht, Transaktion von Gerät A mit Nummer von Gerät B abzufragen. Gerät A findet keine übereinstimmende Transaktionsnummer. ErrorTransactionNumberNotFound wird ausgelöst.</text>
+      </trigger>
     </condition>
   </triggerConditions>
   <executionSequence>
-    <step number="1">User/application calls transaction query function (e.g., exportFilteredTransactionLogs, getTransactionState) with transaction number parameter(s)</step>
-    <step number="2">Function validates input parameters including transaction number format</step>
-    <step number="2a">If transaction number invalid/malformed → may raise ErrorParameterSyntax</step>
-    <step number="2b">If transaction number valid → proceed to step 3</step>
-    <step number="3">Function initiates communication with Secure Element</step>
-    <step number="4">Secure Element receives query request with transaction number(s)</step>
-    <step number="5">Secure Element searches transaction records by provided transaction number(s)</step>
-    <step number="6">Secure Element checks if matching transaction record exists</step>
-    <step number="6a">If matching record found → proceed to step 7</step>
-    <step number="6b">If no matching record found → ErrorTransactionNumberNotFound raised, operation aborted</step>
-    <step number="7">Secure Element retrieves transaction data for matching number(s)</step>
-    <step number="8">Secure Element prepares response with transaction data</step>
-    <step number="9">Secure Element returns results to function</step>
-    <step number="10">Function returns transaction data to caller</step>
+    <step number="1">
+      <text xml:lang="en">User/application calls transaction query function (e.g., exportFilteredTransactionLogs, getTransactionState) with transaction number parameter(s)</text>
+      <text xml:lang="de">Benutzer/Anwendung ruft Transaktionsabfragefunktion (z. B. exportFilteredTransactionLogs, getTransactionState) mit Transaktionsnummerparameter(n) auf</text>
+    </step>
+    <step number="2">
+      <text xml:lang="en">Function validates input parameters including transaction number format</text>
+      <text xml:lang="de">Funktion validiert Eingabeparameter einschließlich Transaktionsnummernformat</text>
+    </step>
+    <step number="2a">
+      <text xml:lang="en">If transaction number invalid/malformed → may raise ErrorParameterSyntax</text>
+      <text xml:lang="de">Wenn Transaktionsnummer ungültig/fehlerhaft → kann ErrorParameterSyntax auslösen</text>
+    </step>
+    <step number="2b">
+      <text xml:lang="en">If transaction number valid → proceed to step 3</text>
+      <text xml:lang="de">Wenn Transaktionsnummer gültig → Fahren Sie mit Schritt 3 fort</text>
+    </step>
+    <step number="3">
+      <text xml:lang="en">Function initiates communication with Secure Element</text>
+      <text xml:lang="de">Funktion initiiert Kommunikation mit Secure Element</text>
+    </step>
+    <step number="4">
+      <text xml:lang="en">Secure Element receives query request with transaction number(s)</text>
+      <text xml:lang="de">Secure Element empfängt Abfrageanforderung mit Transaktionsnummer(n)</text>
+    </step>
+    <step number="5">
+      <text xml:lang="en">Secure Element searches transaction records by provided transaction number(s)</text>
+      <text xml:lang="de">Secure Element durchsucht Transaktionsdatensätze nach bereitgestellter Transaktionsnummer(n)</text>
+    </step>
+    <step number="6">
+      <text xml:lang="en">Secure Element checks if matching transaction record exists</text>
+      <text xml:lang="de">Secure Element prüft, ob übereinstimmender Transaktionsdatensatz existiert</text>
+    </step>
+    <step number="6a">
+      <text xml:lang="en">If matching record found → proceed to step 7</text>
+      <text xml:lang="de">Wenn übereinstimmender Datensatz gefunden → Fahren Sie mit Schritt 7 fort</text>
+    </step>
+    <step number="6b">
+      <text xml:lang="en">If no matching record found → ErrorTransactionNumberNotFound raised, operation aborted</text>
+      <text xml:lang="de">Wenn kein übereinstimmender Datensatz gefunden → ErrorTransactionNumberNotFound ausgelöst, Operation abgebrochen</text>
+    </step>
+    <step number="7">
+      <text xml:lang="en">Secure Element retrieves transaction data for matching number(s)</text>
+      <text xml:lang="de">Secure Element ruft Transaktionsdaten für übereinstimmende Nummern ab</text>
+    </step>
+    <step number="8">
+      <text xml:lang="en">Secure Element prepares response with transaction data</text>
+      <text xml:lang="de">Secure Element bereitet Antwort mit Transaktionsdaten vor</text>
+    </step>
+    <step number="9">
+      <text xml:lang="en">Secure Element returns results to function</text>
+      <text xml:lang="de">Secure Element gibt Ergebnisse an Funktion zurück</text>
+    </step>
+    <step number="10">
+      <text xml:lang="en">Function returns transaction data to caller</text>
+      <text xml:lang="de">Funktion gibt Transaktionsdaten an Aufrufer zurück</text>
+    </step>
   </executionSequence>
   <recovery>
-    <step>Verify transaction number is valid and exists</step>
-    <step>Check finished transactions or transaction history</step>
-    <step>Ensure transaction number matches tracked transaction</step>
-    <step>Use getOpenTransactions to verify active transactions</step>
+    <step>
+      <text xml:lang="en">Verify transaction number is valid and exists</text>
+      <text xml:lang="de">Überprüfen Sie, dass Transaktionsnummer gültig und vorhanden ist</text>
+    </step>
+    <step>
+      <text xml:lang="en">Check finished transactions or transaction history</text>
+      <text xml:lang="de">Überprüfen Sie abgeschlossene Transaktionen oder Transaktionsverlauf</text>
+    </step>
+    <step>
+      <text xml:lang="en">Ensure transaction number matches tracked transaction</text>
+      <text xml:lang="de">Stellen Sie sicher, dass Transaktionsnummer mit verfolgter Transaktion übereinstimmt</text>
+    </step>
+    <step>
+      <text xml:lang="en">Use getOpenTransactions to verify active transactions</text>
+      <text xml:lang="de">Verwenden Sie getOpenTransactions, um aktive Transaktionen zu überprüfen</text>
+    </step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorNoDataAvailable</exception>
@@ -78,44 +192,116 @@
     <exception>ErrorTransactionNumberNotFound</exception>
   </relatedExceptions>
   <postconditionality>
-    <state name="Transaction Data Not Retrieved">Transaction data cannot be retrieved for requested transaction number.</state>
-    <state name="Query Returns No Results">No matching transaction records found in storage.</state>
-    <state name="Export Not Completed">Export operation does not proceed due to no matching transactions.</state>
-    <state name="Query State Invalid">Transaction state cannot be determined for non-existent transaction.</state>
-    <state name="Medium Exception Returned">Function returns ErrorTransactionNumberNotFound Medium exception to caller.</state>
-    <state name="Caller Must Verify Number">Caller should verify transaction number is correct and exists.</state>
+    <state name="Transaction Data Not Retrieved">
+      <text xml:lang="en">Transaction data cannot be retrieved for requested transaction number.</text>
+      <text xml:lang="de">Transaktionsdaten können für angeforderte Transaktionsnummer nicht abgerufen werden.</text>
+    </state>
+    <state name="Query Returns No Results">
+      <text xml:lang="en">No matching transaction records found in storage.</text>
+      <text xml:lang="de">Keine übereinstimmenden Transaktionsdatensätze im Speicher gefunden.</text>
+    </state>
+    <state name="Export Not Completed">
+      <text xml:lang="en">Export operation does not proceed due to no matching transactions.</text>
+      <text xml:lang="de">Exportvorgang wird nicht ausgeführt, da keine übereinstimmenden Transaktionen vorhanden sind.</text>
+    </state>
+    <state name="Query State Invalid">
+      <text xml:lang="en">Transaction state cannot be determined for non-existent transaction.</text>
+      <text xml:lang="de">Transaktionszustand kann für nicht existierende Transaktion nicht bestimmt werden.</text>
+    </state>
+    <state name="Medium Exception Returned">
+      <text xml:lang="en">Function returns ErrorTransactionNumberNotFound Medium exception to caller.</text>
+      <text xml:lang="de">Funktion gibt mittlere Ausnahme ErrorTransactionNumberNotFound an Aufrufer zurück.</text>
+    </state>
+    <state name="Caller Must Verify Number">
+      <text xml:lang="en">Caller should verify transaction number is correct and exists.</text>
+      <text xml:lang="de">Aufrufer sollte überprüfen, dass Transaktionsnummer korrekt und vorhanden ist.</text>
+    </state>
   </postconditionality>
   <notes>
-    <note>Indication: Transaction with the specified number not found - transaction does not exist</note>
-    <note>Topics: Transaction Management, Transaction Identification, Data Retrieval, Transaction State</note>
+    <note>
+      <text xml:lang="en">Indication: Transaction with the specified number not found - transaction does not exist</text>
+      <text xml:lang="de">Anzeichen: Transaktion mit angegebener Nummer nicht gefunden - Transaktion existiert nicht</text>
+    </note>
+    <note>
+      <text xml:lang="en">Topics: Transaction Management, Transaction Identification, Data Retrieval, Transaction State</text>
+      <text xml:lang="de">Themen: Transaktionsverwaltung, Transaktionsidentifikation, Datenabruf, Transaktionszustand</text>
+    </note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Export with Invalid Transaction Number">
-      <description>Administrator attempts to export transaction logs using specific transaction number from documentation. Calls exportFilteredTransactionLogs with provided transaction number. Device searches records but transaction number not found. ErrorTransactionNumberNotFound raised. Administrator verifies transaction number in documentation and retries with corrected number.</description>
-      <relatedFunctions>exportFilteredTransactionLogs</relatedFunctions>
-      <errorContext>Transaction number query unsuccessful - verification needed</errorContext>
+      <description>
+        <text xml:lang="en">Administrator attempts to export transaction logs using specific transaction number from documentation. Calls exportFilteredTransactionLogs with provided transaction number. Device searches records but transaction number not found. ErrorTransactionNumberNotFound raised. Administrator verifies transaction number in documentation and retries with corrected number.</text>
+        <text xml:lang="de">Administrator versucht, Transaktionsprotokolle mithilfe einer bestimmten Transaktionsnummer aus der Dokumentation zu exportieren. Ruft exportFilteredTransactionLogs mit bereitgestellter Transaktionsnummer auf. Gerät durchsucht Datensätze, aber Transaktionsnummer nicht gefunden. ErrorTransactionNumberNotFound wird ausgelöst. Administrator überprüft Transaktionsnummer in Dokumentation und versucht erneut mit korrigierter Nummer.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">exportFilteredTransactionLogs</text>
+        <text xml:lang="de">exportFilteredTransactionLogs</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Transaction number query unsuccessful - verification needed</text>
+        <text xml:lang="de">Abfrage der Transaktionsnummer erfolglos - Überprüfung erforderlich</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 2: Query Deleted Transaction State">
-      <description>Application attempts to retrieve state of transaction that was previously executed. Calls getTransactionState with stored transaction number. Device indicates transaction not found. ErrorTransactionNumberNotFound raised because transaction has been deleted or archived. Application handles error and queries alternative transaction.</description>
-      <relatedFunctions>getTransactionState</relatedFunctions>
-      <errorContext>Transaction deleted or archived - no longer available for query</errorContext>
+      <description>
+        <text xml:lang="en">Application attempts to retrieve state of transaction that was previously executed. Calls getTransactionState with stored transaction number. Device indicates transaction not found. ErrorTransactionNumberNotFound raised because transaction has been deleted or archived. Application handles error and queries alternative transaction.</text>
+        <text xml:lang="de">Anwendung versucht, den Zustand einer zuvor ausgeführten Transaktion abzurufen. Ruft getTransactionState mit gespeicherter Transaktionsnummer auf. Gerät zeigt an, dass Transaktion nicht gefunden. ErrorTransactionNumberNotFound wird ausgelöst, da Transaktion gelöscht oder archiviert wurde. Anwendung behandelt Fehler und fragt alternative Transaktion ab.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">getTransactionState</text>
+        <text xml:lang="de">getTransactionState</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Transaction deleted or archived - no longer available for query</text>
+        <text xml:lang="de">Transaktion gelöscht oder archiviert - nicht mehr für Abfrage verfügbar</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 3: Cross-Device Transaction Number Query">
-      <description>Administrator has transaction number from Device A. Administrator attempts to query transaction on Device B using same number. Device B doesn't recognize transaction number. ErrorTransactionNumberNotFound raised. Administrator recognizes mistake and queries correct device.</description>
-      <relatedFunctions>getTransactionState, exportFilteredTransactionLogs</relatedFunctions>
-      <errorContext>Transaction number from different device - device-specific number sequence</errorContext>
+      <description>
+        <text xml:lang="en">Administrator has transaction number from Device A. Administrator attempts to query transaction on Device B using same number. Device B doesn't recognize transaction number. ErrorTransactionNumberNotFound raised. Administrator recognizes mistake and queries correct device.</text>
+        <text xml:lang="de">Administrator verfügt über Transaktionsnummer von Gerät A. Administrator versucht, Transaktion auf Gerät B mit derselben Nummer abzufragen. Gerät B erkennt Transaktionsnummer nicht. ErrorTransactionNumberNotFound wird ausgelöst. Administrator erkennt Fehler und fragt korrektes Gerät ab.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">getTransactionState, exportFilteredTransactionLogs</text>
+        <text xml:lang="de">getTransactionState, exportFilteredTransactionLogs</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Transaction number from different device - device-specific number sequence</text>
+        <text xml:lang="de">Transaktionsnummer von anderem Gerät - gerätespezifische Nummernfolge</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 4: Export with Range-Based Fallback Query">
-      <description>Application cannot locate specific transaction number. Instead of failing, application retries exportFilteredTransactionLogs with date range filter. Query succeeds and returns transactions including the originally-sought transaction with its actual number.</description>
-      <relatedFunctions>exportFilteredTransactionLogs</relatedFunctions>
-      <errorContext>Range query fallback when specific transaction number not found</errorContext>
+      <description>
+        <text xml:lang="en">Application cannot locate specific transaction number. Instead of failing, application retries exportFilteredTransactionLogs with date range filter. Query succeeds and returns transactions including the originally-sought transaction with its actual number.</text>
+        <text xml:lang="de">Anwendung kann bestimmte Transaktionsnummer nicht lokalisieren. Anstatt fehlzuschlagen, versucht die Anwendung exportFilteredTransactionLogs erneut mit Datumsbereichsfilter. Abfrage ist erfolgreich und gibt Transaktionen einschließlich ursprünglich gesuchter Transaktion mit ihrer tatsächlichen Nummer zurück.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">exportFilteredTransactionLogs</text>
+        <text xml:lang="de">exportFilteredTransactionLogs</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Range query fallback when specific transaction number not found</text>
+        <text xml:lang="de">Bereichsabfrage-Fallback, wenn bestimmte Transaktionsnummer nicht gefunden</text>
+      </errorContext>
     </scenario>
   </usage>
   <implementationContext>
-    <note>Raised by transaction functions when specified transaction not found</note>
-    <note>Transaction lookup by number fails to find matching transaction</note>
-    <note>Device searches active and historical transactions</note>
-    <note>Missing transaction prevents operation on specified transaction</note>
+    <note>
+      <text xml:lang="en">Raised by transaction functions when specified transaction not found</text>
+      <text xml:lang="de">Wird von Transaktionsfunktionen ausgelöst, wenn angegeben Transaktion nicht gefunden</text>
+    </note>
+    <note>
+      <text xml:lang="en">Transaction lookup by number fails to find matching transaction</text>
+      <text xml:lang="de">Transaktionssuche nach Nummer findet keine übereinstimmende Transaktion</text>
+    </note>
+    <note>
+      <text xml:lang="en">Device searches active and historical transactions</text>
+      <text xml:lang="de">Gerät durchsucht aktive und historische Transaktionen</text>
+    </note>
+    <note>
+      <text xml:lang="en">Missing transaction prevents operation on specified transaction</text>
+      <text xml:lang="de">Fehlende Transaktion verhindert Operation für angegeben Transaktion</text>
+    </note>
   </implementationContext>
 </exception>
 

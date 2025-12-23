@@ -1,19 +1,34 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes'?>
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorExportLoggingCertificateFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorExportLoggingCertificateFailed</name>
-  <description>This exception is thrown if the collection of the certificates for the export failed during execution of the exportLoggingCertificates function. The exception represents a critical failure in the Secure Element's ability to retrieve and provide certificates required for exporting logging data. ErrorExportLoggingCertificateFailed is raised when the exportLoggingCertificates function requests certificate retrieval from the Secure Element but the Secure Element cannot assemble or provide the required certificates due to a hardware error, firmware issue, certificate storage failure, or communication breakdown. This exception indicates that the Secure Element's certificate retrieval functionality did not complete successfully, preventing the assembly of valid export data containing authenticated certificate information. The exception is raised during the certificate collection phase before certificates are packaged into the export data structure, ensuring no partial or incomplete export data is returned.</description>
+  <description>
+    <text xml:lang="en">This exception is thrown if the collection of the certificates for the export failed during execution of the exportLoggingCertificates function. The exception represents a critical failure in the Secure Element's ability to retrieve and provide certificates required for exporting logging data. ErrorExportLoggingCertificateFailed is raised when the exportLoggingCertificates function requests certificate retrieval from the Secure Element but the Secure Element cannot assemble or provide the required certificates due to a hardware error, firmware issue, certificate storage failure, or communication breakdown. This exception indicates that the Secure Element's certificate retrieval functionality did not complete successfully, preventing the assembly of valid export data containing authenticated certificate information. The exception is raised during the certificate collection phase before certificates are packaged into the export data structure, ensuring no partial or incomplete export data is returned.</text>
+    <text xml:lang="de">Diese Ausnahme wird ausgelöst, wenn die Sammlung der Zertifikate für den Export während der Ausführung der Funktion exportLoggingCertificates fehlgeschlagen ist. Die Ausnahme stellt einen kritischen Fehler in der Fähigkeit des Secure Element dar, die für den Export von Protokollierungsdaten erforderlichen Zertifikate abzurufen und bereitzustellen. ErrorExportLoggingCertificateFailed wird ausgelöst, wenn die Funktion exportLoggingCertificates einen Zertifikatabruf vom Secure Element anfordert, aber das Secure Element die erforderlichen Zertifikate aufgrund eines Hardwarefehlers, Firmware-Problems, Zertifikatsspeicherfehlers oder Kommunikationsfehlers nicht zusammenstellen oder bereitstellen kann. Diese Ausnahme zeigt an, dass die Zertifikatabruffunktionalität des Secure Element nicht erfolgreich abgeschlossen wurde, was die Zusammenstellung gültiger Exportdaten mit authentifizierten Zertifikatsinformationen verhindert. Die Ausnahme wird während der Zertifikatsammlungsphase ausgelöst, bevor Zertifikate in die Exportdatenstruktur verpackt werden, um sicherzustellen, dass keine teilweisen oder unvollständigen Exportdaten zurückgegeben werden.</text>
+  </description>
   <category>Logging Export Operations</category>
   <subcategory>Export</subcategory>
   <severity>High</severity>
   <javadoc>
-    <summary>The exception ErrorExportLoggingCertificateFailed is thrown if the collection of the certificates for the export failed.</summary>
-    <description>The exportLoggingCertificates function performs a multi-step process to export logging certificates from the Secure Element. This exception is raised when the Secure Element cannot provide the required certificates during the collection phase of the export operation. When this exception occurs, no export data is returned to the user, and the function exits without providing any partial certificate data. The failure indicates that the Secure Element's certificate retrieval functionality did not complete successfully.</description>
+    <summary>
+      <text xml:lang="en">The exception ErrorExportLoggingCertificateFailed is thrown if the collection of the certificates for the export failed.</text>
+      <text xml:lang="de">Die Ausnahme ErrorExportLoggingCertificateFailed wird ausgelöst, wenn die Sammlung der Zertifikate für den Export fehlgeschlagen ist.</text>
+    </summary>
+    <description>
+      <text xml:lang="en">The exportLoggingCertificates function performs a multi-step process to export logging certificates from the Secure Element. This exception is raised when the Secure Element cannot provide the required certificates during the collection phase of the export operation. When this exception occurs, no export data is returned to the user, and the function exits without providing any partial certificate data. The failure indicates that the Secure Element's certificate retrieval functionality did not complete successfully.</text>
+      <text xml:lang="de">Die Funktion exportLoggingCertificates führt einen mehrstufigen Prozess durch, um Protokollierungszertifikate aus dem Secure Element zu exportieren. Diese Ausnahme wird ausgelöst, wenn das Secure Element die erforderlichen Zertifikate während der Sammlungsphase des Exportvorgangs nicht bereitstellen kann. Wenn diese Ausnahme auftritt, werden keine Exportdaten an den Benutzer zurückgegeben, und die Funktion wird beendet, ohne teilweise Zertifikatsdaten bereitzustellen. Der Fehler zeigt an, dass die Zertifikatabruffunktionalität des Secure Element nicht erfolgreich abgeschlossen wurde.</text>
+    </description>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>
     <section>3.3.13 Export Functionality - exportLoggingCertificates</section>
-    <requirement>The function exportLoggingCertificates SHALL request the Secure Element to retrieve the certificates needed for export. If the Secure Element cannot provide or collect the required certificates, the function SHALL raise the exception ErrorExportLoggingCertificateFailed and exit without returning any export data. The certificate collection failure indicates the Secure Element's certificate retrieval functionality could not complete successfully, preventing the assembly of valid export data.</requirement>
-    <applicability>Logging certificate export operations - Export functionality exportLoggingCertificates only</applicability>
+    <requirement>
+      <text xml:lang="en">The function exportLoggingCertificates SHALL request the Secure Element to retrieve the certificates needed for export. If the Secure Element cannot provide or collect the required certificates, the function SHALL raise the exception ErrorExportLoggingCertificateFailed and exit without returning any export data. The certificate collection failure indicates the Secure Element's certificate retrieval functionality could not complete successfully, preventing the assembly of valid export data.</text>
+      <text xml:lang="de">Die Funktion exportLoggingCertificates soll das Secure Element anfordern, die für den Export erforderlichen Zertifikate abzurufen. Wenn das Secure Element die erforderlichen Zertifikate nicht bereitstellen oder sammeln kann, soll die Funktion die Ausnahme ErrorExportLoggingCertificateFailed auslösen und beendet werden, ohne Exportdaten zurückzugeben. Der Fehler bei der Zertifikatsammlung zeigt an, dass die Zertifikatabruffunktionalität des Secure Element nicht erfolgreich abgeschlossen werden konnte, was die Zusammenstellung gültiger Exportdaten verhindert.</text>
+    </requirement>
+    <applicability>
+      <text xml:lang="en">Logging certificate export operations - Export functionality exportLoggingCertificates only</text>
+      <text xml:lang="de">Operationen zum Exportieren von Protokollierungszertifikaten - nur Exportfunktionalität exportLoggingCertificates</text>
+    </applicability>
     <reference>exportLoggingCertificates – Function (3.3.13)</reference>
   </specification>
   <thrownBy>
@@ -21,52 +36,151 @@
   </thrownBy>
   <triggerConditions>
     <condition>
-      <scenario>Secure Element certificate storage failure or corruption</scenario>
-      <description>The Secure Element attempts to retrieve logging certificates from its internal storage, but the certificates are corrupted, inaccessible, or damaged. Certificate retrieval fails due to storage errors or corruption.</description>
-      <trigger>Secure Element certificate storage failure or certificate data corruption preventing retrieval</trigger>
+      <scenario>
+        <text xml:lang="en">Secure Element certificate storage failure or corruption</text>
+        <text xml:lang="de">Fehler oder Beschädigung des Secure-Element-Zertifikatsspeichers</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">The Secure Element attempts to retrieve logging certificates from its internal storage, but the certificates are corrupted, inaccessible, or damaged. Certificate retrieval fails due to storage errors or corruption.</text>
+        <text xml:lang="de">Das Secure Element versucht, Protokollierungszertifikate aus seinem internen Speicher abzurufen, aber die Zertifikate sind beschädigt, nicht zugänglich oder beschädigt. Der Zertifikatabruf schlägt aufgrund von Speicherfehlern oder Beschädigungen fehl.</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">Secure Element certificate storage failure or certificate data corruption preventing retrieval</text>
+        <text xml:lang="de">Fehler beim Secure-Element-Zertifikatsspeicher oder Zertifikatsdatenbeschädigung, die den Abruf verhindert</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Secure Element firmware error during certificate retrieval</scenario>
-      <description>The Secure Element's firmware encounters an error or exception while processing the certificate retrieval request. Firmware bugs, memory corruption, or firmware state inconsistency prevent successful certificate assembly.</description>
-      <trigger>Secure Element firmware error during certificate retrieval and assembly operation</trigger>
+      <scenario>
+        <text xml:lang="en">Secure Element firmware error during certificate retrieval</text>
+        <text xml:lang="de">Firmware-Fehler des Secure Element während des Zertifikataabrufs</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">The Secure Element's firmware encounters an error or exception while processing the certificate retrieval request. Firmware bugs, memory corruption, or firmware state inconsistency prevent successful certificate assembly.</text>
+        <text xml:lang="de">Die Firmware des Secure Element trifft auf einen Fehler oder eine Ausnahme bei der Verarbeitung der Zertifikataabruftanfrage. Firmware-Bugs, Speicherbeschädigung oder Firmware-Statusinkonsistenz verhindern die erfolgreiche Zertifikatsammlung.</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">Secure Element firmware error during certificate retrieval and assembly operation</text>
+        <text xml:lang="de">Firmware-Fehler des Secure Element während der Zertifikataabruf- und Zusammenstellungsoperation</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Communication failure during certificate transfer</scenario>
-      <description>The Secure Element successfully retrieves certificates but the communication channel fails during transfer of certificate data from the Secure Element to the device. The device cannot receive the complete certificate data.</description>
-      <trigger>Communication failure during certificate data transfer from Secure Element</trigger>
+      <scenario>
+        <text xml:lang="en">Communication failure during certificate transfer</text>
+        <text xml:lang="de">Kommunikationsfehler während der Zertifikaatsübertragung</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">The Secure Element successfully retrieves certificates but the communication channel fails during transfer of certificate data from the Secure Element to the device. The device cannot receive the complete certificate data.</text>
+        <text xml:lang="de">Das Secure Element ruft Zertifikate erfolgreich ab, aber der Kommunikationskanal fällt während der Übertragung von Zertifikatsdaten vom Secure Element zum Gerät aus. Das Gerät kann nicht die vollständigen Zertifikatsdaten empfangen.</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">Communication failure during certificate data transfer from Secure Element</text>
+        <text xml:lang="de">Kommunikationsfehler während der Zertifikatsdatenübertragung vom Secure Element</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Certificate quota or resource exhaustion</scenario>
-      <description>The Secure Element has exhausted certificate storage capacity or resource limits that prevent retrieval of the complete set of required certificates. The export operation cannot proceed without all necessary certificates.</description>
-      <trigger>Secure Element certificate storage quota exceeded or resource limits preventing retrieval</trigger>
+      <scenario>
+        <text xml:lang="en">Certificate quota or resource exhaustion</text>
+        <text xml:lang="de">Zertifikatskontingent oder Ressourcenerschöpfung</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">The Secure Element has exhausted certificate storage capacity or resource limits that prevent retrieval of the complete set of required certificates. The export operation cannot proceed without all necessary certificates.</text>
+        <text xml:lang="de">Das Secure Element hat die Zertifikatsspeicherkapazität oder Ressourcenlimits erschöpft, die den Abruf der vollständigen Menge erforderlicher Zertifikate verhindern. Der Exportvorgang kann ohne alle erforderlichen Zertifikate nicht fortgesetzt werden.</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">Secure Element certificate storage quota exceeded or resource limits preventing retrieval</text>
+        <text xml:lang="de">Kontingent für Secure-Element-Zertifikatsspeicher überschritten oder Ressourcenlimits, die den Abruf verhindern</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Secure Element in restricted state preventing certificate access</scenario>
-      <description>The Secure Element has entered a protected, restricted, or locked state due to security policies or error conditions that prevents access to or retrieval of certificates. Certificate export is blocked by Secure Element security restrictions.</description>
-      <trigger>Secure Element in restricted state preventing certificate access or retrieval</trigger>
+      <scenario>
+        <text xml:lang="en">Secure Element in restricted state preventing certificate access</text>
+        <text xml:lang="de">Secure Element im eingeschränkten Zustand, der Zertifikatszugriff verhindert</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">The Secure Element has entered a protected, restricted, or locked state due to security policies or error conditions that prevents access to or retrieval of certificates. Certificate export is blocked by Secure Element security restrictions.</text>
+        <text xml:lang="de">Das Secure Element ist aufgrund von Sicherheitsrichtlinien oder Fehlerbedingungen in einen geschützten, eingeschränkten oder gesperrten Zustand eingetreten, der den Zugriff auf oder Abruf von Zertifikaten verhindert. Der Zertifikatexport wird durch Sicherheitsbeschränkungen des Secure Element blockiert.</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">Secure Element in restricted state preventing certificate access or retrieval</text>
+        <text xml:lang="de">Secure Element im eingeschränkten Zustand, der Zertifikatszugriff oder Abruf verhindert</text>
+      </trigger>
     </condition>
   </triggerConditions>
   <executionSequence>
-    <step number="1" name="Function Invocation">User or application calls exportLoggingCertificates function with no parameters required</step>
-    <step number="2" name="Authentication Check">The function checks authentication status if required by the implementation guideline to ensure the caller is authorized to export certificates</step>
-    <step number="3" name="Authorization Check">The function checks authorization to verify the caller has permission to export logging certificates</step>
-    <step number="4" name="Device Initialization Verification">The function verifies that the device is in an initialized state and ready for export operations</step>
-    <step number="5" name="Time Synchronization Check">The function verifies that device time is synchronized if required for certificate export operations</step>
-    <step number="6" name="Secure Element Certificate Request">The function sends a request to the Secure Element to retrieve and assemble the required logging certificates</step>
-    <step number="6a" name="Certificate Collection Success">If the Secure Element successfully retrieves and assembles all required certificates, execution continues to step 7 (not taken in this exception case)</step>
-    <step number="6b" name="Certificate Collection Failure">If the Secure Element cannot retrieve, assemble, or provide the required certificates due to storage failure, firmware error, communication loss, quota exhaustion, or security restrictions, execution branches to exception handling at step 7b</step>
-    <step number="7a" name="Export Data Assembly">Upon successful certificate collection, the function packages the certificates into the export data structure for return (not taken in this exception case)</step>
-    <step number="7b" name="Exception Context Preparation">Upon certificate collection failure, exception context is prepared including the Secure Element error details, export operation context, and timestamp</step>
-    <step number="8" name="Exception Instance Creation">ErrorExportLoggingCertificateFailed exception instance is created with appropriate error message indicating Secure Element certificate collection failure</step>
-    <step number="9" name="Exception Propagation">Exception is raised and propagated up the call stack without returning any export data to the caller</step>
-    <step number="10" name="Device State Verification">The Secure Element and certificate storage remain in their current state with no modifications or data extraction having occurred</step>
+    <step number="1" name="Function Invocation">
+      <text xml:lang="en">User or application calls exportLoggingCertificates function with no parameters required</text>
+      <text xml:lang="de">Benutzer oder Anwendung ruft die Funktion exportLoggingCertificates ohne erforderliche Parameter auf</text>
+    </step>
+    <step number="2" name="Authentication Check">
+      <text xml:lang="en">The function checks authentication status if required by the implementation guideline to ensure the caller is authorized to export certificates</text>
+      <text xml:lang="de">Die Funktion prüft den Authentifizierungsstatus, falls von der Implementierungsrichtlinie erforderlich, um sicherzustellen, dass der Aufrufer zur Zertifikatexportierung berechtigt ist</text>
+    </step>
+    <step number="3" name="Authorization Check">
+      <text xml:lang="en">The function checks authorization to verify the caller has permission to export logging certificates</text>
+      <text xml:lang="de">Die Funktion prüft die Autorisierung, um zu überprüfen, dass der Aufrufer die Berechtigung zum Exportieren von Protokollierungszertifikaten hat</text>
+    </step>
+    <step number="4" name="Device Initialization Verification">
+      <text xml:lang="en">The function verifies that the device is in an initialized state and ready for export operations</text>
+      <text xml:lang="de">Die Funktion überprüft, dass das Gerät in einem initialisierten Zustand ist und bereit für Exportvorgänge ist</text>
+    </step>
+    <step number="5" name="Time Synchronization Check">
+      <text xml:lang="en">The function verifies that device time is synchronized if required for certificate export operations</text>
+      <text xml:lang="de">Die Funktion überprüft, dass die Gerätezeit synchronisiert wird, falls für Zertifikatexportvorgänge erforderlich</text>
+    </step>
+    <step number="6" name="Secure Element Certificate Request">
+      <text xml:lang="en">The function sends a request to the Secure Element to retrieve and assemble the required logging certificates</text>
+      <text xml:lang="de">Die Funktion sendet eine Anfrage an das Secure Element, um die erforderlichen Protokollierungszertifikate abzurufen und zusammenzustellen</text>
+    </step>
+    <step number="6a" name="Certificate Collection Success">
+      <text xml:lang="en">If the Secure Element successfully retrieves and assembles all required certificates, execution continues to step 7 (not taken in this exception case)</text>
+      <text xml:lang="de">Falls das Secure Element alle erforderlichen Zertifikate erfolgreich abruft und zusammenstellt, wird die Ausführung zu Schritt 7 fortgesetzt (nicht in diesem Ausnahmefall)</text>
+    </step>
+    <step number="6b" name="Certificate Collection Failure">
+      <text xml:lang="en">If the Secure Element cannot retrieve, assemble, or provide the required certificates due to storage failure, firmware error, communication loss, quota exhaustion, or security restrictions, execution branches to exception handling at step 7b</text>
+      <text xml:lang="de">Falls das Secure Element die erforderlichen Zertifikate aufgrund eines Speicherfehlers, Firmware-Fehlers, Kommunikationsverlusts, Ressourcenerschöpfung oder Sicherheitsbeschränkungen nicht abrufen, zusammenstellen oder bereitstellen kann, wird die Ausführung zur Ausnahmeverarbeitung bei Schritt 7b verzweigt</text>
+    </step>
+    <step number="7a" name="Export Data Assembly">
+      <text xml:lang="en">Upon successful certificate collection, the function packages the certificates into the export data structure for return (not taken in this exception case)</text>
+      <text xml:lang="de">Nach erfolgreicher Zertifikatsammlung packt die Funktion die Zertifikate zur Rückgabe in die Exportdatenstruktur (nicht in diesem Ausnahmefall)</text>
+    </step>
+    <step number="7b" name="Exception Context Preparation">
+      <text xml:lang="en">Upon certificate collection failure, exception context is prepared including the Secure Element error details, export operation context, and timestamp</text>
+      <text xml:lang="de">Bei Fehler bei der Zertifikatsammlung wird der Ausnahmekontekt vorbereitet, einschließlich Secure-Element-Fehlerdetails, Exportvorgangskontext und Zeitstempel</text>
+    </step>
+    <step number="8" name="Exception Instance Creation">
+      <text xml:lang="en">ErrorExportLoggingCertificateFailed exception instance is created with appropriate error message indicating Secure Element certificate collection failure</text>
+      <text xml:lang="de">ErrorExportLoggingCertificateFailed-Ausnahminstanz wird mit einer angemessenen Fehlermeldung erstellt, die den Fehler bei der Zertifikatsammlung des Secure Element anzeigt</text>
+    </step>
+    <step number="9" name="Exception Propagation">
+      <text xml:lang="en">Exception is raised and propagated up the call stack without returning any export data to the caller</text>
+      <text xml:lang="de">Die Ausnahme wird ausgelöst und über den Call-Stack propagiert, ohne Exportdaten an den Aufrufer zurückzugeben</text>
+    </step>
+    <step number="10" name="Device State Verification">
+      <text xml:lang="en">The Secure Element and certificate storage remain in their current state with no modifications or data extraction having occurred</text>
+      <text xml:lang="de">Das Secure Element und der Zertifikatsspeicher bleiben in ihrem aktuellen Zustand mit keinen Änderungen oder Datenauszügen</text>
+    </step>
   </executionSequence>
   <recovery>
-    <step>Verify device is initialized</step>
-    <step>Confirm Secure Element is operational</step>
-    <step>Check output parameter is valid and writable</step>
-    <step>Retry certificate export after confirming preconditions</step>
-    <step>Verify user has authorization for certificate export</step>
+    <step>
+      <text xml:lang="en">Verify device is initialized</text>
+      <text xml:lang="de">Stellen Sie sicher, dass das Gerät initialisiert ist</text>
+    </step>
+    <step>
+      <text xml:lang="en">Confirm Secure Element is operational</text>
+      <text xml:lang="de">Bestätigen Sie, dass das Secure Element funktionsfähig ist</text>
+    </step>
+    <step>
+      <text xml:lang="en">Check output parameter is valid and writable</text>
+      <text xml:lang="de">Überprüfen Sie, dass der Ausgabeparameter gültig und schreibbar ist</text>
+    </step>
+    <step>
+      <text xml:lang="en">Retry certificate export after confirming preconditions</text>
+      <text xml:lang="de">Wiederholen Sie den Zertifikatexport nach Bestätigung der Vorbedingungen</text>
+    </step>
+    <step>
+      <text xml:lang="en">Verify user has authorization for certificate export</text>
+      <text xml:lang="de">Überprüfen Sie, dass der Benutzer die Berechtigung für den Zertifikatexport hat</text>
+    </step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorFunctionFailed</exception>
@@ -75,44 +189,116 @@
     <exception>ErrorSigningEventDataFailed</exception>
   </relatedExceptions>
   <postconditionality>
-    <state name="Export Data State">No export data is returned to the caller. The certificate export operation has not completed and no data of any kind (not even partial data) is provided to the user.</state>
-    <state name="Device State">Device state remains completely unchanged. No modifications to internal state, configuration, or data structures have occurred as a result of the failed certificate export attempt.</state>
-    <state name="Secure Element State">Secure Element remains unchanged and all its certificates remain stored in protected Secure Element storage. No certificate data has been extracted or modified.</state>
-    <state name="Certificate Storage">Certificate storage on device is unaffected. All certificates remain securely stored in the Secure Element. Certificate count and content are unchanged.</state>
-    <state name="State Consistency">No state inconsistency exists. The function exits at the certificate collection phase before any data assembly, packaging, or return operations.</state>
-    <state name="Device Availability">Device functions continue to execute normally. The device remains operational and all API functions remain accessible.</state>
+    <state name="Export Data State">
+      <text xml:lang="en">No export data is returned to the caller. The certificate export operation has not completed and no data of any kind (not even partial data) is provided to the user.</text>
+      <text xml:lang="de">Es werden keine Exportdaten an den Aufrufer zurückgegeben. Der Zertifikatexportvorgang wurde nicht abgeschlossen und es werden keine Daten (nicht einmal teilweise Daten) an den Benutzer bereitgestellt.</text>
+    </state>
+    <state name="Device State">
+      <text xml:lang="en">Device state remains completely unchanged. No modifications to internal state, configuration, or data structures have occurred as a result of the failed certificate export attempt.</text>
+      <text xml:lang="de">Der Gerätezustand bleibt vollständig unverändert. Es wurden keine Änderungen am internen Zustand, der Konfiguration oder den Datenstrukturen aufgrund des fehlgeschlagenen Zertifikatexportversuchs vorgenommen.</text>
+    </state>
+    <state name="Secure Element State">
+      <text xml:lang="en">Secure Element remains unchanged and all its certificates remain stored in protected Secure Element storage. No certificate data has been extracted or modified.</text>
+      <text xml:lang="de">Das Secure Element bleibt unverändert und alle Zertifikate bleiben im geschützten Secure-Element-Speicher gespeichert. Es wurden keine Zertifikatsdaten extrahiert oder geändert.</text>
+    </state>
+    <state name="Certificate Storage">
+      <text xml:lang="en">Certificate storage on device is unaffected. All certificates remain securely stored in the Secure Element. Certificate count and content are unchanged.</text>
+      <text xml:lang="de">Der Zertifikatsspeicher auf dem Gerät ist nicht betroffen. Alle Zertifikate bleiben sicher im Secure Element gespeichert. Die Zertifikatanzahl und der Inhalt sind unverändert.</text>
+    </state>
+    <state name="State Consistency">
+      <text xml:lang="en">No state inconsistency exists. The function exits at the certificate collection phase before any data assembly, packaging, or return operations.</text>
+      <text xml:lang="de">Es gibt keine Zustandsinkonsistenz. Die Funktion wird in der Zertifikatsammlungsphase beendet, bevor Datenausammlung, Verpackung oder Rückgabevorgänge erfolgen.</text>
+    </state>
+    <state name="Device Availability">
+      <text xml:lang="en">Device functions continue to execute normally. The device remains operational and all API functions remain accessible.</text>
+      <text xml:lang="de">Gerätefunktionen werden weiterhin normal ausgeführt. Das Gerät bleibt betriebsbereit und alle API-Funktionen bleiben zugänglich.</text>
+    </state>
   </postconditionality>
   <notes>
-    <note>Indication: Export of logging certificates failed - certificate data could not be retrieved</note>
-    <note>Topics: Certificate Management, Data Export, Certificate Operations, Security Credentials</note>
+    <note>
+      <text xml:lang="en">Indication: Export of logging certificates failed - certificate data could not be retrieved</text>
+      <text xml:lang="de">Anzeichen: Export von Protokollierungszertifikaten fehlgeschlagen - Zertifikatsdaten konnten nicht abgerufen werden</text>
+    </note>
+    <note>
+      <text xml:lang="en">Topics: Certificate Management, Data Export, Certificate Operations, Security Credentials</text>
+      <text xml:lang="de">Themen: Zertifikatsverwaltung, Datenexport, Zertifikatsvorgänge, Sicherheitsberechtigungen</text>
+    </note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Hardware Failure During Certificate Collection">
-      <description>A user calls exportLoggingCertificates to retrieve logging certificates from the device for external audit trail verification. The Secure Element has been storing log messages and contains multiple logging certificates. During the certificate retrieval phase, the Secure Element hardware encounters an internal error and fails to read the certificate storage area.</description>
-      <relatedFunctions>exportLoggingCertificates, exportSerialNumbers, retrieveLogMessage</relatedFunctions>
-      <errorContext>Secure Element hardware failure during certificate retrieval preventing export data assembly</errorContext>
+      <description>
+        <text xml:lang="en">A user calls exportLoggingCertificates to retrieve logging certificates from the device for external audit trail verification. The Secure Element has been storing log messages and contains multiple logging certificates. During the certificate retrieval phase, the Secure Element hardware encounters an internal error and fails to read the certificate storage area.</text>
+        <text xml:lang="de">Ein Benutzer ruft exportLoggingCertificates auf, um Protokollierungszertifikate vom Gerät für externe Audit-Trail-Überprüfung abzurufen. Das Secure Element speichert Protokollmeldungen und enthält mehrere Protokollierungszertifikate. Während der Zertifikataabrufphase trifft die Secure-Element-Hardware auf einen internen Fehler und kann nicht aus dem Zertifikatsspeicher lesen.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">exportLoggingCertificates, exportSerialNumbers, retrieveLogMessage</text>
+        <text xml:lang="de">exportLoggingCertificates, exportSerialNumbers, retrieveLogMessage</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Secure Element hardware failure during certificate retrieval preventing export data assembly</text>
+        <text xml:lang="de">Sicherheit-Element-Hardwarefehler während des Zertifikataabrufs, der die Exportdatenzusammensetzung verhindert</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 2: Communication Loss During Certificate Export">
-      <description>A user initiates exportLoggingCertificates through a remote management interface. The communication link between the application and Secure Element is disrupted during the certificate collection phase. The Secure Element certificate retrieval command times out and the device firmware reports a communication failure.</description>
-      <relatedFunctions>exportLoggingCertificates, exportSerialNumbers, retrieveLogMessage</relatedFunctions>
-      <errorContext>Communication failure between device and Secure Element during certificate transfer blocking export completion</errorContext>
+      <description>
+        <text xml:lang="en">A user initiates exportLoggingCertificates through a remote management interface. The communication link between the application and Secure Element is disrupted during the certificate collection phase. The Secure Element certificate retrieval command times out and the device firmware reports a communication failure.</text>
+        <text xml:lang="de">Ein Benutzer leitet exportLoggingCertificates über eine Remote-Verwaltungsschnittstelle ein. Die Kommunikationsverbindung zwischen der Anwendung und dem Secure Element wird während der Zertifikatsammlungsphase unterbrochen. Der Zertifikataabrufbefehl des Secure Element wird zeitüberschritten und die Geräte-Firmware meldet einen Kommunikationsfehler.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">exportLoggingCertificates, exportSerialNumbers, retrieveLogMessage</text>
+        <text xml:lang="de">exportLoggingCertificates, exportSerialNumbers, retrieveLogMessage</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Communication failure between device and Secure Element during certificate transfer blocking export completion</text>
+        <text xml:lang="de">Kommunikationsfehler zwischen Gerät und Secure Element während der Zertifikaatsübertragung blockiert Exportabschluss</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 3: Certificate Storage Corruption Detection">
-      <description>A device has been operating normally for several weeks logging messages. When exportLoggingCertificates is called to retrieve certificates for compliance verification, the Secure Element detects that the certificate storage area contains corrupted data. The certificate data does not match expected checksums or formats.</description>
-      <relatedFunctions>exportLoggingCertificates, exportSerialNumbers, storeLogMessage</relatedFunctions>
-      <errorContext>Certificate storage corruption or data integrity failure requiring diagnostic investigation</errorContext>
+      <description>
+        <text xml:lang="en">A device has been operating normally for several weeks logging messages. When exportLoggingCertificates is called to retrieve certificates for compliance verification, the Secure Element detects that the certificate storage area contains corrupted data. The certificate data does not match expected checksums or formats.</text>
+        <text xml:lang="de">Ein Gerät läuft mehrere Wochen lang normal, protokolliert Meldungen. Wenn exportLoggingCertificates aufgerufen wird, um Zertifikate zur Compliance-Überprüfung abzurufen, erkennt das Secure Element, dass der Zertifikatsspeicher beschädigte Daten enthält. Die Zertifikatsdaten stimmen nicht mit erwarteten Prüfsummen oder Formaten überein.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">exportLoggingCertificates, exportSerialNumbers, storeLogMessage</text>
+        <text xml:lang="de">exportLoggingCertificates, exportSerialNumbers, storeLogMessage</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Certificate storage corruption or data integrity failure requiring diagnostic investigation</text>
+        <text xml:lang="de">Zertifikatsspeicherbeschädigung oder Datenintegritätsfehler, der diagnostische Untersuchung erfordert</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 4: Persistent Failure Requiring Professional Service">
-      <description>A device operator attempts exportLoggingCertificates multiple times over several hours to address an audit request, but each attempt results in ErrorExportLoggingCertificateFailed. Other operations like logging are working normally. This pattern indicates a persistent issue with the Secure Element's certificate management that cannot be resolved through standard troubleshooting.</description>
-      <relatedFunctions>exportLoggingCertificates, exportSerialNumbers, storeLogMessage, retrieveLogMessage</relatedFunctions>
-      <errorContext>Persistent Secure Element certificate management failure indicating underlying hardware or firmware issues</errorContext>
+      <description>
+        <text xml:lang="en">A device operator attempts exportLoggingCertificates multiple times over several hours to address an audit request, but each attempt results in ErrorExportLoggingCertificateFailed. Other operations like logging are working normally. This pattern indicates a persistent issue with the Secure Element's certificate management that cannot be resolved through standard troubleshooting.</text>
+        <text xml:lang="de">Ein Geräteoperator versucht exportLoggingCertificates mehrmals über mehrere Stunden, um eine Audit-Anfrage zu bearbeiten, aber jeder Versuch führt zu ErrorExportLoggingCertificateFailed. Andere Vorgänge wie Protokollierung funktionieren normal. Dieses Muster zeigt ein persistentes Problem mit der Zertifikatsverwaltung des Secure Element an, das durch standardmäßige Fehlerbehebung nicht behoben werden kann.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">exportLoggingCertificates, exportSerialNumbers, storeLogMessage, retrieveLogMessage</text>
+        <text xml:lang="de">exportLoggingCertificates, exportSerialNumbers, storeLogMessage, retrieveLogMessage</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Persistent Secure Element certificate management failure indicating underlying hardware or firmware issues</text>
+        <text xml:lang="de">Persistenter Fehler bei der Secure-Element-Zertifikatsverwaltung, der auf zugrunde liegende Hardware- oder Firmware-Probleme hinweist</text>
+      </errorContext>
     </scenario>
   </usage>
   <implementationContext>
-    <note>Raised by exportLoggingCertificates when certificate export fails</note>
-    <note>Certificate export function retrieves logging certificates from SE</note>
-    <note>Device provides certificates used for log message signing operations</note>
-    <note>Export failure prevents certificate provisioning to external systems</note>
+    <note>
+      <text xml:lang="en">Raised by exportLoggingCertificates when certificate export fails</text>
+      <text xml:lang="de">Wird von exportLoggingCertificates ausgelöst, wenn der Zertifikatexport fehlschlägt</text>
+    </note>
+    <note>
+      <text xml:lang="en">Certificate export function retrieves logging certificates from SE</text>
+      <text xml:lang="de">Zertifikatexportfunktion ruft Protokollierungszertifikate aus SE ab</text>
+    </note>
+    <note>
+      <text xml:lang="en">Device provides certificates used for log message signing operations</text>
+      <text xml:lang="de">Gerät stellt Zertifikate bereit, die für Protokollnachrichtenaufsignierungsvorgänge verwendet werden</text>
+    </note>
+    <note>
+      <text xml:lang="en">Export failure prevents certificate provisioning to external systems</text>
+      <text xml:lang="de">Exportfehler verhindert Zertifikatbereitstellung für externe Systeme</text>
+    </note>
   </implementationContext>
 </exception>
 

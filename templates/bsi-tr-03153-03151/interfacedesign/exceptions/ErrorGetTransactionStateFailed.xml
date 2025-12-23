@@ -1,19 +1,34 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes'?>
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorGetTransactionStateFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorGetTransactionStateFailed</name>
-  <description>This exception is thrown if the SE API function getTransactionState fails to retrieve the current state of a specific transaction. The function attempts to determine the operational state of an active transaction, but the retrieval process fails before the transaction state can be determined and returned.</description>
+  <description>
+    <text xml:lang="en">This exception is thrown if the SE API function getTransactionState fails to retrieve the current state of a specific transaction. The function attempts to determine the operational state of an active transaction, but the retrieval process fails before the transaction state can be determined and returned.</text>
+    <text xml:lang="de">Diese Ausnahme wird ausgelöst, wenn die SE API Funktion getTransactionState fehlschlägt, um den aktuellen Status einer bestimmten Transaktion abzurufen. Die Funktion versucht, den Betriebszustand einer aktiven Transaktion zu bestimmen, aber der Abrufprozess schlägt fehl, bevor der Transaktionsstatus bestimmt und zurückgegeben werden kann.</text>
+  </description>
   <category>Transaction Management</category>
   <subcategory>Transaction State Query</subcategory>
   <severity>High</severity>
   <javadoc>
-    <summary>This class defines the exception ErrorGetTransactionStateFailed that is thrown if the determination of the transaction state failed.</summary>
-    <description>This exception is thrown when the getTransactionState function cannot retrieve the current state of a specific transaction from the Secure Element. Transaction state information describes the operational status of an active transaction (active, pending completion, suspended, etc.). ErrorGetTransactionStateFailed indicates that the Secure Element cannot provide the transaction state due to hardware failure, transaction state storage corruption, internal transaction management system errors, communication failures, or Secure Element state restrictions. When this exception occurs, no transaction state value is returned and applications cannot determine the operational status of the requested transaction. Recovery typically involves transaction diagnostics, transaction management subsystem verification, and state recovery if the failure persists.</description>
+    <summary>
+      <text xml:lang="en">This class defines the exception ErrorGetTransactionStateFailed that is thrown if the determination of the transaction state failed.</text>
+      <text xml:lang="de">Diese Klasse definiert die Ausnahme ErrorGetTransactionStateFailed, die ausgelöst wird, wenn die Bestimmung des Transaktionsstatus fehlgeschlagen ist.</text>
+    </summary>
+    <description>
+      <text xml:lang="en">This exception is thrown when the getTransactionState function cannot retrieve the current state of a specific transaction from the Secure Element. Transaction state information describes the operational status of an active transaction (active, pending completion, suspended, etc.). ErrorGetTransactionStateFailed indicates that the Secure Element cannot provide the transaction state due to hardware failure, transaction state storage corruption, internal transaction management system errors, communication failures, or Secure Element state restrictions. When this exception occurs, no transaction state value is returned and applications cannot determine the operational status of the requested transaction. Recovery typically involves transaction diagnostics, transaction management subsystem verification, and state recovery if the failure persists.</text>
+      <text xml:lang="de">Diese Ausnahme wird ausgelöst, wenn die Funktion getTransactionState den aktuellen Status einer bestimmten Transaktion nicht vom Secure Element abrufen kann. Die Transaktionsstatus-Information beschreibt den Betriebszustand einer aktiven Transaktion (aktiv, ausstehend, unterbrochen, usw.). ErrorGetTransactionStateFailed zeigt an, dass das Secure Element den Transaktionsstatus aufgrund eines Hardware-Ausfalls, Speicherbeschädigung des Transaktionsstatus, interner Transaktionsmanagement-Systemfehler, Kommunikationsfehler oder Secure Element Zustandsbeschränkungen nicht bereitstellen kann. Wenn diese Ausnahme auftritt, wird kein Transaktionsstatus-Wert zurückgegeben und Anwendungen können den Betriebszustand der angeforderten Transaktion nicht bestimmen. Die Wiederherstellung umfasst normalerweise Transaktionsdiagnose, Transaktionsmanagement-Subsystem-Verifizierung und Zustandswiederherstellung, wenn der Fehler anhält.</text>
+    </description>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>
     <section>3.1.5 Transaction Management - getTransactionState</section>
-    <requirement>The function getTransactionState SHALL query the Secure Element to determine the current state of a specific transaction. If the Secure Element cannot provide or return the required transaction state information, the function SHALL raise the exception ErrorGetTransactionStateFailed and exit without returning any state data. The transaction state retrieval failure indicates the Secure Element's transaction management query functionality could not complete successfully.</requirement>
-    <applicability>Transaction management operations - getTransactionState function only</applicability>
+    <requirement>
+      <text xml:lang="en">The function getTransactionState SHALL query the Secure Element to determine the current state of a specific transaction. If the Secure Element cannot provide or return the required transaction state information, the function SHALL raise the exception ErrorGetTransactionStateFailed and exit without returning any state data. The transaction state retrieval failure indicates the Secure Element's transaction management query functionality could not complete successfully.</text>
+      <text xml:lang="de">Die Funktion getTransactionState soll das Secure Element abfragen, um den aktuellen Status einer bestimmten Transaktion zu bestimmen. Falls das Secure Element die erforderlichen Transaktionsstatus-Informationen nicht bereitstellen oder zurückgeben kann, soll die Funktion die Ausnahme ErrorGetTransactionStateFailed auslösen und beenden, ohne Statusdaten zurückzugeben. Das Abruffehler für den Transaktionsstatus zeigt an, dass die Abfragefunktionalität des Transaktionsmanagements des Secure Element nicht erfolgreich abgeschlossen werden konnte.</text>
+    </requirement>
+    <applicability>
+      <text xml:lang="en">Transaction management operations - getTransactionState function only</text>
+      <text xml:lang="de">Transaktionsmanagement-Operationen - nur Funktion getTransactionState</text>
+    </applicability>
     <reference>getTransactionState – Function (3.1.5)</reference>
   </specification>
   <thrownBy>
@@ -21,50 +36,143 @@
   </thrownBy>
   <triggerConditions>
     <condition>
-      <scenario>Transaction management hardware failure</scenario>
-      <description>The Secure Element's transaction management hardware malfunctions or becomes inaccessible, preventing transaction state retrieval</description>
-      <trigger>The Secure Element's transaction registry or transaction management hardware malfunctions or experiences read errors. When getTransactionState is called, the transaction state query is sent to the Secure Element, but the hardware cannot provide valid state information. The function receives a failure status from the Secure Element, triggering ErrorGetTransactionStateFailed.</trigger>
+      <scenario>
+        <text xml:lang="en">Transaction management hardware failure</text>
+        <text xml:lang="de">Hardware-Fehler des Transaktionsmanagements</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">The Secure Element's transaction management hardware malfunctions or becomes inaccessible, preventing transaction state retrieval</text>
+        <text xml:lang="de">Die Transaktionsmanagement-Hardware des Secure Element funktioniert nicht mehr oder wird nicht zugänglich, was den Abruf des Transaktionsstatus verhindert</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">The Secure Element's transaction registry or transaction management hardware malfunctions or experiences read errors. When getTransactionState is called, the transaction state query is sent to the Secure Element, but the hardware cannot provide valid state information. The function receives a failure status from the Secure Element, triggering ErrorGetTransactionStateFailed.</text>
+        <text xml:lang="de">Die Transaktionsregistrierung oder Transaktionsmanagement-Hardware des Secure Element funktioniert nicht mehr oder verursacht Lesefehler. Wenn getTransactionState aufgerufen wird, wird die Transaktionsstatus-Abfrage an das Secure Element gesendet, aber die Hardware kann keine gültigen Statusinformationen bereitstellen. Die Funktion erhält einen Fehlerstatus vom Secure Element, das ErrorGetTransactionStateFailed auslöst.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Transaction state data corruption</scenario>
-      <description>The Secure Element's transaction registry or transaction state tracking data becomes corrupted or is lost</description>
-      <trigger>The Secure Element's memory containing transaction state information, transaction tracking tables, or transaction metadata becomes corrupted, experiences data loss, or is marked as inaccessible due to storage errors. When getTransactionState attempts to read the transaction state, the data cannot be reliably retrieved, triggering ErrorGetTransactionStateFailed.</trigger>
+      <scenario>
+        <text xml:lang="en">Transaction state data corruption</text>
+        <text xml:lang="de">Beschädigung der Transaktionsstatus-Daten</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">The Secure Element's transaction registry or transaction state tracking data becomes corrupted or is lost</text>
+        <text xml:lang="de">Die Transaktionsregistrierung oder Transaktionsstatus-Verfolgungsdaten des Secure Element werden beschädigt oder gehen verloren</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">The Secure Element's memory containing transaction state information, transaction tracking tables, or transaction metadata becomes corrupted, experiences data loss, or is marked as inaccessible due to storage errors. When getTransactionState attempts to read the transaction state, the data cannot be reliably retrieved, triggering ErrorGetTransactionStateFailed.</text>
+        <text xml:lang="de">Der Speicher des Secure Element, der Transaktionsstatus-Informationen, Transaktionsverfolgungs-Tabellen oder Transaktionsmetadaten enthält, wird beschädigt, erfährt Datenverluste oder wird aufgrund von Speicherfehlern als nicht zugänglich markiert. Wenn getTransactionState versucht, den Transaktionsstatus zu lesen, können die Daten nicht zuverlässig abgerufen werden, was ErrorGetTransactionStateFailed auslöst.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Transaction management subsystem internal error</scenario>
-      <description>The Secure Element's transaction management subsystem encounters critical errors that prevent transaction state retrieval</description>
-      <trigger>The Secure Element's transaction management subsystem (responsible for managing transactions and providing transaction state) encounters an internal error, deadlock, or exception. When getTransactionState is called, the transaction management system cannot process the state query, triggering ErrorGetTransactionStateFailed.</trigger>
+      <scenario>
+        <text xml:lang="en">Transaction management subsystem internal error</text>
+        <text xml:lang="de">Interner Fehler des Transaktionsmanagement-Subsystems</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">The Secure Element's transaction management subsystem encounters critical errors that prevent transaction state retrieval</text>
+        <text xml:lang="de">Das Transaktionsmanagement-Subsystem des Secure Element trifft auf kritische Fehler, die den Transaktionsstatus-Abruf verhindern</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">The Secure Element's transaction management subsystem (responsible for managing transactions and providing transaction state) encounters an internal error, deadlock, or exception. When getTransactionState is called, the transaction management system cannot process the state query, triggering ErrorGetTransactionStateFailed.</text>
+        <text xml:lang="de">Das Transaktionsmanagement-Subsystem des Secure Element (verantwortlich für die Verwaltung von Transaktionen und Bereitstellung des Transaktionsstatus) trifft auf einen internen Fehler, Deadlock oder Ausnahme. Wenn getTransactionState aufgerufen wird, kann das Transaktionsmanagement-System die Statusabfrage nicht verarbeiten, was ErrorGetTransactionStateFailed auslöst.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Device-to-Secure Element communication failure during state query</scenario>
-      <description>The communication channel between device and Secure Element is disrupted during transaction state retrieval</description>
-      <trigger>A communication failure occurs while getTransactionState transmits the state query to the Secure Element or while receiving the transaction state response. The command may be corrupted, the response may be incomplete, or the communication link may be temporarily unavailable. The function receives a communication error status, triggering ErrorGetTransactionStateFailed.</trigger>
+      <scenario>
+        <text xml:lang="en">Device-to-Secure Element communication failure during state query</text>
+        <text xml:lang="de">Kommunikationsfehler zwischen Gerät und Secure Element während Status-Abfrage</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">The communication channel between device and Secure Element is disrupted during transaction state retrieval</text>
+        <text xml:lang="de">Der Kommunikationskanal zwischen Gerät und Secure Element wird während des Abrufs des Transaktionsstatus unterbrochen</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">A communication failure occurs while getTransactionState transmits the state query to the Secure Element or while receiving the transaction state response. The command may be corrupted, the response may be incomplete, or the communication link may be temporarily unavailable. The function receives a communication error status, triggering ErrorGetTransactionStateFailed.</text>
+        <text xml:lang="de">Ein Kommunikationsfehler tritt auf, während getTransactionState die Statusabfrage an das Secure Element übersendet oder während die Transaktionsstatus-Antwort empfangen wird. Der Befehl kann beschädigt sein, die Antwort kann unvollständig sein oder der Kommunikationskanal kann vorübergehend nicht verfügbar sein. Die Funktion erhält einen Kommunikationsfehler-Status, der ErrorGetTransactionStateFailed auslöst.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Secure Element in restricted or error state prohibiting transaction access</scenario>
-      <description>The Secure Element is in a locked, restricted, or error state that prevents external queries for transaction information</description>
-      <trigger>The Secure Element enters a state where transaction queries or transaction state access is not permitted. When getTransactionState is called and the Secure Element's state prohibits transaction access, the function receives a state-related rejection, triggering ErrorGetTransactionStateFailed.</trigger>
+      <scenario>
+        <text xml:lang="en">Secure Element in restricted or error state prohibiting transaction access</text>
+        <text xml:lang="de">Secure Element im eingeschränkten oder fehlerhaften Zustand, der Transaktions-Zugriff verhindert</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">The Secure Element is in a locked, restricted, or error state that prevents external queries for transaction information</text>
+        <text xml:lang="de">Das Secure Element ist im gesperrten, eingeschränkten oder fehlerhaften Zustand, der externe Abfragen für Transaktions-Informationen verhindert</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">The Secure Element enters a state where transaction queries or transaction state access is not permitted. When getTransactionState is called and the Secure Element's state prohibits transaction access, the function receives a state-related rejection, triggering ErrorGetTransactionStateFailed.</text>
+        <text xml:lang="de">Das Secure Element tritt in einen Zustand ein, in dem Transaktions-Abfragen oder Transaktionsstatus-Zugriff nicht zulässig sind. Wenn getTransactionState aufgerufen wird und der Zustand des Secure Element den Transaktions-Zugriff verhindert, erhält die Funktion eine zustandsbezogene Ablehnung, die ErrorGetTransactionStateFailed auslöst.</text>
+      </trigger>
     </condition>
   </triggerConditions>
   <executionSequence>
-    <step number="1">User/application calls getTransactionState function with transaction ID parameter on device</step>
-    <step number="2">Function validates input parameters (transaction ID validity) and checks authentication status (if required by referencing guideline)</step>
-    <step number="3">Function checks authorization for transaction information access (if required by referencing guideline)</step>
-    <step number="4">Function verifies device is properly initialized and transaction management is operational</step>
-    <step number="5">Function initiates communication channel to Secure Element and prepares transaction state query command with transaction ID</step>
-    <step number="6">Function transmits state query command to Secure Element requesting the current state of the specified transaction</step>
-    <step number="6a">If Secure Element responds with failure status (transaction error, state error, management error) → ErrorGetTransactionStateFailed raised, function exits without state value</step>
-    <step number="6b">If communication failure occurs during query transmission or response reception → ErrorGetTransactionStateFailed raised, function exits</step>
-    <step number="7">If successful, function receives transaction state value from Secure Element</step>
-    <step number="8">Function validates transaction state value for correctness (format, state validity, transaction existence verification)</step>
-    <step number="9">Function closes Secure Element communication channel</step>
-    <step number="10">Function returns valid transaction state value to caller</step>
+    <step number="1">
+      <text xml:lang="en">User/application calls getTransactionState function with transaction ID parameter on device</text>
+      <text xml:lang="de">Benutzer/Anwendung ruft die Funktion getTransactionState mit Transaktions-ID-Parameter auf dem Gerät auf</text>
+    </step>
+    <step number="2">
+      <text xml:lang="en">Function validates input parameters (transaction ID validity) and checks authentication status (if required by referencing guideline)</text>
+      <text xml:lang="de">Funktion validiert Eingabeparameter (Transaktions-ID-Gültigkeit) und prüft Authentifizierungsstatus (falls von Richtlinie erforderlich)</text>
+    </step>
+    <step number="3">
+      <text xml:lang="en">Function checks authorization for transaction information access (if required by referencing guideline)</text>
+      <text xml:lang="de">Funktion prüft die Autorisierung für den Transaktions-Informationszugriff (falls von Richtlinie erforderlich)</text>
+    </step>
+    <step number="4">
+      <text xml:lang="en">Function verifies device is properly initialized and transaction management is operational</text>
+      <text xml:lang="de">Funktion verifiziert, dass das Gerät ordnungsgemäß initialisiert und das Transaktionsmanagement betriebsbereit ist</text>
+    </step>
+    <step number="5">
+      <text xml:lang="en">Function initiates communication channel to Secure Element and prepares transaction state query command with transaction ID</text>
+      <text xml:lang="de">Funktion initiiert Kommunikationskanal zu Secure Element und bereitet Transaktionsstatus-Abfrage-Befehl mit Transaktions-ID vor</text>
+    </step>
+    <step number="6">
+      <text xml:lang="en">Function transmits state query command to Secure Element requesting the current state of the specified transaction</text>
+      <text xml:lang="de">Funktion übersendet Statusabfrage-Befehl zu Secure Element und fordert den aktuellen Status der angegebenen Transaktion an</text>
+    </step>
+    <step number="6a">
+      <text xml:lang="en">If Secure Element responds with failure status (transaction error, state error, management error) → ErrorGetTransactionStateFailed raised, function exits without state value</text>
+      <text xml:lang="de">Falls Secure Element mit Fehlerstatus antwortet (Transaktionsfehler, Statusfehler, Managementfehler) → ErrorGetTransactionStateFailed ausgelöst, Funktion beendet ohne Statuswert</text>
+    </step>
+    <step number="6b">
+      <text xml:lang="en">If communication failure occurs during query transmission or response reception → ErrorGetTransactionStateFailed raised, function exits</text>
+      <text xml:lang="de">Falls Kommunikationsfehler während Abfragetransmission oder Antwortempfang auftritt → ErrorGetTransactionStateFailed ausgelöst, Funktion beendet</text>
+    </step>
+    <step number="7">
+      <text xml:lang="en">If successful, function receives transaction state value from Secure Element</text>
+      <text xml:lang="de">Falls erfolgreich, empfängt Funktion Transaktionsstatus-Wert von Secure Element</text>
+    </step>
+    <step number="8">
+      <text xml:lang="en">Function validates transaction state value for correctness (format, state validity, transaction existence verification)</text>
+      <text xml:lang="de">Funktion validiert Transaktionsstatus-Wert auf Korrektheit (Format, Status-Gültigkeit, Transaktions-Existenz-Verifizierung)</text>
+    </step>
+    <step number="9">
+      <text xml:lang="en">Function closes Secure Element communication channel</text>
+      <text xml:lang="de">Funktion schließt Secure Element Kommunikationskanal</text>
+    </step>
+    <step number="10">
+      <text xml:lang="en">Function returns valid transaction state value to caller</text>
+      <text xml:lang="de">Funktion gibt gültigen Transaktionsstatus-Wert an Aufrufer zurück</text>
+    </step>
   </executionSequence>
   <recovery>
-    <step>Verify device is initialized</step>
-    <step>Confirm Secure Element is operational</step>
-    <step>Verify transaction number is valid and exists</step>
-    <step>Retry transaction state query after confirming preconditions</step>
+    <step>
+      <text xml:lang="en">Verify device is initialized</text>
+      <text xml:lang="de">Stellen Sie sicher, dass das Gerät initialisiert ist</text>
+    </step>
+    <step>
+      <text xml:lang="en">Confirm Secure Element is operational</text>
+      <text xml:lang="de">Bestätigen Sie, dass das Secure Element betriebsbereit ist</text>
+    </step>
+    <step>
+      <text xml:lang="en">Verify transaction number is valid and exists</text>
+      <text xml:lang="de">Verifizieren Sie, dass die Transaktionsnummer gültig ist und existiert</text>
+    </step>
+    <step>
+      <text xml:lang="en">Retry transaction state query after confirming preconditions</text>
+      <text xml:lang="de">Wiederholen Sie die Transaktionsstatus-Abfrage nach Bestätigung der Vorbedingungen</text>
+    </step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorFunctionFailed</exception>
@@ -74,44 +182,116 @@
     <exception>ErrorGetCurrentTransactionCounterFailed</exception>
   </relatedExceptions>
   <postconditionality>
-    <state name="Device Operational State">Device remains fully operational and unmodified. The failure to retrieve transaction state does not affect device initialization state, transaction management operations, internal memory, stored data, or the ability to perform other operations. All device components remain in their pre-call state.</state>
-    <state name="Transaction State Return Status">No transaction state value is returned to the caller. The function exits without providing transaction operational status. Applications must not assume default transaction states or cached information; they must handle the exception as indicating transaction state information is unavailable.</state>
-    <state name="Secure Element Transaction Management State">Secure Element transaction management subsystem remains unchanged by the failed query. No state modifications, transaction state changes, or transaction management configuration changes occur. Transaction management operations continue normally regardless of the retrieval failure.</state>
-    <state name="Transaction Continuity">The specified transaction continues to be maintained internally in the Secure Element. The failure to retrieve the transaction state does not affect the transaction or transaction management operations. State queries can be retried once the underlying issue is resolved.</state>
-    <state name="No Cascading State Effects">No cascading state inconsistencies or secondary failures occur as a result of the state query failure. Device internal consistency is maintained. Other SE API functions and transaction management operations continue normally without state corruption.</state>
-    <state name="Recovery Preconditions Met">The device state after exception is consistent and allows for recovery operations. The underlying issue (hardware error, communication error, management system error) remains present, but the device is stable enough to accept diagnostic queries or recovery attempts.</state>
+    <state name="Device Operational State">
+      <text xml:lang="en">Device remains fully operational and unmodified. The failure to retrieve transaction state does not affect device initialization state, transaction management operations, internal memory, stored data, or the ability to perform other operations. All device components remain in their pre-call state.</text>
+      <text xml:lang="de">Das Gerät bleibt vollständig betriebsbereit und unmodifiziert. Das Fehlschlagen des Abrufs des Transaktionsstatus wirkt sich nicht auf den Geräteinitialisierungszustand, Transaktionsmanagement-Operationen, den internen Speicher, die gespeicherten Daten oder die Fähigkeit zur Durchführung anderer Operationen aus. Alle Gerätekomponenten bleiben in ihrem Pre-Call-Zustand.</text>
+    </state>
+    <state name="Transaction State Return Status">
+      <text xml:lang="en">No transaction state value is returned to the caller. The function exits without providing transaction operational status. Applications must not assume default transaction states or cached information; they must handle the exception as indicating transaction state information is unavailable.</text>
+      <text xml:lang="de">Es wird kein Transaktionsstatus-Wert an den Aufrufer zurückgegeben. Die Funktion wird beendet, ohne Transaktionsbetriebs-Status bereitzustellen. Anwendungen dürfen nicht mit Standard-Transaktionsstatuswerten oder zwischengespeicherten Informationen rechnen; sie müssen die Ausnahme als Anzeichen dafür behandeln, dass Transaktionsstatus-Informationen nicht verfügbar sind.</text>
+    </state>
+    <state name="Secure Element Transaction Management State">
+      <text xml:lang="en">Secure Element transaction management subsystem remains unchanged by the failed query. No state modifications, transaction state changes, or transaction management configuration changes occur. Transaction management operations continue normally regardless of the retrieval failure.</text>
+      <text xml:lang="de">Das Transaktionsmanagement-Subsystem des Secure Element bleibt durch die fehlgeschlagene Abfrage unverändert. Es werden keine Zustandsänderungen, Transaktionsstaänderungen oder Transaktionsmanagement-Konfigurationänderungen vorgenommen. Transaktionsmanagement-Operationen funktionieren normal, unabhängig vom Abruffehler.</text>
+    </state>
+    <state name="Transaction Continuity">
+      <text xml:lang="en">The specified transaction continues to be maintained internally in the Secure Element. The failure to retrieve the transaction state does not affect the transaction or transaction management operations. State queries can be retried once the underlying issue is resolved.</text>
+      <text xml:lang="de">Die angegebene Transaktion wird intern im Secure Element weiterhin verwaltet. Das Fehlschlagen des Abrufs des Transaktionsstatus wirkt sich nicht auf die Transaktion oder Transaktionsmanagement-Operationen aus. Statusabfragen können wiederholt werden, sobald das zugrunde liegende Problem behoben ist.</text>
+    </state>
+    <state name="No Cascading State Effects">
+      <text xml:lang="en">No cascading state inconsistencies or secondary failures occur as a result of the state query failure. Device internal consistency is maintained. Other SE API functions and transaction management operations continue normally without state corruption.</text>
+      <text xml:lang="de">Es treten keine kaskadenförmigen Zustandsinkonsistenzen oder sekundäre Ausfälle als Ergebnis des Statusabfragefehlers auf. Die interne Konsistenz des Geräts wird aufrechterhalten. Andere SE API Funktionen und Transaktionsmanagement-Operationen funktionieren normal ohne Zustandsbeschädigung.</text>
+    </state>
+    <state name="Recovery Preconditions Met">
+      <text xml:lang="en">The device state after exception is consistent and allows for recovery operations. The underlying issue (hardware error, communication error, management system error) remains present, but the device is stable enough to accept diagnostic queries or recovery attempts.</text>
+      <text xml:lang="de">Der Gerätezustand nach der Ausnahme ist konsistent und ermöglicht Wiederherstellungsoperationen. Das zugrunde liegende Problem (Hardware-Fehler, Kommunikationsfehler, Managementsystem-Fehler) bleibt bestehen, aber das Gerät ist stabil genug, um Diagnoseversuche oder Wiederherstellungsversuche zu akzeptieren.</text>
+    </state>
   </postconditionality>
   <notes>
-    <note>Indication: Retrieval of transaction state failed - transaction information unavailable</note>
-    <note>Topics: Transaction Management, Information Retrieval, Transaction State, Transaction Status</note>
+    <note>
+      <text xml:lang="en">Indication: Retrieval of transaction state failed - transaction information unavailable</text>
+      <text xml:lang="de">Anzeichen: Abruf des Transaktionsstatus fehlgeschlagen - Transaktions-Informationen nicht verfügbar</text>
+    </note>
+    <note>
+      <text xml:lang="en">Topics: Transaction Management, Information Retrieval, Transaction State, Transaction Status</text>
+      <text xml:lang="de">Themen: Transaktionsmanagement, Informationsabruf, Transaktionsstatus, Transaktionszustand</text>
+    </note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Transaction Monitoring and Operational State Tracking">
-      <description>A transaction monitoring system tracks the operational state of active transactions to ensure proper transaction lifecycle. The system periodically calls getTransactionState to monitor the state of specific transactions. If ErrorGetTransactionStateFailed is raised, the monitoring system cannot assess transaction operational status.</description>
-      <relatedFunctions>getTransactionState, getOpenTransactions, getCurrentTransactionCounter</relatedFunctions>
-      <errorContext>Transaction state unavailable for transaction monitoring and operational tracking</errorContext>
+      <description>
+        <text xml:lang="en">A transaction monitoring system tracks the operational state of active transactions to ensure proper transaction lifecycle. The system periodically calls getTransactionState to monitor the state of specific transactions. If ErrorGetTransactionStateFailed is raised, the monitoring system cannot assess transaction operational status.</text>
+        <text xml:lang="de">Ein Transaktions-Überwachungssystem verfolgt den Betriebszustand aktiver Transaktionen, um einen korrekten Transaktions-Lebenszyklus zu gewährleisten. Das System ruft periodisch getTransactionState auf, um den Status spezifischer Transaktionen zu überwachen. Falls ErrorGetTransactionStateFailed ausgelöst wird, kann das Überwachungssystem den Transaktionsbetriebs-Status nicht bewerten.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">getTransactionState, getOpenTransactions, getCurrentTransactionCounter</text>
+        <text xml:lang="de">getTransactionState, getOpenTransactions, getCurrentTransactionCounter</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Transaction state unavailable for transaction monitoring and operational tracking</text>
+        <text xml:lang="de">Transaktionsstatus nicht verfügbar für Transaktions-Überwachung und Betriebs-Verfolgung</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 2: Transaction Diagnostics and Health Assessment">
-      <description>A diagnostic system collects detailed transaction diagnostics to assess transaction health and identify issues. The system calls getTransactionState to obtain transaction operational status as part of the diagnostic assessment. If ErrorGetTransactionStateFailed is raised, the diagnostic cannot verify transaction state.</description>
-      <relatedFunctions>getTransactionState, getOpenTransactions, getCurrentTransactionCounter</relatedFunctions>
-      <errorContext>Transaction state unavailable for transaction diagnostics and health assessment</errorContext>
+      <description>
+        <text xml:lang="en">A diagnostic system collects detailed transaction diagnostics to assess transaction health and identify issues. The system calls getTransactionState to obtain transaction operational status as part of the diagnostic assessment. If ErrorGetTransactionStateFailed is raised, the diagnostic cannot verify transaction state.</text>
+        <text xml:lang="de">Ein Diagnose-System sammelt detaillierte Transaktionsdiagnose, um die Transaktionsgesundheit zu bewerten und Probleme zu identifizieren. Das System ruft getTransactionState auf, um den Transaktionsbetriebs-Status als Teil der Diagnose-Bewertung zu erhalten. Falls ErrorGetTransactionStateFailed ausgelöst wird, kann die Diagnose den Transaktionsstatus nicht verifizieren.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">getTransactionState, getOpenTransactions, getCurrentTransactionCounter</text>
+        <text xml:lang="de">getTransactionState, getOpenTransactions, getCurrentTransactionCounter</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Transaction state unavailable for transaction diagnostics and health assessment</text>
+        <text xml:lang="de">Transaktionsstatus nicht verfügbar für Transaktionsdiagnose und Gesundheitsbewertung</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 3: Transaction State Validation and Completion Verification">
-      <description>A transaction completion verification system validates that expected transactions have reached appropriate completion states. The system calls getTransactionState to verify the state of each transaction. If ErrorGetTransactionStateFailed is raised, the system cannot verify transaction completion state.</description>
-      <relatedFunctions>getTransactionState, getOpenTransactions</relatedFunctions>
-      <errorContext>Transaction state unavailable for transaction completion verification</errorContext>
+      <description>
+        <text xml:lang="en">A transaction completion verification system validates that expected transactions have reached appropriate completion states. The system calls getTransactionState to verify the state of each transaction. If ErrorGetTransactionStateFailed is raised, the system cannot verify transaction completion state.</text>
+        <text xml:lang="de">Ein Transaktions-Abschluss-Verifizierungs-System validiert, dass erwartete Transaktionen angemessene Abschluss-States erreicht haben. Das System ruft getTransactionState auf, um den Status jeder Transaktion zu verifizieren. Falls ErrorGetTransactionStateFailed ausgelöst wird, kann das System den Transaktions-Abschluss-Status nicht verifizieren.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">getTransactionState, getOpenTransactions</text>
+        <text xml:lang="de">getTransactionState, getOpenTransactions</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Transaction state unavailable for transaction completion verification</text>
+        <text xml:lang="de">Transaktionsstatus nicht verfügbar für Transaktions-Abschluss-Verifizierung</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 4: Multi-Transaction State Inspection and Batch Monitoring">
-      <description>An enterprise system manages multiple transactions and needs to inspect their states for operational purposes. The system calls getTransactionState on multiple transactions to assess the overall transaction workload and state distribution. If ErrorGetTransactionStateFailed is raised on any transaction, that transaction's state cannot be included in the workload assessment.</description>
-      <relatedFunctions>getTransactionState, getOpenTransactions, getCurrentTransactionCounter</relatedFunctions>
-      <errorContext>Transaction state unavailable for multi-transaction inspection</errorContext>
+      <description>
+        <text xml:lang="en">An enterprise system manages multiple transactions and needs to inspect their states for operational purposes. The system calls getTransactionState on multiple transactions to assess the overall transaction workload and state distribution. If ErrorGetTransactionStateFailed is raised on any transaction, that transaction's state cannot be included in the workload assessment.</text>
+        <text xml:lang="de">Ein Unternehmens-System verwaltet mehrere Transaktionen und muss deren States für operative Zwecke untersuchen. Das System ruft getTransactionState für mehrere Transaktionen auf, um die Gesamt-Transaktionsarbeitslast und Status-Verteilung zu bewerten. Falls ErrorGetTransactionStateFailed bei einer Transaktion ausgelöst wird, kann der Status dieser Transaktion nicht in die Arbeitslast-Bewertung einbezogen werden.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">getTransactionState, getOpenTransactions, getCurrentTransactionCounter</text>
+        <text xml:lang="de">getTransactionState, getOpenTransactions, getCurrentTransactionCounter</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Transaction state unavailable for multi-transaction inspection</text>
+        <text xml:lang="de">Transaktionsstatus nicht verfügbar für Multi-Transaktions-Inspektion</text>
+      </errorContext>
     </scenario>
   </usage>
   <implementationContext>
-    <note>Raised by getTransactionState when transaction state retrieval fails</note>
-    <note>Query function retrieves specific transaction state information</note>
-    <note>Device maintains detailed state for each transaction</note>
-    <note>Retrieval failure prevents transaction state access</note>
+    <note>
+      <text xml:lang="en">Raised by getTransactionState when transaction state retrieval fails</text>
+      <text xml:lang="de">Wird von getTransactionState ausgelöst, wenn der Abruf des Transaktionsstatus fehlschlägt</text>
+    </note>
+    <note>
+      <text xml:lang="en">Query function retrieves specific transaction state information</text>
+      <text xml:lang="de">Abfragefunktion ruft spezifische Transaktionsstatus-Informationen ab</text>
+    </note>
+    <note>
+      <text xml:lang="en">Device maintains detailed state for each transaction</text>
+      <text xml:lang="de">Gerät verwaltet detaillierten Status für jede Transaktion</text>
+    </note>
+    <note>
+      <text xml:lang="en">Retrieval failure prevents transaction state access</text>
+      <text xml:lang="de">Abruffehler verhindert Transaktionsstatus-Zugriff</text>
+    </note>
   </implementationContext>
 </exception>
 

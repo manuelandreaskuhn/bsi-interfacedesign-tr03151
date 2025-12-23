@@ -1,19 +1,34 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes'?>
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorClientAlreadyRegistered" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorClientAlreadyRegistered</name>
-  <description>This exception is thrown if the SE API function registerClient has already been invoked for the specific clientId. The clientId is therefore already registered. The function attempts to register a new client but detects that the provided clientId is already in use by another registered client.</description>
+  <description>
+    <text xml:lang="en">This exception is thrown if the SE API function registerClient has already been invoked for the specific clientId. The clientId is therefore already registered. The function attempts to register a new client but detects that the provided clientId is already in use by another registered client.</text>
+    <text xml:lang="de">Diese Ausnahme wird ausgelöst, wenn die SE-API-Funktion registerClient bereits für die spezifische clientId aufgerufen wurde. Die clientId ist daher bereits registriert. Die Funktion versucht, einen neuen Client zu registrieren, stellt aber fest, dass die bereitgestellte clientId bereits von einem anderen registrierten Client verwendet wird.</text>
+  </description>
   <category>Client Management</category>
   <subcategory>Registration</subcategory>
   <severity>Medium</severity>
   <javadoc>
-    <summary>This class defines the exception ErrorClientAlreadyRegistered that is thrown if the SE API function registerClient has already been invoked for the specific clientId. The clientId is therefore already registered.</summary>
-    <description>The ErrorClientAlreadyRegistered exception indicates that an attempt was made to register a client ID that has already been registered with the device. Each client ID must be unique within the device's client registry, and duplicate registration attempts violate this constraint. When this exception is raised, the registration operation fails immediately without modifying the client registry or device state. The application must choose a different clientId or deregister the existing client before attempting a new registration with the same ID.</description>
+    <summary>
+      <text xml:lang="en">This class defines the exception ErrorClientAlreadyRegistered that is thrown if the SE API function registerClient has already been invoked for the specific clientId. The clientId is therefore already registered.</text>
+      <text xml:lang="de">Diese Klasse definiert die Ausnahme ErrorClientAlreadyRegistered, die ausgelöst wird, wenn die SE-API-Funktion registerClient bereits für die spezifische clientId aufgerufen wurde. Die clientId ist daher bereits registriert.</text>
+    </summary>
+    <description>
+      <text xml:lang="en">The ErrorClientAlreadyRegistered exception indicates that an attempt was made to register a client ID that has already been registered with the device. Each client ID must be unique within the device's client registry, and duplicate registration attempts violate this constraint. When this exception is raised, the registration operation fails immediately without modifying the client registry or device state. The application must choose a different clientId or deregister the existing client before attempting a new registration with the same ID.</text>
+      <text xml:lang="de">Die Ausnahme ErrorClientAlreadyRegistered zeigt an, dass ein Versuch unternommen wurde, eine Client-ID zu registrieren, die bereits auf dem Gerät registriert wurde. Jede Client-ID muss eindeutig in der Client-Registry des Geräts sein, und doppelte Registrierungsversuche verstoßen gegen diese Einschränkung. Wenn diese Ausnahme ausgelöst wird, schlägt der Registrierungsvorgang sofort fehl, ohne die Client-Registry oder den Gerätezustand zu ändern. Die Anwendung muss entweder eine andere clientId wählen oder den vorhandenen Client vor einem neuen Registrierungsversuch mit derselben ID abmelden.</text>
+    </description>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>
     <section>3.3.14 Client Management - registerClient Function (3.3.14.4)</section>
-    <requirement>The exception ErrorClientAlreadyRegistered SHALL be raised if the passed clientId is already registered. The function registerClient SHALL check if the passed clientId is already registered. If the passed clientId is already registered, the function SHALL raise the exception ErrorClientAlreadyRegistered and exit the function without modifying any state. This ensures unique client identities within the device's client registry.</requirement>
-    <applicability>Client registration operations - registerClient function only</applicability>
+    <requirement>
+      <text xml:lang="en">The exception ErrorClientAlreadyRegistered SHALL be raised if the passed clientId is already registered. The function registerClient SHALL check if the passed clientId is already registered. If the passed clientId is already registered, the function SHALL raise the exception ErrorClientAlreadyRegistered and exit the function without modifying any state. This ensures unique client identities within the device's client registry.</text>
+      <text xml:lang="de">Die Ausnahme ErrorClientAlreadyRegistered sollte ausgelöst werden, wenn die übergebene clientId bereits registriert ist. Die Funktion registerClient sollte prüfen, ob die übergebene clientId bereits registriert ist. Falls die übergebene clientId bereits registriert ist, sollte die Funktion die Ausnahme ErrorClientAlreadyRegistered auslösen und die Funktion beenden, ohne den Zustand zu ändern. Dies stellt sicher, dass Client-Identitäten in der Client-Registry des Geräts eindeutig sind.</text>
+    </requirement>
+    <applicability>
+      <text xml:lang="en">Client registration operations - registerClient function only</text>
+      <text xml:lang="de">Client-Registrierungsvorgänge - nur registerClient-Funktion</text>
+    </applicability>
     <reference>registerClient – Function (3.3.14) - Section 3.3.14.4 Exception Specification</reference>
   </specification>
   <thrownBy>
@@ -21,34 +36,97 @@
   </thrownBy>
   <triggerConditions>
     <condition>
-      <scenario>Duplicate client registration attempt</scenario>
-      <description>The registerClient function is invoked with a clientId that has already been successfully registered</description>
-      <trigger>The application calls registerClient with a clientId that matches an existing registered client. The device checks the client registry and finds a matching clientId. This triggers ErrorClientAlreadyRegistered.</trigger>
+      <scenario>
+        <text xml:lang="en">Duplicate client registration attempt</text>
+        <text xml:lang="de">Versuch einer doppelten Client-Registrierung</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">The registerClient function is invoked with a clientId that has already been successfully registered</text>
+        <text xml:lang="de">Die registerClient-Funktion wird mit einer clientId aufgerufen, die bereits erfolgreich registriert wurde</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">The application calls registerClient with a clientId that matches an existing registered client. The device checks the client registry and finds a matching clientId. This triggers ErrorClientAlreadyRegistered.</text>
+        <text xml:lang="de">Die Anwendung ruft registerClient mit einer clientId auf, die einem vorhandenen registrierten Client entspricht. Das Gerät prüft die Client-Registry und findet eine übereinstimmende clientId. Dies löst ErrorClientAlreadyRegistered aus.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Multiple registration attempts for same client</scenario>
-      <description>An application attempts to register the same clientId multiple times without deregistering it first</description>
-      <trigger>The first registerClient call with a given clientId succeeds and registers the client. Subsequent registerClient calls with the identical clientId fail with ErrorClientAlreadyRegistered.</trigger>
+      <scenario>
+        <text xml:lang="en">Multiple registration attempts for same client</text>
+        <text xml:lang="de">Mehrere Registrierungsversuche für denselben Client</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">An application attempts to register the same clientId multiple times without deregistering it first</text>
+        <text xml:lang="de">Eine Anwendung versucht, dieselbe clientId mehrfach zu registrieren, ohne sie vorher abzumelden</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">The first registerClient call with a given clientId succeeds and registers the client. Subsequent registerClient calls with the identical clientId fail with ErrorClientAlreadyRegistered.</text>
+        <text xml:lang="de">Der erste registerClient-Aufruf mit einer bestimmten clientId erfolgt erfolgreich und registriert den Client. Nachfolgende registerClient-Aufrufe mit der identischen clientId schlagen mit ErrorClientAlreadyRegistered fehl.</text>
+      </trigger>
     </condition>
   </triggerConditions>
   <executionSequence>
-    <step number="1">User/application calls registerClient function with a clientId</step>
-    <step number="2">Function checks authentication status (if required by referencing guideline)</step>
-    <step number="3">Function checks authorization (if required by referencing guideline)</step>
-    <step number="4">Function checks device initialization status</step>
-    <step number="5">Function checks if current number of clients is less than maximum</step>
-    <step number="6">Function queries client registry to check if clientId is already registered</step>
-    <step number="6a">If clientId IS already registered → ErrorClientAlreadyRegistered raised and function exits</step>
-    <step number="7">If clientId is NOT registered, function validates clientId format and characters</step>
-    <step number="8">Function adds clientId to device's client registry</step>
-    <step number="9">Function returns successfully to the user</step>
+    <step number="1">
+      <text xml:lang="en">User/application calls registerClient function with a clientId</text>
+      <text xml:lang="de">Benutzer/Anwendung ruft die registerClient-Funktion mit einer clientId auf</text>
+    </step>
+    <step number="2">
+      <text xml:lang="en">Function checks authentication status (if required by referencing guideline)</text>
+      <text xml:lang="de">Funktion prüft den Authentifizierungsstatus (falls von der Richtlinie erforderlich)</text>
+    </step>
+    <step number="3">
+      <text xml:lang="en">Function checks authorization (if required by referencing guideline)</text>
+      <text xml:lang="de">Funktion prüft die Autorisierung (falls von der Richtlinie erforderlich)</text>
+    </step>
+    <step number="4">
+      <text xml:lang="en">Function checks device initialization status</text>
+      <text xml:lang="de">Funktion prüft den Geräteinitalisierungsstatus</text>
+    </step>
+    <step number="5">
+      <text xml:lang="en">Function checks if current number of clients is less than maximum</text>
+      <text xml:lang="de">Funktion prüft, ob die aktuelle Anzahl der Clients unter dem Maximum liegt</text>
+    </step>
+    <step number="6">
+      <text xml:lang="en">Function queries client registry to check if clientId is already registered</text>
+      <text xml:lang="de">Funktion fragt die Client-Registry ab, um zu prüfen, ob die clientId bereits registriert ist</text>
+    </step>
+    <step number="6a">
+      <text xml:lang="en">If clientId IS already registered → ErrorClientAlreadyRegistered raised and function exits</text>
+      <text xml:lang="de">Falls clientId BEREITS registriert ist → ErrorClientAlreadyRegistered wird ausgelöst und Funktion wird beendet</text>
+    </step>
+    <step number="7">
+      <text xml:lang="en">If clientId is NOT registered, function validates clientId format and characters</text>
+      <text xml:lang="de">Falls clientId NICHT registriert ist, validiert die Funktion das clientId-Format und die Zeichen</text>
+    </step>
+    <step number="8">
+      <text xml:lang="en">Function adds clientId to device's client registry</text>
+      <text xml:lang="de">Funktion fügt clientId zur Client-Registry des Geräts hinzu</text>
+    </step>
+    <step number="9">
+      <text xml:lang="en">Function returns successfully to the user</text>
+      <text xml:lang="de">Funktion kehrt erfolgreich zum Benutzer zurück</text>
+    </step>
   </executionSequence>
   <recovery>
-    <step>Verify which clientId is already registered using getRegisteredClients</step>
-    <step>Choose alternative clientId with different identifier for new registration</step>
-    <step>Or deregister existing client first using deregisterClient before re-registering</step>
-    <step>Ensure application-level logic prevents duplicate registration attempts</step>
-    <step>Review client registration workflow in application code</step>
+    <step>
+      <text xml:lang="en">Verify which clientId is already registered using getRegisteredClients</text>
+      <text xml:lang="de">Überprüfen Sie, welche clientId bereits mit getRegisteredClients registriert ist</text>
+    </step>
+    <step>
+      <text xml:lang="en">Choose alternative clientId with different identifier for new registration</text>
+      <text xml:lang="de">Wählen Sie eine alternative clientId mit verschiedener Kennung für neue Registrierung</text>
+    </step>
+    <step>
+      <text xml:lang="en">Or deregister existing client first using deregisterClient before re-registering</text>
+      <text xml:lang="de">Oder melden Sie zuerst mit deregisterClient den vorhandenen Client ab, bevor Sie ihn neu registrieren</text>
+    </step>
+    <step>
+      <text xml:lang="en">Ensure application-level logic prevents duplicate registration attempts</text>
+      <text xml:lang="de">Stellen Sie sicher, dass die Anwendungslogik doppelte Registrierungsversuche verhindert</text>
+    </step>
+    <step>
+      <text xml:lang="en">Review client registration workflow in application code</text>
+      <text xml:lang="de">Überprüfen Sie den Client-Registrierungs-Workflow im Anwendungscode</text>
+    </step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorClientLimitReached</exception>
@@ -57,44 +135,116 @@
     <exception>ErrorDeviceNotInitialized</exception>
   </relatedExceptions>
   <postconditionality>
-    <state>Client registry unchanged - no client was registered or modified</state>
-    <state>Current number of clients unchanged - failed registration does not affect client count</state>
-    <state>Duplicate clientId not registered - the problematic clientId is still associated with the original registration only</state>
-    <state>Device state unchanged - no modifications made during failed registration attempt</state>
-    <state>Function exits without creating log message (registration did not succeed)</state>
-    <state>No state inconsistency - client registry remains consistent with only one entry per unique clientId</state>
+    <state>
+      <text xml:lang="en">Client registry unchanged - no client was registered or modified</text>
+      <text xml:lang="de">Client-Registry unverändert - kein Client wurde registriert oder geändert</text>
+    </state>
+    <state>
+      <text xml:lang="en">Current number of clients unchanged - failed registration does not affect client count</text>
+      <text xml:lang="de">Aktuelle Anzahl der Clients unverändert - fehlgeschlagene Registrierung beeinflusst nicht die Client-Anzahl</text>
+    </state>
+    <state>
+      <text xml:lang="en">Duplicate clientId not registered - the problematic clientId is still associated with the original registration only</text>
+      <text xml:lang="de">Doppelte clientId nicht registriert - die problematische clientId ist noch mit der ursprünglichen Registrierung verbunden</text>
+    </state>
+    <state>
+      <text xml:lang="en">Device state unchanged - no modifications made during failed registration attempt</text>
+      <text xml:lang="de">Gerätezustand unverändert - keine Änderungen während des fehlgeschlagenen Registrierungsversuchs vorgenommen</text>
+    </state>
+    <state>
+      <text xml:lang="en">Function exits without creating log message (registration did not succeed)</text>
+      <text xml:lang="de">Funktion wird beendet, ohne eine Protokollmeldung zu erstellen (Registrierung war nicht erfolgreich)</text>
+    </state>
+    <state>
+      <text xml:lang="en">No state inconsistency - client registry remains consistent with only one entry per unique clientId</text>
+      <text xml:lang="de">Keine Statusinkonsistenz - Client-Registry bleibt konsistent mit nur einem Eintrag pro eindeutiger clientId</text>
+    </state>
   </postconditionality>
   <notes>
-    <note>Indication: Attempted to register a client ID that is already registered - duplicate client registration detected</note>
-    <note>Topics: Client Management, Registration, Client Registry, Uniqueness Constraints</note>
+    <note>
+      <text xml:lang="en">Indication: Attempted to register a client ID that is already registered - duplicate client registration detected</text>
+      <text xml:lang="de">Anzeichen: Versuch, eine bereits registrierte Client-ID zu registrieren - doppelte Client-Registrierung erkannt</text>
+    </note>
+    <note>
+      <text xml:lang="en">Topics: Client Management, Registration, Client Registry, Uniqueness Constraints</text>
+      <text xml:lang="de">Themen: Client-Verwaltung, Registrierung, Client-Registry, Eindeutigkeitseinschränkungen</text>
+    </note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Duplicate Client Registration Attempt">
-      <description>An application attempts to register a client with a clientId that is already registered in the device. The registration fails immediately with ErrorClientAlreadyRegistered. The application catches the exception and either uses the existing registration or attempts deregistration first.</description>
-      <relatedFunctions>registerClient, deregisterClient, getRegisteredClients</relatedFunctions>
-      <errorContext>Duplicate clientId - client already registered - conflict in client registry</errorContext>
+      <description>
+        <text xml:lang="en">An application attempts to register a client with a clientId that is already registered in the device. The registration fails immediately with ErrorClientAlreadyRegistered. The application catches the exception and either uses the existing registration or attempts deregistration first.</text>
+        <text xml:lang="de">Eine Anwendung versucht, einen Client mit einer clientId zu registrieren, die bereits auf dem Gerät registriert ist. Die Registrierung schlägt sofort mit ErrorClientAlreadyRegistered fehl. Die Anwendung fängt die Ausnahme ab und verwendet entweder die vorhandene Registrierung oder versucht zuerst, sie abzumelden.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">registerClient, deregisterClient, getRegisteredClients</text>
+        <text xml:lang="de">registerClient, deregisterClient, getRegisteredClients</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Duplicate clientId - client already registered - conflict in client registry</text>
+        <text xml:lang="de">Doppelte clientId - Client bereits registriert - Konflikt in Client-Registry</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 2: Client Re-Registration Without Deregistration">
-      <description>An application previously registered a client with a specific clientId. Without deregistering first, the application attempts to register again with the same clientId. The device detects the duplicate and raises ErrorClientAlreadyRegistered. Application must deregister first.</description>
-      <relatedFunctions>registerClient, deregisterClient</relatedFunctions>
-      <errorContext>Duplicate registration - client already active - deregistration required before re-registration</errorContext>
+      <description>
+        <text xml:lang="en">An application previously registered a client with a specific clientId. Without deregistering first, the application attempts to register again with the same clientId. The device detects the duplicate and raises ErrorClientAlreadyRegistered. Application must deregister first.</text>
+        <text xml:lang="de">Eine Anwendung hat zuvor einen Client mit einer bestimmten clientId registriert. Ohne zuerst abzumelden, versucht die Anwendung, sich wieder mit der gleichen clientId zu registrieren. Das Gerät erkennt das Duplikat und löst ErrorClientAlreadyRegistered aus. Die Anwendung muss zuerst abmelden.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">registerClient, deregisterClient</text>
+        <text xml:lang="de">registerClient, deregisterClient</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Duplicate registration - client already active - deregistration required before re-registration</text>
+        <text xml:lang="de">Doppelte Registrierung - Client bereits aktiv - Abmeldung erforderlich vor Neuregistrierung</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 3: Concurrent Registration Attempts">
-      <description>Multiple application threads or processes attempt to register clients simultaneously. Due to race conditions, both attempt to register with the same clientId. One succeeds, the other receives ErrorClientAlreadyRegistered. Application must implement synchronization.</description>
-      <relatedFunctions>registerClient</relatedFunctions>
-      <errorContext>Race condition - concurrent registration attempts - synchronization needed</errorContext>
+      <description>
+        <text xml:lang="en">Multiple application threads or processes attempt to register clients simultaneously. Due to race conditions, both attempt to register with the same clientId. One succeeds, the other receives ErrorClientAlreadyRegistered. Application must implement synchronization.</text>
+        <text xml:lang="de">Mehrere Anwendungsthreads oder Prozesse versuchen gleichzeitig, Clients zu registrieren. Aufgrund von Rennbedingungen versuchen beide, sich mit der gleichen clientId zu registrieren. Einer erfolgreich, der andere erhält ErrorClientAlreadyRegistered. Die Anwendung muss Synchronisierung implementieren.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">registerClient</text>
+        <text xml:lang="de">registerClient</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Race condition - concurrent registration attempts - synchronization needed</text>
+        <text xml:lang="de">Rennbedingung - gleichzeitige Registrierungsversuche - Synchronisierung erforderlich</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 4: Client Registry Persistence Check">
-      <description>Application checks the current registered clients using getRegisteredClients before attempting registration. This proactive approach can help avoid ErrorClientAlreadyRegistered by detecting duplicates before registration is attempted.</description>
-      <relatedFunctions>registerClient, getRegisteredClients</relatedFunctions>
-      <errorContext>Proactive duplicate detection - client registry query - conflict prevention</errorContext>
+      <description>
+        <text xml:lang="en">Application checks the current registered clients using getRegisteredClients before attempting registration. This proactive approach can help avoid ErrorClientAlreadyRegistered by detecting duplicates before registration is attempted.</text>
+        <text xml:lang="de">Die Anwendung prüft die aktuell registrierten Clients mit getRegisteredClients, bevor sie versucht zu registrieren. Dieser proaktive Ansatz kann helfen, ErrorClientAlreadyRegistered zu vermeiden, indem Duplikate erkannt werden, bevor die Registrierung versucht wird.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">registerClient, getRegisteredClients</text>
+        <text xml:lang="de">registerClient, getRegisteredClients</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Proactive duplicate detection - client registry query - conflict prevention</text>
+        <text xml:lang="de">Proaktive Duplikateerkennung - Client-Registry-Abfrage - Konfliktprävention</text>
+      </errorContext>
     </scenario>
   </usage>
   <implementationContext>
-    <note>Raised by registerClient when passed clientId is already registered in device registry</note>
-    <note>Client registration subsystem enforces unique clientId constraint</note>
-    <note>Device checks client registry before allowing new registration</note>
-    <note>Prevents duplicate client identities that would violate uniqueness constraint</note>
+    <note>
+      <text xml:lang="en">Raised by registerClient when passed clientId is already registered in device registry</text>
+      <text xml:lang="de">Wird von registerClient ausgelöst, wenn die übergebene clientId bereits in der Geräte-Registry registriert ist</text>
+    </note>
+    <note>
+      <text xml:lang="en">Client registration subsystem enforces unique clientId constraint</text>
+      <text xml:lang="de">Das Client-Registrierungssubsystem erzwingt die eindeutige clientId-Beschränkung</text>
+    </note>
+    <note>
+      <text xml:lang="en">Device checks client registry before allowing new registration</text>
+      <text xml:lang="de">Gerät prüft die Client-Registry, bevor es eine neue Registrierung zulässt</text>
+    </note>
+    <note>
+      <text xml:lang="en">Prevents duplicate client identities that would violate uniqueness constraint</text>
+      <text xml:lang="de">Verhindert doppelte Client-Identitäten, die gegen die Eindeutigkeitseinschränkung verstoßen würden</text>
+    </note>
   </implementationContext>
 </exception>
 

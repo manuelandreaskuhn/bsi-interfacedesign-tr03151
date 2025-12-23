@@ -1,19 +1,34 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes'?>
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorGetComponentVersionsFailed" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorGetComponentVersionsFailed</name>
-  <description>This exception is thrown if the SE API function getComponentVersions fails to determine the device information. ErrorGetComponentVersionsFailed represents a failure in the device's ability to retrieve and provide component version information. This exception indicates that the getComponentVersions function requested version information from the device but the device cannot assemble or provide the required version data due to a hardware error, firmware issue, version storage failure, or communication breakdown. The exception is raised when the device's component version retrieval functionality did not complete successfully, preventing applications from determining which components, firmware versions, and software versions are present on the device. The exception is raised during the version retrieval phase before version information is packaged into the return structure, ensuring no partial or incomplete version data is returned.</description>
+  <description>
+    <text xml:lang="en">This exception is thrown if the SE API function getComponentVersions fails to determine the device information. ErrorGetComponentVersionsFailed represents a failure in the device's ability to retrieve and provide component version information. This exception indicates that the getComponentVersions function requested version information from the device but the device cannot assemble or provide the required version data due to a hardware error, firmware issue, version storage failure, or communication breakdown. The exception is raised when the device's component version retrieval functionality did not complete successfully, preventing applications from determining which components, firmware versions, and software versions are present on the device. The exception is raised during the version retrieval phase before version information is packaged into the return structure, ensuring no partial or incomplete version data is returned.</text>
+    <text xml:lang="de">Diese Ausnahme wird ausgelöst, wenn die SE API Funktion getComponentVersions fehlschlägt, um die Geräteinformationen zu bestimmen. ErrorGetComponentVersionsFailed stellt einen Fehler in der Fähigkeit des Geräts dar, Komponentenversionsinformationen abzurufen und bereitzustellen. Diese Ausnahme zeigt an, dass die Funktion getComponentVersions Versionsinformationen vom Gerät anforderte, aber das Gerät die erforderlichen Versionsdaten aufgrund eines Hardwarefehlers, Firmware-Problems, Versionsspeicherfehlers oder Kommunikationsfehlers nicht zusammenstellen oder bereitstellen kann. Die Ausnahme wird ausgelöst, wenn die Komponentenversionwahrnehmungsfunktionalität des Geräts nicht erfolgreich abgeschlossen wurde, was verhindert, dass Anwendungen bestimmen, welche Komponenten, Firmware-Versionen und Software-Versionen auf dem Gerät vorhanden sind. Die Ausnahme wird während der Versionsabfragephase ausgelöst, bevor Versionsinformationen in die Rückgabestruktur verpackt werden, um sicherzustellen, dass keine teilweisen oder unvollständigen Versionsdaten zurückgegeben werden.</text>
+  </description>
   <category>Device Management</category>
   <subcategory>Version Retrieval</subcategory>
   <severity>Medium</severity>
   <javadoc>
-    <summary>This class defines the exception ErrorGetComponentVersionsFailed that is thrown if the SE API function getComponentVersions fails to determine the device information.</summary>
-    <description>The getComponentVersions function performs a multi-step process to retrieve version information about device components and software. This exception is raised when the device cannot provide the required version information during the retrieval phase. When this exception occurs, no version data is returned to the user, and the function exits without providing any partial version information. The failure indicates that the device's version information retrieval functionality did not complete successfully, preventing applications from determining which components and versions are present on the device.</description>
+    <summary>
+      <text xml:lang="en">This class defines the exception ErrorGetComponentVersionsFailed that is thrown if the SE API function getComponentVersions fails to determine the device information.</text>
+      <text xml:lang="de">Diese Klasse definiert die Ausnahme ErrorGetComponentVersionsFailed, die ausgelöst wird, wenn die SE API Funktion getComponentVersions fehlschlägt, um die Geräteinformationen zu bestimmen.</text>
+    </summary>
+    <description>
+      <text xml:lang="en">The getComponentVersions function performs a multi-step process to retrieve version information about device components and software. This exception is raised when the device cannot provide the required version information during the retrieval phase. When this exception occurs, no version data is returned to the user, and the function exits without providing any partial version information. The failure indicates that the device's version information retrieval functionality did not complete successfully, preventing applications from determining which components and versions are present on the device.</text>
+      <text xml:lang="de">Die Funktion getComponentVersions führt einen mehrstufigen Prozess durch, um Versionsinformationen über Gerätekomponenten und Software abzurufen. Diese Ausnahme wird ausgelöst, wenn das Gerät die erforderlichen Versionsinformationen während der Abfragephase nicht bereitstellen kann. Wenn diese Ausnahme auftritt, werden keine Versionsdaten an den Benutzer zurückgegeben, und die Funktion wird beendet, ohne teilweise Versionsinformationen bereitzustellen. Der Fehler zeigt an, dass die Versionsinformationsabfragefunktionalität des Geräts nicht erfolgreich abgeschlossen wurde, was verhindert, dass Anwendungen bestimmen, welche Komponenten und Versionen auf dem Gerät vorhanden sind.</text>
+    </description>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>
     <section>3.3.9 Device Information - getComponentVersions</section>
-    <requirement>The function getComponentVersions SHALL retrieve version information for all device components including firmware, Secure Element, software modules, and hardware components. If the device cannot provide or retrieve the required component version information, the function SHALL raise the exception ErrorGetComponentVersionsFailed and exit without returning any version data. The version information retrieval failure indicates the device's component version query functionality could not complete successfully.</requirement>
-    <applicability>Device information retrieval operations - getComponentVersions function only</applicability>
+    <requirement>
+      <text xml:lang="en">The function getComponentVersions SHALL retrieve version information for all device components including firmware, Secure Element, software modules, and hardware components. If the device cannot provide or retrieve the required component version information, the function SHALL raise the exception ErrorGetComponentVersionsFailed and exit without returning any version data. The version information retrieval failure indicates the device's component version query functionality could not complete successfully.</text>
+      <text xml:lang="de">Die Funktion getComponentVersions soll Versionsinformationen für alle Gerätekomponenten abrufen, einschließlich Firmware, Secure Element, Software-Module und Hardware-Komponenten. Falls das Gerät die erforderlichen Komponentenversionsinformationen nicht bereitstellen oder abrufen kann, soll die Funktion die Ausnahme ErrorGetComponentVersionsFailed auslösen und beendet werden, ohne Versionsdaten zurückzugeben. Der Fehler bei der Versionsinformationsabfrage zeigt an, dass die Komponentenversionsfrage-Funktionalität des Geräts nicht erfolgreich abgeschlossen werden konnte.</text>
+    </requirement>
+    <applicability>
+      <text xml:lang="en">Device information retrieval operations - getComponentVersions function only</text>
+      <text xml:lang="de">Operationen zur Geräteninformationsabfrage - nur Funktion getComponentVersions</text>
+    </applicability>
     <reference>getComponentVersions – Function (3.3.9)</reference>
   </specification>
   <thrownBy>
@@ -21,50 +36,143 @@
   </thrownBy>
   <triggerConditions>
     <condition>
-      <scenario>Device component version storage failure or corruption</scenario>
-      <description>The device attempts to retrieve component version information from its internal storage, but the version data is corrupted, inaccessible, or damaged. Version retrieval fails due to storage errors or data corruption.</description>
-      <trigger>Device component version storage failure or version data corruption preventing retrieval</trigger>
+      <scenario>
+        <text xml:lang="en">Device component version storage failure or corruption</text>
+        <text xml:lang="de">Fehler oder Beschädigung des Gerätekomponentenversionsspeichers</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">The device attempts to retrieve component version information from its internal storage, but the version data is corrupted, inaccessible, or damaged. Version retrieval fails due to storage errors or data corruption.</text>
+        <text xml:lang="de">Das Gerät versucht, Komponentenversionsinformationen aus seinem internen Speicher abzurufen, aber die Versionsdaten sind beschädigt, nicht zugänglich oder beschädigt. Der Versionsabruf schlägt aufgrund von Speicherfehlern oder Datenbeschädigung fehl.</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">Device component version storage failure or version data corruption preventing retrieval</text>
+        <text xml:lang="de">Fehler beim Gerätekomponentenversionsspeicher oder Versionsdatenbeschädigung, die den Abruf verhindert</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Device firmware error during version retrieval</scenario>
-      <description>The device's firmware encounters an error or exception while processing the version information retrieval request. Firmware bugs, memory corruption, or firmware state inconsistency prevent successful version assembly.</description>
-      <trigger>Device firmware error during component version retrieval and assembly operation</trigger>
+      <scenario>
+        <text xml:lang="en">Device firmware error during version retrieval</text>
+        <text xml:lang="de">Firmware-Fehler des Geräts während des Versionabrufs</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">The device's firmware encounters an error or exception while processing the version information retrieval request. Firmware bugs, memory corruption, or firmware state inconsistency prevent successful version assembly.</text>
+        <text xml:lang="de">Die Firmware des Geräts trifft auf einen Fehler oder eine Ausnahme bei der Verarbeitung der Versionsinformationsabfrageanfrage. Firmware-Bugs, Speicherbeschädigung oder Firmware-Statusinkonsistenz verhindern die erfolgreiche Versionsammlung.</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">Device firmware error during component version retrieval and assembly operation</text>
+        <text xml:lang="de">Firmware-Fehler des Geräts während der Komponentenversionabruf- und Zusammenstellungsoperation</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Communication failure during version transfer</scenario>
-      <description>The device successfully retrieves version information but the communication channel fails during transfer of version data. The application cannot receive the complete version information.</description>
-      <trigger>Communication failure during component version data transfer from device to caller</trigger>
+      <scenario>
+        <text xml:lang="en">Communication failure during version transfer</text>
+        <text xml:lang="de">Kommunikationsfehler während der Versionsübertragung</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">The device successfully retrieves version information but the communication channel fails during transfer of version data. The application cannot receive the complete version information.</text>
+        <text xml:lang="de">Das Gerät ruft Versionsinformationen erfolgreich ab, aber der Kommunikationskanal fällt während der Übertragung von Versionsdaten aus. Die Anwendung kann die vollständigen Versionsinformationen nicht empfangen.</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">Communication failure during component version data transfer from device to caller</text>
+        <text xml:lang="de">Kommunikationsfehler während der Komponentenversionsdatenübertragung vom Gerät zum Aufrufer</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Version information quota or resource exhaustion</scenario>
-      <description>The device has exhausted storage or resource limits that prevent retrieval of the complete set of component versions. The operation cannot proceed without all necessary version information.</description>
-      <trigger>Device version storage quota exceeded or resource limits preventing version retrieval</trigger>
+      <scenario>
+        <text xml:lang="en">Version information quota or resource exhaustion</text>
+        <text xml:lang="de">Versionsinformationen-Kontingent oder Ressourcenerschöpfung</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">The device has exhausted storage or resource limits that prevent retrieval of the complete set of component versions. The operation cannot proceed without all necessary version information.</text>
+        <text xml:lang="de">Das Gerät hat Speicher- oder Ressourcenlimits erschöpft, die den Abruf der vollständigen Menge von Komponentenversionen verhindern. Der Vorgang kann ohne alle erforderlichen Versionsinformationen nicht fortgesetzt werden.</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">Device version storage quota exceeded or resource limits preventing version retrieval</text>
+        <text xml:lang="de">Kontingent für Geräteversionsspeicher überschritten oder Ressourcenlimits, die die Versionsabfrage verhindern</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Device in restricted state preventing version access</scenario>
-      <description>The device has entered a protected, restricted, or locked state that prevents access to or retrieval of version information. Version information query is blocked by device security restrictions.</description>
-      <trigger>Device in restricted state preventing component version access or retrieval</trigger>
+      <scenario>
+        <text xml:lang="en">Device in restricted state preventing version access</text>
+        <text xml:lang="de">Gerät im eingeschränkten Zustand, der Versionszugriff verhindert</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">The device has entered a protected, restricted, or locked state that prevents access to or retrieval of version information. Version information query is blocked by device security restrictions.</text>
+        <text xml:lang="de">Das Gerät ist in einen geschützten, eingeschränkten oder gesperrten Zustand eingetreten, der den Zugriff auf oder Abruf von Versionsinformationen verhindert. Die Versionsinformationsabfrage wird durch Geräte-Sicherheitsbeschränkungen blockiert.</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">Device in restricted state preventing component version access or retrieval</text>
+        <text xml:lang="de">Gerät im eingeschränkten Zustand, der Komponentenversionszugriff oder Abruf verhindert</text>
+      </trigger>
     </condition>
   </triggerConditions>
   <executionSequence>
-    <step number="1" name="Function Invocation">User or application calls getComponentVersions function</step>
-    <step number="2" name="Authentication Check">The function checks authentication status if required by the implementation guideline</step>
-    <step number="3" name="Authorization Check">The function checks authorization to verify the caller has permission to query device information</step>
-    <step number="4" name="Device Initialization Verification">The function verifies that the device is in an initialized state and ready for information queries</step>
-    <step number="5" name="Component Version Request">The function sends a request to the device to retrieve component version information including firmware, Secure Element, bootloader, and other component versions</step>
-    <step number="5a" name="Version Retrieval Success">If the device successfully retrieves all component version information, execution continues to step 6 (not taken in this exception case)</step>
-    <step number="5b" name="Version Retrieval Failure">If the device cannot retrieve, assemble, or provide the required version information due to storage failure, firmware error, communication loss, quota exhaustion, or security restrictions, execution branches to exception handling at step 6b</step>
-    <step number="6a" name="Version Data Assembly">Upon successful version retrieval, the function packages the version information into the return structure (not taken in this exception case)</step>
-    <step number="6b" name="Exception Context Preparation">Upon version retrieval failure, exception context is prepared including device error details, version query context, and timestamp</step>
-    <step number="7" name="Exception Instance Creation">ErrorGetComponentVersionsFailed exception instance is created with error message indicating device component version retrieval failure</step>
-    <step number="8" name="Exception Propagation">Exception is raised and propagated up the call stack without returning any version data to the caller</step>
-    <step number="9" name="Device State Verification">The device and version storage remain in their current state with no modifications or data extraction having occurred</step>
+    <step number="1" name="Function Invocation">
+      <text xml:lang="en">User or application calls getComponentVersions function</text>
+      <text xml:lang="de">Benutzer oder Anwendung ruft die Funktion getComponentVersions auf</text>
+    </step>
+    <step number="2" name="Authentication Check">
+      <text xml:lang="en">The function checks authentication status if required by the implementation guideline</text>
+      <text xml:lang="de">Die Funktion prüft den Authentifizierungsstatus, falls von der Implementierungsrichtlinie erforderlich</text>
+    </step>
+    <step number="3" name="Authorization Check">
+      <text xml:lang="en">The function checks authorization to verify the caller has permission to query device information</text>
+      <text xml:lang="de">Die Funktion prüft die Autorisierung, um zu verifizieren, dass der Aufrufer die Berechtigung zur Abfrage von Geräteinformationen hat</text>
+    </step>
+    <step number="4" name="Device Initialization Verification">
+      <text xml:lang="en">The function verifies that the device is in an initialized state and ready for information queries</text>
+      <text xml:lang="de">Die Funktion überprüft, dass das Gerät in einem initialisierten Zustand ist und für Informationsabfragen bereit ist</text>
+    </step>
+    <step number="5" name="Component Version Request">
+      <text xml:lang="en">The function sends a request to the device to retrieve component version information including firmware, Secure Element, bootloader, and other component versions</text>
+      <text xml:lang="de">Die Funktion sendet eine Anfrage an das Gerät, um Komponentenversionsinformationen abzurufen, einschließlich Firmware, Secure Element, Bootloader und anderer Komponentenversionen</text>
+    </step>
+    <step number="5a" name="Version Retrieval Success">
+      <text xml:lang="en">If the device successfully retrieves all component version information, execution continues to step 6 (not taken in this exception case)</text>
+      <text xml:lang="de">Falls das Gerät alle Komponentenversionsinformationen erfolgreich abruft, wird die Ausführung zu Schritt 6 fortgesetzt (nicht in diesem Ausnahmefall)</text>
+    </step>
+    <step number="5b" name="Version Retrieval Failure">
+      <text xml:lang="en">If the device cannot retrieve, assemble, or provide the required version information due to storage failure, firmware error, communication loss, quota exhaustion, or security restrictions, execution branches to exception handling at step 6b</text>
+      <text xml:lang="de">Falls das Gerät die erforderlichen Versionsinformationen aufgrund eines Speicherfehlers, Firmware-Fehlers, Kommunikationsverlusts, Ressourcenerschöpfung oder Sicherheitsbeschränkungen nicht abrufen, zusammenstellen oder bereitstellen kann, wird die Ausführung zur Ausnahmeverarbeitung bei Schritt 6b verzweigt</text>
+    </step>
+    <step number="6a" name="Version Data Assembly">
+      <text xml:lang="en">Upon successful version retrieval, the function packages the version information into the return structure (not taken in this exception case)</text>
+      <text xml:lang="de">Nach erfolgreicher Versionsabfrage packt die Funktion die Versionsinformationen in die Rückgabestruktur (nicht in diesem Ausnahmefall)</text>
+    </step>
+    <step number="6b" name="Exception Context Preparation">
+      <text xml:lang="en">Upon version retrieval failure, exception context is prepared including device error details, version query context, and timestamp</text>
+      <text xml:lang="de">Bei Versionsabfragefehler wird der Ausnahmekontekt vorbereitet, einschließlich Gerätefehlterdetails, Versionsabfragekontext und Zeitstempel</text>
+    </step>
+    <step number="7" name="Exception Instance Creation">
+      <text xml:lang="en">ErrorGetComponentVersionsFailed exception instance is created with error message indicating device component version retrieval failure</text>
+      <text xml:lang="de">ErrorGetComponentVersionsFailed-Ausnahminstanz wird mit Fehlermeldung erstellt, die einen Fehler bei der Gerätekomponentenversionabfrage anzeigt</text>
+    </step>
+    <step number="8" name="Exception Propagation">
+      <text xml:lang="en">Exception is raised and propagated up the call stack without returning any version data to the caller</text>
+      <text xml:lang="de">Die Ausnahme wird ausgelöst und über den Call-Stack propagiert, ohne Versionsdaten an den Aufrufer zurückzugeben</text>
+    </step>
+    <step number="9" name="Device State Verification">
+      <text xml:lang="en">The device and version storage remain in their current state with no modifications or data extraction having occurred</text>
+      <text xml:lang="de">Das Gerät und der Versionsspeicher bleiben in ihrem aktuellen Zustand mit keinen Änderungen oder Datenautzügen</text>
+    </step>
   </executionSequence>
   <recovery>
-    <step>Verify device is initialized</step>
-    <step>Confirm Secure Element is operational</step>
-    <step>Retry version query operation</step>
-    <step>Check device status if operation remains unavailable</step>
+    <step>
+      <text xml:lang="en">Verify device is initialized</text>
+      <text xml:lang="de">Stellen Sie sicher, dass das Gerät initialisiert ist</text>
+    </step>
+    <step>
+      <text xml:lang="en">Confirm Secure Element is operational</text>
+      <text xml:lang="de">Bestätigen Sie, dass das Secure Element funktionsfähig ist</text>
+    </step>
+    <step>
+      <text xml:lang="en">Retry version query operation</text>
+      <text xml:lang="de">Wiederholen Sie den Versionsinabufrvorgang</text>
+    </step>
+    <step>
+      <text xml:lang="en">Check device status if operation remains unavailable</text>
+      <text xml:lang="de">Prüfen Sie den Gerätestatus, wenn der Vorgang nicht verfügbar bleibt</text>
+    </step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorFunctionFailed</exception>
@@ -72,44 +180,116 @@
     <exception>ErrorFunctionNotSupported</exception>
   </relatedExceptions>
   <postconditionality>
-    <state name="Version Data State">No version data is returned to the caller. The component version retrieval has not completed and no information of any kind is provided to the user.</state>
-    <state name="Device State">Device state remains completely unchanged. No modifications to internal state, configuration, or data structures have occurred during the version retrieval attempt.</state>
-    <state name="Version Storage State">Version storage on device remains unchanged and all component versions remain stored in the device's internal storage. No version data has been extracted or modified.</state>
-    <state name="State Consistency">No state inconsistency exists. The function exits at the version retrieval phase before any data assembly or packaging operations.</state>
-    <state name="Device Functionality">Device functions continue to execute normally. The device remains fully operational and all API functions remain accessible.</state>
-    <state name="Version Information">Version information remains stored and available on the device. The retrieval can be retried if the underlying issue is resolved.</state>
+    <state name="Version Data State">
+      <text xml:lang="en">No version data is returned to the caller. The component version retrieval has not completed and no information of any kind is provided to the user.</text>
+      <text xml:lang="de">Es werden keine Versionsdaten an den Aufrufer zurückgegeben. Die Komponentenversionabfrage wurde nicht abgeschlossen und es werden keine Informationen an den Benutzer bereitgestellt.</text>
+    </state>
+    <state name="Device State">
+      <text xml:lang="en">Device state remains completely unchanged. No modifications to internal state, configuration, or data structures have occurred during the version retrieval attempt.</text>
+      <text xml:lang="de">Der Gerätezustand bleibt vollständig unverändert. Es wurden keine Änderungen am internen Zustand, der Konfiguration oder den Datenstrukturen während des Versionabfrageversuches vorgenommen.</text>
+    </state>
+    <state name="Version Storage State">
+      <text xml:lang="en">Version storage on device remains unchanged and all component versions remain stored in the device's internal storage. No version data has been extracted or modified.</text>
+      <text xml:lang="de">Der Versionsspeicher auf dem Gerät bleibt unverändert und alle Komponentenversionen bleiben im internen Speicher des Geräts gespeichert. Es wurden keine Versionsdaten extrahiert oder geändert.</text>
+    </state>
+    <state name="State Consistency">
+      <text xml:lang="en">No state inconsistency exists. The function exits at the version retrieval phase before any data assembly or packaging operations.</text>
+      <text xml:lang="de">Es gibt keine Zustandsinkonsistenz. Die Funktion wird in der Versionabfragephase beendet, bevor Datenausammlung oder Verpackungsvorgänge erfolgen.</text>
+    </state>
+    <state name="Device Functionality">
+      <text xml:lang="en">Device functions continue to execute normally. The device remains fully operational and all API functions remain accessible.</text>
+      <text xml:lang="de">Gerätefunktionen werden weiterhin normal ausgeführt. Das Gerät bleibt vollständig betriebsbereit und alle API-Funktionen bleiben zugänglich.</text>
+    </state>
+    <state name="Version Information">
+      <text xml:lang="en">Version information remains stored and available on the device. The retrieval can be retried if the underlying issue is resolved.</text>
+      <text xml:lang="de">Versionsinformationen bleiben auf dem Gerät gespeichert und verfügbar. Der Abruf kann wiederholt werden, wenn das zugrunde liegende Problem behoben ist.</text>
+    </state>
   </postconditionality>
   <notes>
-    <note>Indication: Retrieval of component version information failed</note>
-    <note>Topics: Device Information, Version Management, Component Management, Information Retrieval</note>
+    <note>
+      <text xml:lang="en">Indication: Retrieval of component version information failed</text>
+      <text xml:lang="de">Anzeichen: Abruf von Komponentenversionsinformationen fehlgeschlagen</text>
+    </note>
+    <note>
+      <text xml:lang="en">Topics: Device Information, Version Management, Component Management, Information Retrieval</text>
+      <text xml:lang="de">Themen: Geräteinformationen, Versionsverwaltung, Komponentenverwaltung, Informationsabfrage</text>
+    </note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Device Capability Assessment During Initialization">
-      <description>An application initializes a device connection and attempts to retrieve component versions to assess device capabilities and verify firmware compatibility. If ErrorGetComponentVersionsFailed is raised, the application logs this as a diagnostic failure and implements fallback logic using other device information queries.</description>
-      <relatedFunctions>getComponentVersions, getDeviceHealth, getEndOfUsageDate</relatedFunctions>
-      <errorContext>Version information retrieval failure during device initialization preventing capability assessment</errorContext>
+      <description>
+        <text xml:lang="en">An application initializes a device connection and attempts to retrieve component versions to assess device capabilities and verify firmware compatibility. If ErrorGetComponentVersionsFailed is raised, the application logs this as a diagnostic failure and implements fallback logic using other device information queries.</text>
+        <text xml:lang="de">Eine Anwendung initialisiert eine Geräteverbindung und versucht, Komponentenversionen abzurufen, um Gerätefähigkeiten zu bewerten und Firmware-Kompatibilität zu verifizieren. Falls ErrorGetComponentVersionsFailed erhoben wird, protokolliert die Anwendung dies als Diagnosefehler und implementiert Fallback-Logik unter Verwendung anderer Geräteinformationsabfragen.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">getComponentVersions, getDeviceHealth, getEndOfUsageDate</text>
+        <text xml:lang="de">getComponentVersions, getDeviceHealth, getEndOfUsageDate</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Version information retrieval failure during device initialization preventing capability assessment</text>
+        <text xml:lang="de">Versionsabfragefehler während der Geräteinitialisierung, der die Kapabilitätsbewertung verhindert</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 2: Firmware Compatibility Verification Before Sensitive Operations">
-      <description>An application needs to verify that the device firmware version supports a particular feature before executing a sensitive operation. The application calls getComponentVersions to check firmware version. If ErrorGetComponentVersionsFailed is raised, the application conservatively refuses to execute the sensitive operation to avoid unknown compatibility issues.</description>
-      <relatedFunctions>getComponentVersions, updateDevice, selfTest</relatedFunctions>
-      <errorContext>Cannot verify firmware compatibility due to version retrieval failure</errorContext>
+      <description>
+        <text xml:lang="en">An application needs to verify that the device firmware version supports a particular feature before executing a sensitive operation. The application calls getComponentVersions to check firmware version. If ErrorGetComponentVersionsFailed is raised, the application conservatively refuses to execute the sensitive operation to avoid unknown compatibility issues.</text>
+        <text xml:lang="de">Eine Anwendung muss verifizieren, dass die Geräte-Firmware eine bestimmte Funktion unterstützt, bevor eine sensible Operation ausgeführt wird. Die Anwendung ruft getComponentVersions auf, um die Firmware-Version zu prüfen. Falls ErrorGetComponentVersionsFailed erhoben wird, verweigert die Anwendung konservativ die Ausführung der sensiblen Operation, um unbekannte Kompatibilitätsprobleme zu vermeiden.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">getComponentVersions, updateDevice, selfTest</text>
+        <text xml:lang="de">getComponentVersions, updateDevice, selfTest</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Cannot verify firmware compatibility due to version retrieval failure</text>
+        <text xml:lang="de">Kann Firmware-Kompatibilität aufgrund des Versionabfragefehlers nicht verifizieren</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 3: Post-Firmware-Update Verification">
-      <description>An enterprise deploys a firmware update to a device. After the update completes, the application calls getComponentVersions to verify that the new firmware version is correctly installed. If ErrorGetComponentVersionsFailed is raised, the application is uncertain if the firmware update succeeded and flags the device for manual verification.</description>
-      <relatedFunctions>getComponentVersions, updateDevice, getComponentVersions</relatedFunctions>
-      <errorContext>Cannot verify firmware update success due to version information retrieval failure</errorContext>
+      <description>
+        <text xml:lang="en">An enterprise deploys a firmware update to a device. After the update completes, the application calls getComponentVersions to verify that the new firmware version is correctly installed. If ErrorGetComponentVersionsFailed is raised, the application is uncertain if the firmware update succeeded and flags the device for manual verification.</text>
+        <text xml:lang="de">Ein Unternehmen stellt ein Firmware-Update für ein Gerät bereit. Nach Abschluss des Updates ruft die Anwendung getComponentVersions auf, um zu verifizieren, dass die neue Firmware-Version ordnungsgemäß installiert ist. Falls ErrorGetComponentVersionsFailed erhoben wird, ist die Anwendung unsicher, ob das Firmware-Update erfolgreich war, und markiert das Gerät für manuelle Verifizierung.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">getComponentVersions, updateDevice, getComponentVersions</text>
+        <text xml:lang="de">getComponentVersions, updateDevice, getComponentVersions</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Cannot verify firmware update success due to version information retrieval failure</text>
+        <text xml:lang="de">Kann Firmware-Update-Erfolg aufgrund des Versionsabfragefehlers nicht verifizieren</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 4: Diagnostic Information Collection">
-      <description>An application collects comprehensive device diagnostic information for troubleshooting and support purposes. As part of this process, it attempts to retrieve component version information. If ErrorGetComponentVersionsFailed is raised, the application logs this as diagnostic data showing that version information is unavailable on this device.</description>
-      <relatedFunctions>getComponentVersions, getDeviceHealth, getTotalMemory, getUsedMemory</relatedFunctions>
-      <errorContext>Version information unavailable during diagnostic data collection</errorContext>
+      <description>
+        <text xml:lang="en">An application collects comprehensive device diagnostic information for troubleshooting and support purposes. As part of this process, it attempts to retrieve component version information. If ErrorGetComponentVersionsFailed is raised, the application logs this as diagnostic data showing that version information is unavailable on this device.</text>
+        <text xml:lang="de">Eine Anwendung sammelt umfassende Gerätediagnoseinformationen für Fehlerbehebung und Unterstützungszwecke. Im Rahmen dieses Prozesses versucht sie, Komponentenversionsinformationen abzurufen. Falls ErrorGetComponentVersionsFailed erhoben wird, protokolliert die Anwendung dies als Diagnosedaten, die zeigen, dass Versionsinformationen auf diesem Gerät nicht verfügbar sind.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">getComponentVersions, getDeviceHealth, getTotalMemory, getUsedMemory</text>
+        <text xml:lang="de">getComponentVersions, getDeviceHealth, getTotalMemory, getUsedMemory</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Version information unavailable during diagnostic data collection</text>
+        <text xml:lang="de">Versionsinformationen nicht verfügbar während der Diagnosedatenerfassung</text>
+      </errorContext>
     </scenario>
   </usage>
   <implementationContext>
-    <note>Raised by getComponentVersions when version information retrieval fails</note>
-    <note>Version query function retrieves component firmware and version information</note>
-    <note>Device maintains component version metadata</note>
-    <note>Retrieval failure prevents version information access</note>
+    <note>
+      <text xml:lang="en">Raised by getComponentVersions when version information retrieval fails</text>
+      <text xml:lang="de">Wird von getComponentVersions ausgelöst, wenn der Versionabrufs fehlschlägt</text>
+    </note>
+    <note>
+      <text xml:lang="en">Version query function retrieves component firmware and version information</text>
+      <text xml:lang="de">Versionsfragefunktion ruft Komponenten-Firmware und Versionsinformationen ab</text>
+    </note>
+    <note>
+      <text xml:lang="en">Device maintains component version metadata</text>
+      <text xml:lang="de">Das Gerät verwaltet Komponentenversionsmeta-Daten</text>
+    </note>
+    <note>
+      <text xml:lang="en">Retrieval failure prevents version information access</text>
+      <text xml:lang="de">Abruffehler verhindert Versioninformationszugriff</text>
+    </note>
   </implementationContext>
 </exception>
 

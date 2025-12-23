@@ -1,7 +1,10 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes'?>
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorTransactionCounterExhausted" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorTransactionCounterExhausted</name>
-  <description>This exception is thrown if the physical memory of the transaction counter has been exhausted and can no longer guarantee error-free operation. The transaction counter maintains a record of all executed transactions in persistent memory to ensure authenticity and non-repudiation. The physical memory is a finite resource that can become exhausted after many transactions. When memory approaches or reaches saturation, the counter cannot reliably record new transactions. ErrorTransactionCounterExhausted is a Critical severity exception because it prevents all transaction operations and indicates device maintenance is urgently required. The device must be serviced to restore or replace the counter memory before transaction functionality can resume.</description>
+  <description>
+    <text xml:lang="en">This exception is thrown if the physical memory of the transaction counter has been exhausted and can no longer guarantee error-free operation. The transaction counter maintains a record of all executed transactions in persistent memory to ensure authenticity and non-repudiation. The physical memory is a finite resource that can become exhausted after many transactions. When memory approaches or reaches saturation, the counter cannot reliably record new transactions. ErrorTransactionCounterExhausted is a Critical severity exception because it prevents all transaction operations and indicates device maintenance is urgently required. The device must be serviced to restore or replace the counter memory before transaction functionality can resume.</text>
+    <text xml:lang="de">Diese Ausnahme wird ausgelöst, wenn der physische Speicher des Transaktionszählers erschöpft ist und nicht mehr die fehlerfreie Funktionsweise garantieren kann. Der Transaktionszähler verwaltet einen Datensatz aller ausgeführten Transaktionen im persistenten Speicher, um Authentizität und Nichtabstreitbarkeit sicherzustellen. Der physische Speicher ist eine endliche Ressource, die nach vielen Transaktionen erschöpft werden kann. Wenn der Speicher sich dem Sättigungspunkt nähert oder diesen erreicht, kann der Zähler neue Transaktionen nicht zuverlässig aufzeichnen. ErrorTransactionCounterExhausted ist eine Ausnahme mit kritischem Schweregrad, da sie alle Transaktionsoperationen verhindert und anzeigt, dass Gerätewartung dringend erforderlich ist. Das Gerät muss gewartet werden, um den Zählerspeicher wiederherzustellen oder zu ersetzen, bevor die Transaktionsfunktion fortgesetzt werden kann.</text>
+  </description>
   <category>Transaction Management</category>
   <subcategory>Counter Resource Exhaustion</subcategory>
   <severity>Critical</severity>
@@ -9,65 +12,179 @@
     <function>startTransaction</function>
   </thrownBy>
   <javadoc>
-    <summary>This class defines the exception ErrorTransactionCounterExhausted that is thrown if the physical memory of the transaction counter is exhausted and can no longer guarantee error-free operation.</summary>
-    <description>This exception is thrown when the transaction counter's physical memory has been exhausted and cannot guarantee reliable recording of new transactions. The transaction counter maintains a persistent record of all executed transactions for authenticity and non-repudiation purposes. Physical memory resources are finite and can become exhausted after many transactions. When memory is exhausted, the counter cannot reliably record transactions and ErrorTransactionCounterExhausted is raised. This is a Critical severity exception because transaction functionality is completely blocked. All transaction operations (startTransaction, updateTransaction, finishTransaction) cannot proceed. Device maintenance is required to restore or replace counter memory. ErrorTransactionCounterExhausted indicates a serious device resource limitation requiring immediate intervention.</description>
+    <summary>
+      <text xml:lang="en">This class defines the exception ErrorTransactionCounterExhausted that is thrown if the physical memory of the transaction counter is exhausted and can no longer guarantee error-free operation.</text>
+      <text xml:lang="de">Diese Klasse definiert die Ausnahme ErrorTransactionCounterExhausted, die ausgelöst wird, wenn der physische Speicher des Transaktionszählers erschöpft ist und nicht mehr die fehlerfreie Funktionsweise garantieren kann.</text>
+    </summary>
+    <description>
+      <text xml:lang="en">This exception is thrown when the transaction counter's physical memory has been exhausted and cannot guarantee reliable recording of new transactions. The transaction counter maintains a persistent record of all executed transactions for authenticity and non-repudiation purposes. Physical memory resources are finite and can become exhausted after many transactions. When memory is exhausted, the counter cannot reliably record transactions and ErrorTransactionCounterExhausted is raised. This is a Critical severity exception because transaction functionality is completely blocked. All transaction operations (startTransaction, updateTransaction, finishTransaction) cannot proceed. Device maintenance is required to restore or replace counter memory. ErrorTransactionCounterExhausted indicates a serious device resource limitation requiring immediate intervention.</text>
+      <text xml:lang="de">Diese Ausnahme wird ausgelöst, wenn der physische Speicher des Transaktionszählers erschöpft wurde und nicht mehr die zuverlässige Aufzeichnung neuer Transaktionen garantieren kann. Der Transaktionszähler verwaltet einen persistenten Datensatz aller ausgeführten Transaktionen für Authentizitäts- und Nichtabstreitbarkeitszwecke. Physische Speicherressourcen sind endlich und können nach vielen Transaktionen erschöpft werden. Wenn der Speicher erschöpft ist, kann der Zähler Transaktionen nicht zuverlässig aufzeichnen und ErrorTransactionCounterExhausted wird ausgelöst. Dies ist eine Ausnahme mit kritischem Schweregrad, da die Transaktionsfunktion völlig blockiert ist. Alle Transaktionsoperationen (startTransaction, updateTransaction, finishTransaction) können nicht fortgesetzt werden. Gerätewartung ist erforderlich, um den Zählerspeicher wiederherzustellen oder zu ersetzen. ErrorTransactionCounterExhausted zeigt eine schwerwiegende Geräteressourceneinschränkung an, die sofortige Intervention erfordert.</text>
+    </description>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>
     <section>3.2.2 Transaction Management - Transaction Counter</section>
-    <requirement>The Secure Element maintains a transaction counter in persistent memory to record all executed transactions. This counter is essential for authenticity and non-repudiation. Physical memory for the counter is a finite resource. If counter memory becomes exhausted such that error-free operation cannot be guaranteed, the Secure Element SHALL raise ErrorTransactionCounterExhausted and block all transaction operations. This Critical severity exception indicates urgent device maintenance is required. The device must be serviced to restore or replace counter memory before transaction functionality can resume.</requirement>
-    <applicability>All transaction operations when counter physical memory exhausted: startTransaction, updateTransaction, finishTransaction</applicability>
+    <requirement>
+      <text xml:lang="en">The Secure Element maintains a transaction counter in persistent memory to record all executed transactions. This counter is essential for authenticity and non-repudiation. Physical memory for the counter is a finite resource. If counter memory becomes exhausted such that error-free operation cannot be guaranteed, the Secure Element SHALL raise ErrorTransactionCounterExhausted and block all transaction operations. This Critical severity exception indicates urgent device maintenance is required. The device must be serviced to restore or replace counter memory before transaction functionality can resume.</text>
+      <text xml:lang="de">Das Secure Element verwaltet einen Transaktionszähler im persistenten Speicher, um alle ausgeführten Transaktionen aufzuzeichnen. Dieser Zähler ist wesentlich für Authentizität und Nichtabstreitbarkeit. Der physische Speicher für den Zähler ist eine endliche Ressource. Falls der Zählerspeicher so erschöpft wird, dass fehlerfreie Funktionsweise nicht garantiert werden kann, SOLL das Secure Element ErrorTransactionCounterExhausted auslösen und alle Transaktionsoperationen blockieren. Diese Ausnahme mit kritischem Schweregrad zeigt an, dass dringende Gerätewartung erforderlich ist. Das Gerät muss gewartet werden, um den Zählerspeicher wiederherzustellen oder zu ersetzen, bevor die Transaktionsfunktion fortgesetzt werden kann.</text>
+    </requirement>
+    <applicability>
+      <text xml:lang="en">All transaction operations when counter physical memory exhausted: startTransaction, updateTransaction, finishTransaction</text>
+      <text xml:lang="de">Alle Transaktionsoperationen, wenn Zähler physischer Speicher erschöpft ist: startTransaction, updateTransaction, finishTransaction</text>
+    </applicability>
     <reference>Transaction Management (3.2.2), Transaction Counter (3.2.2), startTransaction – Function (3.2.2), updateTransaction – Function (3.2.2), finishTransaction – Function (3.2.2)</reference>
   </specification>
   <triggerConditions>
     <condition>
-      <scenario>Transaction counter physical memory completely filled</scenario>
-      <description>The persistent memory dedicated to transaction counter has reached maximum capacity</description>
-      <trigger>After thousands of transactions over extended operation, counter physical memory reaches saturation. Next startTransaction call detects exhaustion and raises ErrorTransactionCounterExhausted.</trigger>
+      <scenario>
+        <text xml:lang="en">Transaction counter physical memory completely filled</text>
+        <text xml:lang="de">Physischer Speicher des Transaktionszählers völlig gefüllt</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">The persistent memory dedicated to transaction counter has reached maximum capacity</text>
+        <text xml:lang="de">Der dem Transaktionszähler zugewiesene persistente Speicher hat die maximale Kapazität erreicht</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">After thousands of transactions over extended operation, counter physical memory reaches saturation. Next startTransaction call detects exhaustion and raises ErrorTransactionCounterExhausted.</text>
+        <text xml:lang="de">Nach Tausenden von Transaktionen über lange Betriebszeiten erreicht der Zähler physischer Speicher die Sättigung. Der nächste startTransaction-Aufruf erkennt die Erschöpfung und löst ErrorTransactionCounterExhausted aus.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Counter memory reliability degraded</scenario>
-      <description>Physical memory integrity has degraded such that reliable operation cannot be guaranteed</description>
-      <trigger>Memory wear over extended operation causes reliability concerns. Device self-test indicates counter memory cannot guarantee error-free operation. ErrorTransactionCounterExhausted is raised to prevent unreliable transactions.</trigger>
+      <scenario>
+        <text xml:lang="en">Counter memory reliability degraded</text>
+        <text xml:lang="de">Zählerspeicherzuverlässigkeit verschlechtert</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">Physical memory integrity has degraded such that reliable operation cannot be guaranteed</text>
+        <text xml:lang="de">Die physische Speicherintegrität hat sich so verschlechtert, dass zuverlässiger Betrieb nicht garantiert werden kann</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">Memory wear over extended operation causes reliability concerns. Device self-test indicates counter memory cannot guarantee error-free operation. ErrorTransactionCounterExhausted is raised to prevent unreliable transactions.</text>
+        <text xml:lang="de">Speicherverschleiß über lange Betriebszeiten verursacht Zuverlässigkeitsbedenken. Der Selbsttest des Geräts zeigt, dass der Zählerspeicher keine fehlerfreie Funktionsweise garantieren kann. ErrorTransactionCounterExhausted wird ausgelöst, um unzuverlässige Transaktionen zu verhindern.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Critical memory utilization threshold exceeded</scenario>
-      <description>Memory utilization reaches critical threshold triggering protective shutdown</description>
-      <trigger>Counter memory usage exceeds 95% threshold during updateTransaction. Device protective logic raises ErrorTransactionCounterExhausted to prevent catastrophic memory failure.</trigger>
+      <scenario>
+        <text xml:lang="en">Critical memory utilization threshold exceeded</text>
+        <text xml:lang="de">Kritischer Speicherauslastungsschwellenwert überschritten</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">Memory utilization reaches critical threshold triggering protective shutdown</text>
+        <text xml:lang="de">Die Speicherauslastung erreicht den kritischen Schwellenwert und löst eine Schutzabschaltung aus</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">Counter memory usage exceeds 95% threshold during updateTransaction. Device protective logic raises ErrorTransactionCounterExhausted to prevent catastrophic memory failure.</text>
+        <text xml:lang="de">Die Zählerspeichernutzung überschreitet den 95%-Schwellenwert während updateTransaction. Die Schutzlogik des Geräts löst ErrorTransactionCounterExhausted aus, um katastrophale Speicherfehler zu verhindern.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Hardware memory failure or degradation detected</scenario>
-      <description>Physical memory hardware detects errors or indicates imminent failure</description>
-      <trigger>Memory error detection circuit in Secure Element detects correctable errors accumulating. Device raises ErrorTransactionCounterExhausted to halt operations before uncorrectable failures occur.</trigger>
+      <scenario>
+        <text xml:lang="en">Hardware memory failure or degradation detected</text>
+        <text xml:lang="de">Hardwarespeicherfehler oder -verschlechterung erkannt</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">Physical memory hardware detects errors or indicates imminent failure</text>
+        <text xml:lang="de">Die physische Speicherhardware erkennt Fehler oder zeigt bevorstehendes Versagen an</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">Memory error detection circuit in Secure Element detects correctable errors accumulating. Device raises ErrorTransactionCounterExhausted to halt operations before uncorrectable failures occur.</text>
+        <text xml:lang="de">Die Speicherfehlererkennungsschaltung im Secure Element erkennt sich ansammelnde korrigierbare Fehler. Das Gerät löst ErrorTransactionCounterExhausted aus, um Operationen zu unterbrechen, bevor unkorrierbare Fehler auftreten.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Counter initialization reveals exhausted state</scenario>
-      <description>Device initialization or diagnostics discover counter memory exhausted</description>
-      <trigger>Device startup self-test or user-initiated diagnostics discover counter memory is exhausted. Subsequent transaction operations raise ErrorTransactionCounterExhausted until remediated.</trigger>
+      <scenario>
+        <text xml:lang="en">Counter initialization reveals exhausted state</text>
+        <text xml:lang="de">Zählerinitialisierung offenbart erschöpften Zustand</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">Device initialization or diagnostics discover counter memory exhausted</text>
+        <text xml:lang="de">Geräteinitialisierung oder Diagnose entdeckt erschöpften Zählerspeicher</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">Device startup self-test or user-initiated diagnostics discover counter memory is exhausted. Subsequent transaction operations raise ErrorTransactionCounterExhausted until remediated.</text>
+        <text xml:lang="de">Der Selbsttest beim Gerätestart oder vom Benutzer initiierte Diagnosen entdecken erschöpften Zählerspeicher. Nach diesen Transaktionsoperationen wird ErrorTransactionCounterExhausted ausgelöst, bis das Problem behoben ist.</text>
+      </trigger>
     </condition>
   </triggerConditions>
   <executionSequence>
-    <step number="1">User/application calls transaction operation (e.g., startTransaction, updateTransaction, finishTransaction)</step>
-    <step number="2">Function validates input parameters and operations prerequisites</step>
-    <step number="3">Function initiates communication with Secure Element</step>
-    <step number="4">Secure Element receives transaction operation request</step>
-    <step number="5">Secure Element performs counter memory status check</step>
-    <step number="5a">If counter memory status normal and available → proceed to step 6</step>
-    <step number="5b">If counter memory exhausted or unavailable → ErrorTransactionCounterExhausted raised, operation aborted</step>
-    <step number="6">Secure Element prepares transaction record for counter</step>
-    <step number="7">Secure Element verifies memory available for new transaction entry</step>
-    <step number="7a">If memory insufficient for entry → ErrorTransactionCounterExhausted raised</step>
-    <step number="7b">If memory available → proceed to step 8</step>
-    <step number="8">Secure Element writes transaction record to counter memory</step>
-    <step number="9">Secure Element increments counter value</step>
-    <step number="10">Secure Element returns success to function</step>
-    <step number="11">Function returns to caller indicating transaction recorded</step>
+    <step number="1">
+      <text xml:lang="en">User/application calls transaction operation (e.g., startTransaction, updateTransaction, finishTransaction)</text>
+      <text xml:lang="de">Benutzer/Anwendung ruft Transaktionsoperation auf (z.B. startTransaction, updateTransaction, finishTransaction)</text>
+    </step>
+    <step number="2">
+      <text xml:lang="en">Function validates input parameters and operations prerequisites</text>
+      <text xml:lang="de">Funktion validiert Eingabeparameter und Operationsvorbedingungen</text>
+    </step>
+    <step number="3">
+      <text xml:lang="en">Function initiates communication with Secure Element</text>
+      <text xml:lang="de">Funktion initiiert Kommunikation mit Secure Element</text>
+    </step>
+    <step number="4">
+      <text xml:lang="en">Secure Element receives transaction operation request</text>
+      <text xml:lang="de">Secure Element empfängt Transaktionsoperationsanforderung</text>
+    </step>
+    <step number="5">
+      <text xml:lang="en">Secure Element performs counter memory status check</text>
+      <text xml:lang="de">Secure Element führt Zählerspeicher-Statusprüfung durch</text>
+    </step>
+    <step number="5a">
+      <text xml:lang="en">If counter memory status normal and available → proceed to step 6</text>
+      <text xml:lang="de">Wenn Zählerspeicherstatus normal und verfügbar → fahren Sie mit Schritt 6 fort</text>
+    </step>
+    <step number="5b">
+      <text xml:lang="en">If counter memory exhausted or unavailable → ErrorTransactionCounterExhausted raised, operation aborted</text>
+      <text xml:lang="de">Wenn Zählerspeicher erschöpft oder nicht verfügbar → ErrorTransactionCounterExhausted ausgelöst, Operation abgebrochen</text>
+    </step>
+    <step number="6">
+      <text xml:lang="en">Secure Element prepares transaction record for counter</text>
+      <text xml:lang="de">Secure Element bereitet Transaktionsdatensatz für Zähler vor</text>
+    </step>
+    <step number="7">
+      <text xml:lang="en">Secure Element verifies memory available for new transaction entry</text>
+      <text xml:lang="de">Secure Element bestätigt, dass Speicher für neuen Transaktionseintrag verfügbar ist</text>
+    </step>
+    <step number="7a">
+      <text xml:lang="en">If memory insufficient for entry → ErrorTransactionCounterExhausted raised</text>
+      <text xml:lang="de">Wenn Speicher für Eintrag unzureichend → ErrorTransactionCounterExhausted ausgelöst</text>
+    </step>
+    <step number="7b">
+      <text xml:lang="en">If memory available → proceed to step 8</text>
+      <text xml:lang="de">Wenn Speicher verfügbar → fahren Sie mit Schritt 8 fort</text>
+    </step>
+    <step number="8">
+      <text xml:lang="en">Secure Element writes transaction record to counter memory</text>
+      <text xml:lang="de">Secure Element schreibt Transaktionsdatensatz in Zählerspeicher</text>
+    </step>
+    <step number="9">
+      <text xml:lang="en">Secure Element increments counter value</text>
+      <text xml:lang="de">Secure Element erhöht Zählerwert</text>
+    </step>
+    <step number="10">
+      <text xml:lang="en">Secure Element returns success to function</text>
+      <text xml:lang="de">Secure Element gibt Erfolg an Funktion zurück</text>
+    </step>
+    <step number="11">
+      <text xml:lang="en">Function returns to caller indicating transaction recorded</text>
+      <text xml:lang="de">Funktion kehrt zu Aufrufer zurück und zeigt an, dass Transaktion aufgezeichnet wurde</text>
+    </step>
   </executionSequence>
   <recovery>
-    <step>Check current counter value</step>
-    <step>Device cannot create new transactions after exhaustion</step>
-    <step>Plan for counter exhaustion reaching device capacity</step>
-    <step>Contact device vendor about counter management</step>
+    <step>
+      <text xml:lang="en">Check current counter value</text>
+      <text xml:lang="de">Prüfen Sie den aktuellen Zählerwert</text>
+    </step>
+    <step>
+      <text xml:lang="en">Device cannot create new transactions after exhaustion</text>
+      <text xml:lang="de">Gerät kann nach Erschöpfung keine neuen Transaktionen erstellen</text>
+    </step>
+    <step>
+      <text xml:lang="en">Plan for counter exhaustion reaching device capacity</text>
+      <text xml:lang="de">Planen Sie für Zählererschöpfung, die Gerätekapazität erreicht</text>
+    </step>
+    <step>
+      <text xml:lang="en">Contact device vendor about counter management</text>
+      <text xml:lang="de">Wenden Sie sich an den Gerätehersteller bezgl. Zählerverwaltung</text>
+    </step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorSignatureCounterExhausted</exception>
@@ -76,44 +193,104 @@
     <exception>ErrorDeviceNotInitialized</exception>
   </relatedExceptions>
   <postconditionality>
-    <state name="Transaction Operations Blocked">No transaction operations can proceed (startTransaction, updateTransaction, finishTransaction).</state>
-    <state name="Counter Not Updated">Transaction record is not written to counter memory.</state>
-    <state name="Counter Value Unchanged">Counter remains at current exhausted state without incrementing.</state>
-    <state name="Device Requires Maintenance">Device maintenance is required to restore counter functionality.</state>
-    <state name="Critical Exception Returned">Function returns ErrorTransactionCounterExhausted Critical exception to caller.</state>
-    <state name="Transaction Authenticity At Risk">Transaction recording capability compromised due to counter memory exhaustion.</state>
+    <state name="Transaction Operations Blocked">
+      <text xml:lang="en">No transaction operations can proceed (startTransaction, updateTransaction, finishTransaction).</text>
+      <text xml:lang="de">Keine Transaktionsoperationen können fortgesetzt werden (startTransaction, updateTransaction, finishTransaction).</text>
+    </state>
+    <state name="Counter Not Updated">
+      <text xml:lang="en">Transaction record is not written to counter memory.</text>
+      <text xml:lang="de">Transaktionsdatensatz wird nicht in Zählerspeicher geschrieben.</text>
+    </state>
+    <state name="Counter Value Unchanged">
+      <text xml:lang="en">Counter remains at current exhausted state without incrementing.</text>
+      <text xml:lang="de">Der Zähler bleibt im aktuellen erschöpften Zustand ohne Erhöhung.</text>
+    </state>
+    <state name="Device Requires Maintenance">
+      <text xml:lang="en">Device maintenance is required to restore counter functionality.</text>
+      <text xml:lang="de">Gerätewartung ist erforderlich, um die Zählerfunktion wiederherzustellen.</text>
+    </state>
+    <state name="Critical Exception Returned">
+      <text xml:lang="en">Function returns ErrorTransactionCounterExhausted Critical exception to caller.</text>
+      <text xml:lang="de">Funktion gibt die kritische Ausnahme ErrorTransactionCounterExhausted an den Aufrufer zurück.</text>
+    </state>
+    <state name="Transaction Authenticity At Risk">
+      <text xml:lang="en">Transaction recording capability compromised due to counter memory exhaustion.</text>
+      <text xml:lang="de">Die Transaktionsaufzeichnungsfunktion ist aufgrund der Zählerspeichererschöpfung gefährdet.</text>
+    </state>
   </postconditionality>
   <notes>
-    <note>Indication: Transaction counter has reached its maximum value - no more transactions possible</note>
-    <note>Topics: Transaction Management, Counter Management, Resource Limits, Transaction Capacity</note>
+    <note>
+      <text xml:lang="en">Indication: Transaction counter has reached its maximum value - no more transactions possible</text>
+      <text xml:lang="de">Anzeichen: Transaktionszähler hat seinen Maximalwert erreicht - keine weiteren Transaktionen möglich</text>
+    </note>
+    <note>
+      <text xml:lang="en">Topics: Transaction Management, Counter Management, Resource Limits, Transaction Capacity</text>
+      <text xml:lang="de">Themen: Transaktionsverwaltung, Zählerverwaltung, Ressourcengrenzen, Transaktionskapazität</text>
+    </note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Counter Exhaustion During High Transaction Volume">
-      <description>A device has executed millions of transactions over years of operation. Transaction counter memory becomes exhausted. When operator attempts to execute new transaction via startTransaction, ErrorTransactionCounterExhausted is raised. Operator contacts manufacturer for counter memory service.</description>
+      <description>
+        <text xml:lang="en">A device has executed millions of transactions over years of operation. Transaction counter memory becomes exhausted. When operator attempts to execute new transaction via startTransaction, ErrorTransactionCounterExhausted is raised. Operator contacts manufacturer for counter memory service.</text>
+        <text xml:lang="de">Ein Gerät hat über Jahre hinweg Millionen von Transaktionen ausgeführt. Der Transaktionszählerspeicher wird erschöpft. Wenn der Benutzer versucht, eine neue Transaktion über startTransaction auszuführen, wird ErrorTransactionCounterExhausted ausgelöst. Der Benutzer kontaktiert den Hersteller für Zählerspeicherdienste.</text>
+      </description>
       <relatedFunctions>startTransaction, updateTransaction, finishTransaction</relatedFunctions>
-      <errorContext>Counter memory exhausted after extended operational lifetime - service required</errorContext>
+      <errorContext>
+        <text xml:lang="en">Counter memory exhausted after extended operational lifetime - service required</text>
+        <text xml:lang="de">Zählerspeicher nach langer Betriebsdauer erschöpft - Wartung erforderlich</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 2: Exhaustion Detected During Device Diagnostics">
-      <description>Administrator runs device diagnostics as part of maintenance plan. Diagnostics reveal counter memory nearing exhaustion. While counter not yet completely exhausted, device sets internal exhaustion flag. Subsequent transaction operations raise ErrorTransactionCounterExhausted to prevent imminent failure.</description>
+      <description>
+        <text xml:lang="en">Administrator runs device diagnostics as part of maintenance plan. Diagnostics reveal counter memory nearing exhaustion. While counter not yet completely exhausted, device sets internal exhaustion flag. Subsequent transaction operations raise ErrorTransactionCounterExhausted to prevent imminent failure.</text>
+        <text xml:lang="de">Administrator führt Gerätediagnose im Rahmen des Wartungsplans aus. Die Diagnose zeigt, dass der Zählerspeicher sich der Erschöpfung nähert. Während der Zähler noch nicht völlig erschöpft ist, setzt das Gerät ein internes Erschöpfungsflag. Nachfolgende Transaktionsoperationen lösen ErrorTransactionCounterExhausted aus, um bevorstehende Ausfallzeiten zu verhindern.</text>
+      </description>
       <relatedFunctions>startTransaction, updateTransaction, finishTransaction</relatedFunctions>
-      <errorContext>Proactive diagnostics detect exhaustion risk - preventive exception raised</errorContext>
+      <errorContext>
+        <text xml:lang="en">Proactive diagnostics detect exhaustion risk - preventive exception raised</text>
+        <text xml:lang="de">Proaktive Diagnose erkennt Erschöpfungsrisiko - vorbeugende Ausnahme ausgelöst</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 3: Counter Memory Degradation After Hardware Error">
-      <description>Device experiences memory error during operation. Error detection circuits identify correctable errors in counter memory. Device protective mechanisms raise ErrorTransactionCounterExhausted to halt operations until hardware issue is resolved.</description>
+      <description>
+        <text xml:lang="en">Device experiences memory error during operation. Error detection circuits identify correctable errors in counter memory. Device protective mechanisms raise ErrorTransactionCounterExhausted to halt operations until hardware issue is resolved.</text>
+        <text xml:lang="de">Das Gerät erlebt einen Speicherfehler während des Betriebs. Fehlererkennnungsschaltungen erkennen korrigierbare Fehler im Zählerspeicher. Die Schutzmaßnahmen des Geräts lösen ErrorTransactionCounterExhausted aus, um Operationen zu unterbrechen, bis das Hardwareproblem gelöst ist.</text>
+      </description>
       <relatedFunctions>startTransaction, updateTransaction, finishTransaction</relatedFunctions>
-      <errorContext>Hardware memory errors detected - device halts transactions for protection</errorContext>
+      <errorContext>
+        <text xml:lang="en">Hardware memory errors detected - device halts transactions for protection</text>
+        <text xml:lang="de">Hardwarespeicherfehler erkannt - Gerät stoppt Transaktionen zum Schutz</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 4: Planned Service Before Complete Exhaustion">
-      <description>Device monitoring system tracks counter memory utilization. When reaching 85% threshold, alert is generated. Operator schedules service at convenient time before complete exhaustion occurs. Service is performed to restore counter memory before ErrorTransactionCounterExhausted condition is triggered.</description>
+      <description>
+        <text xml:lang="en">Device monitoring system tracks counter memory utilization. When reaching 85% threshold, alert is generated. Operator schedules service at convenient time before complete exhaustion occurs. Service is performed to restore counter memory before ErrorTransactionCounterExhausted condition is triggered.</text>
+        <text xml:lang="de">Das Geräteüberwachungssystem verfolgt die Zählerspeicherauslastung. Bei Erreichen des 85%-Schwellenwerts wird eine Warnung generiert. Der Benutzer plant die Wartung zu einem günstigen Zeitpunkt, bevor die vollständige Erschöpfung auftritt. Die Wartung wird durchgeführt, um den Zählerspeicher vor dem Auflösen der ErrorTransactionCounterExhausted-Bedingung wiederherzustellen.</text>
+      </description>
       <relatedFunctions>startTransaction, updateTransaction, finishTransaction</relatedFunctions>
-      <errorContext>Proactive maintenance prevents exhaustion exception through planned service</errorContext>
+      <errorContext>
+        <text xml:lang="en">Proactive maintenance prevents exhaustion exception through planned service</text>
+        <text xml:lang="de">Proaktive Wartung verhindert Erschöpfungsausnahme durch geplante Wartung</text>
+      </errorContext>
     </scenario>
   </usage>
   <implementationContext>
-    <note>Raised by startTransaction when transaction counter reaches maximum</note>
-    <note>Transaction numbering subsystem tracks issued transaction numbers</note>
-    <note>Device maintains counter of transactions</note>
-    <note>Exhaustion prevents new transaction creation</note>
+    <note>
+      <text xml:lang="en">Raised by startTransaction when transaction counter reaches maximum</text>
+      <text xml:lang="de">Wird durch startTransaction ausgelöst, wenn Transaktionszähler Maximum erreicht</text>
+    </note>
+    <note>
+      <text xml:lang="en">Transaction numbering subsystem tracks issued transaction numbers</text>
+      <text xml:lang="de">Das Transaktionsnummerierungssubsystem verfolgt vergebene Transaktionsnummern</text>
+    </note>
+    <note>
+      <text xml:lang="en">Device maintains counter of transactions</text>
+      <text xml:lang="de">Gerät verwaltet Zähler von Transaktionen</text>
+    </note>
+    <note>
+      <text xml:lang="en">Exhaustion prevents new transaction creation</text>
+      <text xml:lang="de">Erschöpfung verhindert die Erstellung neuer Transaktionen</text>
+    </note>
   </implementationContext>
 </exception>
 

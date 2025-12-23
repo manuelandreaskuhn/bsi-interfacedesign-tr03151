@@ -1,19 +1,34 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes'?>
 <exception xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ErrorUnexportedLogMessages" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/exceptions.xsd">
   <name>ErrorUnexportedLogMessages</name>
-  <description>This exception is thrown if deletion of log messages from storage fails because the storage contains log messages that have not been exported. The logging system maintains an audit trail of all transactions and events. Before deleting log messages to reclaim storage space, all messages should be exported for archival and compliance purposes. ErrorUnexportedLogMessages is raised when deleteLogMessages is called on a device that contains unexported messages. This protects audit trail integrity by preventing permanent deletion of unarchived log data. ErrorUnexportedLogMessages is a High severity exception because it indicates a potential data loss risk. The caller must first export messages before deletion can proceed to ensure all audit trail data is preserved.</description>
+  <description>
+    <text xml:lang="en">This exception is thrown if deletion of log messages from storage fails because the storage contains log messages that have not been exported. The logging system maintains an audit trail of all transactions and events. Before deleting log messages to reclaim storage space, all messages should be exported for archival and compliance purposes. ErrorUnexportedLogMessages is raised when deleteLogMessages is called on a device that contains unexported messages. This protects audit trail integrity by preventing permanent deletion of unarchived log data. ErrorUnexportedLogMessages is a High severity exception because it indicates a potential data loss risk. The caller must first export messages before deletion can proceed to ensure all audit trail data is preserved.</text>
+    <text xml:lang="de">Diese Ausnahme wird ausgelöst, wenn das Löschen von Protokollmeldungen aus dem Speicher fehlschlägt, weil der Speicher Protokollmeldungen enthält, die nicht exportiert wurden. Das Protokollierungssystem verwaltet einen Audit-Trail aller Transaktionen und Ereignisse. Vor dem Löschen von Protokollmeldungen zur Rückgewinnung von Speicherplatz sollten alle Meldungen für Archivierungs- und Compliance-Zwecke exportiert werden. ErrorUnexportedLogMessages wird ausgelöst, wenn deleteLogMessages auf einem Gerät aufgerufen wird, das nicht exportierte Meldungen enthält. Dies schützt die Integrität des Audit-Trail durch Verhinderung permanenter Löschung nicht archivierter Protokolldaten. ErrorUnexportedLogMessages ist eine Ausnahme mit hohem Schweregrad, da sie ein potenzielles Datenverlustrisiko anzeigt. Der Aufrufer muss Meldungen zuerst exportieren, bevor das Löschen fortgesetzt werden kann, um sicherzustellen, dass alle Audit-Trail-Daten erhalten bleiben.</text>
+  </description>
   <category>Logging</category>
   <subcategory>Data Preservation</subcategory>
   <severity>High</severity>
   <javadoc>
-    <summary>This class defines the exception ErrorUnexportedLogMessages that is thrown if deletion of log messages fails because storage contains unexported log messages.</summary>
-    <description>This exception is thrown when deleteLogMessages is called but the device storage contains log messages that have not been exported. The logging system maintains an audit trail of all transactions and events. Before deleting messages to reclaim storage, all messages should be exported for archival and compliance. ErrorUnexportedLogMessages indicates the deletion cannot proceed due to unexported messages. This protects audit trail integrity by preventing permanent deletion of unarchived data. ErrorUnexportedLogMessages is a High severity exception because it indicates potential data loss risk. Recovery requires exporting all messages first, then retrying deletion. The caller must ensure all audit trail data is properly archived before permanent deletion.</description>
+    <summary>
+      <text xml:lang="en">This class defines the exception ErrorUnexportedLogMessages that is thrown if deletion of log messages fails because storage contains unexported log messages.</text>
+      <text xml:lang="de">Diese Klasse definiert die Ausnahme ErrorUnexportedLogMessages, die ausgelöst wird, wenn das Löschen von Protokollmeldungen fehlschlägt, weil der Speicher nicht exportierte Protokollmeldungen enthält.</text>
+    </summary>
+    <description>
+      <text xml:lang="en">This exception is thrown when deleteLogMessages is called but the device storage contains log messages that have not been exported. The logging system maintains an audit trail of all transactions and events. Before deleting messages to reclaim storage, all messages should be exported for archival and compliance. ErrorUnexportedLogMessages indicates the deletion cannot proceed due to unexported messages. This protects audit trail integrity by preventing permanent deletion of unarchived data. ErrorUnexportedLogMessages is a High severity exception because it indicates potential data loss risk. Recovery requires exporting all messages first, then retrying deletion. The caller must ensure all audit trail data is properly archived before permanent deletion.</text>
+      <text xml:lang="de">Diese Ausnahme wird ausgelöst, wenn deleteLogMessages aufgerufen wird, aber der Gerätespeicher Protokollmeldungen enthält, die nicht exportiert wurden. Das Protokollierungssystem verwaltet einen Audit-Trail aller Transaktionen und Ereignisse. Vor dem Löschen von Meldungen zur Speicherrückgewinnung sollten alle Meldungen für Archivierungs- und Compliance-Zwecke exportiert werden. ErrorUnexportedLogMessages zeigt an, dass das Löschen nicht aufgrund nicht exportierter Meldungen fortgesetzt werden kann. Dies schützt die Integrität des Audit-Trail durch Verhinderung permanenter Löschung nicht archivierter Daten. ErrorUnexportedLogMessages ist eine Ausnahme mit hohem Schweregrad, da sie potenzielles Datenverlustrisiko anzeigt. Die Wiederherstellung erfordert das Exportieren aller Meldungen zuerst und dann ein Wiederholen des Löschens. Der Aufrufer muss sicherstellen, dass alle Audit-Trail-Daten vor der permanenten Löschung ordnungsgemäß archiviert werden.</text>
+    </description>
   </javadoc>
   <specification>
     <source>BSI TR-03151-1</source>
     <section>3.3.3 Logging Operations - Log Message Management</section>
-    <requirement>The logging system maintains an audit trail of all transactions and events in persistent storage. The deleteLogMessages function allows deletion of logged messages to reclaim storage space when storage capacity is low. However, to preserve audit trail integrity and ensure compliance with data retention requirements, log messages should be exported to archival storage before permanent deletion. If deleteLogMessages is called but unexported messages exist in storage, the Secure Element SHALL raise ErrorUnexportedLogMessages to prevent permanent deletion of unarchived audit trail data. ErrorUnexportedLogMessages is a High severity exception because deletion of unexported messages represents data loss and compliance violation. The caller must first export all messages before deletion can proceed.</requirement>
-    <applicability>Log message deletion with unexported data protection: deleteLogMessages</applicability>
+    <requirement>
+      <text xml:lang="en">The logging system maintains an audit trail of all transactions and events in persistent storage. The deleteLogMessages function allows deletion of logged messages to reclaim storage space when storage capacity is low. However, to preserve audit trail integrity and ensure compliance with data retention requirements, log messages should be exported to archival storage before permanent deletion. If deleteLogMessages is called but unexported messages exist in storage, the Secure Element SHALL raise ErrorUnexportedLogMessages to prevent permanent deletion of unarchived audit trail data. ErrorUnexportedLogMessages is a High severity exception because deletion of unexported messages represents data loss and compliance violation. The caller must first export all messages before deletion can proceed.</text>
+      <text xml:lang="de">Das Protokollierungssystem verwaltet einen Audit-Trail aller Transaktionen und Ereignisse in persistentem Speicher. Die Funktion deleteLogMessages erlaubt das Löschen von protokollierten Meldungen zur Speicherrückgewinnung bei niedriger Speicherkapazität. Um jedoch die Integrität des Audit-Trail zu bewahren und die Einhaltung von Datenverwaltungsanforderungen sicherzustellen, sollten Protokollmeldungen vor permanenter Löschung in den Archivierungsspeicher exportiert werden. Wenn deleteLogMessages aufgerufen wird, aber nicht exportierte Meldungen im Speicher vorhanden sind, MUSS das Secure Element ErrorUnexportedLogMessages auslösen, um permanente Löschung nicht archivierter Audit-Trail-Daten zu verhindern. ErrorUnexportedLogMessages ist eine Ausnahme mit hohem Schweregrad, da das Löschen nicht exportierter Meldungen Datenverlust und Compliance-Verstoß darstellt. Der Aufrufer muss zuerst alle Meldungen exportieren, bevor das Löschen fortgesetzt werden kann.</text>
+    </requirement>
+    <applicability>
+      <text xml:lang="en">Log message deletion with unexported data protection: deleteLogMessages</text>
+      <text xml:lang="de">Löschung von Protokollmeldungen mit Schutz für nicht exportierte Daten: deleteLogMessages</text>
+    </applicability>
     <reference>Logging Operations (3.3.3), Log Message Management (3.3.3), deleteLogMessages – Function (3.3.3), exportLogMessages – Function (3.3.3)</reference>
   </specification>
   <thrownBy>
@@ -21,55 +36,163 @@
   </thrownBy>
   <triggerConditions>
     <condition>
-      <scenario>Deletion attempted with unexported messages in storage</scenario>
-      <description>deleteLogMessages called on device with messages never exported</description>
-      <trigger>Storage fills with log messages. Operator attempts deleteLogMessages to reclaim space. Device detects unexported messages exist. ErrorUnexportedLogMessages raised to prevent deletion.</trigger>
+      <scenario>
+        <text xml:lang="en">Deletion attempted with unexported messages in storage</text>
+        <text xml:lang="de">Löschung versucht mit nicht exportierten Meldungen im Speicher</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">deleteLogMessages called on device with messages never exported</text>
+        <text xml:lang="de">deleteLogMessages auf Gerät mit niemals exportierten Meldungen aufgerufen</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">Storage fills with log messages. Operator attempts deleteLogMessages to reclaim space. Device detects unexported messages exist. ErrorUnexportedLogMessages raised to prevent deletion.</text>
+        <text xml:lang="de">Speicher füllt sich mit Protokollmeldungen. Operator versucht deleteLogMessages, um Speicher freizugeben. Gerät erkennt, dass nicht exportierte Meldungen vorhanden sind. ErrorUnexportedLogMessages wird ausgelöst, um Löschung zu verhindern.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Partial deletion attempted with some messages never exported</scenario>
-      <description>Deletion targets specific date range but some messages in range never exported</description>
-      <trigger>Operator attempts deleteLogMessages with date range. Some messages in range have never been exported. Device detects unexported messages in deletion range. ErrorUnexportedLogMessages raised.</trigger>
+      <scenario>
+        <text xml:lang="en">Partial deletion attempted with some messages never exported</text>
+        <text xml:lang="de">Teilweise Löschung versucht mit einigen nie exportierten Meldungen</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">Deletion targets specific date range but some messages in range never exported</text>
+        <text xml:lang="de">Löschung zielt auf spezifischen Datumsbereich, aber einige Meldungen im Bereich nie exportiert</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">Operator attempts deleteLogMessages with date range. Some messages in range have never been exported. Device detects unexported messages in deletion range. ErrorUnexportedLogMessages raised.</text>
+        <text xml:lang="de">Operator versucht deleteLogMessages mit Datumsbereich. Einige Meldungen im Bereich wurden nie exportiert. Gerät erkennt nicht exportierte Meldungen im Löschbereich. ErrorUnexportedLogMessages wird ausgelöst.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Storage cleanup triggered with unexported data</scenario>
-      <description>Automatic storage cleanup routine attempts deletion</description>
-      <trigger>Device storage reaches high capacity threshold. Automatic cleanup routine calls deleteLogMessages. Device detects unexported messages. ErrorUnexportedLogMessages raised to protect audit trail.</trigger>
+      <scenario>
+        <text xml:lang="en">Storage cleanup triggered with unexported data</text>
+        <text xml:lang="de">Speicherbereinigung mit nicht exportierten Daten ausgelöst</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">Automatic storage cleanup routine attempts deletion</text>
+        <text xml:lang="de">Automatische Speicherbereinigungsroutine versucht Löschung</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">Device storage reaches high capacity threshold. Automatic cleanup routine calls deleteLogMessages. Device detects unexported messages. ErrorUnexportedLogMessages raised to protect audit trail.</text>
+        <text xml:lang="de">Gerätespeicher erreicht hohe Kapazitätsschwelle. Automatische Bereinigungsroutine ruft deleteLogMessages auf. Gerät erkennt nicht exportierte Meldungen. ErrorUnexportedLogMessages wird ausgelöst, um Audit-Trail zu schützen.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Deletion in response to storage full condition</scenario>
-      <description>Forced deletion attempted due to storage exhaustion</description>
-      <trigger>Storage completely full. Device cannot accept new log entries. Operator attempts deleteLogMessages. Device detects unexported messages and prioritizes data preservation. ErrorUnexportedLogMessages raised.</trigger>
+      <scenario>
+        <text xml:lang="en">Deletion in response to storage full condition</text>
+        <text xml:lang="de">Löschung als Reaktion auf vollständige Speicherbedingung</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">Forced deletion attempted due to storage exhaustion</text>
+        <text xml:lang="de">Erzwungene Löschung aufgrund von Speichererschöpfung versucht</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">Storage completely full. Device cannot accept new log entries. Operator attempts deleteLogMessages. Device detects unexported messages and prioritizes data preservation. ErrorUnexportedLogMessages raised.</text>
+        <text xml:lang="de">Speicher vollständig voll. Gerät kann keine neuen Protokolleinträge akzeptieren. Operator versucht deleteLogMessages. Gerät erkennt nicht exportierte Meldungen und priorisiert Datenschutz. ErrorUnexportedLogMessages wird ausgelöst.</text>
+      </trigger>
     </condition>
     <condition>
-      <scenario>Administrative deletion without export verification</scenario>
-      <description>Administrator attempts deletion without verifying export status</description>
-      <trigger>Administrator initiates batch deletion command without checking export history. Device verifies export status, finds unexported messages, raises ErrorUnexportedLogMessages.</trigger>
+      <scenario>
+        <text xml:lang="en">Administrative deletion without export verification</text>
+        <text xml:lang="de">Verwaltung Löschung ohne Exportverifizierung</text>
+      </scenario>
+      <description>
+        <text xml:lang="en">Administrator attempts deletion without verifying export status</text>
+        <text xml:lang="de">Administrator versucht Löschung ohne Exportstatus-Verifizierung</text>
+      </description>
+      <trigger>
+        <text xml:lang="en">Administrator initiates batch deletion command without checking export history. Device verifies export status, finds unexported messages, raises ErrorUnexportedLogMessages.</text>
+        <text xml:lang="de">Administrator initiiert Batch-Löschbefehl ohne Exportverlauf zu prüfen. Gerät verifiziert Exportstatus, findet nicht exportierte Meldungen, löst ErrorUnexportedLogMessages aus.</text>
+      </trigger>
     </condition>
   </triggerConditions>
   <executionSequence>
-    <step number="1">User/application calls deleteLogMessages function with optional date range or filter parameters</step>
-    <step number="2">Function validates input parameters including date ranges if specified</step>
-    <step number="2a">If parameters invalid → may raise ErrorParameterSyntax or ErrorParameterMismatch</step>
-    <step number="2b">If parameters valid → proceed to step 3</step>
-    <step number="3">Function initiates communication with Secure Element</step>
-    <step number="4">Secure Element receives deletion request with parameters</step>
-    <step number="5">Secure Element determines scope of messages to be deleted</step>
-    <step number="6">Secure Element checks export status of affected messages</step>
-    <step number="6a">If any affected message has not been exported → proceed to step 7</step>
-    <step number="6b">If all affected messages have been exported → proceed to step 8</step>
-    <step number="7">Secure Element detects unexported messages and raises ErrorUnexportedLogMessages, operation aborted</step>
-    <step number="8">Secure Element verifies no transactions or operations depend on messages</step>
-    <step number="9">Secure Element performs cryptographic deletion of messages</step>
-    <step number="10">Secure Element marks storage as reclaimed</step>
-    <step number="11">Secure Element updates logging status/counters</step>
-    <step number="12">Secure Element returns success to function</step>
-    <step number="13">Function returns to caller indicating messages deleted</step>
+    <step number="1">
+      <text xml:lang="en">User/application calls deleteLogMessages function with optional date range or filter parameters</text>
+      <text xml:lang="de">Benutzer/Anwendung ruft deleteLogMessages-Funktion mit optionalen Datumsbereichs- oder Filterparametern auf</text>
+    </step>
+    <step number="2">
+      <text xml:lang="en">Function validates input parameters including date ranges if specified</text>
+      <text xml:lang="de">Funktion validiert Eingabeparameter einschließlich Datumsbereiche, falls angegeben</text>
+    </step>
+    <step number="2a">
+      <text xml:lang="en">If parameters invalid → may raise ErrorParameterSyntax or ErrorParameterMismatch</text>
+      <text xml:lang="de">Wenn Parameter ungültig → kann ErrorParameterSyntax oder ErrorParameterMismatch auslösen</text>
+    </step>
+    <step number="2b">
+      <text xml:lang="en">If parameters valid → proceed to step 3</text>
+      <text xml:lang="de">Wenn Parameter gültig → fahren Sie mit Schritt 3 fort</text>
+    </step>
+    <step number="3">
+      <text xml:lang="en">Function initiates communication with Secure Element</text>
+      <text xml:lang="de">Funktion initiiert Kommunikation mit Secure Element</text>
+    </step>
+    <step number="4">
+      <text xml:lang="en">Secure Element receives deletion request with parameters</text>
+      <text xml:lang="de">Secure Element empfängt Löschanforderung mit Parametern</text>
+    </step>
+    <step number="5">
+      <text xml:lang="en">Secure Element determines scope of messages to be deleted</text>
+      <text xml:lang="de">Secure Element bestimmt den Umfang der zu löschenden Meldungen</text>
+    </step>
+    <step number="6">
+      <text xml:lang="en">Secure Element checks export status of affected messages</text>
+      <text xml:lang="de">Secure Element prüft Exportstatus betroffener Meldungen</text>
+    </step>
+    <step number="6a">
+      <text xml:lang="en">If any affected message has not been exported → proceed to step 7</text>
+      <text xml:lang="de">Wenn eine betroffene Meldung nicht exportiert wurde → fahren Sie mit Schritt 7 fort</text>
+    </step>
+    <step number="6b">
+      <text xml:lang="en">If all affected messages have been exported → proceed to step 8</text>
+      <text xml:lang="de">Wenn alle betroffenen Meldungen exportiert wurden → fahren Sie mit Schritt 8 fort</text>
+    </step>
+    <step number="7">
+      <text xml:lang="en">Secure Element detects unexported messages and raises ErrorUnexportedLogMessages, operation aborted</text>
+      <text xml:lang="de">Secure Element erkennt nicht exportierte Meldungen und löst ErrorUnexportedLogMessages aus, Vorgang abgebrochen</text>
+    </step>
+    <step number="8">
+      <text xml:lang="en">Secure Element verifies no transactions or operations depend on messages</text>
+      <text xml:lang="de">Secure Element überprüft, ob keine Transaktionen oder Operationen von Meldungen abhängen</text>
+    </step>
+    <step number="9">
+      <text xml:lang="en">Secure Element performs cryptographic deletion of messages</text>
+      <text xml:lang="de">Secure Element führt kryptografische Löschung von Meldungen durch</text>
+    </step>
+    <step number="10">
+      <text xml:lang="en">Secure Element marks storage as reclaimed</text>
+      <text xml:lang="de">Secure Element markiert Speicher als zurückgewonnen</text>
+    </step>
+    <step number="11">
+      <text xml:lang="en">Secure Element updates logging status/counters</text>
+      <text xml:lang="de">Secure Element aktualisiert Protokollstatus/Zähler</text>
+    </step>
+    <step number="12">
+      <text xml:lang="en">Secure Element returns success to function</text>
+      <text xml:lang="de">Secure Element gibt Erfolg an Funktion zurück</text>
+    </step>
+    <step number="13">
+      <text xml:lang="en">Function returns to caller indicating messages deleted</text>
+      <text xml:lang="de">Funktion kehrt zum Aufrufer zurück und gibt an, dass Meldungen gelöscht wurden</text>
+    </step>
   </executionSequence>
   <recovery>
-    <step>Export all log messages using exportLogMessages</step>
-    <step>Verify all messages are exported before deletion</step>
-    <step>Check export completion status</step>
-    <step>Retry deletion after confirming all exports complete</step>
+    <step>
+      <text xml:lang="en">Export all log messages using exportLogMessages</text>
+      <text xml:lang="de">Exportieren Sie alle Protokollmeldungen mit exportLogMessages</text>
+    </step>
+    <step>
+      <text xml:lang="en">Verify all messages are exported before deletion</text>
+      <text xml:lang="de">Überprüfen Sie, dass alle Meldungen vor dem Löschen exportiert werden</text>
+    </step>
+    <step>
+      <text xml:lang="en">Check export completion status</text>
+      <text xml:lang="de">Überprüfen Sie den Exportvollendungsstatus</text>
+    </step>
+    <step>
+      <text xml:lang="en">Retry deletion after confirming all exports complete</text>
+      <text xml:lang="de">Versuchen Sie das Löschen erneut, nachdem Sie bestätigt haben, dass alle Exporte abgeschlossen sind</text>
+    </step>
   </recovery>
   <relatedExceptions>
     <exception>ErrorStorageMemoryFull</exception>
@@ -78,44 +201,116 @@
     <exception>ErrorFunctionFailed</exception>
   </relatedExceptions>
   <postconditionality>
-    <state name="Log Messages Not Deleted">Messages are not deleted from storage.</state>
-    <state name="Storage Space Not Reclaimed">Storage capacity remains unchanged - not freed.</state>
-    <state name="Unexported Messages Protected">Unexported messages remain in storage - protected from deletion.</state>
-    <state name="Export Required">Caller must export messages before deletion allowed.</state>
-    <state name="High Exception Returned">Function returns ErrorUnexportedLogMessages High exception to caller.</state>
-    <state name="Audit Trail Integrity Preserved">Audit trail integrity protected by preventing unarchived data deletion.</state>
+    <state name="Log Messages Not Deleted">
+      <text xml:lang="en">Messages are not deleted from storage.</text>
+      <text xml:lang="de">Meldungen werden nicht aus dem Speicher gelöscht.</text>
+    </state>
+    <state name="Storage Space Not Reclaimed">
+      <text xml:lang="en">Storage capacity remains unchanged - not freed.</text>
+      <text xml:lang="de">Speicherkapazität bleibt unverändert - nicht freigegeben.</text>
+    </state>
+    <state name="Unexported Messages Protected">
+      <text xml:lang="en">Unexported messages remain in storage - protected from deletion.</text>
+      <text xml:lang="de">Nicht exportierte Meldungen bleiben im Speicher - geschützt vor Löschung.</text>
+    </state>
+    <state name="Export Required">
+      <text xml:lang="en">Caller must export messages before deletion allowed.</text>
+      <text xml:lang="de">Aufrufer muss Meldungen exportieren, bevor Löschung erlaubt ist.</text>
+    </state>
+    <state name="High Exception Returned">
+      <text xml:lang="en">Function returns ErrorUnexportedLogMessages High exception to caller.</text>
+      <text xml:lang="de">Funktion gibt die hohe Ausnahme ErrorUnexportedLogMessages an den Aufrufer zurück.</text>
+    </state>
+    <state name="Audit Trail Integrity Preserved">
+      <text xml:lang="en">Audit trail integrity protected by preventing unarchived data deletion.</text>
+      <text xml:lang="de">Audit-Trail-Integrität durch Verhinderung nicht archivierter Datenlöschung geschützt.</text>
+    </state>
   </postconditionality>
   <notes>
-    <note>Indication: Log messages exist that have not been exported - unhandled log data</note>
-    <note>Topics: Logging Operations, Data Export, Log Management, Export Operations</note>
+    <note>
+      <text xml:lang="en">Indication: Log messages exist that have not been exported - unhandled log data</text>
+      <text xml:lang="de">Anzeichen: Protokollmeldungen existieren, die nicht exportiert wurden - unbehandelte Protokolldaten</text>
+    </note>
+    <note>
+      <text xml:lang="en">Topics: Logging Operations, Data Export, Log Management, Export Operations</text>
+      <text xml:lang="de">Themen: Protokollierungsvorgänge, Datenexport, Protokollverwaltung, Exportvorgänge</text>
+    </note>
   </notes>
   <usage>
     <scenario name="Scenario 1: Storage Cleanup with Unexported Messages">
-      <description>Device storage fills with log messages. Operator runs storage cleanup procedure which calls deleteLogMessages to reclaim space. Device detects unexported messages in storage and raises ErrorUnexportedLogMessages. Operator runs exportLogMessages to archive data, then retries deletion successfully.</description>
-      <relatedFunctions>deleteLogMessages, exportLogMessages</relatedFunctions>
-      <errorContext>Audit trail protection prevents deletion without export</errorContext>
+      <description>
+        <text xml:lang="en">Device storage fills with log messages. Operator runs storage cleanup procedure which calls deleteLogMessages to reclaim space. Device detects unexported messages in storage and raises ErrorUnexportedLogMessages. Operator runs exportLogMessages to archive data, then retries deletion successfully.</text>
+        <text xml:lang="de">Gerätespeicher füllt sich mit Protokollmeldungen. Operator führt Speicherbereinigungsverfahren aus, das deleteLogMessages aufruft, um Speicher freizugeben. Gerät erkennt nicht exportierte Meldungen im Speicher und löst ErrorUnexportedLogMessages aus. Operator führt exportLogMessages aus, um Daten zu archivieren, und versucht das Löschen erneut erfolgreich.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">deleteLogMessages, exportLogMessages</text>
+        <text xml:lang="de">deleteLogMessages, exportLogMessages</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Audit trail protection prevents deletion without export</text>
+        <text xml:lang="de">Audit-Trail-Schutz verhindert Löschung ohne Export</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 2: Partial Deletion with Mixed Export Status">
-      <description>Operator calls deleteLogMessages with date range from January to March. Some January messages were exported, but February and March messages have not been exported. Device detects unexported messages in deletion range. ErrorUnexportedLogMessages raised. Operator exports remaining messages before retrying deletion.</description>
-      <relatedFunctions>deleteLogMessages, exportLogMessages</relatedFunctions>
-      <errorContext>Selective deletion prevented - mixed export status in range</errorContext>
+      <description>
+        <text xml:lang="en">Operator calls deleteLogMessages with date range from January to March. Some January messages were exported, but February and March messages have not been exported. Device detects unexported messages in deletion range. ErrorUnexportedLogMessages raised. Operator exports remaining messages before retrying deletion.</text>
+        <text xml:lang="de">Operator ruft deleteLogMessages mit Datumsbereich von Januar bis März auf. Einige Januar-Meldungen wurden exportiert, aber Februar- und März-Meldungen wurden nicht exportiert. Gerät erkennt nicht exportierte Meldungen im Löschbereich. ErrorUnexportedLogMessages wird ausgelöst. Operator exportiert verbleibende Meldungen vor Wiederholung des Löschens.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">deleteLogMessages, exportLogMessages</text>
+        <text xml:lang="de">deleteLogMessages, exportLogMessages</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Selective deletion prevented - mixed export status in range</text>
+        <text xml:lang="de">Selektive Löschung verhindert - gemischter Exportstatus im Bereich</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 3: Automatic Storage Cleanup Blocked">
-      <description>Device automatic storage management routine monitors capacity. When reaching 90% threshold, routine calls deleteLogMessages. Device checks export status, finds unexported messages. ErrorUnexportedLogMessages raised. Automatic routine logs alert and requests administrator intervention for export.</description>
-      <relatedFunctions>deleteLogMessages, exportLogMessages</relatedFunctions>
-      <errorContext>Automatic cleanup blocked - manual export required</errorContext>
+      <description>
+        <text xml:lang="en">Device automatic storage management routine monitors capacity. When reaching 90% threshold, routine calls deleteLogMessages. Device checks export status, finds unexported messages. ErrorUnexportedLogMessages raised. Automatic routine logs alert and requests administrator intervention for export.</text>
+        <text xml:lang="de">Automatische Speicherverwaltungsroutine des Geräts überwacht die Kapazität. Wenn die Schwelle von 90 % erreicht wird, ruft die Routine deleteLogMessages auf. Gerät prüft Exportstatus, findet nicht exportierte Meldungen. ErrorUnexportedLogMessages wird ausgelöst. Die automatische Routine protokolliert eine Warnung und fordert Administratorinterferierung für Export an.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">deleteLogMessages, exportLogMessages</text>
+        <text xml:lang="de">deleteLogMessages, exportLogMessages</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Automatic cleanup blocked - manual export required</text>
+        <text xml:lang="de">Automatische Bereinigung blockiert - manueller Export erforderlich</text>
+      </errorContext>
     </scenario>
     <scenario name="Scenario 4: Proactive Export Prevents Exception">
-      <description>Administrator implements proactive export schedule. Weekly, exportLogMessages is called to archive all new messages. When storage capacity reaches 80%, deleteLogMessages can proceed because all messages have been previously exported. Deletion succeeds and storage is reclaimed without ErrorUnexportedLogMessages exception.</description>
-      <relatedFunctions>deleteLogMessages, exportLogMessages</relatedFunctions>
-      <errorContext>Proactive export prevents deletion blocking exceptions</errorContext>
+      <description>
+        <text xml:lang="en">Administrator implements proactive export schedule. Weekly, exportLogMessages is called to archive all new messages. When storage capacity reaches 80%, deleteLogMessages can proceed because all messages have been previously exported. Deletion succeeds and storage is reclaimed without ErrorUnexportedLogMessages exception.</text>
+        <text xml:lang="de">Administrator implementiert einen proaktiven Exportplan. Wöchentlich wird exportLogMessages aufgerufen, um alle neuen Meldungen zu archivieren. Wenn die Speicherkapazität 80 % erreicht, kann deleteLogMessages fortgesetzt werden, da alle Meldungen zuvor exportiert wurden. Das Löschen ist erfolgreich und Speicher wird ohne ErrorUnexportedLogMessages-Ausnahme zurückgewonnen.</text>
+      </description>
+      <relatedFunctions>
+        <text xml:lang="en">deleteLogMessages, exportLogMessages</text>
+        <text xml:lang="de">deleteLogMessages, exportLogMessages</text>
+      </relatedFunctions>
+      <errorContext>
+        <text xml:lang="en">Proactive export prevents deletion blocking exceptions</text>
+        <text xml:lang="de">Proaktiver Export verhindert Löschblockierungsausnahmen</text>
+      </errorContext>
     </scenario>
   </usage>
   <implementationContext>
-    <note>Raised by deleteLogMessages when exported log messages exist</note>
-    <note>Export completion validation ensures all messages exported</note>
-    <note>Device maintains export status of log messages</note>
-    <note>Unexported messages prevent deletion</note>
+    <note>
+      <text xml:lang="en">Raised by deleteLogMessages when exported log messages exist</text>
+      <text xml:lang="de">Wird von deleteLogMessages ausgelöst, wenn nicht exportierte Protokollmeldungen vorhanden sind</text>
+    </note>
+    <note>
+      <text xml:lang="en">Export completion validation ensures all messages exported</text>
+      <text xml:lang="de">Exportvollendungsvalidierung stellt sicher, dass alle Meldungen exportiert werden</text>
+    </note>
+    <note>
+      <text xml:lang="en">Device maintains export status of log messages</text>
+      <text xml:lang="de">Gerät verwaltet Exportstatus von Protokollmeldungen</text>
+    </note>
+    <note>
+      <text xml:lang="en">Unexported messages prevent deletion</text>
+      <text xml:lang="de">Nicht exportierte Meldungen verhindern Löschung</text>
+    </note>
   </implementationContext>
 </exception>
 
