@@ -3168,7 +3168,10 @@
                               
                               {scenario.relatedFunctions && (
                                 <div className="flex flex-wrap gap-1 mb-2">
-                                  {scenario.relatedFunctions.split(',').map((func, fIdx) => (
+                                  {(typeof scenario.relatedFunctions === 'string' 
+                                    ? scenario.relatedFunctions 
+                                    : String(scenario.relatedFunctions._ || scenario.relatedFunctions)
+                                  ).split(',').map((func, fIdx) => (
                                     <span key={fIdx} className="px-1.5 py-0.5 bg-cyan-100 text-cyan-700 rounded text-xs font-mono">
                                       {func.trim()}
                                     </span>

@@ -819,13 +819,22 @@ async function parseExceptionDetail(filePath) {
     const scenarios = Array.isArray(exc.usage.scenario)
       ? exc.usage.scenario
       : [exc.usage.scenario];
-    usage = scenarios.map(s => ({
-      name: s.name || '', // name stays technical/single-language
-      description: extractMultiLangText(s.description),
-      example: s.example || '', // code example stays single-language
-      relatedFunctions: s.relatedFunctions || '', // function names stay single-language
-      errorContext: extractMultiLangText(s.errorContext)
-    }));
+    usage = scenarios.map(s => {
+      // Safely extract string values (xml2js might create objects)
+      const getStringValue = (val) => {
+        if (!val) return '';
+        if (typeof val === 'string') return val;
+        return val._ || val['#text'] || String(val);
+      };
+      
+      return {
+        name: s.name || '', // name stays technical/single-language
+        description: extractMultiLangText(s.description),
+        example: getStringValue(s.example), // code example stays single-language
+        relatedFunctions: getStringValue(s.relatedFunctions), // function names stay single-language
+        errorContext: extractMultiLangText(s.errorContext)
+      };
+    });
   }
 
   // Extract implementation context notes (multilingual)
