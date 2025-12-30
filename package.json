@@ -5,7 +5,7 @@
   "main": "src/server.js",
   "bin": "src/server.js",
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=22.0.0"
   },
   "scripts": {
     "start": "node src/server.js",
@@ -18,10 +18,13 @@
   },
   "pkg": {
     "scripts": [
-      "src/**/*.js"
+      "src/**/*.js",
+      "src/app.js",
+      "src/server.js"
     ],
     "assets": [
-      "public/**/*"
+      "public/**/*",
+      "templates/**/*"
     ],
     "targets": [
       "node22-win-x64",

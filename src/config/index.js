@@ -6,27 +6,53 @@
 const path = require('path');
 const fsSync = require('fs');
 
-// PKG-compatible base directory detection
-const getBaseDir = () => {
+getBaseDir = () => {
   if (process.pkg) {
+    // PKG environment
     return path.dirname(process.execPath);
+  } else {
+    // Development environment
+    return path.resolve(__dirname, '..', '..');
   }
-  // Now in src/config, so go up 2 levels
-  return path.join(__dirname, '..', '..');
 };
 
-const BASE_DIR = getBaseDir();
-const SRC_DIR = __dirname.includes('snapshot') ? __dirname.replace(/src[\/\\]config[\/\\]testcases$/, '') : path.join(__dirname, '..', '..');
+getVirtuellDir = () => {
+  if (process.pkg) {
+    // PKG environment
+    return __dirname.replace(/src[\/\\]config$/, '');
+  } else {
+    // Development environment
+    return path.resolve(__dirname, '..', '..');
+  }
+};
 
-// Directory paths
-const PUBLIC_DIR = path.join(SRC_DIR, 'public');
+getSrcDir = () => {
+  if (process.pkg) {
+    // PKG environment
+    return __dirname.replace(/[\/\\]config$/, '');
+  } else {
+    // Development environment
+    return path.resolve(__dirname, '..');
+  }
+};
+
+
+
+// Development: / - PKG: /
+const BASE_DIR = getBaseDir();
+// Development: / - PKG: /snapshot/<folder>/
+const VIRTUELL_DIR = getVirtuellDir();
+// Development: src/ - PKG: /snapshot/<folder>/src/
+const SRC_DIR = getSrcDir();
+
+const PUBLIC_DIR = path.join(VIRTUELL_DIR, 'public');
 const INSTANCES_ROOT = path.join(BASE_DIR, 'instances');
-const TEMPLATES_ROOT = path.join(BASE_DIR, 'templates');
+const TEMPLATES_ROOT = path.join(VIRTUELL_DIR, 'templates');
 
 // Report templates - check BASE_DIR first (for portable), then SRC_DIR
 const REPORT_TEMPLATES_DIR = fsSync.existsSync(path.join(BASE_DIR, 'report-templates'))
   ? path.join(BASE_DIR, 'report-templates')
-  : path.join(SRC_DIR, 'report-templates');
+  : path.join(VIRTUELL_DIR, 'report-templates');
 
 // Server configuration
 const PORT = process.env.PORT || 3001;
@@ -58,6 +84,7 @@ const STATUS_COLORS = {
 
 module.exports = {
   BASE_DIR,
+  VIRTUELL_DIR,
   SRC_DIR,
   PUBLIC_DIR,
   INSTANCES_ROOT,
