@@ -26,12 +26,15 @@ jobs:
         run: mkdir combined-tr-tse-manager
 
       - name: Copy repo1 into combined (no overwrite)
+        shell: pwsh
         run: |
-          robocopy repo1 combined-tr-tse-manager /E /NFL /NDL /NJH /NJS /NC /NS /XO || exit 0
+          robocopy repo1 combined-tr-tse-manager /E /NFL /NDL /NJH /NJS /NC /NS /XO
+          exit 0
       - name: Copy repo2 into combined (no overwrite)
+        shell: pwsh
         run: |
-          robocopy repo2 combined-tr-tse-manager /E /NFL /NDL /NJH /NJS /NC /NS /XO || exit 0
-
+          robocopy repo2 combined-tr-tse-manager /E /NFL /NDL /NJH /NJS /NC /NS /XO
+          exit 0
       - name: Show combined directory structure
         run: tree combined-tr-tse-manager /F
 
