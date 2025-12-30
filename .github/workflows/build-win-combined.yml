@@ -1,0 +1,55 @@
+name: Build Combined Windows Executable
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout primary repository
+        uses: actions/checkout@v4
+        with:
+          repository: manuelandreaskuhn/bsi-testcase-manager-tr03153
+          path: repo1
+
+      - name: Checkout secondary repository
+        uses: actions/checkout@v4
+        with:
+          repository: manuelandreaskuhn/bsi-interfacedesign-tr03151
+          path: repo2
+
+      - name: Create combined directory
+        run: mkdir combined-tr-tse-manager
+
+      - name: Copy repo1 into combined (no overwrite)
+        run: |
+          robocopy repo1 combined-tr-tse-manager /E /NFL /NDL /NJH /NJS /NC /NS /XO
+      - name: Copy repo2 into combined (no overwrite)
+        run: |
+          robocopy repo2 combined-tr-tse-manager /E /NFL /NDL /NJH /NJS /NC /NS /XO
+
+      - name: Show combined directory structure
+        run: tree combined-tr-tse-manager /F
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        working-directory: combined-tr-tse-manager
+        run: npm ci
+
+      - name: Build Windows executable
+        working-directory: combined-tr-tse-manager
+        run: npm run build:win
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: combined-windows-exe
+          path: combined-tr-tse-manager/dist/*.exe
