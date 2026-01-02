@@ -2,165 +2,329 @@
 <function xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="unblockPin" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/functions.xsd">
   <name>unblockPin</name>
   <category>Authentifizierung</category>
-  <description>Enables the unblocking for the entry of a PIN and the definition of a new PIN for the authentication of authorized users or applications.</description>
+  <description>
+    <text xml:lang="en">Enables the unblocking for the entry of a PIN and the definition of a new PIN for the authentication of authorized users or applications.</text>
+    <text xml:lang="de">Ermöglicht die Entsperrung für die Eingabe einer PIN und die Definition einer neuen PIN zur Authentifizierung autorisierter Benutzer oder Anwendungen.</text>
+  </description>
   <detailedSteps>
     <step>
       <number>1</number>
-      <originalText>If the referencing guideline limits the access to the functionality solely to authenticated users, the function SHALL check if the user that has invoked the function has the status authenticated. If the status is not authenticated, the function SHALL raise the exception ErrorUserNotAuthenticated and exit the function.</originalText>
-      <germanText>Falls die Richtlinie den Zugriff auf authentifizierte Benutzer beschränkt: Prüfe, ob der aufrufende Benutzer authentifiziert ist. Falls nicht: Werfe ErrorUserNotAuthenticated und beende Funktion.</germanText>
-      <pseudocode>WENN Benutzer NICHT authentifiziert DANN
+      <description>
+        <text xml:lang="en">If the referencing guideline limits the access to the functionality solely to authenticated users, the function SHALL check if the user that has invoked the function has the status authenticated. If the status is not authenticated, the function SHALL raise the exception ErrorUserNotAuthenticated and exit the function.</text>
+        <text xml:lang="de">Prüft, ob Nutzer authentifiziert. Falls nicht: Exception ErrorUserNotAuthenticated, Ende.</text>
+      </description>
+      <pseudocode>
+        <text xml:lang="en">IF user NOT authenticated THEN
+  THROW ErrorUserNotAuthenticated
+  EXIT function
+END</text>
+        <text xml:lang="de">WENN Benutzer NICHT authentifiziert DANN
   WERFE ErrorUserNotAuthenticated
   BEENDE_FUNKTION
-ENDE</pseudocode>
+ENDE</text>
+      </pseudocode>
       <errorCase>
         <exception>ErrorUserNotAuthenticated</exception>
-        <trigger>Der Benutzer ist nicht authentifiziert</trigger>
-        <action>Funktion beenden</action>
+        <trigger>
+          <text xml:lang="en">The user is not authenticated</text>
+          <text xml:lang="de">Der Benutzer ist nicht authentifiziert</text>
+        </trigger>
+        <action>
+          <text xml:lang="en">Exit function</text>
+          <text xml:lang="de">Funktion beenden</text>
+        </action>
       </errorCase>
     </step>
     <step>
       <number>2</number>
-      <originalText>If the referencing guideline limits the access to the functionality to certain roles, the function SHALL check in the corresponding role if the (unauthenticated) user is authorized to execute the function. If the user is not authorized, the function SHALL raise the exception ErrorUserNotAuthorized and exit the function.</originalText>
-      <germanText>Falls die Richtlinie den Zugriff auf bestimmte Rollen beschränkt: Prüfe in der entsprechenden Rolle, ob der (unauthentifizierte) Benutzer berechtigt ist, die Funktion auszuführen. Falls nicht: Werfe ErrorUserNotAuthorized und beende Funktion.</germanText>
-      <pseudocode>WENN Benutzer NICHT autorisiert DANN
+      <description>
+        <text xml:lang="en">If the referencing guideline limits the access to the functionality to certain roles, the function SHALL check in the corresponding role if the (unauthenticated) user is authorized to execute the function. If the user is not authorized, the function SHALL raise the exception ErrorUserNotAuthorized and exit the function.</text>
+        <text xml:lang="de">Prüft, ob Nutzer berechtigt. Falls nicht: Exception ErrorUserNotAuthorized, Ende.</text>
+      </description>
+      <pseudocode>
+        <text xml:lang="en">IF user NOT authorized THEN
+  THROW ErrorUserNotAuthorized
+  EXIT function
+END</text>
+        <text xml:lang="de">WENN Benutzer NICHT autorisiert DANN
   WERFE ErrorUserNotAuthorized
   BEENDE_FUNKTION
-ENDE</pseudocode>
+ENDE</text>
+      </pseudocode>
       <errorCase>
         <exception>ErrorUserNotAuthorized</exception>
-        <trigger>Der Benutzer ist nicht berechtigt</trigger>
-        <action>Funktion beenden</action>
+        <trigger>
+          <text xml:lang="en">The user is not authorized</text>
+          <text xml:lang="de">Der Benutzer ist nicht berechtigt</text>
+        </trigger>
+        <action>
+          <text xml:lang="en">Exit function</text>
+          <text xml:lang="de">Funktion beenden</text>
+        </action>
       </errorCase>
     </step>
     <step>
       <number>3</number>
-      <originalText>The function SHALL check if the value for the passed userId is managed by the device. If the passed userId is not managed by the device, the function SHALL perform the tasks defined in chapter 3.2.5.5.1 to log the failed unblocking attempt. The element unblockResult SHALL be set to the value "unkownUserId". Afterwards the function SHALL raise the exception ErrorUnknownUserId and exit the function.</originalText>
-      <germanText>Prüfe, ob die übergebene userId vom Gerät verwaltet wird. Falls nicht: Protokolliere fehlgeschlagenen Entsperr-Versuch (unblockResult="unknownUserId"), werfe ErrorUnknownUserId und beende Funktion.</germanText>
-      <pseudocode>WENN userId NICHT vom Gerät verwaltet DANN
+      <description>
+        <text xml:lang="en">The function SHALL check if the value for the passed userId is managed by the device. If the passed userId is not managed by the device, the function SHALL perform the tasks defined in chapter 3.2.5.5.1 to log the failed unblocking attempt. The element unblockResult SHALL be set to the value "unkownUserId". Afterwards the function SHALL raise the exception ErrorUnknownUserId and exit the function.</text>
+        <text xml:lang="de">Prüfe, ob die übergebene userId vom Gerät verwaltet wird. Falls nicht: Protokolliere fehlgeschlagenen Entsperr-Versuch (unblockResult="unknownUserId"), werfe ErrorUnknownUserId und beende Funktion.</text>
+      </description>
+      <pseudocode>
+        <text xml:lang="en">IF userId NOT managed by device THEN
+  LOG failed unblocking attempt (unblockResult="unknownUserId")
+  THROW ErrorUnknownUserId
+  EXIT function
+END</text>
+        <text xml:lang="de">WENN userId NICHT vom Gerät verwaltet DANN
   RUFE_AUF Protokollierung fehlgeschlagener Versuch (unblockResult="unknownUserId")
   WERFE ErrorUnknownUserId
   BEENDE_FUNKTION
-ENDE</pseudocode>
+ENDE</text>
+      </pseudocode>
       <errorCase>
         <exception>ErrorUnknownUserId</exception>
-        <trigger>Die userId wird vom Gerät nicht verwaltet</trigger>
-        <action>Protokolliere Fehler, Funktion beenden</action>
+        <trigger>
+          <text xml:lang="en">UserId not managed by device</text>
+          <text xml:lang="de">Die userId wird vom Gerät nicht verwaltet</text>
+        </trigger>
+        <action>
+          <text xml:lang="en">Log error, exit function</text>
+          <text xml:lang="de">Protokolliere Fehler, Funktion beenden</text>
+        </action>
       </errorCase>
     </step>
     <step>
       <number>4</number>
-      <originalText>The function SHALL perform countermeasures against password guessing attacks. These countermeasures MAY be realized by delaying subsequent invocations of the function. If a password guessing attack is detected and the PUK is temporarily blocked as a countermeasure, the function SHALL perform the tasks defined in chapter 3.2.5.5.1 to log the failed unblocking attempt. The element unblockResult SHALL be set to the value "unblockingTemporarilyBlocked". Afterwards the function SHALL raise the exception ErrorPukTemporarilyBlocked and exit the function.</originalText>
-      <germanText>Führe Schutzmechanismen gegen Wörterbuch-Anschläge durch. Falls PUK temporär gesperrt ist: Protokolliere fehlgeschlagenen Versuch (unblockResult="unblockingTemporarilyBlocked"), werfe ErrorPukTemporarilyBlocked und beende Funktion.</germanText>
-      <pseudocode>WENN Anschlag erkannt UND PUK temporär gesperrt DANN
+      <description>
+        <text xml:lang="en">The function SHALL perform countermeasures against password guessing attacks. These countermeasures MAY be realized by delaying subsequent invocations of the function. If a password guessing attack is detected and the PUK is temporarily blocked as a countermeasure, the function SHALL perform the tasks defined in chapter 3.2.5.5.1 to log the failed unblocking attempt. The element unblockResult SHALL be set to the value "unblockingTemporarilyBlocked". Afterwards the function SHALL raise the exception ErrorPukTemporarilyBlocked and exit the function.</text>
+        <text xml:lang="de">Führe Schutzmechanismen gegen Wörterbuch-Anschläge durch. Falls PUK temporär gesperrt ist: Protokolliere fehlgeschlagenen Versuch (unblockResult="unblockingTemporarilyBlocked"), werfe ErrorPukTemporarilyBlocked und beende Funktion.</text>
+      </description>
+      <pseudocode>
+        <text xml:lang="en">IF attack detected AND PUK temporarily blocked THEN
+  LOG failed unblocking attempt (unblockResult="unblockingTemporarilyBlocked")
+  THROW ErrorPukTemporarilyBlocked
+  EXIT function
+END</text>
+        <text xml:lang="de">WENN Anschlag erkannt UND PUK temporär gesperrt DANN
   RUFE_AUF Protokollierung fehlgeschlagener Versuch (unblockResult="unblockingTemporarilyBlocked")
   WERFE ErrorPukTemporarilyBlocked
   BEENDE_FUNKTION
-ENDE</pseudocode>
+ENDE</text>
+      </pseudocode>
       <errorCase>
         <exception>ErrorPukTemporarilyBlocked</exception>
-        <trigger>PUK ist temporär gesperrt (Schutzmechanismus)</trigger>
-        <action>Protokolliere Fehler, Funktion beenden</action>
+        <trigger>
+          <text xml:lang="en">PUK temporarily blocked (countermeasure)</text>
+          <text xml:lang="de">PUK ist temporär gesperrt (Schutzmechanismus)</text>
+        </trigger>
+        <action>
+          <text xml:lang="en">Log error, exit function</text>
+          <text xml:lang="de">Protokolliere Fehler, Funktion beenden</text>
+        </action>
       </errorCase>
     </step>
     <step>
       <number>5</number>
-      <originalText>The function SHALL check if the passed PUK is correct for the passed userId. If the PUK is not correct, the function SHALL perform the actions defined in chapter 3.2.5.5.1 to log the failed unblocking attempt. The element unblockResult SHALL be set to the value "incorrectPuk". Afterwards the function SHALL raise the exception ErrorIncorrectPuk and exit the function.</originalText>
-      <germanText>Prüfe, ob die übergebene PUK korrekt für die userId ist. Falls nicht: Protokolliere fehlgeschlagenen Versuch (unblockResult="incorrectPuk"), werfe ErrorIncorrectPuk und beende Funktion.</germanText>
-      <pseudocode>WENN PUK NICHT korrekt DANN
+      <description>
+        <text xml:lang="en">The function SHALL check if the passed PUK is correct for the passed userId. If the PUK is not correct, the function SHALL perform the actions defined in chapter 3.2.5.5.1 to log the failed unblocking attempt. The element unblockResult SHALL be set to the value "incorrectPuk". Afterwards the function SHALL raise the exception ErrorIncorrectPuk and exit the function.</text>
+        <text xml:lang="de">Prüfe, ob die übergebene PUK korrekt für die userId ist. Falls nicht: Protokolliere fehlgeschlagenen Versuch (unblockResult="incorrectPuk"), werfe ErrorIncorrectPuk und beende Funktion.</text>
+      </description>
+      <pseudocode>
+        <text xml:lang="en">IF PUK NOT correct THEN
+  LOG failed unblocking attempt (unblockResult="incorrectPuk")
+  THROW ErrorIncorrectPuk
+  EXIT function
+END</text>
+        <text xml:lang="de">WENN PUK NICHT korrekt DANN
   RUFE_AUF Protokollierung fehlgeschlagener Versuch (unblockResult="incorrectPuk")
   WERFE ErrorIncorrectPuk
   BEENDE_FUNKTION
-ENDE</pseudocode>
+ENDE</text>
+      </pseudocode>
       <errorCase>
         <exception>ErrorIncorrectPuk</exception>
-        <trigger>Die PUK ist nicht korrekt</trigger>
-        <action>Protokolliere Fehler, Funktion beenden</action>
+        <trigger>
+          <text xml:lang="en">PUK is not correct</text>
+          <text xml:lang="de">Die PUK ist nicht korrekt</text>
+        </trigger>
+        <action>
+          <text xml:lang="en">Log error, exit function</text>
+          <text xml:lang="de">Protokolliere Fehler, Funktion beenden</text>
+        </action>
       </errorCase>
     </step>
     <step>
       <number>6</number>
-      <originalText>If the passed PUK is correct, the function SHALL perform the following tasks within one atomic transaction: (1) The function SHALL substitute the current PIN for the userId with the newPin. If this substitution fails, the function SHALL perform the actions defined in chapter 3.2.5.5.1 to log the failed unblocking attempt with unblockResult="errorSettingNewPinFailed" or generic "resettingError", and raise ErrorSettingNewPinFailed or ErrorUnblockingPinFailed. (2) The function SHALL set the PIN retry counter to the defined maximum value. If this fails, raise ErrorResettingRetryCounterFailed or ErrorUnblockingPinFailed with appropriate logging.</originalText>
-      <germanText>Falls PUK korrekt ist: Führe folgende atomare Transaktionen durch: (1) Ersetze PIN durch newPin. Bei Fehler: Protokolliere mit unblockResult="errorSettingNewPinFailed" oder "resettingError", werfe ErrorSettingNewPinFailed oder ErrorUnblockingPinFailed. (2) Setze PIN-Wiederholungszähler auf Maximum. Bei Fehler: Protokolliere mit unblockResult="errorResettingRetryCounterFailed" oder "resettingError", werfe ErrorResettingRetryCounterFailed oder ErrorUnblockingPinFailed.</germanText>
-      <pseudocode>VERSUCHE
+      <description>
+        <text xml:lang="en">If the passed PUK is correct, the function SHALL perform the following tasks within one atomic transaction: (1) The function SHALL substitute the current PIN for the userId with the newPin. If this substitution fails, the function SHALL perform the actions defined in chapter 3.2.5.5.1 to log the failed unblocking attempt with unblockResult="errorSettingNewPinFailed" or generic "resettingError", and raise ErrorSettingNewPinFailed or ErrorUnblockingPinFailed. (2) The function SHALL set the PIN retry counter to the defined maximum value. If this fails, raise ErrorResettingRetryCounterFailed or ErrorUnblockingPinFailed with appropriate logging.</text>
+        <text xml:lang="de">Falls PUK korrekt ist: Führe folgende atomare Transaktionen durch: (1) Ersetze PIN durch newPin. Bei Fehler: Protokolliere mit unblockResult="errorSettingNewPinFailed" oder "resettingError", werfe ErrorSettingNewPinFailed oder ErrorUnblockingPinFailed. (2) Setze PIN-Wiederholungscounter auf Maximum. Bei Fehler: Protokolliere mit unblockResult="errorResettingRetryCounterFailed" oder "resettingError", werfe ErrorResettingRetryCounterFailed oder ErrorUnblockingPinFailed.</text>
+      </description>
+      <pseudocode>
+        <text xml:lang="en">BEGIN atomic transaction
+  TRY
+    REPLACE PIN with newPin
+  CATCH error_pin
+    LOG failed attempt (unblockResult="errorSettingNewPinFailed"/"resettingError")
+    THROW ErrorSettingNewPinFailed or ErrorUnblockingPinFailed
+    EXIT function
+  TRY
+    SET retry counter to maximum
+  CATCH error_counter
+    LOG failed attempt (unblockResult="errorResettingRetryCounterFailed"/"resettingError")
+    THROW ErrorResettingRetryCounterFailed or ErrorUnblockingPinFailed
+    EXIT function
+  COMMIT transaction
+  ENSURE device consistency
+END</text>
+        <text xml:lang="de">VERSUCHE
   BEGINNE_TRANSAKTION atomare Operationen
   ERSETZE PIN durch newPin
   BEI_FEHLER_PIN
     RUFE_AUF Protokollierung (unblockResult="errorSettingNewPinFailed"/"resettingError")
     WERFE ErrorSettingNewPinFailed oder ErrorUnblockingPinFailed
     BEENDE_FUNKTION
-  SETZE Wiederholungszähler auf Maximum
+  SETZE Wiederholungscounter auf Maximum
   BEI_FEHLER_ZÄHLER
     RUFE_AUF Protokollierung (unblockResult="errorResettingRetryCounterFailed"/"resettingError")
     WERFE ErrorResettingRetryCounterFailed oder ErrorUnblockingPinFailed
     BEENDE_FUNKTION
   COMMIT TRANSAKTION
   STELLE_SICHER Gerät ist konsistent
-ENDE</pseudocode>
+ENDE</text>
+      </pseudocode>
       <errorCase>
         <exception>ErrorSettingNewPinFailed</exception>
-        <trigger>PIN-Ersetzung fehlgeschlagen</trigger>
-        <action>Protokolliere Fehler, stelle Konsistenz sicher, Funktion beenden</action>
+        <trigger>
+          <text xml:lang="en">PIN replacement fails</text>
+          <text xml:lang="de">PIN-Ersetzung fehlgeschlagen</text>
+        </trigger>
+        <action>
+          <text xml:lang="en">Log error, ensure consistency, exit function</text>
+          <text xml:lang="de">Protokolliere Fehler, stelle Konsistenz sicher, Funktion beenden</text>
+        </action>
       </errorCase>
     </step>
     <step>
       <number>7</number>
-      <originalText>The function SHALL invoke the functionality of the Secure Element to create the log message parts for the event data for the successful unblocking attempt. The element unblockResult SHALL be set to the value "success". If the execution of this Secure Element functionality fails, the function unblockPin SHALL raise the exception ErrorSigningEventDataFailed and exit the function.</originalText>
-      <germanText>Rufe Secure-Element-Funktionalität auf, um Log-Nachricht-Teile für erfolgreiche Entsperrung zu erstellen (unblockResult="success"). Bei Fehler: Werfe ErrorSigningEventDataFailed und beende Funktion.</germanText>
-      <pseudocode>VERSUCHE
+      <description>
+        <text xml:lang="en">The function SHALL invoke the functionality of the Secure Element to create the log message parts for the event data for the successful unblocking attempt. The element unblockResult SHALL be set to the value "success". If the execution of this Secure Element functionality fails, the function unblockPin SHALL raise the exception ErrorSigningEventDataFailed and exit the function.</text>
+        <text xml:lang="de">Rufe Secure-Element-Funktionalität auf, um Log-Nachricht-Teile für erfolgreiche Entsperrung zu erstellen (unblockResult="success"). Bei Fehler: Werfe ErrorSigningEventDataFailed und beende Funktion.</text>
+      </description>
+      <pseudocode>
+        <text xml:lang="en">TRY
+  INVOKE SE functionality to create log message
+  SET unblockResult="success"
+  GET log message parts from SE
+CATCH error
+  THROW ErrorSigningEventDataFailed
+  EXIT function
+END</text>
+        <text xml:lang="de">VERSUCHE
   RUFE_AUF Secure-Element-Funktionalität
   SETZE unblockResult="success"
   HOLE Log-Nachricht-Teile vom SE
 BEI_FEHLER
   WERFE ErrorSigningEventDataFailed
   BEENDE_FUNKTION
-ENDE</pseudocode>
+ENDE</text>
+      </pseudocode>
       <errorCase>
         <exception>ErrorSigningEventDataFailed</exception>
-        <trigger>Secure-Element-Funktionalität fehlgeschlagen</trigger>
-        <action>Funktion beenden</action>
+        <trigger>
+          <text xml:lang="en">SE functionality fails</text>
+          <text xml:lang="de">Secure-Element-Funktionalität fehlgeschlagen</text>
+        </trigger>
+        <action>
+          <text xml:lang="en">Exit function</text>
+          <text xml:lang="de">Funktion beenden</text>
+        </action>
       </errorCase>
     </step>
     <step>
       <number>8</number>
-      <originalText>The function SHALL retrieve the parts of the log message determined by the Secure Element. If the retrieval of the log message parts fails, the function SHALL raise the exception ErrorRetrieveLogMessageFailed and exit the function.</originalText>
-      <germanText>Hole die Log-Nachricht-Teile vom Secure Element. Falls der Abruf fehlschlägt: Werfe ErrorRetrieveLogMessageFailed und beende Funktion.</germanText>
-      <pseudocode>VERSUCHE
+      <description>
+        <text xml:lang="en">The function SHALL retrieve the parts of the log message determined by the Secure Element. If the retrieval of the log message parts fails, the function SHALL raise the exception ErrorRetrieveLogMessageFailed and exit the function.</text>
+        <text xml:lang="de">Hole die Log-Nachricht-Teile vom Secure Element. Falls der Abruf fehlschlägt: Werfe ErrorRetrieveLogMessageFailed und beende Funktion.</text>
+      </description>
+      <pseudocode>
+        <text xml:lang="en">TRY
+  RETRIEVE log message parts from SE
+CATCH error
+  THROW ErrorRetrieveLogMessageFailed
+  EXIT function
+END</text>
+        <text xml:lang="de">VERSUCHE
   HOLE Log-Nachricht-Teile vom Secure Element
 BEI_FEHLER
   WERFE ErrorRetrieveLogMessageFailed
   BEENDE_FUNKTION
-ENDE</pseudocode>
+ENDE</text>
+      </pseudocode>
       <errorCase>
         <exception>ErrorRetrieveLogMessageFailed</exception>
-        <trigger>Abruf der Log-Nachricht-Teile fehlgeschlagen</trigger>
-        <action>Funktion beenden</action>
+        <trigger>
+          <text xml:lang="en">Retrieval of log message parts fails</text>
+          <text xml:lang="de">Abruf der Log-Nachricht-Teile fehlgeschlagen</text>
+        </trigger>
+        <action>
+          <text xml:lang="en">Exit function</text>
+          <text xml:lang="de">Funktion beenden</text>
+        </action>
       </errorCase>
     </step>
     <step>
       <number>9</number>
-      <originalText>The function SHALL store the data of the previously retrieved log message parts on the storage medium. If the data has not been stored successfully, the function SHALL raise the exception ErrorStoringLogMessageFailed and exit the function.</originalText>
-      <germanText>Speichere die Log-Nachricht-Teile auf dem Speichermedium. Falls Speicherung fehlschlägt: Werfe ErrorStoringLogMessageFailed und beende Funktion.</germanText>
-      <pseudocode>VERSUCHE
+      <description>
+        <text xml:lang="en">The function SHALL store the data of the previously retrieved log message parts on the storage medium. If the data has not been stored successfully, the function SHALL raise the exception ErrorStoringLogMessageFailed and exit the function.</text>
+        <text xml:lang="de">Speichere die Log-Nachricht-Teile auf dem Speichermedium. Falls Speicherung fehlschlägt: Werfe ErrorStoringLogMessageFailed und beende Funktion.</text>
+      </description>
+      <pseudocode>
+        <text xml:lang="en">TRY
+  STORE log message parts on storage medium
+CATCH error
+  THROW ErrorStoringLogMessageFailed
+  EXIT function
+END</text>
+        <text xml:lang="de">VERSUCHE
   SPEICHERE Log-Nachricht-Teile auf Speichermedium
 BEI_FEHLER
   WERFE ErrorStoringLogMessageFailed
   BEENDE_FUNKTION
-ENDE</pseudocode>
+ENDE</text>
+      </pseudocode>
       <errorCase>
         <exception>ErrorStoringLogMessageFailed</exception>
-        <trigger>Speicherung auf Speichermedium fehlgeschlagen</trigger>
-        <action>Funktion beenden</action>
+        <trigger>
+          <text xml:lang="en">Storage fails</text>
+          <text xml:lang="de">Speicherung auf Speichermedium fehlgeschlagen</text>
+        </trigger>
+        <action>
+          <text xml:lang="en">Exit function</text>
+          <text xml:lang="de">Funktion beenden</text>
+        </action>
       </errorCase>
     </step>
     <step>
       <number>10</number>
-      <originalText>The function SHALL return without raising an exception to indicate that the execution of the function unblockPin has been successful.</originalText>
-      <germanText>Gebe ohne Exception zurück, um erfolgreiche Ausführung anzuzeigen.</germanText>
-      <pseudocode>RETURN ohne Exception
-BEENDE_ERFOLGREICH</pseudocode>
+      <description>
+        <text xml:lang="en">The function SHALL return without raising an exception to indicate that the execution of the function unblockPin has been successful.</text>
+        <text xml:lang="de">Gebe ohne Exception zurück, um erfolgreiche Ausführung anzuzeigen.</text>
+      </description>
+      <pseudocode>
+        <text xml:lang="en">RETURN without exception
+END SUCCESSFULLY</text>
+        <text xml:lang="de">RETURN ohne Exception
+BEENDE_ERFOLGREICH</text>
+      </pseudocode>
       <successCase>
-        <condition>Ausführung war erfolgreich</condition>
-        <action>Funktion kehrt ohne Exception zurück</action>
+        <condition>
+          <text xml:lang="en">Execution was successful</text>
+          <text xml:lang="de">Ausführung war erfolgreich</text>
+        </condition>
+        <action>
+          <text xml:lang="en">Function returns without exception</text>
+          <text xml:lang="de">Funktion kehrt ohne Exception zurück</text>
+        </action>
       </successCase>
     </step>
   </detailedSteps>
@@ -168,28 +332,40 @@ BEENDE_ERFOLGREICH</pseudocode>
     <parameter>
       <name>userId</name>
       <type>String</type>
-      <description>the ID of the user who or application that wants to unblock the corresponding PIN entry.</description>
+      <description>
+        <text xml:lang="en">the ID of the user who or application that wants to unblock the corresponding PIN entry.</text>
+        <text xml:lang="de">die ID des Benutzers oder der Anwendung, die den entsprechenden PIN-Eintrag entsperren möchte.</text>
+      </description>
       <direction>INPUT</direction>
       <required>true</required>
     </parameter>
     <parameter>
       <name>puk</name>
       <type>byte[]</type>
-      <description>the PUK of the user/application.</description>
+      <description>
+        <text xml:lang="en">the PUK of the user/application.</text>
+        <text xml:lang="de">die PUK des Benutzers/der Anwendung.</text>
+      </description>
       <direction>INPUT</direction>
       <required>true</required>
     </parameter>
     <parameter>
       <name>newPin</name>
       <type>byte[]</type>
-      <description>the new PIN for the user/application.</description>
+      <description>
+        <text xml:lang="en">the new PIN for the user/application.</text>
+        <text xml:lang="de">die neue PIN für den Benutzer/die Anwendung.</text>
+      </description>
       <direction>INPUT</direction>
       <required>true</required>
     </parameter>
   </parameters>
   <returnValue>
     <type>void</type>
-    <description>This function does not return a value.</description>
+    <description>
+      <text xml:lang="en">This function does not return a value.</text>
+      <text xml:lang="de">Diese Funktion gibt keinen Wert zurück.</text>
+    </description>
   </returnValue>
   <exceptions>
     <exception>ErrorFunctionFailed</exception>
@@ -255,7 +431,10 @@ UnblockPinEventData ::= SEQUENCE {
         <type>INTEGER (3)</type>
         <required>true</required>
         <defaultValue>3</defaultValue>
-        <description>Version of the log message format. SHALL be set to '3'.</description>
+        <description>
+          <text xml:lang="en">Version of the log message format. SHALL be set to '3'.</text>
+          <text xml:lang="de">Version des Log-Nachricht-Formats. MUSS auf '3' gesetzt sein.</text>
+        </description>
         <origin>Provided by the device</origin>
       </field>
       <field>
@@ -263,7 +442,10 @@ UnblockPinEventData ::= SEQUENCE {
         <type>OBJECT IDENTIFIER</type>
         <required>true</required>
         <defaultValue>id-SE-API-system-log</defaultValue>
-        <description>MUST be set to the OID id-SE-API-system-log.</description>
+        <description>
+          <text xml:lang="en">MUST be set to the OID id-SE-API-system-log.</text>
+          <text xml:lang="de">MUSS auf die OID id-SE-API-system-log gesetzt sein.</text>
+        </description>
         <origin>Provided by the device</origin>
       </field>
       <field>
@@ -272,7 +454,10 @@ UnblockPinEventData ::= SEQUENCE {
         <tag>[0] IMPLICIT</tag>
         <required>true</required>
         <defaultValue>unblockPin</defaultValue>
-        <description>MUST be set to 'unblockPin'.</description>
+        <description>
+          <text xml:lang="en">MUST be set to 'unblockPin'.</text>
+          <text xml:lang="de">MUSS auf 'unblockPin' gesetzt sein.</text>
+        </description>
         <origin>Provided by the device</origin>
       </field>
       <field>
@@ -280,7 +465,10 @@ UnblockPinEventData ::= SEQUENCE {
         <type>PrintableString</type>
         <tag>[1] IMPLICIT</tag>
         <required>false</required>
-        <description>Component that triggered the event (e.g., component name).</description>
+        <description>
+          <text xml:lang="en">Component that triggered the event (e.g., component name).</text>
+          <text xml:lang="de">Komponente, die das Ereignis ausgelöst hat (z.B. Komponentenname).</text>
+        </description>
         <origin>Provided by the device</origin>
       </field>
       <field>
@@ -288,7 +476,10 @@ UnblockPinEventData ::= SEQUENCE {
         <type>UserId</type>
         <tag>[2] IMPLICIT</tag>
         <required>false</required>
-        <description>User ID of the user that triggered the event.</description>
+        <description>
+          <text xml:lang="en">User ID of the user that triggered the event.</text>
+          <text xml:lang="de">Benutzer-ID des Benutzers, der das Ereignis ausgelöst hat.</text>
+        </description>
         <origin>Provided by the device</origin>
       </field>
       <field>
@@ -296,7 +487,10 @@ UnblockPinEventData ::= SEQUENCE {
         <type>UnblockPinEventData</type>
         <tag>[3] IMPLICIT</tag>
         <required>true</required>
-        <description>Function-specific event data.</description>
+        <description>
+          <text xml:lang="en">Function-specific event data.</text>
+          <text xml:lang="de">Funktionsspezifische Ereignisdaten.</text>
+        </description>
         <origin>Provided by the device</origin>
       </field>
       <field>
@@ -304,7 +498,10 @@ UnblockPinEventData ::= SEQUENCE {
         <type>OCTET STRING</type>
         <tag>[4] IMPLICIT</tag>
         <required>false</required>
-        <description>MUST NOT be present. Reserved for future use.</description>
+        <description>
+          <text xml:lang="en">MUST NOT be present. Reserved for future use.</text>
+          <text xml:lang="de">DARF NICHT vorhanden sein. Für zukünftige Verwendung reserviert.</text>
+        </description>
         <note>RFU</note>
         <origin>-</origin>
       </field>
@@ -312,35 +509,50 @@ UnblockPinEventData ::= SEQUENCE {
         <name>serialNumber</name>
         <type>OCTET STRING (SIZE (32))</type>
         <required>true</required>
-        <description>Serial number of the Secure Element consisting of the hash value of the public key of the certificate used to verify system logs.</description>
+        <description>
+          <text xml:lang="en">Serial number of the Secure Element consisting of the hash value of the public key of the certificate used to verify system logs.</text>
+          <text xml:lang="de">Seriennummer des Secure Element bestehend aus dem Hash-Wert des öffentlichen Schlüssels des Zertifikats zur Überprüfung von Systemprotokollen.</text>
+        </description>
         <origin>Provided by the device</origin>
       </field>
       <field>
         <name>signatureAlgorithm</name>
         <type>AlgorithmIdentifier</type>
         <required>true</required>
-        <description>Information about the signature creation.</description>
+        <description>
+          <text xml:lang="en">Information about the signature creation.</text>
+          <text xml:lang="de">Informationen über die Signaturerstellung.</text>
+        </description>
         <origin>Provided by the device</origin>
       </field>
       <field>
         <name>signatureCounter</name>
         <type>INTEGER</type>
         <required>true</required>
-        <description>Current count of signatures created with the log message signing key protected by the Secure Element.</description>
+        <description>
+          <text xml:lang="en">Current count of signatures created with the log message signing key protected by the Secure Element.</text>
+          <text xml:lang="de">Aktueller Zähler der mit dem durch das Secure Element geschützten Log-Nachricht-Signaturschlüssel erstellten Signaturen.</text>
+        </description>
         <origin>Provided by the Secure Element</origin>
       </field>
       <field>
         <name>signatureCreationTime</name>
         <type>Time</type>
         <required>true</required>
-        <description>Point in time of the Secure Element when the log message was signed.</description>
+        <description>
+          <text xml:lang="en">Point in time of the Secure Element when the log message was signed.</text>
+          <text xml:lang="de">Zeitpunkt des Secure Element, als die Log-Nachricht signiert wurde.</text>
+        </description>
         <origin>Provided by the Secure Element</origin>
       </field>
       <field>
         <name>signatureValue</name>
         <type>OCTET STRING</type>
         <required>true</required>
-        <description>Result of the signature computation encoded as octet string.</description>
+        <description>
+          <text xml:lang="en">Result of the signature computation encoded as octet string.</text>
+          <text xml:lang="de">Ergebnis der Signaturberechnung codiert als Oktettkette.</text>
+        </description>
         <origin>Provided by the Secure Element</origin>
       </field>
     </structure>

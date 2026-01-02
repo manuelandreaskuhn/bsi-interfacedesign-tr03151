@@ -2,138 +2,274 @@
 <function xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="configureLogging" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/functions.xsd">
   <name>configureLogging</name>
   <category>Logging</category>
-  <description>The function configureLogging can be used to enable and disable the logging of specific events.</description>
+  <description>
+    <text xml:lang="en">The function configureLogging can be used to enable and disable the logging of specific events.</text>
+    <text xml:lang="de">Mit der Funktion configureLogging können das Protokollieren spezifischer Ereignisse aktiviert und deaktiviert werden.</text>
+  </description>
   <detailedSteps>
     <step>
       <number>1</number>
-      <originalText>If the referencing guideline limits the access to the functionality solely to authenticated users, the function SHALL check if the user that has invoked the function has the status authenticated. If the status is not authenticated, the function SHALL raise the exception ErrorUserNotAuthenticated and exit the function.</originalText>
-      <germanText>Prüft, ob Nutzer authentifiziert. Falls nicht: Exception ErrorUserNotAuthenticated, Ende.</germanText>
-      <pseudocode>WENN Benutzer NICHT authentifiziert DANN
+      <description>
+        <text xml:lang="en">If the referencing guideline limits the access to the functionality solely to authenticated users, the function SHALL check if the user that has invoked the function has the status authenticated. If the status is not authenticated, the function SHALL raise the exception ErrorUserNotAuthenticated and exit the function.</text>
+        <text xml:lang="de">Prüft, ob Nutzer authentifiziert. Falls nicht: Exception ErrorUserNotAuthenticated, Ende.</text>
+      </description>
+      <pseudocode>
+        <text xml:lang="en">IF user NOT authenticated THEN
+  RAISE ErrorUserNotAuthenticated
+  EXIT_FUNCTION
+END</text>
+        <text xml:lang="de">WENN Benutzer NICHT authentifiziert DANN
   WERFE ErrorUserNotAuthenticated
   BEENDE_FUNKTION
-ENDE</pseudocode>
+ENDE</text>
+      </pseudocode>
       <errorCase>
         <exception>ErrorUserNotAuthenticated</exception>
-        <trigger>Der Benutzer ist nicht authentifiziert</trigger>
-        <action>Funktion beenden</action>
+        <trigger>
+          <text xml:lang="en">The user is not authenticated</text>
+          <text xml:lang="de">Der Benutzer ist nicht authentifiziert</text>
+        </trigger>
+        <action>
+          <text xml:lang="en">Exit the function</text>
+          <text xml:lang="de">Funktion beenden</text>
+        </action>
       </errorCase>
     </step>
     <step>
       <number>2</number>
-      <originalText>If the referencing guideline limits the access to the functionality to certain roles, the function SHALL check in the corresponding role if the (unauthenticated) user is authorized to execute the function. If the user is not authorized, the function SHALL raise the exception ErrorUserNotAuthorized and exit the function.</originalText>
-      <germanText>Prüft, ob Nutzer berechtigt. Falls nicht: Exception ErrorUserNotAuthorized, Ende.</germanText>
-      <pseudocode>WENN Benutzer NICHT autorisiert DANN
+      <description>
+        <text xml:lang="en">If the referencing guideline limits the access to the functionality to certain roles, the function SHALL check in the corresponding role if the (unauthenticated) user is authorized to execute the function. If the user is not authorized, the function SHALL raise the exception ErrorUserNotAuthorized and exit the function.</text>
+        <text xml:lang="de">Prüft, ob Nutzer berechtigt. Falls nicht: Exception ErrorUserNotAuthorized, Ende.</text>
+      </description>
+      <pseudocode>
+        <text xml:lang="en">IF user NOT authorized THEN
+  RAISE ErrorUserNotAuthorized
+  EXIT_FUNCTION
+END</text>
+        <text xml:lang="de">WENN Benutzer NICHT autorisiert DANN
   WERFE ErrorUserNotAuthorized
   BEENDE_FUNKTION
-ENDE</pseudocode>
+ENDE</text>
+      </pseudocode>
       <errorCase>
         <exception>ErrorUserNotAuthorized</exception>
-        <trigger>Der Benutzer ist nicht berechtigt</trigger>
-        <action>Funktion beenden</action>
+        <trigger>
+          <text xml:lang="en">The user is not authorized</text>
+          <text xml:lang="de">Der Benutzer ist nicht berechtigt</text>
+        </trigger>
+        <action>
+          <text xml:lang="en">Exit the function</text>
+          <text xml:lang="de">Funktion beenden</text>
+        </action>
       </errorCase>
     </step>
     <step>
       <number>3</number>
-      <originalText>If a referencing guideline prohibits the usage of the function after the initialization and the device is already initialized, the function SHALL raise the exeception ErrorDeviceIsInitialized and exit the function.</originalText>
-      <germanText>Falls nach Initialisierung verboten und Gerät initialisiert: Exception ErrorDeviceIsInitialized, Ende.</germanText>
-      <pseudocode>WENN Richtlinie verbietet nach Initialisierung UND Gerät initialisiert DANN
+      <description>
+        <text xml:lang="en">If a referencing guideline prohibits the usage of the function after the initialization and the device is already initialized, the function SHALL raise the exeception ErrorDeviceIsInitialized and exit the function.</text>
+        <text xml:lang="de">Falls nach Initialisierung verboten und Gerät initialisiert: Exception ErrorDeviceIsInitialized, Ende.</text>
+      </description>
+      <pseudocode>
+        <text xml:lang="en">IF guideline prohibits after initialization AND device initialized THEN
+  RAISE ErrorDeviceIsInitialized
+  EXIT_FUNCTION
+END</text>
+        <text xml:lang="de">WENN Richtlinie verbietet nach Initialisierung UND Gerät initialisiert DANN
   WERFE ErrorDeviceIsInitialized
   BEENDE_FUNKTION
-ENDE</pseudocode>
+ENDE</text>
+      </pseudocode>
       <errorCase>
         <exception>ErrorDeviceIsInitialized</exception>
-        <trigger>Das Gerät ist bereits initialisiert</trigger>
-        <action>Funktion beenden</action>
+        <trigger>
+          <text xml:lang="en">The device is already initialized</text>
+          <text xml:lang="de">Das Gerät ist bereits initialisiert</text>
+        </trigger>
+        <action>
+          <text xml:lang="en">Exit the function</text>
+          <text xml:lang="de">Funktion beenden</text>
+        </action>
       </errorCase>
     </step>
     <step>
       <number>4</number>
-      <originalText>The function SHALL check if the logging of the event specified by the function input parameter eventName in the component specified by function input parameter componentName is configurable. If the logging of the event is not configurable, the function SHALL raise the exception ErrorLoggingOfEventNotConfigurable and exit the function.</originalText>
-      <germanText>Prüft, ob Logging für Event/Komp. konfigurierbar. Falls nicht: Exception ErrorLoggingOfEventNotConfigurable, Ende.</germanText>
-      <pseudocode>WENN Logging für Event/Komponente NICHT konfigurierbar DANN
+      <description>
+        <text xml:lang="en">The function SHALL check if the logging of the event specified by the function input parameter eventName in the component specified by function input parameter componentName is configurable. If the logging of the event is not configurable, the function SHALL raise the exception ErrorLoggingOfEventNotConfigurable and exit the function.</text>
+        <text xml:lang="de">Prüft, ob Logging für Event/Komp. konfigurierbar. Falls nicht: Exception ErrorLoggingOfEventNotConfigurable, Ende.</text>
+      </description>
+      <pseudocode>
+        <text xml:lang="en">IF logging for event/component NOT configurable THEN
+  RAISE ErrorLoggingOfEventNotConfigurable
+  EXIT_FUNCTION
+END</text>
+        <text xml:lang="de">WENN Logging für Event/Komponente NICHT konfigurierbar DANN
   WERFE ErrorLoggingOfEventNotConfigurable
   BEENDE_FUNKTION
-ENDE</pseudocode>
+ENDE</text>
+      </pseudocode>
       <errorCase>
         <exception>ErrorLoggingOfEventNotConfigurable</exception>
-        <trigger>Das Logging für das angegebene Event ist nicht konfigurierbar</trigger>
-        <action>Funktion beenden</action>
+        <trigger>
+          <text xml:lang="en">The logging for the specified event is not configurable</text>
+          <text xml:lang="de">Das Logging für das angegebene Event ist nicht konfigurierbar</text>
+        </trigger>
+        <action>
+          <text xml:lang="en">Exit the function</text>
+          <text xml:lang="de">Funktion beenden</text>
+        </action>
       </errorCase>
     </step>
     <step>
       <number>5</number>
-      <originalText>The function SHALL set the logging of the event specified by the function input parameter eventName in the component specified by function input parameter componentName to the value of the boolean input parameter eventEnabled. If the execution fails, the function SHALL raise the exception ErrorConfigureLoggingFailed and exit the function.</originalText>
-      <germanText>Setzt Logging für Event/Komp. auf eventEnabled. Bei Fehler: Exception ErrorConfigureLoggingFailed, Ende.</germanText>
-      <pseudocode>VERSUCHE
+      <description>
+        <text xml:lang="en">The function SHALL set the logging of the event specified by the function input parameter eventName in the component specified by function input parameter componentName to the value of the boolean input parameter eventEnabled. If the execution fails, the function SHALL raise the exception ErrorConfigureLoggingFailed and exit the function.</text>
+        <text xml:lang="de">Setzt Logging für Event/Komp. auf eventEnabled. Bei Fehler: Exception ErrorConfigureLoggingFailed, Ende.</text>
+      </description>
+      <pseudocode>
+        <text xml:lang="en">TRY
+  SET logging to eventEnabled
+ON_ERROR
+  RAISE ErrorConfigureLoggingFailed
+  EXIT_FUNCTION
+END</text>
+        <text xml:lang="de">VERSUCHE
   SETZE Logging auf eventEnabled
 BEI_FEHLER
   WERFE ErrorConfigureLoggingFailed
   BEENDE_FUNKTION
-ENDE</pseudocode>
+ENDE</text>
+      </pseudocode>
       <errorCase>
         <exception>ErrorConfigureLoggingFailed</exception>
-        <trigger>Die Ausführung schlägt fehl</trigger>
-        <action>Funktion beenden</action>
+        <trigger>
+          <text xml:lang="en">The execution fails</text>
+          <text xml:lang="de">Die Ausführung schlägt fehl</text>
+        </trigger>
+        <action>
+          <text xml:lang="en">Exit the function</text>
+          <text xml:lang="de">Funktion beenden</text>
+        </action>
       </errorCase>
     </step>
     <step>
       <number>6</number>
-      <originalText>The function SHALL invoke the functionality of the Secure Element to create the log message parts to log the logging configuration and to pass the relevant data to the Secure Element. If the execution fails, the function SHALL raise the exception ErrorSigningEventDataFailed and exit the function.</originalText>
-      <germanText>Ruft SE-Funktionalität auf, um Log-Nachricht-Teile für Konfigurationsereignisse zu erstellen. Bei Fehler: Exception ErrorSigningEventDataFailed, Ende.</germanText>
-      <pseudocode>VERSUCHE
+      <description>
+        <text xml:lang="en">The function SHALL invoke the functionality of the Secure Element to create the log message parts to log the logging configuration and to pass the relevant data to the Secure Element. If the execution fails, the function SHALL raise the exception ErrorSigningEventDataFailed and exit the function.</text>
+        <text xml:lang="de">Ruft SE-Funktionalität auf, um Log-Nachricht-Teile für Konfigurationsereignisse zu erstellen. Bei Fehler: Exception ErrorSigningEventDataFailed, Ende.</text>
+      </description>
+      <pseudocode>
+        <text xml:lang="en">TRY
+  CALL SE.create_Log_Message_Parts
+ON_ERROR
+  RAISE ErrorSigningEventDataFailed
+  EXIT_FUNCTION
+END</text>
+        <text xml:lang="de">VERSUCHE
   RUFE_AUF SE.erstelle_Log_Nachricht_Teile
 BEI_FEHLER
   WERFE ErrorSigningEventDataFailed
   BEENDE_FUNKTION
-ENDE</pseudocode>
+ENDE</text>
+      </pseudocode>
       <errorCase>
         <exception>ErrorSigningEventDataFailed</exception>
-        <trigger>Die Ausführung schlägt fehl</trigger>
-        <action>Funktion beenden</action>
+        <trigger>
+          <text xml:lang="en">The execution fails</text>
+          <text xml:lang="de">Die Ausführung schlägt fehl</text>
+        </trigger>
+        <action>
+          <text xml:lang="en">Exit the function</text>
+          <text xml:lang="de">Funktion beenden</text>
+        </action>
       </errorCase>
     </step>
     <step>
       <number>7</number>
-      <originalText>The function SHALL retrieve the parts of the log message determined by the Secure Element. If the execution of this function fails, the function SHALL raise the exception ErrorRetrieveLogMessageFailed and exit the function.</originalText>
-      <germanText>Holt die Log-Nachricht-Teile vom SE ab. Bei Fehler: Exception ErrorRetrieveLogMessageFailed, Ende.</germanText>
-      <pseudocode>VERSUCHE
+      <description>
+        <text xml:lang="en">The function SHALL retrieve the parts of the log message determined by the Secure Element. If the execution of this function fails, the function SHALL raise the exception ErrorRetrieveLogMessageFailed and exit the function.</text>
+        <text xml:lang="de">Holt die Log-Nachricht-Teile vom SE ab. Bei Fehler: Exception ErrorRetrieveLogMessageFailed, Ende.</text>
+      </description>
+      <pseudocode>
+        <text xml:lang="en">TRY
+  GET log message parts from SE
+ON_ERROR
+  RAISE ErrorRetrieveLogMessageFailed
+  EXIT_FUNCTION
+END</text>
+        <text xml:lang="de">VERSUCHE
   HOLE Log-Nachricht-Teile vom SE
 BEI_FEHLER
   WERFE ErrorRetrieveLogMessageFailed
   BEENDE_FUNKTION
-ENDE</pseudocode>
+ENDE</text>
+      </pseudocode>
       <errorCase>
         <exception>ErrorRetrieveLogMessageFailed</exception>
-        <trigger>Die Ausführung dieser Funktion schlägt fehl</trigger>
-        <action>Funktion beenden</action>
+        <trigger>
+          <text xml:lang="en">The execution of this function fails</text>
+          <text xml:lang="de">Die Ausführung dieser Funktion schlägt fehl</text>
+        </trigger>
+        <action>
+          <text xml:lang="en">Exit the function</text>
+          <text xml:lang="de">Funktion beenden</text>
+        </action>
       </errorCase>
     </step>
     <step>
       <number>8</number>
-      <originalText>The data sent to the Secure Element and the data of the log message parts retrieved from the Secure Element (together forming the log message contents) SHALL be stored. If the data has not been stored successfully, the function SHALL raise the exception ErrorStoringLogMessageFailed and exit the function.</originalText>
-      <germanText>Speichert Daten und Log-Teile. Bei Fehler: Exception ErrorStoringLogMessageFailed, Ende.</germanText>
-      <pseudocode>VERSUCHE
+      <description>
+        <text xml:lang="en">The data sent to the Secure Element and the data of the log message parts retrieved from the Secure Element (together forming the log message contents) SHALL be stored. If the data has not been stored successfully, the function SHALL raise the exception ErrorStoringLogMessageFailed and exit the function.</text>
+        <text xml:lang="de">Speichert Daten und Log-Teile. Bei Fehler: Exception ErrorStoringLogMessageFailed, Ende.</text>
+      </description>
+      <pseudocode>
+        <text xml:lang="en">TRY
+  STORE data and log message parts
+ON_ERROR
+  RAISE ErrorStoringLogMessageFailed
+  EXIT_FUNCTION
+END</text>
+        <text xml:lang="de">VERSUCHE
   SPEICHERE Daten und Log-Teile
 BEI_FEHLER
   WERFE ErrorStoringLogMessageFailed
   BEENDE_FUNKTION
-ENDE</pseudocode>
+ENDE</text>
+      </pseudocode>
       <errorCase>
         <exception>ErrorStoringLogMessageFailed</exception>
-        <trigger>Die Daten wurden nicht erfolgreich gespeichert</trigger>
-        <action>Funktion beenden</action>
+        <trigger>
+          <text xml:lang="en">The data has not been stored successfully</text>
+          <text xml:lang="de">Die Daten wurden nicht erfolgreich gespeichert</text>
+        </trigger>
+        <action>
+          <text xml:lang="en">Exit the function</text>
+          <text xml:lang="de">Funktion beenden</text>
+        </action>
       </errorCase>
     </step>
     <step>
       <number>9</number>
-      <originalText>The function SHALL return without raising an exception to indicate that the execution of the function has been successful.</originalText>
-      <germanText>Gebe ohne Exception zurück, um die erfolgreiche Ausführung anzuzeigen.</germanText>
-      <pseudocode>// Erfolgsfall
+      <description>
+        <text xml:lang="en">The function SHALL return without raising an exception to indicate that the execution of the function has been successful.</text>
+        <text xml:lang="de">Gibt ohne Exception zurück, um die erfolgreiche Ausführung anzuzeigen.</text>
+      </description>
+      <pseudocode>
+        <text xml:lang="en">// Success case
+Function returns without exception
+END_SUCCESSFULLY</text>
+        <text xml:lang="de">// Erfolgsfall
 Funktion kehrt ohne Exception zurück
-BEENDE_ERFOLGREICH</pseudocode>
+BEENDE_ERFOLGREICH</text>
+      </pseudocode>
       <successCase>
-        <condition>Ausführung war erfolgreich</condition>
-        <action>Funktion kehrt ohne Exception zurück</action>
+        <condition>
+          <text xml:lang="en">Execution was successful</text>
+          <text xml:lang="de">Ausführung war erfolgreich</text>
+        </condition>
+        <action>
+          <text xml:lang="en">Function returns without exception</text>
+          <text xml:lang="de">Funktion kehrt ohne Exception zurück</text>
+        </action>
       </successCase>
     </step>
   </detailedSteps>
@@ -141,28 +277,40 @@ BEENDE_ERFOLGREICH</pseudocode>
     <parameter>
       <name>componentName</name>
       <type>String</type>
-      <description>the name of the component for which logging is configured.</description>
+      <description>
+        <text xml:lang="en">the name of the component for which logging is configured.</text>
+        <text xml:lang="de">Der Name der Komponente, für die die Protokollierung konfiguriert wird.</text>
+      </description>
       <direction>INPUT</direction>
       <required>true</required>
     </parameter>
     <parameter>
       <name>eventname</name>
       <type>String</type>
-      <description>the name of the event to be configured.</description>
+      <description>
+        <text xml:lang="en">the name of the event to be configured.</text>
+        <text xml:lang="de">Der Name des zu konfigurierenden Ereignisses.</text>
+      </description>
       <direction>INPUT</direction>
       <required>true</required>
     </parameter>
     <parameter>
       <name>eventEnabled</name>
       <type>boolean</type>
-      <description>indicates whether the event logging should be enabled or disabled.</description>
+      <description>
+        <text xml:lang="en">indicates whether the event logging should be enabled or disabled.</text>
+        <text xml:lang="de">Gibt an, ob die Ereignisprotokollierung aktiviert oder deaktiviert werden soll.</text>
+      </description>
       <direction>INPUT</direction>
       <required>true</required>
     </parameter>
   </parameters>
   <returnValue>
     <type>void</type>
-    <description>This function does not return a value.</description>
+    <description>
+      <text xml:lang="en">This function does not return a value.</text>
+      <text xml:lang="de">Diese Funktion gibt keinen Wert zurück.</text>
+    </description>
   </returnValue>
   <exceptions>
     <exception>ErrorCertificateExpired</exception>
@@ -226,7 +374,10 @@ ConfigureLoggingEventData ::= SEQUENCE {
         <type>INTEGER (3)</type>
         <required>true</required>
         <defaultValue>3</defaultValue>
-        <description>Version of the log message format. SHALL be set to '3'.</description>
+        <description>
+          <text xml:lang="en">Version of the log message format. SHALL be set to '3'.</text>
+          <text xml:lang="de">Version des Protokollnachrichtenformats. Muss auf "3" gesetzt werden.</text>
+        </description>
         <origin>Provided by the device</origin>
       </field>
       <field>
@@ -234,7 +385,10 @@ ConfigureLoggingEventData ::= SEQUENCE {
         <type>OBJECT IDENTIFIER</type>
         <required>true</required>
         <defaultValue>id-SE-API-system-log</defaultValue>
-        <description>MUST be set to the OID id-SE-API-system-log.</description>
+        <description>
+          <text xml:lang="en">MUST be set to the OID id-SE-API-system-log.</text>
+          <text xml:lang="de">Muss auf die OID id-SE-API-system-log gesetzt werden.</text>
+        </description>
         <origin>Provided by the device</origin>
       </field>
       <field>
@@ -243,7 +397,10 @@ ConfigureLoggingEventData ::= SEQUENCE {
         <tag>[0] IMPLICIT</tag>
         <required>true</required>
         <defaultValue>configureLogging</defaultValue>
-        <description>MUST be set to 'configureLogging'.</description>
+        <description>
+          <text xml:lang="en">MUST be set to 'configureLogging'.</text>
+          <text xml:lang="de">Muss auf "configureLogging" gesetzt werden.</text>
+        </description>
         <origin>Provided by the device</origin>
       </field>
       <field>
@@ -251,7 +408,10 @@ ConfigureLoggingEventData ::= SEQUENCE {
         <type>PrintableString</type>
         <tag>[1] IMPLICIT</tag>
         <required>false</required>
-        <description>Component that triggered the event (e.g., component name).</description>
+        <description>
+          <text xml:lang="en">Component that triggered the event (e.g., component name).</text>
+          <text xml:lang="de">Komponente, die das Ereignis ausgelöst hat (z.B. Komponentenname).</text>
+        </description>
         <origin>Provided by the device</origin>
       </field>
       <field>
@@ -259,7 +419,10 @@ ConfigureLoggingEventData ::= SEQUENCE {
         <type>UserId</type>
         <tag>[2] IMPLICIT</tag>
         <required>false</required>
-        <description>User ID of the user that triggered the event.</description>
+        <description>
+          <text xml:lang="en">User ID of the user that triggered the event.</text>
+          <text xml:lang="de">Benutzer-ID des Benutzers, der das Ereignis ausgelöst hat.</text>
+        </description>
         <origin>Provided by the device</origin>
       </field>
       <field>
@@ -267,7 +430,10 @@ ConfigureLoggingEventData ::= SEQUENCE {
         <type>ConfigureLoggingEventData</type>
         <tag>[3] IMPLICIT</tag>
         <required>true</required>
-        <description>Function-specific event data.</description>
+        <description>
+          <text xml:lang="en">Function-specific event data.</text>
+          <text xml:lang="de">Funktionsspezifische Ereignisdaten.</text>
+        </description>
         <origin>Provided by the device</origin>
       </field>
       <field>
@@ -275,7 +441,10 @@ ConfigureLoggingEventData ::= SEQUENCE {
         <type>OCTET STRING</type>
         <tag>[4] IMPLICIT</tag>
         <required>false</required>
-        <description>MUST NOT be present. Reserved for future use.</description>
+        <description>
+          <text xml:lang="en">MUST NOT be present. Reserved for future use.</text>
+          <text xml:lang="de">Darf nicht vorhanden sein. Für zukünftige Verwendung reserviert.</text>
+        </description>
         <note>RFU</note>
         <origin>-</origin>
       </field>
@@ -283,35 +452,50 @@ ConfigureLoggingEventData ::= SEQUENCE {
         <name>serialNumber</name>
         <type>OCTET STRING (SIZE (32))</type>
         <required>true</required>
-        <description>Serial number of the Secure Element consisting of the hash value of the public key of the certificate used to verify system logs.</description>
+        <description>
+          <text xml:lang="en">Serial number of the Secure Element consisting of the hash value of the public key of the certificate used to verify system logs.</text>
+          <text xml:lang="de">Seriennummer des Secure Element bestehend aus dem Hash-Wert des öffentlichen Schlüssels des Zertifikats zur Überprüfung von Systemprotokollen.</text>
+        </description>
         <origin>Provided by the device</origin>
       </field>
       <field>
         <name>signatureAlgorithm</name>
         <type>AlgorithmIdentifier</type>
         <required>true</required>
-        <description>Information about the signature creation.</description>
+        <description>
+          <text xml:lang="en">Information about the signature creation.</text>
+          <text xml:lang="de">Informationen zur Signaturerstellung.</text>
+        </description>
         <origin>Provided by the device</origin>
       </field>
       <field>
         <name>signatureCounter</name>
         <type>INTEGER</type>
         <required>true</required>
-        <description>Current count of signatures created with the log message signing key protected by the Secure Element.</description>
+        <description>
+          <text xml:lang="en">Current count of signatures created with the log message signing key protected by the Secure Element.</text>
+          <text xml:lang="de">Aktuelle Anzahl der mit dem durch das Secure Element geschützten Protokollnachricht-Signaturschlüssel erstellten Signaturen.</text>
+        </description>
         <origin>Provided by the Secure Element</origin>
       </field>
       <field>
         <name>signatureCreationTime</name>
         <type>Time</type>
         <required>true</required>
-        <description>Point in time of the Secure Element when the log message was signed.</description>
+        <description>
+          <text xml:lang="en">Point in time of the Secure Element when the log message was signed.</text>
+          <text xml:lang="de">Zeitpunkt des Secure Element, zu dem die Protokollnachricht signiert wurde.</text>
+        </description>
         <origin>Provided by the Secure Element</origin>
       </field>
       <field>
         <name>signatureValue</name>
         <type>OCTET STRING</type>
         <required>true</required>
-        <description>Result of the signature computation encoded as octet string.</description>
+        <description>
+          <text xml:lang="en">Result of the signature computation encoded as octet string.</text>
+          <text xml:lang="de">Ergebnis der Signaturberechnung kodiert als Oktettstring.</text>
+        </description>
         <origin>Provided by the Secure Element</origin>
       </field>
     </structure>

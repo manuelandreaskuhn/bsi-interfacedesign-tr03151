@@ -2,68 +2,130 @@
 <function xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="getCurrentTransactionCounter" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/functions.xsd">
   <name>getCurrentTransactionCounter</name>
   <category>Client- und Transaktionsverwaltung</category>
-  <description>The function getOpenTransactions can be used to obtain the transaction numbers of open transactions that are currently managed by the device.</description>
+  <description>
+    <text xml:lang="en">The function getOpenTransactions can be used to obtain the transaction numbers of open transactions that are currently managed by the device.</text>
+    <text xml:lang="de">Die Funktion getOpenTransactions kann verwendet werden, um die Transaktionsnummern offener Transaktionen zu erhalten, die derzeit vom Gerät verwaltet werden.</text>
+  </description>
   <detailedSteps>
     <step>
       <number>1</number>
-      <originalText>If the referencing guideline limits the access to the functionality solely to authenticated users, the function SHALL check if the user that has invoked the function has the status authenticated. If the status is not authenticated, the function SHALL raise the exception ErrorUserNotAuthenticated and exit the function.</originalText>
-      <germanText>Prüft, ob Nutzer authentifiziert. Falls nicht: Exception ErrorUserNotAuthenticated, Ende.</germanText>
-      <pseudocode>WENN Benutzer NICHT authentifiziert DANN
+      <description>
+        <text xml:lang="en">If the referencing guideline limits the access to the functionality solely to authenticated users, the function SHALL check if the user that has invoked the function has the status authenticated. If the status is not authenticated, the function SHALL raise the exception ErrorUserNotAuthenticated and exit the function.</text>
+        <text xml:lang="de">Prüft, ob Nutzer authentifiziert. Falls nicht: Exception ErrorUserNotAuthenticated, Ende.</text>
+      </description>
+      <pseudocode>
+        <text xml:lang="en">IF user NOT authenticated THEN
+  THROW ErrorUserNotAuthenticated
+  EXIT function
+END</text>
+        <text xml:lang="de">WENN Benutzer NICHT authentifiziert DANN
   WERFE ErrorUserNotAuthenticated
   BEENDE_FUNKTION
-ENDE</pseudocode>
+ENDE</text>
+      </pseudocode>
       <errorCase>
         <exception>ErrorUserNotAuthenticated</exception>
-        <trigger>Der Benutzer ist nicht authentifiziert</trigger>
-        <action>Funktion beenden</action>
+        <trigger>
+          <text xml:lang="en">The user is not authenticated</text>
+          <text xml:lang="de">Der Benutzer ist nicht authentifiziert</text>
+        </trigger>
+        <action>
+          <text xml:lang="en">Exit function</text>
+          <text xml:lang="de">Funktion beenden</text>
+        </action>
       </errorCase>
     </step>
     <step>
       <number>2</number>
-      <originalText>If the referencing guideline limits the access to the functionality to certain roles, the function SHALL check in the corresponding role if the (unauthenticated) user is authorized to execute the function. If the user is not authorized, the function SHALL raise the exception ErrorUserNotAuthorized and exit the function.</originalText>
-      <germanText>Prüft, ob Nutzer berechtigt. Falls nicht: Exception ErrorUserNotAuthorized, Ende.</germanText>
-      <pseudocode>WENN Benutzer NICHT autorisiert DANN
+      <description>
+        <text xml:lang="en">If the referencing guideline limits the access to the functionality to certain roles, the function SHALL check in the corresponding role if the (unauthenticated) user is authorized to execute the function. If the user is not authorized, the function SHALL raise the exception ErrorUserNotAuthorized and exit the function.</text>
+        <text xml:lang="de">Prüft, ob Nutzer berechtigt. Falls nicht: Exception ErrorUserNotAuthorized, Ende.</text>
+      </description>
+      <pseudocode>
+        <text xml:lang="en">IF user NOT authorized THEN
+  THROW ErrorUserNotAuthorized
+  EXIT function
+END</text>
+        <text xml:lang="de">WENN Benutzer NICHT autorisiert DANN
   WERFE ErrorUserNotAuthorized
   BEENDE_FUNKTION
-ENDE</pseudocode>
+ENDE</text>
+      </pseudocode>
       <errorCase>
         <exception>ErrorUserNotAuthorized</exception>
-        <trigger>Der Benutzer ist nicht berechtigt</trigger>
-        <action>Funktion beenden</action>
+        <trigger>
+          <text xml:lang="en">The user is not authorized</text>
+          <text xml:lang="de">Der Benutzer ist nicht berechtigt</text>
+        </trigger>
+        <action>
+          <text xml:lang="en">Exit function</text>
+          <text xml:lang="de">Funktion beenden</text>
+        </action>
       </errorCase>
     </step>
     <step>
       <number>3</number>
-      <originalText>The function SHALL determine the transaction number of the last opened transaction. If the determination of the current transaction number fails, the function SHALL raise the exception ErrorGetCurrentTransactionCounterFailed and exit the function.</originalText>
-      <germanText>Ermittelt letzte Transaktionsnummer. Bei Fehler: Exception ErrorGetCurrentTransactionCounterFailed, Ende.</germanText>
-      <pseudocode>VERSUCHE
+      <description>
+        <text xml:lang="en">The function SHALL determine the transaction number of the last opened transaction. If the determination of the current transaction number fails, the function SHALL raise the exception ErrorGetCurrentTransactionCounterFailed and exit the function.</text>
+        <text xml:lang="de">Ermittelt letzte Transaktionsnummer. Bei Fehler: Exception ErrorGetCurrentTransactionCounterFailed, Ende.</text>
+      </description>
+      <pseudocode>
+        <text xml:lang="en">TRY
+  DETERMINE transaction number of the last opened transaction
+ON ERROR
+  THROW ErrorGetCurrentTransactionCounterFailed
+  EXIT function
+END</text>
+        <text xml:lang="de">VERSUCHE
   ERMITTLE Transaktionsnummer der letzten geöffneten Transaktion
 BEI_FEHLER
   WERFE ErrorGetCurrentTransactionCounterFailed
   BEENDE_FUNKTION
-ENDE</pseudocode>
+ENDE</text>
+      </pseudocode>
       <errorCase>
         <exception>ErrorGetCurrentTransactionCounterFailed</exception>
-        <trigger>Die Ermittlung der Transaktionsnummer schlägt fehl</trigger>
-        <action>Funktion beenden</action>
+        <trigger>
+          <text xml:lang="en">The determination of the transaction number fails</text>
+          <text xml:lang="de">Die Ermittlung der Transaktionsnummer schlägt fehl</text>
+        </trigger>
+        <action>
+          <text xml:lang="en">Exit function</text>
+          <text xml:lang="de">Funktion beenden</text>
+        </action>
       </errorCase>
     </step>
     <step>
       <number>4</number>
-      <originalText>If the determination of the current transaction number has been successful, the function SHALL return the current transaction number (as an output parameter) by transactionNumber. The function SHALL return without raising an exception to indicate that the execution of the function has been successful.</originalText>
-      <germanText>Gibt Transaktionsnummer zurück. Bei Erfolg keine Exception.</germanText>
-      <pseudocode>GEBE aktuelle Transaktionsnummer zurück (transactionNumber Parameter)
-RETURN ohne Exception</pseudocode>
+      <description>
+        <text xml:lang="en">If the determination of the current transaction number has been successful, the function SHALL return the current transaction number (as an output parameter) by transactionNumber. The function SHALL return without raising an exception to indicate that the execution of the function has been successful.</text>
+        <text xml:lang="de">Gibt Transaktionsnummer zurück. Bei Erfolg keine Exception.</text>
+      </description>
+      <pseudocode>
+        <text xml:lang="en">RETURN current transaction number (transactionNumber parameter)
+RETURN without exception</text>
+        <text xml:lang="de">GEBE aktuelle Transaktionsnummer zurück (transactionNumber Parameter)
+RETURN ohne Exception</text>
+      </pseudocode>
       <successCase>
-        <condition>Die Ermittlung der aktuellen Transaktionsnummer war erfolgreich</condition>
-        <action>Gibt Transaktionsnummer zurück und kehrt ohne Exception zurück</action>
+        <condition>
+          <text xml:lang="en">Determination of the current transaction number was successful</text>
+          <text xml:lang="de">Die Ermittlung der aktuellen Transaktionsnummer war erfolgreich</text>
+        </condition>
+        <action>
+          <text xml:lang="en">Return transaction number and return without exception</text>
+          <text xml:lang="de">Gibt Transaktionsnummer zurück und kehrt ohne Exception zurück</text>
+        </action>
       </successCase>
     </step>
   </detailedSteps>
   <parameters />
   <returnValue>
     <type>long</type>
-    <description>the current value of the transaction counter.</description>
+    <description>
+      <text xml:lang="en">the current value of the transaction counter.</text>
+      <text xml:lang="de">der aktuelle Wert des Transaktionszählers.</text>
+    </description>
   </returnValue>
   <exceptions>
     <exception>ErrorDeviceNotInitialized</exception>

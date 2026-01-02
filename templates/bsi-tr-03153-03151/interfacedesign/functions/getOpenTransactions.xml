@@ -2,68 +2,129 @@
 <function xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="getOpenTransactions" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/functions.xsd">
   <name>getOpenTransactions</name>
   <category>Client- und Transaktionsverwaltung</category>
-  <description>The function getOpenTransactions can be used to obtain the transaction numbers of open transactions for a specific client application.</description>
+  <description>
+    <text xml:lang="en">The function getOpenTransactions can be used to obtain the transaction numbers of open transactions for a specific client application.</text>
+    <text xml:lang="de">Die Funktion getOpenTransactions kann verwendet werden, um die Transaktionsnummern offener Transaktionen für eine bestimmte Clientanwendung zu ermitteln.</text>
+  </description>
   <detailedSteps>
     <step>
       <number>1</number>
-      <originalText>If the referencing guideline limits the access to the functionality solely to authenticated users, the function SHALL check if the user that has invoked the function has the status authenticated. If the status is not authenticated, the function SHALL raise the exception ErrorUserNotAuthenticated and exit the function.</originalText>
-      <germanText>Falls die Richtlinie den Zugriff auf authentifizierte Benutzer beschränkt: Prüfe, ob der aufrufende Benutzer authentifiziert ist. Falls nicht: Werfe ErrorUserNotAuthenticated und beende Funktion.</germanText>
-      <pseudocode>WENN Benutzer NICHT authentifiziert DANN
+      <description>
+        <text xml:lang="en">If the referencing guideline limits the access to the functionality solely to authenticated users, the function SHALL check if the user that has invoked the function has the status authenticated. If the status is not authenticated, the function SHALL raise the exception ErrorUserNotAuthenticated and exit the function.</text>
+        <text xml:lang="de">Prüft, ob Nutzer authentifiziert. Falls nicht: Exception ErrorUserNotAuthenticated, Ende.</text>
+      </description>
+      <pseudocode>
+        <text xml:lang="en">IF user NOT authenticated THEN
+  THROW ErrorUserNotAuthenticated
+  EXIT function
+END</text>
+        <text xml:lang="de">WENN Benutzer NICHT authentifiziert DANN
   WERFE ErrorUserNotAuthenticated
   BEENDE_FUNKTION
-ENDE</pseudocode>
+ENDE</text>
+      </pseudocode>
       <errorCase>
         <exception>ErrorUserNotAuthenticated</exception>
-        <trigger>Der Benutzer ist nicht authentifiziert</trigger>
-        <action>Funktion beenden</action>
+        <trigger>
+          <text xml:lang="en">The user is not authenticated</text>
+          <text xml:lang="de">Der Benutzer ist nicht authentifiziert</text>
+        </trigger>
+        <action>
+          <text xml:lang="en">Exit function</text>
+          <text xml:lang="de">Funktion beenden</text>
+        </action>
       </errorCase>
     </step>
     <step>
       <number>2</number>
-      <originalText>If the referencing guideline limits the access to the functionality to certain roles, the function SHALL check in the corresponding role if the (unauthenticated) user is authorized to execute the function. If the user is not authorized, the function SHALL raise the exception ErrorUserNotAuthorized and exit the function.</originalText>
-      <germanText>Falls die Richtlinie den Zugriff auf bestimmte Rollen beschränkt: Prüfe in der entsprechenden Rolle, ob der (unauthentifizierte) Benutzer berechtigt ist, die Funktion auszuführen. Falls nicht: Werfe ErrorUserNotAuthorized und beende Funktion.</germanText>
-      <pseudocode>WENN Benutzer NICHT autorisiert DANN
+      <description>
+        <text xml:lang="en">If the referencing guideline limits the access to the functionality to certain roles, the function SHALL check in the corresponding role if the (unauthenticated) user is authorized to execute the function. If the user is not authorized, the function SHALL raise the exception ErrorUserNotAuthorized and exit the function.</text>
+        <text xml:lang="de">Prüft, ob Nutzer berechtigt. Falls nicht: Exception ErrorUserNotAuthorized, Ende.</text>
+      </description>
+      <pseudocode>
+        <text xml:lang="en">IF user NOT authorized THEN
+  THROW ErrorUserNotAuthorized
+  EXIT function
+END</text>
+        <text xml:lang="de">WENN Benutzer NICHT autorisiert DANN
   WERFE ErrorUserNotAuthorized
   BEENDE_FUNKTION
-ENDE</pseudocode>
+ENDE</text>
+      </pseudocode>
       <errorCase>
         <exception>ErrorUserNotAuthorized</exception>
-        <trigger>Der Benutzer ist nicht berechtigt</trigger>
-        <action>Funktion beenden</action>
+        <trigger>
+          <text xml:lang="en">The user is not authorized</text>
+          <text xml:lang="de">Der Benutzer ist nicht berechtigt</text>
+        </trigger>
+        <action>
+          <text xml:lang="en">Exit function</text>
+          <text xml:lang="de">Funktion beenden</text>
+        </action>
       </errorCase>
     </step>
     <step>
       <number>3</number>
-      <originalText>The function SHALL determine all transactions that are currently open. If the determination of this fails, the function SHALL raise the exception ErrorGetOpenTransactionsFailed and exit the function.</originalText>
-      <germanText>Funktion ermittelt alle derzeit offenen Transaktionen. Bei Fehler: ErrorGetOpenTransactionsFailed, Ende.</germanText>
-      <pseudocode>VERSUCHE
+      <description>
+        <text xml:lang="en">The function SHALL determine all transactions that are currently open. If the determination of this fails, the function SHALL raise the exception ErrorGetOpenTransactionsFailed and exit the function.</text>
+        <text xml:lang="de">Ermittelt alle derzeit offenen Transaktionen. Bei Fehler: Exception ErrorGetOpenTransactionsFailed, Ende.</text>
+      </description>
+      <pseudocode>
+        <text xml:lang="en">TRY
+  RETRIEVE open transactions from SE
+CATCH error
+  THROW ErrorGetOpenTransactionsFailed
+  EXIT function
+END</text>
+        <text xml:lang="de">VERSUCHE
   HOLE offene Transaktionen vom SE
 BEI_FEHLER
   WERFE ErrorGetOpenTransactionsFailed
   BEENDE_FUNKTION
-ENDE</pseudocode>
+ENDE</text>
+      </pseudocode>
       <errorCase>
         <exception>ErrorGetOpenTransactionsFailed</exception>
-        <trigger>Die Ermittlung schlägt fehl</trigger>
-        <action>Funktion beenden</action>
+        <trigger>
+          <text xml:lang="en">The determination of open transactions fails</text>
+          <text xml:lang="de">Die Ermittlung schlägt fehl</text>
+        </trigger>
+        <action>
+          <text xml:lang="en">Exit function</text>
+          <text xml:lang="de">Funktion beenden</text>
+        </action>
       </errorCase>
     </step>
     <step>
       <number>4</number>
-      <originalText>If the determination of the currently opened transactions is successful, the function SHALL return information on all currently opened transactions by usage of the output parameter openTransactions. Additionally, the function SHALL return without raising an exception to indicate that the execution of the function has been successful.</originalText>
-      <germanText>Bei Erfolg der Ermittlung: Gibt alle offenen Transaktionen via Parameter openTransactions zurück. Keine Exception.</germanText>
-      <pseudocode>GEBE offene Transaktionen zurück (openTransactions Parameter)
-RETURN ohne Exception</pseudocode>
+      <description>
+        <text xml:lang="en">If the determination of the currently opened transactions is successful, the function SHALL return information on all currently opened transactions by usage of the output parameter openTransactions. Additionally, the function SHALL return without raising an exception to indicate that the execution of the function has been successful.</text>
+        <text xml:lang="de">Bei Erfolg der Ermittlung: Gibt alle offenen Transaktionen via Parameter openTransactions zurück. Keine Exception.</text>
+      </description>
+      <pseudocode>
+        <text xml:lang="en">RETURN openTransactions without exception</text>
+        <text xml:lang="de">GEBE offene Transaktionen zurück (openTransactions Parameter)
+RETURN ohne Exception</text>
+      </pseudocode>
       <successCase>
-        <condition>Ausführung war erfolgreich</condition>
-        <action>Funktion kehrt ohne Exception zurück</action>
+        <condition>
+          <text xml:lang="en">The determination of open transactions has been successful</text>
+          <text xml:lang="de">Ausführung war erfolgreich</text>
+        </condition>
+        <action>
+          <text xml:lang="en">Return all open transactions without raising an exception</text>
+          <text xml:lang="de">Funktion kehrt ohne Exception zurück</text>
+        </action>
       </successCase>
     </step>
   </detailedSteps>
   <parameters />
   <returnValue>
     <type>byte[]</type>
-    <description>list of currently open transactions.</description>
+    <description>
+      <text xml:lang="en">list of currently open transactions.</text>
+      <text xml:lang="de">Liste der derzeit offenen Transaktionen.</text>
+    </description>
   </returnValue>
   <exceptions>
     <exception>ErrorDeviceNotInitialized</exception>

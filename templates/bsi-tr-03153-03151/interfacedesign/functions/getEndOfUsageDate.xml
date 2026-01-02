@@ -2,68 +2,129 @@
 <function xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="getEndOfUsageDate" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/functions.xsd">
   <name>getEndOfUsageDate</name>
   <category>Gerätewartung</category>
-  <description>Electrical devices may be subject to aging or wear and tear. Sometimes this process is observable or predictable. The API function getDeviceHealth can be used to get information about the actual health of the device or the components within.</description>
+  <description>
+    <text xml:lang="en">Electrical devices may be subject to aging or wear and tear. Sometimes this process is observable or predictable. The API function getDeviceHealth can be used to get information about the actual health of the device or the components within.</text>
+    <text xml:lang="de">Elektrische Geräte können Verschleiß unterliegen. Dieser Prozess ist manchmal beobachtbar oder vorhersehbar. Die API-Funktion getDeviceHealth kann verwendet werden, um Informationen über den tatsächlichen Zustand des Geräts oder der darin enthaltenen Komponenten zu erhalten.</text>
+  </description>
   <detailedSteps>
     <step>
       <number>1</number>
-      <originalText>If the referencing guideline limits the access to the functionality solely to authenticated users, the function SHALL check if the user that has invoked the function has the status authenticated. If the status is not authenticated, the function SHALL raise the exception ErrorUserNotAuthenticated and exit the function.</originalText>
-      <germanText>Prüft, ob Nutzer authentifiziert. Falls nicht: Exception ErrorUserNotAuthenticated, Ende.</germanText>
-      <pseudocode>WENN Benutzer NICHT authentifiziert DANN
+      <description>
+        <text xml:lang="en">If the referencing guideline limits the access to the functionality solely to authenticated users, the function SHALL check if the user that has invoked the function has the status authenticated. If the status is not authenticated, the function SHALL raise the exception ErrorUserNotAuthenticated and exit the function.</text>
+        <text xml:lang="de">Prüft, ob Nutzer authentifiziert. Falls nicht: Exception ErrorUserNotAuthenticated, Ende.</text>
+      </description>
+      <pseudocode>
+        <text xml:lang="en">IF user NOT authenticated THEN
+  THROW ErrorUserNotAuthenticated
+  EXIT function
+END</text>
+        <text xml:lang="de">WENN Benutzer NICHT authentifiziert DANN
   WERFE ErrorUserNotAuthenticated
   BEENDE_FUNKTION
-ENDE</pseudocode>
+ENDE</text>
+      </pseudocode>
       <errorCase>
         <exception>ErrorUserNotAuthenticated</exception>
-        <trigger>Der Benutzer ist nicht authentifiziert</trigger>
-        <action>Funktion beenden</action>
+        <trigger>
+          <text xml:lang="en">The user is not authenticated</text>
+          <text xml:lang="de">Der Benutzer ist nicht authentifiziert</text>
+        </trigger>
+        <action>
+          <text xml:lang="en">Exit function</text>
+          <text xml:lang="de">Funktion beenden</text>
+        </action>
       </errorCase>
     </step>
     <step>
       <number>2</number>
-      <originalText>If the referencing guideline limits the access to the functionality to certain roles, the function SHALL check in the corresponding role if the (unauthenticated) user is authorized to execute the function. If the user is not authorized, the function SHALL raise the exception ErrorUserNotAuthorized and exit the function.</originalText>
-      <germanText>Prüft, ob Nutzer berechtigt. Falls nicht: Exception ErrorUserNotAuthorized, Ende.</germanText>
-      <pseudocode>WENN Benutzer NICHT autorisiert DANN
+      <description>
+        <text xml:lang="en">If the referencing guideline limits the access to the functionality to certain roles, the function SHALL check in the corresponding role if the (unauthenticated) user is authorized to execute the function. If the user is not authorized, the function SHALL raise the exception ErrorUserNotAuthorized and exit the function.</text>
+        <text xml:lang="de">Prüft, ob Nutzer berechtigt. Falls nicht: Exception ErrorUserNotAuthorized, Ende.</text>
+      </description>
+      <pseudocode>
+        <text xml:lang="en">IF user NOT authorized THEN
+  THROW ErrorUserNotAuthorized
+  EXIT function
+END</text>
+        <text xml:lang="de">WENN Benutzer NICHT autorisiert DANN
   WERFE ErrorUserNotAuthorized
   BEENDE_FUNKTION
-ENDE</pseudocode>
+ENDE</text>
+      </pseudocode>
       <errorCase>
         <exception>ErrorUserNotAuthorized</exception>
-        <trigger>Der Benutzer ist nicht berechtigt</trigger>
-        <action>Funktion beenden</action>
+        <trigger>
+          <text xml:lang="en">The user is not authorized</text>
+          <text xml:lang="de">Der Benutzer ist nicht berechtigt</text>
+        </trigger>
+        <action>
+          <text xml:lang="en">Exit function</text>
+          <text xml:lang="de">Funktion beenden</text>
+        </action>
       </errorCase>
     </step>
     <step>
       <number>3</number>
-      <originalText>The function SHALL determine the earliest date after which the input functions can no longer be used. Possible invocations of the functions disableSecureElement and lockTransactionLogging SHALL NOT be taken into account. If the determination of this date fails, the function SHALL raise the exception ErrorGetEndOfUsageDateFailed and exit the function.</originalText>
-      <germanText>Ermittelt Enddatum der Nutzbarkeit. Bei Fehler: Exception ErrorGetEndOfUsageDateFailed, Ende.</germanText>
-      <pseudocode>VERSUCHE
+      <description>
+        <text xml:lang="en">The function SHALL determine the earliest date after which the input functions can no longer be used. Possible invocations of the functions disableSecureElement and lockTransactionLogging SHALL NOT be taken into account. If the determination of this date fails, the function SHALL raise the exception ErrorGetEndOfUsageDateFailed and exit the function.</text>
+        <text xml:lang="de">Ermittelt Enddatum der Nutzbarkeit. Bei Fehler: Exception ErrorGetEndOfUsageDateFailed, Ende.</text>
+      </description>
+      <pseudocode>
+        <text xml:lang="en">TRY
+  DETERMINE earliest end of usage date
+CATCH error
+  THROW ErrorGetEndOfUsageDateFailed
+  EXIT function
+END</text>
+        <text xml:lang="de">VERSUCHE
   ERMITTLE frühestes Enddatum der Nutzbarkeit
 BEI_FEHLER
   WERFE ErrorGetEndOfUsageDateFailed
   BEENDE_FUNKTION
-ENDE</pseudocode>
+ENDE</text>
+      </pseudocode>
       <errorCase>
         <exception>ErrorGetEndOfUsageDateFailed</exception>
-        <trigger>Die Ermittlung des Datums schlägt fehl</trigger>
-        <action>Funktion beenden</action>
+        <trigger>
+          <text xml:lang="en">The determination of the date fails</text>
+          <text xml:lang="de">Die Ermittlung des Datums schlägt fehl</text>
+        </trigger>
+        <action>
+          <text xml:lang="en">Exit function</text>
+          <text xml:lang="de">Funktion beenden</text>
+        </action>
       </errorCase>
     </step>
     <step>
       <number>4</number>
-      <originalText>If the determination of the earliest date after which the input functions can no longer be used has been successful, the function SHALL return this date by usage of the output parameter endOfUsageDate. Additionally, the function SHALL return without raising an exception to indicate that the execution of the function has been successful.</originalText>
-      <germanText>Gibt Enddatum zurück. Bei Erfolg keine Exception.</germanText>
-      <pseudocode>GEBE Enddatum zurück (endOfUsageDate Parameter)
-RETURN ohne Exception</pseudocode>
+      <description>
+        <text xml:lang="en">If the determination of the earliest date after which the input functions can no longer be used has been successful, the function SHALL return this date by usage of the output parameter endOfUsageDate. Additionally, the function SHALL return without raising an exception to indicate that the execution of the function has been successful.</text>
+        <text xml:lang="de">Gibt Enddatum zurück. Bei Erfolg keine Exception.</text>
+      </description>
+      <pseudocode>
+        <text xml:lang="en">RETURN endOfUsageDate without exception</text>
+        <text xml:lang="de">GEBE Enddatum zurück (endOfUsageDate Parameter)
+RETURN ohne Exception</text>
+      </pseudocode>
       <successCase>
-        <condition>Die Ermittlung des Enddatums war erfolgreich</condition>
-        <action>Gibt das Enddatum zurück und kehrt ohne Exception zurück</action>
+        <condition>
+          <text xml:lang="en">The determination of the earliest date has been successful</text>
+          <text xml:lang="de">Die Ermittlung des Enddatums war erfolgreich</text>
+        </condition>
+        <action>
+          <text xml:lang="en">Return the end of usage date without raising an exception</text>
+          <text xml:lang="de">Gibt das Enddatum zurück und kehrt ohne Exception zurück</text>
+        </action>
       </successCase>
     </step>
   </detailedSteps>
   <parameters />
   <returnValue>
     <type>ZonedDateTime</type>
-    <description>the end of usage date of the device.</description>
+    <description>
+      <text xml:lang="en">the end of usage date of the device.</text>
+      <text xml:lang="de">das Enddatum der Nutzbarkeit des Geräts.</text>
+    </description>
   </returnValue>
   <exceptions>
     <exception>ErrorDeviceNotInitialized</exception>
