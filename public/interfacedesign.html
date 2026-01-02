@@ -3485,9 +3485,6 @@
                         <div className="space-y-2">
                           {data.postconditionality.map((state, idx) => (
                             <div key={idx} className="">
-                              {state.name && (
-                                <span className="text-sm font-semibold text-purple-700 block mb-1">{state.name}</span>
-                              )}
                               <span className="text-gray-700 text-sm">{t(state.description) || t(state)}</span>
                             </div>
                           ))}
