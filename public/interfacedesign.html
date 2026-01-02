@@ -2582,10 +2582,10 @@
                             {renderTypeReference(field.type)}
                           </td>
                           <td className="px-4 py-3 text-sm text-gray-600 max-w-md">
-                            {t(field.description) || '-'}
+                            {field.description || '-'}
                             {field.defaultValue && (
                               <p className="text-gray-400 text-xs mt-1">
-                                {language === 'de' ? 'Standard' : 'Default'}: <code>{field.defaultValue}</code>
+                                Default: <code>{field.defaultValue}</code>
                               </p>
                             )}
                           </td>
@@ -2597,7 +2597,7 @@
                             ) : (
                               <span className="px-2 py-0.5 bg-green-100 text-green-700 rounded text-xs">
                                 <Icon name="check" className="mr-1" />
-                                {language === 'de' ? 'Pflicht' : 'Required'}
+                                Required
                               </span>
                             )}
                           </td>
@@ -3194,9 +3194,8 @@
 
       const tabs = [
         { id: 'overview', label: 'Übersicht', icon: 'info-circle' },
-        { id: 'trigger', label: 'Auslöser', icon: 'bolt' },
-        { id: 'handling', label: 'Behandlung', icon: 'first-aid' },
-        { id: 'scenarios', label: 'Szenarien', icon: 'flask' }
+        { id: 'trigger', label: 'Ausführungssequenz', icon: 'list' },
+        { id: 'handling', label: 'Behandlung', icon: 'first-aid' }
       ];
 
       return (
@@ -3273,34 +3272,27 @@
                 {/* Tab: Overview */}
                 {activeTab === 'overview' && (
                   <div className="space-y-4">
-                    {/* Javadoc */}
-                    {data.javadoc && (t(data.javadoc.summary) || t(data.javadoc.description)) && (
+                    {/* Notes & Implementation Context combined */}
+                    {((data.notes && data.notes.length > 0) || (data.implementationContext && data.implementationContext.length > 0)) && (
                       <div className="bg-white rounded-lg shadow p-4">
                         <h3 className="font-semibold text-gray-800 mb-2 flex items-center text-base">
-                          <Icon name="book" className="mr-2 text-indigo-500" />
-                          Javadoc
+                          <Icon name="sticky-note" className="mr-2 text-yellow-500" />
+                          {language === 'de' ? 'Hinweise & Kontext' : 'Notes & Context'}
                         </h3>
-                        {t(data.javadoc.summary) && (
-                          <p className="text-gray-600 text-sm font-bold">{t(data.javadoc.summary)}</p>
-                        )}
-                        {t(data.javadoc.description) && t(data.javadoc.description) !== t(data.javadoc.summary) && (
-                          <p className="text-gray-500 text-xs mt-2">{t(data.javadoc.description)}</p>
-                        )}
-                        {data.javadoc.constructors && data.javadoc.constructors.length > 0 && (
-                          <details className="mt-3">
-                            <summary className="text-xs font-medium text-indigo-600 cursor-pointer hover:text-indigo-800">
-                              {data.javadoc.constructors.length} {language === 'de' ? 'Konstruktoren anzeigen' : 'Show constructors'}
-                            </summary>
-                            <div className="mt-2 space-y-2 pl-3 border-l-2 border-indigo-100">
-                              {data.javadoc.constructors.map((con, idx) => (
-                                <div key={idx} className="text-xs">
-                                  <code className="text-purple-600 bg-purple-50 px-1 rounded">{con.signature}</code>
-                                  {t(con.description) && <p className="text-gray-500 mt-1">{t(con.description)}</p>}
-                                </div>
-                              ))}
+                        <div className="space-y-2">
+                          {data.notes && data.notes.map((note, idx) => (
+                            <div key={`note-${idx}`} className="flex items-start gap-2 text-sm text-gray-600">
+                              <Icon name="angle-right" className="text-yellow-400 mt-0.5 flex-shrink-0" />
+                              <span>{t(note)}</span>
                             </div>
-                          </details>
-                        )}
+                          ))}
+                          {data.implementationContext && data.implementationContext.map((note, idx) => (
+                            <div key={`impl-${idx}`} className="flex items-start gap-2 text-sm text-gray-500">
+                              <Icon name="cog" className="text-teal-400 mt-0.5 flex-shrink-0" />
+                              <span>{t(note)}</span>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     )}
 
@@ -3338,25 +3330,53 @@
                       </div>
                     )}
 
-                    {/* Notes & Implementation Context combined */}
-                    {((data.notes && data.notes.length > 0) || (data.implementationContext && data.implementationContext.length > 0)) && (
+                    {/* Javadoc */}
+                    {data.javadoc && (t(data.javadoc.summary) || t(data.javadoc.description)) && (
                       <div className="bg-white rounded-lg shadow p-4">
                         <h3 className="font-semibold text-gray-800 mb-2 flex items-center text-base">
-                          <Icon name="sticky-note" className="mr-2 text-yellow-500" />
-                          {language === 'de' ? 'Hinweise & Kontext' : 'Notes & Context'}
+                          <Icon name="book" className="mr-2 text-indigo-500" />
+                          Javadoc
                         </h3>
-                        <div className="space-y-2">
-                          {data.notes && data.notes.map((note, idx) => (
-                            <div key={`note-${idx}`} className="flex items-start gap-2 text-sm text-gray-600">
-                              <Icon name="angle-right" className="text-yellow-400 mt-0.5 flex-shrink-0" />
-                              <span>{t(note)}</span>
+                        {t(data.javadoc.summary) && (
+                          <p className="text-gray-600 text-sm font-bold">{t(data.javadoc.summary)}</p>
+                        )}
+                        {t(data.javadoc.description) && t(data.javadoc.description) !== t(data.javadoc.summary) && (
+                          <p className="text-gray-500 text-xs mt-2">{t(data.javadoc.description)}</p>
+                        )}
+                        {data.javadoc.constructors && data.javadoc.constructors.length > 0 && (
+                          <details className="mt-3">
+                            <summary className="text-xs font-medium text-indigo-600 cursor-pointer hover:text-indigo-800">
+                              {data.javadoc.constructors.length} {language === 'de' ? 'Konstruktoren anzeigen' : 'Show constructors'}
+                            </summary>
+                            <div className="mt-2 space-y-2 pl-3 border-l-2 border-indigo-100">
+                              {data.javadoc.constructors.map((con, idx) => (
+                                <div key={idx} className="text-xs">
+                                  <code className="text-purple-600 bg-purple-50 px-1 rounded">{con.signature}</code>
+                                  {t(con.description) && <p className="text-gray-500 mt-1">{t(con.description)}</p>}
+                                </div>
+                              ))}
                             </div>
-                          ))}
-                          {data.implementationContext && data.implementationContext.map((note, idx) => (
-                            <div key={`impl-${idx}`} className="flex items-start gap-2 text-sm text-gray-500">
-                              <Icon name="cog" className="text-teal-400 mt-0.5 flex-shrink-0" />
-                              <span>{t(note)}</span>
-                            </div>
+                          </details>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Related Exceptions */}
+                    {data.relatedExceptions && data.relatedExceptions.length > 0 && (
+                      <div className="bg-white rounded-lg shadow p-4">
+                        <h3 className="font-semibold text-gray-800 mb-3 flex items-center text-base">
+                          <Icon name="link" className="mr-2 text-orange-500" />
+                          {language === 'de' ? 'Verwandte Exceptions' : 'Related Exceptions'}
+                        </h3>
+                        <div className="flex flex-wrap gap-2">
+                          {data.relatedExceptions.map((exc, idx) => (
+                            <span 
+                              key={idx}
+                              onClick={() => onNavigateToException && onNavigateToException(typeof exc === 'string' ? exc : exc.name)}
+                              className="px-2 py-1 bg-red-50 text-red-700 rounded text-sm cursor-pointer hover:bg-red-100 transition-colors"
+                            >
+                              {typeof exc === 'string' ? exc : exc.name}
+                            </span>
                           ))}
                         </div>
                       </div>
@@ -3367,34 +3387,6 @@
                 {/* Tab: Trigger */}
                 {activeTab === 'trigger' && (
                   <div className="space-y-4">
-                    {/* Trigger Conditions */}
-                    {data.triggerConditions && data.triggerConditions.length > 0 && (
-                      <div className="bg-white rounded-lg shadow p-4">
-                        <h3 className="font-semibold text-gray-800 mb-3 flex items-center text-base">
-                          <Icon name="bolt" className="mr-2 text-yellow-500" />
-                          {language === 'de' ? 'Auslösebedingungen' : 'Trigger Conditions'}
-                          <span className="ml-2 px-2 py-0.5 bg-yellow-100 text-yellow-700 text-xs rounded-full">
-                            {data.triggerConditions.length}
-                          </span>
-                        </h3>
-                        <div className="space-y-3 grid grid-cols-3 gap-4">
-                          {data.triggerConditions.map((cond, idx) => (
-                            <div key={idx} className="p-3 rounded-lg border-l-2 border-yellow-400 group">
-                              {t(cond.scenario) && (
-                                <div className="font-medium text-yellow-800 text-sm mb-1">{t(cond.scenario)}</div>
-                              )}
-                              <p className="text-gray-700 text-sm">{t(cond.description)}</p>
-                              {t(cond.trigger) && (
-                                <div className="mt-2 rounded text-xs text-gray-500 hidden group-hover:block">
-                                  <span className="font-medium text-orange-600">Trigger:</span> {t(cond.trigger)}
-                                </div>
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
                     {/* Execution Sequence */}
                     {data.executionSequence && data.executionSequence.length > 0 && (
                       <div className="bg-white rounded-lg shadow p-4">
@@ -3492,7 +3484,7 @@
                         </h3>
                         <div className="space-y-2">
                           {data.postconditionality.map((state, idx) => (
-                            <div key={idx} className="p-2 rounded border-l-2 border-purple-400">
+                            <div key={idx} className="">
                               {state.name && (
                                 <span className="text-sm font-semibold text-purple-700 block mb-1">{state.name}</span>
                               )}
@@ -3500,92 +3492,6 @@
                             </div>
                           ))}
                         </div>
-                      </div>
-                    )}
-
-                    {/* Related Exceptions */}
-                    {data.relatedExceptions && data.relatedExceptions.length > 0 && (
-                      <div className="bg-white rounded-lg shadow p-4">
-                        <h3 className="font-semibold text-gray-800 mb-3 flex items-center text-base">
-                          <Icon name="link" className="mr-2 text-orange-500" />
-                          {language === 'de' ? 'Verwandte Exceptions' : 'Related Exceptions'}
-                        </h3>
-                        <div className="flex flex-wrap gap-2">
-                          {data.relatedExceptions.map((exc, idx) => (
-                            <span 
-                              key={idx}
-                              onClick={() => onNavigateToException && onNavigateToException(typeof exc === 'string' ? exc : exc.name)}
-                              className="px-2 py-1 bg-red-50 text-red-700 rounded text-sm cursor-pointer hover:bg-red-100 transition-colors"
-                            >
-                              {typeof exc === 'string' ? exc : exc.name}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {/* Tab: Scenarios */}
-                {activeTab === 'scenarios' && (
-                  <div className="space-y-4">
-                    {/* Usage Scenarios */}
-                    {data.usage && data.usage.length > 0 && (
-                      <div className="bg-white rounded-lg shadow p-4">
-                        <h3 className="font-semibold text-gray-800 mb-3 flex items-center text-base">
-                          <Icon name="flask" className="mr-2 text-cyan-500" />
-                          {language === 'de' ? 'Anwendungsszenarien' : 'Usage Scenarios'}
-                          <span className="ml-2 px-2 py-0.5 bg-cyan-100 text-cyan-700 text-xs rounded-full">
-                            {data.usage.length}
-                          </span>
-                        </h3>
-                        <div className="space-y-3">
-                          {data.usage.map((scenario, idx) => (
-                            <div key={idx} className="p-3 rounded-lg border-l-2 border-cyan-400">
-                              <h4 className="font-medium text-cyan-800 text-sm mb-2">{scenario.name}</h4>
-                              {t(scenario.errorContext) && (
-                                <p className="text-sm text-orange-600 italic">
-                                  <Icon name="exclamation-triangle" className="mr-1" />
-                                  {t(scenario.errorContext)}
-                                </p>
-                              )}
-                              
-                              <p className="text-gray-600 text-sm mb-2">{t(scenario.description)}</p>
-                              
-                              {scenario.relatedFunctions && (
-                                <div className="flex flex-wrap gap-1 mb-2">
-                                  {(typeof scenario.relatedFunctions === 'string' 
-                                    ? scenario.relatedFunctions 
-                                    : String(scenario.relatedFunctions._ || scenario.relatedFunctions)
-                                  ).split(',').map((func, fIdx) => (
-                                    <span key={fIdx} className="px-1.5 py-0.5 bg-cyan-100 text-cyan-700 rounded text-xs font-mono">
-                                      {func.trim()}
-                                    </span>
-                                  ))}
-                                </div>
-                              )}
-                              
-                              {scenario.example && (
-                                <pre className="mt-2 bg-gray-900 rounded p-2 overflow-x-auto">
-                                  <code className="text-green-400 text-xs">{scenario.example}</code>
-                                </pre>
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Example (if exists) */}
-                    {data.example && (
-                      <div className="bg-white rounded-lg shadow p-4">
-                        <h3 className="font-semibold text-gray-800 mb-2 flex items-center text-sm">
-                          <Icon name="code" className="mr-2 text-amber-500" />
-                          {language === 'de' ? 'Beispielcode' : 'Example Code'}
-                        </h3>
-                        <pre className="bg-gray-900 rounded p-3 overflow-x-auto">
-                          <code className="text-green-400 text-xs">{data.example}</code>
-                        </pre>
                       </div>
                     )}
                   </div>
