@@ -8,6 +8,12 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Mermaid 11 for Flowchart rendering (ESM) -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    window.mermaid = mermaid;
+    mermaid.initialize({ startOnLoad: false });
+  </script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="/css/interfacedesign.css">
   <style>
@@ -38,6 +44,30 @@
     .badge {
       font-size: 0.7rem;
       padding: 0.15rem 0.4rem;
+    }
+    /* Mermaid Flowchart Styles */
+    .mermaid-container {
+      background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+      border-radius: 8px;
+    }
+    .mermaid-container svg {
+      max-width: 100%;
+      height: auto;
+    }
+    .mermaid-container .node rect,
+    .mermaid-container .node circle,
+    .mermaid-container .node ellipse,
+    .mermaid-container .node polygon,
+    .mermaid-container .node path {
+      stroke-width: 2px;
+    }
+    .mermaid-container .edgeLabel {
+      background-color: white;
+      padding: 2px 4px;
+      border-radius: 4px;
+    }
+    .mermaid-container .flowchart-link {
+      stroke-width: 2px;
     }
   </style>
 </head>
@@ -717,6 +747,247 @@
     };
 
     // ============================================
+    // Mermaid Flowchart View Component
+    // ============================================
+
+    const MermaidFlowchartView = ({ mermaidCode, language = 'de' }) => {
+      const [showCode, setShowCode] = useState(false);
+      const [renderError, setRenderError] = useState(null);
+      const [isRendering, setIsRendering] = useState(true);
+      const [mermaidReady, setMermaidReady] = useState(false);
+      const mermaidContainerRef = useRef(null);
+      const renderIdRef = useRef(0);
+
+      // Wait for mermaid to be available (loaded via ESM)
+      useEffect(() => {
+        const checkMermaid = () => {
+          if (window.mermaid) {
+            setMermaidReady(true);
+          } else {
+            setTimeout(checkMermaid, 100);
+          }
+        };
+        checkMermaid();
+      }, []);
+
+      useEffect(() => {
+        if (!mermaidCode || !mermaidContainerRef.current || !mermaidReady) return;
+
+        const renderMermaid = async () => {
+          setIsRendering(true);
+          setRenderError(null);
+          renderIdRef.current += 1;
+          const currentRenderId = renderIdRef.current;
+          
+          try {
+            // Initialize mermaid with config (Mermaid v11 API)
+            window.mermaid.initialize({
+              startOnLoad: false,
+              theme: 'default',
+              securityLevel: 'loose',
+              flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis',
+                padding: 20,
+                nodeSpacing: 50,
+                rankSpacing: 80
+              },
+              themeVariables: {
+                primaryColor: '#3b82f6',
+                primaryTextColor: '#fff',
+                primaryBorderColor: '#2563eb',
+                lineColor: '#64748b',
+                secondaryColor: '#10b981',
+                tertiaryColor: '#f8fafc'
+              }
+            });
+
+            // Clear previous content
+            mermaidContainerRef.current.innerHTML = '';
+            
+            // Generate unique ID for this render
+            const id = `mermaid-diagram-${Date.now()}-${currentRenderId}`;
+            
+            // Render the diagram using Mermaid v11 API
+            const { svg } = await window.mermaid.render(id, mermaidCode);
+            
+            // Only update if this is still the current render
+            if (currentRenderId === renderIdRef.current && mermaidContainerRef.current) {
+              mermaidContainerRef.current.innerHTML = svg;
+              
+              // Style the SVG element
+              const svgElement = mermaidContainerRef.current.querySelector('svg');
+              if (svgElement) {
+                svgElement.style.maxWidth = '100%';
+                svgElement.style.height = 'auto';
+                svgElement.style.minHeight = '400px';
+              }
+            }
+          } catch (err) {
+            console.error('Mermaid render error:', err);
+            if (currentRenderId === renderIdRef.current) {
+              setRenderError(err.message || (language === 'de' ? 'Fehler beim Rendern des Flowcharts' : 'Error rendering flowchart'));
+            }
+          } finally {
+            if (currentRenderId === renderIdRef.current) {
+              setIsRendering(false);
+            }
+          }
+        };
+
+        renderMermaid();
+      }, [mermaidCode, mermaidReady, language]);
+
+      const copyToClipboard = () => {
+        navigator.clipboard.writeText(mermaidCode).then(() => {
+          alert(language === 'de' ? 'Code kopiert!' : 'Code copied!');
+        });
+      };
+
+      const downloadSvg = () => {
+        const svgElement = mermaidContainerRef.current?.querySelector('svg');
+        if (svgElement) {
+          const svgData = new XMLSerializer().serializeToString(svgElement);
+          const blob = new Blob([svgData], { type: 'image/svg+xml' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'flowchart.svg';
+          a.click();
+          URL.revokeObjectURL(url);
+        }
+      };
+
+      // Show loading state while waiting for mermaid
+      if (!mermaidReady) {
+        return (
+          <div className="p-4">
+            <div className="bg-white rounded-lg border border-gray-200 p-8">
+              <div className="flex items-center justify-center">
+                <div className="text-center">
+                  <div className="loading-spinner mx-auto mb-3"></div>
+                  <p className="text-gray-500 text-sm">
+                    {language === 'de' ? 'Lade Mermaid-Bibliothek...' : 'Loading Mermaid library...'}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      return (
+        <div className="p-4">
+          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+            {/* Toolbar */}
+            <div className="flex items-center justify-between px-4 py-2 bg-gray-50 border-b border-gray-200">
+              <div className="flex items-center gap-2">
+                <Icon name="project-diagram" className="text-blue-600" />
+                <span className="font-medium text-gray-700">
+                  {language === 'de' ? 'Flowchart-Darstellung' : 'Flowchart View'}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setShowCode(!showCode)}
+                  className={`px-3 py-1.5 rounded text-sm flex items-center gap-1.5 transition-colors ${
+                    showCode 
+                      ? 'bg-blue-600 text-white' 
+                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  }`}
+                >
+                  <Icon name="code" />
+                  {language === 'de' ? 'Code' : 'Code'}
+                </button>
+                <button
+                  onClick={copyToClipboard}
+                  className="px-3 py-1.5 bg-gray-200 text-gray-700 rounded text-sm flex items-center gap-1.5 hover:bg-gray-300 transition-colors"
+                  title={language === 'de' ? 'Code kopieren' : 'Copy code'}
+                >
+                  <Icon name="copy" />
+                </button>
+                <button
+                  onClick={downloadSvg}
+                  className="px-3 py-1.5 bg-gray-200 text-gray-700 rounded text-sm flex items-center gap-1.5 hover:bg-gray-300 transition-colors"
+                  title={language === 'de' ? 'Als SVG herunterladen' : 'Download as SVG'}
+                >
+                  <Icon name="download" />
+                </button>
+              </div>
+            </div>
+
+            {/* Mermaid Code View (toggleable) */}
+            {showCode && (
+              <div className="border-b border-gray-200">
+                <pre className="bg-gray-900 text-gray-100 p-4 text-xs overflow-x-auto font-mono max-h-64 overflow-y-auto">
+                  {mermaidCode}
+                </pre>
+              </div>
+            )}
+
+            {/* Rendered Flowchart */}
+            <div className="p-4 bg-gradient-to-br from-gray-50 to-white min-h-[400px]">
+              {isRendering && (
+                <div className="flex items-center justify-center h-64">
+                  <div className="text-center">
+                    <div className="loading-spinner mx-auto mb-3"></div>
+                    <p className="text-gray-500 text-sm">
+                      {language === 'de' ? 'Rendere Flowchart...' : 'Rendering flowchart...'}
+                    </p>
+                  </div>
+                </div>
+              )}
+              
+              {renderError && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700 mb-4">
+                  <div className="flex items-start gap-2">
+                    <Icon name="exclamation-triangle" className="mt-0.5" />
+                    <div>
+                      <p className="font-medium">
+                        {language === 'de' ? 'Fehler beim Rendern' : 'Render Error'}
+                      </p>
+                      <p className="text-sm mt-1">{renderError}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              <div 
+                ref={mermaidContainerRef}
+                className="mermaid-container flex justify-center items-center overflow-auto"
+                style={{ minHeight: isRendering ? '0' : '400px' }}
+              />
+            </div>
+
+            {/* Legend */}
+            <div className="px-4 py-3 bg-gray-50 border-t border-gray-200">
+              <div className="flex flex-wrap items-center gap-4 text-xs text-gray-600">
+                <span className="font-medium">{language === 'de' ? 'Legende:' : 'Legend:'}</span>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-4 h-4 rounded bg-emerald-500"></span>
+                  <span>{language === 'de' ? 'Start/Ende' : 'Start/End'}</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-4 h-4 rounded bg-blue-500"></span>
+                  <span>{language === 'de' ? 'Schritt' : 'Step'}</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-4 h-4 rounded bg-red-500"></span>
+                  <span>{language === 'de' ? 'Fehler/Exception' : 'Error/Exception'}</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-4 h-2 border-t-2 border-dashed border-gray-500"></span>
+                  <span>{language === 'de' ? 'Fehlerpfad' : 'Error path'}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    // ============================================
     // Function Detail View Component
     // ============================================
 
@@ -866,34 +1137,96 @@
       const generateMermaidFlowchart = () => {
         if (!data?.detailedSteps?.length) return '';
         
+        // Escape special characters for Mermaid
+        const escapeText = (text) => {
+          if (!text) return '';
+          return text
+            .replace(/"/g, "'")
+            .replace(/\[/g, '(')
+            .replace(/\]/g, ')')
+            .replace(/\{/g, '(')
+            .replace(/\}/g, ')')
+            .replace(/</g, '‹')
+            .replace(/>/g, '›')
+            .replace(/&/g, '+')
+            .replace(/\n/g, ' ')
+            .trim();
+        };
+        
         let mermaid = 'flowchart TD\n';
-        mermaid += '    Start([Start]) --> Step1\n';
+        
+        // Define styles
+        mermaid += '    %% Style definitions\n';
+        mermaid += '    classDef startEnd fill:#10b981,stroke:#059669,color:#fff,stroke-width:2px\n';
+        mermaid += '    classDef step fill:#3b82f6,stroke:#2563eb,color:#fff,stroke-width:2px\n';
+        mermaid += '    classDef error fill:#ef4444,stroke:#dc2626,color:#fff,stroke-width:2px\n';
+        mermaid += '    classDef errorEnd fill:#fecaca,stroke:#ef4444,color:#991b1b,stroke-width:2px\n';
+        mermaid += '    classDef condition fill:#f59e0b,stroke:#d97706,color:#fff,stroke-width:2px\n\n';
+        
+        // Start node
+        mermaid += '    Start([▶ Start]):::startEnd\n';
+        mermaid += '    Start --> Step1\n\n';
+        
+        // Main flow subgraph
+        mermaid += '    subgraph MainFlow[" 📋 Hauptablauf"]\n';
+        mermaid += '    direction TB\n';
         
         data.detailedSteps.forEach((step, idx) => {
           const stepId = `Step${step.number}`;
-          const nextStepId = idx < data.detailedSteps.length - 1 ? `Step${data.detailedSteps[idx + 1].number}` : 'End';
+          const nextStepId = idx < data.detailedSteps.length - 1 ? `Step${data.detailedSteps[idx + 1].number}` : 'Success';
           
-          // Truncate text for display - use multilingual description
+          // Get step description with language support
           const stepText = getText(step.description, language) || step.germanText || step.originalText || '';
-          const shortText = stepText.substring(0, 40) + (stepText.length > 40 ? '...' : '');
-          mermaid += `    ${stepId}["${step.number}. ${shortText.replace(/"/g, "'")}"]\n`;
+          const shortText = escapeText(stepText.substring(0, 50)) + (stepText.length > 50 ? '...' : '');
           
-          // Add error cases as branches
-          if (step.errorCases?.length > 0) {
-            step.errorCases.forEach((ec, ecIdx) => {
-              const errorId = `Error${step.number}_${ecIdx}`;
-              mermaid += `    ${stepId} -->|${language === 'de' ? 'Fehler' : 'Error'}| ${errorId}[/${ec.exception}/]\n`;
-              mermaid += `    ${errorId} --> EndError([${language === 'de' ? 'Ende mit Fehler' : 'End with Error'}])\n`;
-            });
-          }
+          // Step node with number
+          mermaid += `    ${stepId}["🔹 ${step.number}. ${shortText}"]:::step\n`;
           
-          // Success path
-          if (step.successCases?.length > 0 || idx === data.detailedSteps.length - 1) {
-            mermaid += `    ${stepId} -->|OK| ${nextStepId === 'End' ? `End([${language === 'de' ? 'Ende' : 'End'}])` : nextStepId}\n`;
-          } else if (idx < data.detailedSteps.length - 1) {
+          // Connect to next step (success path)
+          if (idx < data.detailedSteps.length - 1) {
             mermaid += `    ${stepId} --> ${nextStepId}\n`;
+          } else {
+            mermaid += `    ${stepId} --> Success\n`;
           }
         });
+        
+        mermaid += '    end\n\n';
+        
+        // Success end node
+        mermaid += '    Success([✅ ' + (language === 'de' ? 'Erfolg' : 'Success') + ']):::startEnd\n\n';
+        
+        // Error handling subgraph
+        const hasErrors = data.detailedSteps.some(s => s.errorCases?.length > 0);
+        if (hasErrors) {
+          mermaid += '    subgraph ErrorHandling[" ⚠️ Fehlerbehandlung"]\n';
+          mermaid += '    direction TB\n';
+          mermaid += '    ErrorEnd([❌ ' + (language === 'de' ? 'Abbruch' : 'Abort') + ']):::errorEnd\n';
+          
+          data.detailedSteps.forEach((step) => {
+            const stepId = `Step${step.number}`;
+            if (step.errorCases?.length > 0) {
+              step.errorCases.forEach((ec, ecIdx) => {
+                const errorId = `Err${step.number}_${ecIdx}`;
+                const excName = escapeText(ec.exception || 'Error');
+                mermaid += `    ${errorId}{{"⚡ ${excName}"}}:::error\n`;
+              });
+            }
+          });
+          
+          mermaid += '    end\n\n';
+          
+          // Error connections (outside subgraph)
+          data.detailedSteps.forEach((step) => {
+            const stepId = `Step${step.number}`;
+            if (step.errorCases?.length > 0) {
+              step.errorCases.forEach((ec, ecIdx) => {
+                const errorId = `Err${step.number}_${ecIdx}`;
+                mermaid += `    ${stepId} -.->|"${language === 'de' ? 'Fehler' : 'Error'}"| ${errorId}\n`;
+                mermaid += `    ${errorId} --> ErrorEnd\n`;
+              });
+            }
+          });
+        }
         
         return mermaid;
       };
@@ -1334,17 +1667,10 @@
 
                 {/* Flowchart View (Mermaid) */}
                 {stepViewMode === 'flowchart' && (
-                  <div className="p-4">
-                    <div className="bg-gray-50 p-4 rounded-lg">
-                      <div className="text-center text-gray-500 mb-4">
-                        <Icon name="project-diagram" className="text-4xl mb-2" />
-                        <p>Flowchart-Darstellung</p>
-                      </div>
-                      <pre className="bg-gray-900 text-gray-100 p-4 rounded text-xs overflow-x-auto font-mono">
-                        {generateMermaidFlowchart()}
-                      </pre>
-                    </div>
-                  </div>
+                  <MermaidFlowchartView 
+                    mermaidCode={generateMermaidFlowchart()} 
+                    language={language}
+                  />
                 )}
               </div>
             )}
