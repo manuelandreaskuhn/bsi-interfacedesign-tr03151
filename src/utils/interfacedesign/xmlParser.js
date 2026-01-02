@@ -131,7 +131,7 @@ async function parseFunction(filePath) {
 
   const func = xml.function;
   
-  // Extract parameters
+  // Extract parameters with multilingual support
   let parameters = [];
   if (func.parameters && func.parameters.parameter) {
     const params = Array.isArray(func.parameters.parameter) 
@@ -140,7 +140,7 @@ async function parseFunction(filePath) {
     parameters = params.map(p => ({
       name: p.n || p.name || '',
       type: p.type || '',
-      description: p.description || '',
+      description: extractMultiLangText(p.description),
       direction: p.direction || 'INPUT',
       required: p.required === 'true' || p.required === true
     }));
@@ -167,13 +167,13 @@ async function parseFunction(filePath) {
     id: func.id || func.n || path.basename(filePath, '.xml'),
     name: func.n || func.name || '',
     category: func.category || 'Uncategorized',
-    description: func.description || '',
+    description: extractMultiLangText(func.description),
     parameters,
     parameterCount: parameters.length,
     returnValue: func.returnValue ? {
       type: func.returnValue.type || 'void',
-      description: func.returnValue.description || ''
-    } : { type: 'void', description: '' },
+      description: extractMultiLangText(func.returnValue.description)
+    } : { type: 'void', description: { _default: '' } },
     exceptions,
     exceptionCount: exceptions.length,
     stepCount,
@@ -193,7 +193,7 @@ async function parseFunctionDetail(filePath) {
 
   const func = xml.function;
   
-  // Extract parameters with full details
+  // Extract parameters with full details and multilingual support
   let parameters = [];
   if (func.parameters && func.parameters.parameter) {
     const params = Array.isArray(func.parameters.parameter) 
@@ -202,7 +202,7 @@ async function parseFunctionDetail(filePath) {
     parameters = params.map(p => ({
       name: p.n || p.name || '',
       type: p.type || '',
-      description: p.description || '',
+      description: extractMultiLangText(p.description),
       direction: p.direction || 'INPUT',
       required: p.required === 'true' || p.required === true,
       defaultValue: p.defaultValue || ''
@@ -217,7 +217,7 @@ async function parseFunctionDetail(filePath) {
       : [func.exceptions.exception];
   }
 
-  // Extract detailed steps with all information
+  // Extract detailed steps with all information and multilingual support
   let detailedSteps = [];
   if (func.detailedSteps && func.detailedSteps.step) {
     const steps = Array.isArray(func.detailedSteps.step) 
@@ -225,32 +225,45 @@ async function parseFunctionDetail(filePath) {
       : [func.detailedSteps.step];
     
     detailedSteps = steps.map(s => {
-      // Extract error cases
+      // Extract error cases with multilingual support
       let errorCases = [];
       if (s.errorCase) {
         const cases = Array.isArray(s.errorCase) ? s.errorCase : [s.errorCase];
         errorCases = cases.map(ec => ({
           exception: ec.exception || '',
-          trigger: ec.trigger || '',
-          action: ec.action || ''
+          trigger: extractMultiLangText(ec.trigger),
+          action: extractMultiLangText(ec.action)
         }));
       }
       
-      // Extract success cases
+      // Extract success cases with multilingual support
       let successCases = [];
       if (s.successCase) {
         const cases = Array.isArray(s.successCase) ? s.successCase : [s.successCase];
         successCases = cases.map(sc => ({
-          condition: sc.condition || '',
-          action: sc.action || ''
+          condition: extractMultiLangText(sc.condition),
+          action: extractMultiLangText(sc.action)
         }));
+      }
+      
+      // Support both new format (description with xml:lang) and old format (originalText/germanText)
+      let description = extractMultiLangText(s.description);
+      // Fallback to old format if new format is empty
+      if (!description._default && (s.originalText || s.germanText)) {
+        description = {
+          _default: s.germanText || s.originalText || '',
+          en: s.originalText || s.germanText || '',
+          de: s.germanText || s.originalText || ''
+        };
       }
       
       return {
         number: parseInt(s.number) || 0,
+        description: description,
+        pseudocode: extractMultiLangText(s.pseudocode),
+        // Keep old format fields for backwards compatibility
         originalText: s.originalText || '',
         germanText: s.germanText || '',
-        pseudocode: s.pseudocode || '',
         errorCases,
         successCases
       };
@@ -270,7 +283,7 @@ async function parseFunctionDetail(filePath) {
     });
   }
 
-  // Helper function to parse log fields
+  // Helper function to parse log fields with multilingual support
   const parseLogFields = (structure) => {
     if (!structure || !structure.field) return [];
     const fields = Array.isArray(structure.field) ? structure.field : [structure.field];
@@ -280,7 +293,7 @@ async function parseFunctionDetail(filePath) {
       tag: f.tag || '',
       required: f.required === 'true' || f.required === true,
       defaultValue: f.defaultValue || '',
-      description: f.description || '',
+      description: extractMultiLangText(f.description),
       note: f.note || '',
       origin: f.origin || ''
     }));
@@ -318,13 +331,13 @@ async function parseFunctionDetail(filePath) {
     id: func.id || func.n || path.basename(filePath, '.xml'),
     name: func.n || func.name || '',
     category: func.category || 'Uncategorized',
-    description: func.description || '',
+    description: extractMultiLangText(func.description),
     parameters,
     parameterCount: parameters.length,
     returnValue: func.returnValue ? {
       type: func.returnValue.type || 'void',
-      description: func.returnValue.description || ''
-    } : { type: 'void', description: '' },
+      description: extractMultiLangText(func.returnValue.description)
+    } : { type: 'void', description: { _default: '' } },
     exceptions,
     exceptionCount: exceptions.length,
     detailedSteps,

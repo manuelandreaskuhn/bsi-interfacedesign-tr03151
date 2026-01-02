@@ -430,13 +430,16 @@
     // Functions List Component
     // ============================================
 
-    const FunctionsView = ({ instance, onSelectItem }) => {
+    const FunctionsView = ({ instance, onSelectItem, language = 'de' }) => {
       const [data, setData] = useState(null);
       const [loading, setLoading] = useState(true);
       const [searchTerm, setSearchTerm] = useState('');
       const [expandedCategories, setExpandedCategories] = useState({});
       const [activeCategory, setActiveCategory] = useState(null);
       const categoryRefs = useRef({});
+
+      // Helper to get text in current language
+      const t = (obj) => getText(obj, language);
 
       useEffect(() => {
         loadFunctions();
@@ -478,16 +481,17 @@
 
         const filtered = {};
         Object.entries(data.grouped).forEach(([cat, items]) => {
-          const matchingItems = items.filter(item => 
-            item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            item.description?.toLowerCase().includes(searchTerm.toLowerCase())
-          );
+          const matchingItems = items.filter(item => {
+            const descText = getText(item.description, language);
+            return item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+              descText.toLowerCase().includes(searchTerm.toLowerCase());
+          });
           if (matchingItems.length > 0) {
             filtered[cat] = matchingItems;
           }
         });
         return filtered;
-      }, [data, searchTerm]);
+      }, [data, searchTerm, language]);
 
       // Scroll-Spy: Beobachte welche Kategorie gerade sichtbar ist
       useEffect(() => {
@@ -676,7 +680,7 @@
                                       </span>
                                     )}
                                   </div>
-                                  <p className="text-sm text-gray-600 mt-1 line-clamp-2">{func.description}</p>
+                                  <p className="text-sm text-gray-600 mt-1 line-clamp-2">{t(func.description)}</p>
                                   <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
                                     <span>
                                       <Icon name="sign-in-alt" className="mr-1" />
@@ -688,7 +692,7 @@
                                     </span>
                                     <span>
                                       <Icon name="list-ol" className="mr-1" />
-                                      {func.stepCount} Schritte
+                                      {func.stepCount} {language === 'de' ? 'Schritte' : 'Steps'}
                                     </span>
                                     <span>
                                       <Icon name="exclamation-circle" className="mr-1" />
@@ -716,7 +720,7 @@
     // Function Detail View Component
     // ============================================
 
-    const FunctionDetailView = ({ instance, functionId, onBack, onNavigateToType, onNavigateToEnum, onNavigateToException }) => {
+    const FunctionDetailView = ({ instance, functionId, onBack, onNavigateToType, onNavigateToEnum, onNavigateToException, language = 'de' }) => {
       const [data, setData] = useState(null);
       const [loading, setLoading] = useState(true);
       const [error, setError] = useState(null);
@@ -725,7 +729,9 @@
       const [availableExceptions, setAvailableExceptions] = useState([]);
       const [stepViewMode, setStepViewMode] = useState('cards'); // 'cards', 'timeline', 'pseudocode', 'flowchart'
       const [expandedSteps, setExpandedSteps] = useState({});
-      const [showOriginalText, setShowOriginalText] = useState(false);
+
+      // Helper to get text in current language
+      const t = (obj) => getText(obj, language);
 
       useEffect(() => {
         loadFunction();
@@ -867,22 +873,23 @@
           const stepId = `Step${step.number}`;
           const nextStepId = idx < data.detailedSteps.length - 1 ? `Step${data.detailedSteps[idx + 1].number}` : 'End';
           
-          // Truncate text for display
-          const shortText = (step.germanText || '').substring(0, 40) + (step.germanText?.length > 40 ? '...' : '');
+          // Truncate text for display - use multilingual description
+          const stepText = getText(step.description, language) || step.germanText || step.originalText || '';
+          const shortText = stepText.substring(0, 40) + (stepText.length > 40 ? '...' : '');
           mermaid += `    ${stepId}["${step.number}. ${shortText.replace(/"/g, "'")}"]\n`;
           
           // Add error cases as branches
           if (step.errorCases?.length > 0) {
             step.errorCases.forEach((ec, ecIdx) => {
               const errorId = `Error${step.number}_${ecIdx}`;
-              mermaid += `    ${stepId} -->|Fehler| ${errorId}[/${ec.exception}/]\n`;
-              mermaid += `    ${errorId} --> EndError([Ende mit Fehler])\n`;
+              mermaid += `    ${stepId} -->|${language === 'de' ? 'Fehler' : 'Error'}| ${errorId}[/${ec.exception}/]\n`;
+              mermaid += `    ${errorId} --> EndError([${language === 'de' ? 'Ende mit Fehler' : 'End with Error'}])\n`;
             });
           }
           
           // Success path
           if (step.successCases?.length > 0 || idx === data.detailedSteps.length - 1) {
-            mermaid += `    ${stepId} -->|OK| ${nextStepId === 'End' ? 'End([Ende])' : nextStepId}\n`;
+            mermaid += `    ${stepId} -->|OK| ${nextStepId === 'End' ? `End([${language === 'de' ? 'Ende' : 'End'}])` : nextStepId}\n`;
           } else if (idx < data.detailedSteps.length - 1) {
             mermaid += `    ${stepId} --> ${nextStepId}\n`;
           }
@@ -968,9 +975,9 @@
               <div className="p-6">
                 <h2 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
                   <Icon name="info-circle" className="mr-2 text-blue-500" />
-                  Beschreibung
+                  {language === 'de' ? 'Beschreibung' : 'Description'}
                 </h2>
-                <p className="text-gray-700 leading-relaxed">{data.description || 'Keine Beschreibung verfügbar.'}</p>
+                <p className="text-gray-700 leading-relaxed">{t(data.description) || (language === 'de' ? 'Keine Beschreibung verfügbar.' : 'No description available.')}</p>
               </div>
             </div>
 
@@ -1040,7 +1047,7 @@
                             </span>
                           </td>
                           <td className="px-4 py-3 text-sm text-gray-600 max-w-md">
-                            {param.description || '-'}
+                            {t(param.description) || '-'}
                           </td>
                           <td className="px-4 py-3">
                             {param.required ? (
@@ -1062,12 +1069,12 @@
               <div className="bg-white rounded-lg shadow p-5 mb-6">
                 <h3 className="font-semibold text-gray-800 mb-3 flex items-center">
                   <Icon name="sign-out-alt" className="mr-2 text-green-500" />
-                  Rückgabewert
+                  {language === 'de' ? 'Rückgabewert' : 'Return Value'}
                 </h3>
                 <div className="flex items-center gap-4">
                   {renderTypeReference(data.returnValue.type)}
-                  {data.returnValue.description && (
-                    <span className="text-gray-600 text-sm">– {data.returnValue.description}</span>
+                  {t(data.returnValue.description) && (
+                    <span className="text-gray-600 text-sm">– {t(data.returnValue.description)}</span>
                   )}
                 </div>
               </div>
@@ -1079,7 +1086,7 @@
                 <div className="p-4 bg-gray-50 border-b">
                   <h3 className="font-semibold text-gray-800 flex items-center">
                     <Icon name="exclamation-triangle" className="mr-2 text-red-500" />
-                    Mögliche Exceptions
+                    {language === 'de' ? 'Mögliche Exceptions' : 'Possible Exceptions'}
                     <span className="ml-2 px-2 py-0.5 bg-red-100 text-red-700 text-xs rounded-full">
                       {data.exceptions.length}
                     </span>
@@ -1149,25 +1156,14 @@
                           <Icon name="project-diagram" />
                         </button>
                       </div>
-                      
-                      {/* Language Toggle */}
-                      <button
-                        onClick={() => setShowOriginalText(!showOriginalText)}
-                        className={`px-3 py-1 rounded text-sm border transition-colors ${
-                          showOriginalText ? 'bg-blue-50 border-blue-300 text-blue-700' : 'border-gray-300 text-gray-600 hover:bg-gray-50'
-                        }`}
-                        title={showOriginalText ? 'Deutsche Texte anzeigen' : 'Originaltexte anzeigen'}
-                      >
-                        {showOriginalText ? 'EN' : 'DE'}
-                      </button>
 
                       {/* Expand/Collapse */}
                       {stepViewMode === 'cards' && (
                         <div className="flex gap-1">
-                          <button onClick={expandAllSteps} className="px-2 py-1 text-xs text-gray-500 hover:text-gray-700" title="Alle aufklappen">
+                          <button onClick={expandAllSteps} className="px-2 py-1 text-xs text-gray-500 hover:text-gray-700" title={language === 'de' ? 'Alle aufklappen' : 'Expand all'}>
                             <Icon name="expand-arrows-alt" />
                           </button>
-                          <button onClick={collapseAllSteps} className="px-2 py-1 text-xs text-gray-500 hover:text-gray-700" title="Alle zuklappen">
+                          <button onClick={collapseAllSteps} className="px-2 py-1 text-xs text-gray-500 hover:text-gray-700" title={language === 'de' ? 'Alle zuklappen' : 'Collapse all'}>
                             <Icon name="compress-arrows-alt" />
                           </button>
                         </div>
@@ -1179,7 +1175,12 @@
                 {/* Cards View */}
                 {stepViewMode === 'cards' && (
                   <div className="p-4 space-y-3">
-                    {data.detailedSteps.map((step, idx) => (
+                    {data.detailedSteps.map((step, idx) => {
+                      // Get step description text - support new multilingual format and old format
+                      const stepDescText = t(step.description) || (language === 'en' ? step.originalText : step.germanText) || '';
+                      const pseudocodeText = t(step.pseudocode) || (typeof step.pseudocode === 'string' ? step.pseudocode : '');
+                      
+                      return (
                       <div key={step.number} className="border rounded-lg overflow-hidden">
                         <div 
                           className="p-3 bg-gray-50 cursor-pointer flex items-center justify-between hover:bg-gray-100 transition-colors"
@@ -1190,19 +1191,19 @@
                               {step.number}
                             </span>
                             <span className="font-medium text-gray-800">
-                              {(showOriginalText ? step.originalText : step.germanText)?.substring(0, 80)}
-                              {((showOriginalText ? step.originalText : step.germanText)?.length || 0) > 80 ? '...' : ''}
+                              {stepDescText.substring(0, 80)}
+                              {stepDescText.length > 80 ? '...' : ''}
                             </span>
                           </div>
                           <div className="flex items-center gap-2">
                             {step.errorCases?.length > 0 && (
                               <span className="px-2 py-0.5 bg-red-100 text-red-700 text-xs rounded">
-                                {step.errorCases.length} Fehler
+                                {step.errorCases.length} {language === 'de' ? 'Fehler' : 'Errors'}
                               </span>
                             )}
                             {step.successCases?.length > 0 && (
                               <span className="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded">
-                                Erfolg
+                                {language === 'de' ? 'Erfolg' : 'Success'}
                               </span>
                             )}
                             <Icon name={expandedSteps[step.number] ? 'chevron-up' : 'chevron-down'} className="text-gray-400" />
@@ -1212,14 +1213,14 @@
                         {expandedSteps[step.number] && (
                           <div className="p-4 border-t bg-white">
                             <p className="text-gray-700 mb-4">
-                              {showOriginalText ? step.originalText : step.germanText}
+                              {stepDescText}
                             </p>
                             
-                            {step.pseudocode && (
+                            {pseudocodeText && (
                               <div className="mb-4">
                                 <h5 className="text-xs font-semibold text-gray-500 uppercase mb-2">Pseudocode</h5>
                                 <pre className="bg-gray-900 text-gray-100 p-3 rounded text-sm overflow-x-auto font-mono">
-                                  {step.pseudocode}
+                                  {pseudocodeText}
                                 </pre>
                               </div>
                             )}
@@ -1228,7 +1229,7 @@
                               <div className="mb-4">
                                 <h5 className="text-xs font-semibold text-red-600 uppercase mb-2 flex items-center">
                                   <Icon name="times-circle" className="mr-1" />
-                                  Fehlerfälle
+                                  {language === 'de' ? 'Fehlerfälle' : 'Error Cases'}
                                 </h5>
                                 <div className="space-y-2">
                                   {step.errorCases.map((ec, ecIdx) => (
@@ -1236,8 +1237,8 @@
                                       <div className="flex items-center gap-2 mb-1">
                                         {renderExceptionReference(ec.exception)}
                                       </div>
-                                      <p className="text-sm text-red-700"><strong>Auslöser:</strong> {ec.trigger}</p>
-                                      {ec.action && <p className="text-sm text-red-600"><strong>Aktion:</strong> {ec.action}</p>}
+                                      <p className="text-sm text-red-700"><strong>{language === 'de' ? 'Auslöser' : 'Trigger'}:</strong> {t(ec.trigger)}</p>
+                                      {t(ec.action) && <p className="text-sm text-red-600"><strong>{language === 'de' ? 'Aktion' : 'Action'}:</strong> {t(ec.action)}</p>}
                                     </div>
                                   ))}
                                 </div>
@@ -1248,13 +1249,13 @@
                               <div>
                                 <h5 className="text-xs font-semibold text-green-600 uppercase mb-2 flex items-center">
                                   <Icon name="check-circle" className="mr-1" />
-                                  Erfolgsfälle
+                                  {language === 'de' ? 'Erfolgsfälle' : 'Success Cases'}
                                 </h5>
                                 <div className="space-y-2">
                                   {step.successCases.map((sc, scIdx) => (
                                     <div key={scIdx} className="p-3 bg-green-50 rounded border-l-4 border-green-400">
-                                      <p className="text-sm text-green-700"><strong>Bedingung:</strong> {sc.condition}</p>
-                                      {sc.action && <p className="text-sm text-green-600"><strong>Aktion:</strong> {sc.action}</p>}
+                                      <p className="text-sm text-green-700"><strong>{language === 'de' ? 'Bedingung' : 'Condition'}:</strong> {t(sc.condition)}</p>
+                                      {t(sc.action) && <p className="text-sm text-green-600"><strong>{language === 'de' ? 'Aktion' : 'Action'}:</strong> {t(sc.action)}</p>}
                                     </div>
                                   ))}
                                 </div>
@@ -1263,7 +1264,7 @@
                           </div>
                         )}
                       </div>
-                    ))}
+                    )})}
                   </div>
                 )}
 
@@ -1271,7 +1272,9 @@
                 {stepViewMode === 'timeline' && (
                   <div className="p-4">
                     <div className="relative">
-                      {data.detailedSteps.map((step, idx) => (
+                      {data.detailedSteps.map((step, idx) => {
+                        const stepText = t(step.description) || (language === 'en' ? step.originalText : step.germanText) || '';
+                        return (
                         <div key={step.number} className="flex gap-4 mb-6 last:mb-0">
                           <div className="flex flex-col items-center">
                             <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold ${
@@ -1287,7 +1290,7 @@
                           </div>
                           <div className="flex-1 pb-6">
                             <p className="text-gray-800 font-medium mb-2">
-                              {showOriginalText ? step.originalText : step.germanText}
+                              {stepText}
                             </p>
                             {step.errorCases?.length > 0 && (
                               <div className="flex flex-wrap gap-1 mt-2">
@@ -1298,7 +1301,7 @@
                             )}
                           </div>
                         </div>
-                      ))}
+                      )})}
                     </div>
                   </div>
                 )}
@@ -1309,17 +1312,20 @@
                     <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg text-sm overflow-x-auto font-mono">
                       <code>
                         <span className="text-purple-400">function</span> <span className="text-yellow-300">{data.name}</span>({data.parameters?.map(p => p.name).join(', ')}) {'{\n'}
-                        {data.detailedSteps.map(step => (
+                        {data.detailedSteps.map(step => {
+                          const pseudoText = t(step.pseudocode) || (typeof step.pseudocode === 'string' ? step.pseudocode : '');
+                          const descText = t(step.description) || (language === 'en' ? step.originalText : step.germanText) || '';
+                          return (
                           <span key={step.number}>
-                            {`\n  `}<span className="text-gray-500">// Schritt {step.number}</span>{'\n'}
-                            {step.pseudocode ? 
-                              step.pseudocode.split('\n').map((line, i) => (
+                            {`\n  `}<span className="text-gray-500">// {language === 'de' ? 'Schritt' : 'Step'} {step.number}</span>{'\n'}
+                            {pseudoText ? 
+                              pseudoText.split('\n').map((line, i) => (
                                 <span key={i}>{`  ${line}\n`}</span>
                               )) : 
-                              `  // ${(showOriginalText ? step.originalText : step.germanText)?.substring(0, 60)}...\n`
+                              `  // ${descText.substring(0, 60)}...\n`
                             }
                           </span>
-                        ))}
+                        )})}
                         {'\n}'}
                       </code>
                     </pre>
@@ -1400,6 +1406,7 @@
                 functionName={data.name}
                 onNavigateToType={onNavigateToType}
                 availableTypes={availableTypes}
+                language={language}
               />
             )}
           </div>
@@ -1411,11 +1418,14 @@
     // Logging Section Component
     // ============================================
     
-    const LoggingSection = ({ systemLog, transactionLog, functionName, onNavigateToType, availableTypes }) => {
+    const LoggingSection = ({ systemLog, transactionLog, functionName, onNavigateToType, availableTypes, language = 'de' }) => {
       const [activeLogTab, setActiveLogTab] = useState(transactionLog ? 'transaction' : 'system');
       const [logViewMode, setLogViewMode] = useState('overview'); // 'overview', 'asn1', 'fields', 'diagram'
       
       const activeLog = activeLogTab === 'transaction' ? transactionLog : systemLog;
+
+      // Helper to get text in current language
+      const t = (obj) => getText(obj, language);
       
       // Get origin badge color
       const getOriginColor = (origin) => {
@@ -1693,7 +1703,7 @@
                         )}
                       </td>
                       <td className="px-4 py-3 text-sm text-gray-600 max-w-xs">
-                        {field.description || '-'}
+                        {t(field.description) || '-'}
                       </td>
                       <td className="px-4 py-3">
                         <span className={`px-2 py-0.5 rounded text-xs ${getOriginColor(field.origin)}`}>
@@ -2196,10 +2206,10 @@
                             {renderTypeReference(field.type)}
                           </td>
                           <td className="px-4 py-3 text-sm text-gray-600 max-w-md">
-                            {field.description || '-'}
+                            {t(field.description) || '-'}
                             {field.defaultValue && (
                               <p className="text-gray-400 text-xs mt-1">
-                                Standard: <code>{field.defaultValue}</code>
+                                {language === 'de' ? 'Standard' : 'Default'}: <code>{field.defaultValue}</code>
                               </p>
                             )}
                           </td>
@@ -2211,7 +2221,7 @@
                             ) : (
                               <span className="px-2 py-0.5 bg-green-100 text-green-700 rounded text-xs">
                                 <Icon name="check" className="mr-1" />
-                                Pflicht
+                                {language === 'de' ? 'Pflicht' : 'Required'}
                               </span>
                             )}
                           </td>
@@ -3736,7 +3746,7 @@
           case 'overview':
             return <OverviewView overview={overview} onNavigate={handleViewChange} />;
           case 'functions':
-            return <FunctionsView instance={instance} onSelectItem={handleSelectItem} />;
+            return <FunctionsView instance={instance} onSelectItem={handleSelectItem} language={language} />;
           case 'function-detail':
             return (
               <FunctionDetailView 
@@ -3746,6 +3756,7 @@
                 onNavigateToType={handleNavigateToType}
                 onNavigateToEnum={handleNavigateToEnum}
                 onNavigateToException={handleNavigateToException}
+                language={language}
               />
             );
           case 'types':
