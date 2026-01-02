@@ -34,78 +34,6 @@
   <thrownBy>
     <function>registerClient</function>
   </thrownBy>
-  <triggerConditions>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Device resource exhaustion prevents registration</text>
-        <text xml:lang="de">Ressourcenerschöpfung des Geräts verhindert die Registrierung</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The device lacks sufficient resources (memory, storage, etc.) to register the new client</text>
-        <text xml:lang="de">Das Gerät verfügt nicht über ausreichende Ressourcen (Speicher, Speicher usw.) zum Registrieren des neuen Clients</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">A registerClient call is made when the device is low on memory or storage. The device cannot allocate resources for the new client registration. ErrorRegisterClientFailed is raised.</text>
-        <text xml:lang="de">Ein registerClient-Aufruf erfolgt, wenn das Gerät wenig Speicher oder Speicher hat. Das Gerät kann Ressourcen für die neue Clientregistrierung nicht zuweisen. ErrorRegisterClientFailed wird ausgelöst.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Maximum client capacity reached</text>
-        <text xml:lang="de">Maximale Clientkapazität erreicht</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The device has reached its maximum number of registered clients</text>
-        <text xml:lang="de">Das Gerät hat seine maximale Anzahl registrierter Clients erreicht</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">A registerClient call is made when the device already has the maximum number of registered clients. The device cannot register additional clients until some clients are deregistered. ErrorRegisterClientFailed is raised.</text>
-        <text xml:lang="de">Ein registerClient-Aufruf erfolgt, wenn das Gerät bereits die maximale Anzahl registrierter Clients hat. Das Gerät kann keine zusätzlichen Clients registrieren, bis einige Clients abgemeldet werden. ErrorRegisterClientFailed wird ausgelöst.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Client ID already registered</text>
-        <text xml:lang="de">Client-ID bereits registriert</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The specified client ID is already registered on the device</text>
-        <text xml:lang="de">Die angegebene Client-ID ist bereits auf dem Gerät registriert</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">A registerClient call is made with a client ID that is already registered. The device rejects duplicate client registration. ErrorRegisterClientFailed is raised.</text>
-        <text xml:lang="de">Ein registerClient-Aufruf erfolgt mit einer Client-ID, die bereits registriert ist. Das Gerät lehnt die doppelte Clientregistrierung ab. ErrorRegisterClientFailed wird ausgelöst.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Device communication failure during registration</text>
-        <text xml:lang="de">Gerätekommunikationsfehler während der Registrierung</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">Communication with the Secure Element is lost during the registration operation</text>
-        <text xml:lang="de">Die Kommunikation mit dem Secure Element wird während der Registrierungsoperation unterbrochen</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">A registerClient call begins but communication with the device is lost before the registration completes. The device cannot confirm registration completion. ErrorRegisterClientFailed is raised.</text>
-        <text xml:lang="de">Ein registerClient-Aufruf beginnt, aber die Kommunikation mit dem Gerät wird unterbrochen, bevor die Registrierung abgeschlossen ist. Das Gerät kann die Registrierung nicht bestätigen. ErrorRegisterClientFailed wird ausgelöst.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Device internal error during registration</text>
-        <text xml:lang="de">Interner Gerätefehler während der Registrierung</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The Secure Element reports an internal error during client registration</text>
-        <text xml:lang="de">Das Secure Element meldet einen internen Fehler während der Clientregistrierung</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">A registerClient call is transmitted to the device but the device encounters an internal error while processing the registration (e.g., storage write failure, verification error). The device reports the failure and ErrorRegisterClientFailed is raised.</text>
-        <text xml:lang="de">Ein registerClient-Aufruf wird an das Gerät übertragen, aber das Gerät stößt auf einen internen Fehler bei der Verarbeitung der Registrierung (z. B. Speicherschreibfehler, Überprüfungsfehler). Das Gerät meldet den Fehler und ErrorRegisterClientFailed wird ausgelöst.</text>
-      </trigger>
-    </condition>
-  </triggerConditions>
   <executionSequence>
     <step number="1">
       <text xml:lang="en">User/application calls registerClient function with client ID and other client parameters</text>
@@ -245,52 +173,6 @@
       <text xml:lang="de">Themen: Clientverwaltung, Registrierung, Client-Lebenszyklus, Registry-Operationen</text>
     </note>
   </notes>
-  <usage>
-    <scenario name="Scenario 1: Client Registration with Capacity Check">
-      <description>
-        <text xml:lang="en">An application attempts to register a new client by calling registerClient. The function raises ErrorRegisterClientFailed because the device has reached its maximum client capacity. The application queries the device to check capacity, deregisters an unused client, and retries the registration.</text>
-        <text xml:lang="de">Eine Anwendung versucht, einen neuen Client durch Aufrufen von registerClient zu registrieren. Die Funktion wirft ErrorRegisterClientFailed auf, da das Gerät seine maximale Client-Kapazität erreicht hat. Die Anwendung fragt das Gerät ab, um die Kapazität zu überprüfen, meldet einen ungenutzten Client ab und versucht die Registrierung erneut.</text>
-      </description>
-      <relatedFunctions>registerClient, deregisterClient, getRegisteredClients</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Client registration fails due to device capacity limit</text>
-        <text xml:lang="de">Clientregistrierung schlägt fehl aufgrund des Gerätekapazitätslimits</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 2: Duplicate Client Registration Prevention">
-      <description>
-        <text xml:lang="en">An application attempts to register a client with an ID that is already registered. The registerClient function raises ErrorRegisterClientFailed with a message indicating the client ID is already registered. The application handles this by either reusing the existing registration or choosing a different client ID.</text>
-        <text xml:lang="de">Eine Anwendung versucht, einen Client mit einer ID zu registrieren, die bereits registriert ist. Die registerClient-Funktion wirft ErrorRegisterClientFailed mit einer Nachricht auf, die angibt, dass die Client-ID bereits registriert ist. Die Anwendung handhabt dies, indem sie entweder die vorhandene Registrierung wiederverwenden oder eine andere Client-ID wählt.</text>
-      </description>
-      <relatedFunctions>registerClient, getRegisteredClients</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Client registration fails due to duplicate client ID</text>
-        <text xml:lang="de">Clientregistrierung schlägt fehl aufgrund doppelter Client-ID</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 3: Device Resource Management with Registration Retry">
-      <description>
-        <text xml:lang="en">An application batch registers multiple clients on a device with limited resources. When ErrorRegisterClientFailed is raised due to resource exhaustion, the application implements a backoff strategy, waits for device resources to be freed, and retries the registration.</text>
-        <text xml:lang="de">Eine Anwendung registriert mehrere Clients stapelweise auf einem Gerät mit begrenzten Ressourcen. Wenn ErrorRegisterClientFailed aufgrund von Ressourcenerschöpfung ausgelöst wird, implementiert die Anwendung eine Backoff-Strategie, wartet, bis Geräteressourcen freigegeben werden, und versucht die Registrierung erneut.</text>
-      </description>
-      <relatedFunctions>registerClient, deregisterClient</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Client registration fails due to insufficient device resources</text>
-        <text xml:lang="de">Clientregistrierung schlägt fehl aufgrund unzureichender Geräteressourcen</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 4: Multi-Device Client Management with Failover">
-      <description>
-        <text xml:lang="en">An enterprise system manages clients across multiple Secure Element devices. When client registration fails on one device, the system detects the failure and attempts to register the client on an alternate device with available capacity.</text>
-        <text xml:lang="de">Ein Unternehmenssystem verwaltet Clients auf mehreren Secure Element-Geräten. Wenn die Clientregistrierung auf einem Gerät fehlschlägt, erkennt das System den Fehler und versucht, den Client auf einem alternativen Gerät mit verfügbarer Kapazität zu registrieren.</text>
-      </description>
-      <relatedFunctions>registerClient, getRegisteredClients</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Registration failure triggers load balancing or failover to alternate device</text>
-        <text xml:lang="de">Registrierungsfehler löst Lastenausgleich oder Failover zu anderem Gerät aus</text>
-      </errorContext>
-    </scenario>
-  </usage>
   <implementationContext>
     <note>
       <text xml:lang="en">Raised by registerClient when client registration operation fails</text>

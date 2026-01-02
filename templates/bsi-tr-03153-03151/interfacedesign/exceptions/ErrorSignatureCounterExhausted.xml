@@ -51,78 +51,6 @@
     </applicability>
     <reference>Transaction Operations (3.3.2), Logging Operations (3.3.3), Signature Counter Management</reference>
   </specification>
-  <triggerConditions>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Signature counter memory write endurance limit reached</text>
-        <text xml:lang="de">Schreibausdauergrenze des Signaturzählerspeichers erreicht</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The physical memory backing signature counter has exceeded safe write endurance limits</text>
-        <text xml:lang="de">Der physikalische Speicher, der den Signaturzähler unterstützt, hat sichere Schreibausdauergrenzen überschritten</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">A startTransaction call is made but the device detects the signature counter memory has exceeded its safe operational write limit. ErrorSignatureCounterExhausted is raised to prevent unsafe counter operations.</text>
-        <text xml:lang="de">Ein startTransaction-Aufruf wird getätigt, aber das Gerät erkennt, dass der Signaturzählerspeicher seine sichere Betriebsschreibgrenze überschritten hat. ErrorSignatureCounterExhausted wird ausgelöst, um unsichere Zähleroperationen zu verhindern.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Signature counter storage approaching exhaustion</text>
-        <text xml:lang="de">Signaturzählerspeicher nähert sich der Erschöpfung</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The device detects signature counter memory is approaching exhaustion</text>
-        <text xml:lang="de">Das Gerät erkennt, dass der Signaturzählerspeicher sich der Erschöpfung nähert</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">An updateTransaction call is made but the device monitors that signature counter memory is critically low. The device raises ErrorSignatureCounterExhausted as a preventive measure before complete exhaustion.</text>
-        <text xml:lang="de">Ein updateTransaction-Aufruf wird getätigt, aber das Gerät überwacht, dass der Signaturzählerspeicher kritisch niedrig ist. Das Gerät löst ErrorSignatureCounterExhausted als Präventivmaßnahme vor vollständiger Erschöpfung aus.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Excessive transaction volume over device lifetime</text>
-        <text xml:lang="de">Excessives Transaktionsvolumen über Gerätelebensdauer</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The device has processed so many transactions that the signature counter memory is exhausted</text>
-        <text xml:lang="de">Das Gerät hat so viele Transaktionen verarbeitet, dass der Signaturzählerspeicher erschöpft ist</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">A finishTransaction call is made after the device has processed many millions of transactions. The signature counter memory is exhausted and cannot reliably record additional transactions. ErrorSignatureCounterExhausted is raised.</text>
-        <text xml:lang="de">Ein finishTransaction-Aufruf wird getätigt, nachdem das Gerät Millionen von Transaktionen verarbeitet hat. Der Signaturzählerspeicher ist erschöpft und kann zusätzliche Transaktionen nicht zuverlässig aufzeichnen. ErrorSignatureCounterExhausted wird ausgelöst.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Device reaching end-of-life due to signature counter exhaustion</text>
-        <text xml:lang="de">Gerät erreicht End-of-Life aufgrund von Signaturzähler-Erschöpfung</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The device lifecycle is ending because the signature counter storage has reached exhaustion</text>
-        <text xml:lang="de">Der Gerätelebenszyklus endet, da der Signaturzählerspeicher die Erschöpfung erreicht hat</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">Any operation requiring signature counter increment detects the memory is exhausted. The device is at end-of-life and must be decommissioned or replaced.</text>
-        <text xml:lang="de">Jede Operation, die einen Signaturzähler-Inkrement erfordert, erkennt, dass der Speicher erschöpft ist. Das Gerät ist am Ende seiner Lebensdauer und muss außer Betrieb genommen oder ersetzt werden.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Signature counter configuration error causing premature exhaustion</text>
-        <text xml:lang="de">Fehler in der Signaturzähler-Konfiguration verursacht vorzeitige Erschöpfung</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">Device configuration causes signature counter to be written excessively, exhausting memory prematurely</text>
-        <text xml:lang="de">Gerätekonfiguration führt zu exzessiven Schreibvorgängen des Signaturzählers und erschöpft den Speicher vorzeitig</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">A configureLogging call attempts to enable excessive signature counter writes. The device detects memory exhaustion and raises ErrorSignatureCounterExhausted.</text>
-        <text xml:lang="de">Ein configureLogging-Aufruf versucht, exzessive Signaturzähler-Schreibvorgänge zu aktivieren. Das Gerät erkennt die Speichererschöpfung und löst ErrorSignatureCounterExhausted aus.</text>
-      </trigger>
-    </condition>
-  </triggerConditions>
   <executionSequence>
     <step number="1">
       <text xml:lang="en">User/application calls transaction operation that requires signature counter increment (e.g., startTransaction)</text>
@@ -253,52 +181,6 @@
       <text xml:lang="de">Themen: Signaturoperationen, Zählerverwaltung, Ressourcengrenzen, Signierungskapazität</text>
     </note>
   </notes>
-  <usage>
-    <scenario name="Scenario 1: Production Device Reaching End-of-Life">
-      <description>
-        <text xml:lang="en">A production device has been in operation for several years and processed millions of transactions. A startTransaction call receives ErrorSignatureCounterExhausted. The device is at end-of-life. All transaction logs are exported, and a replacement device is provisioned.</text>
-        <text xml:lang="de">Ein Produktionsgerät war mehrere Jahre lang in Betrieb und hat Millionen von Transaktionen verarbeitet. Ein startTransaction-Aufruf empfängt ErrorSignatureCounterExhausted. Das Gerät ist am Ende seiner Lebensdauer. Alle Transaktionsprotokolle werden exportiert und ein Austauschgerät wird bereitgestellt.</text>
-      </description>
-      <relatedFunctions>startTransaction, exportLogMessages, getDescription</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Device end-of-life detected due to signature counter exhaustion</text>
-        <text xml:lang="de">Gerät-End-of-Life erkannt aufgrund von Signaturzähler-Erschöpfung</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 2: Early Warning of Counter Exhaustion">
-      <description>
-        <text xml:lang="en">A monitoring system regularly queries device status and detects signature counter memory is approaching exhaustion. Before ErrorSignatureCounterExhausted occurs, the system alerts administrators to plan device replacement proactively.</text>
-        <text xml:lang="de">Ein Monitoringsystem fragt regelmäßig den Gerätestatus ab und erkennt, dass der Signaturzählerspeicher sich der Erschöpfung nähert. Bevor ErrorSignatureCounterExhausted auftritt, warnt das System Administratoren, um proaktiv die Geräteersetzung zu planen.</text>
-      </description>
-      <relatedFunctions>getDescription, getDeviceInfo</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Proactive monitoring detects imminent signature counter exhaustion</text>
-        <text xml:lang="de">Proaktives Monitoring erkennt bevorstehende Signaturzähler-Erschöpfung</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 3: Signature Counter Exhaustion During Peak Transaction Load">
-      <description>
-        <text xml:lang="en">During peak business hours, a finishTransaction call receives ErrorSignatureCounterExhausted. The system immediately alerts operations that the production device cannot accept new transactions. A pre-staged replacement device is activated.</text>
-        <text xml:lang="de">Während der Spitzenlastzeiten empfängt ein finishTransaction-Aufruf ErrorSignatureCounterExhausted. Das System warnt sofort den Betrieb, dass das Produktionsgerät keine neuen Transaktionen akzeptieren kann. Ein bereitgestelltes Austauschgerät wird aktiviert.</text>
-      </description>
-      <relatedFunctions>finishTransaction, startTransaction</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Production service disrupted by signature counter exhaustion during peak load</text>
-        <text xml:lang="de">Produktionsdienst unterbrochen durch Signaturzähler-Erschöpfung während Spitzenlast</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 4: Device Lifecycle Planning Based on Counter Status">
-      <description>
-        <text xml:lang="en">Capacity planning tools monitor signature counter usage trends across a fleet of devices. They predict which devices will exhaust their signature counters in the coming months and schedule replacement accordingly.</text>
-        <text xml:lang="de">Kapazitätsplanungstools überwachen Signaturzählernutzungstrends über eine Flotte von Geräten hinweg. Sie prognostizieren, welche Geräte ihre Signaturzähler in den kommenden Monaten erschöpfen werden, und planen den Austausch entsprechend.</text>
-      </description>
-      <relatedFunctions>getDescription, startTransaction</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Fleet-wide device lifecycle planning based on signature counter exhaustion predictions</text>
-        <text xml:lang="de">Flottenweite Gerätelebenszyklus-Planung basierend auf Signaturzähler-Erschöpfungsprognosen</text>
-      </errorContext>
-    </scenario>
-  </usage>
   <implementationContext>
     <note>
       <text xml:lang="en">Raised by logging functions when signature counter reaches maximum</text>

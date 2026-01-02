@@ -51,78 +51,6 @@
     </applicability>
     <reference>Transaction Operations (3.3.2), Logging Operations (3.3.3), Audit Trail Management</reference>
   </specification>
-  <triggerConditions>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Device storage write error during log storage</text>
-        <text xml:lang="de">Gerätespeicher-Schreibfehler während der Log-Speicherung</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The device storage system fails to write the log message</text>
-        <text xml:lang="de">Das Gerätespeichersystem kann die Log-Message nicht schreiben</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">A finishTransaction call creates log message and attempts to store it but the storage write operation fails (I/O error, hardware failure). ErrorStoringLogMessageFailed is raised.</text>
-        <text xml:lang="de">Ein finishTransaction-Aufruf erstellt eine Log-Message und versucht, diese zu speichern, aber die Speicherschreiboperation schlägt fehl (I/O-Fehler, Hardwarefehler). ErrorStoringLogMessageFailed wird ausgelöst.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Insufficient storage capacity for log message</text>
-        <text xml:lang="de">Unzureichende Speicherkapazität für Log-Message</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">Storage capacity is full or insufficient for the log message</text>
-        <text xml:lang="de">Die Speicherkapazität ist voll oder unzureichend für die Log-Message</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">A startTransaction call creates log message but storage is full. The message cannot be stored and ErrorStoringLogMessageFailed is raised.</text>
-        <text xml:lang="de">Ein startTransaction-Aufruf erstellt eine Log-Message, aber der Speicher ist voll. Die Nachricht kann nicht gespeichert werden und ErrorStoringLogMessageFailed wird ausgelöst.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Storage medium disconnected or unavailable</text>
-        <text xml:lang="de">Speichermedium getrennt oder nicht verfügbar</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The storage medium becomes disconnected or unavailable during write</text>
-        <text xml:lang="de">Das Speichermedium wird während des Schreibens getrennt oder nicht verfügbar</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">An updateTransaction call attempts to store log message but storage becomes unreachable. ErrorStoringLogMessageFailed is raised.</text>
-        <text xml:lang="de">Ein updateTransaction-Aufruf versucht, eine Log-Message zu speichern, aber der Speicher wird nicht erreichbar. ErrorStoringLogMessageFailed wird ausgelöst.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Communication failure during log storage</text>
-        <text xml:lang="de">Kommunikationsfehler während der Log-Speicherung</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">Communication with storage fails during the write operation</text>
-        <text xml:lang="de">Die Kommunikation mit dem Speicher schlägt während der Schreiboperation fehl</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">A finishTransaction call transmits log message to storage but communication is interrupted before write completes. ErrorStoringLogMessageFailed is raised.</text>
-        <text xml:lang="de">Ein finishTransaction-Aufruf überträgt Log-Message zum Speicher, aber die Kommunikation wird unterbrochen, bevor das Schreiben abgeschlossen ist. ErrorStoringLogMessageFailed wird ausgelöst.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Storage corruption or write verification failure</text>
-        <text xml:lang="de">Speicherbeschädigung oder Schreibverifikationsfehler</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">Storage corruption is detected or write verification fails</text>
-        <text xml:lang="de">Speicherbeschädigung wird erkannt oder Schreibverifikation schlägt fehl</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">An updateTransaction call writes log message but post-write verification fails or corruption is detected. ErrorStoringLogMessageFailed is raised.</text>
-        <text xml:lang="de">Ein updateTransaction-Aufruf schreibt Log-Message, aber die Nachschreib-Verifikation schlägt fehl oder Beschädigung wird erkannt. ErrorStoringLogMessageFailed wird ausgelöst.</text>
-      </trigger>
-    </condition>
-  </triggerConditions>
   <executionSequence>
     <step number="1">
       <text xml:lang="en">User/application calls a transaction operation that creates log messages (e.g., finishTransaction)</text>
@@ -257,52 +185,6 @@
       <text xml:lang="de">Themen: Protokollierungsoperationen, Speicheroperationen, Datenbeständigkeit, Log-Verwaltung</text>
     </note>
   </notes>
-  <usage>
-    <scenario name="Scenario 1: Transaction Log Storage Failure During Processing">
-      <description>
-        <text xml:lang="en">A finishTransaction call processes successfully but fails to store the transaction log message. ErrorStoringLogMessageFailed is raised. The transaction is rolled back and user is informed that the transaction could not be properly recorded.</text>
-        <text xml:lang="de">Ein finishTransaction-Aufruf wird erfolgreich verarbeitet, kann aber die Transaktions-Log-Message nicht speichern. ErrorStoringLogMessageFailed wird ausgelöst. Die Transaktion wird zurückgerollt und der Benutzer wird informiert, dass die Transaktion nicht ordnungsgemäß aufgezeichnet werden konnte.</text>
-      </description>
-      <relatedFunctions>finishTransaction, startTransaction, updateTransaction</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Transaction processing blocked by log message storage failure</text>
-        <text xml:lang="de">Transaktionsverarbeitung durch Log-Message-Speicherfehler blockiert</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 2: Audit Trail Gap Detection">
-      <description>
-        <text xml:lang="en">An audit review detects a gap in the transaction log where a transaction should have been recorded but is missing. Investigation reveals ErrorStoringLogMessageFailed occurred during that transaction, preventing audit trail recording.</text>
-        <text xml:lang="de">Ein Audit-Review erkennt eine Lücke im Transaktionsprotokoll, wo eine Transaktion aufgezeichnet sein sollte, aber fehlt. Die Untersuchung zeigt, dass ErrorStoringLogMessageFailed während dieser Transaktion aufgetreten ist und die Audit-Trail-Aufzeichnung verhindert hat.</text>
-      </description>
-      <relatedFunctions>startTransaction, exportLogMessages</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Audit trail gap detected due to failed log storage</text>
-        <text xml:lang="de">Audit-Trail-Lücke erkannt aufgrund fehlgeschlagener Log-Speicherung</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 3: Storage Full Prevents Log Recording">
-      <description>
-        <text xml:lang="en">High-volume transaction system reaches storage full. A startTransaction call fails with ErrorStoringLogMessageFailed because storage is full and log message cannot be recorded. System exports old logs to free space, then resumes transactions.</text>
-        <text xml:lang="de">Hochvolumiges Transaktionssystem erreicht vollen Speicher. Ein startTransaction-Aufruf schlägt mit ErrorStoringLogMessageFailed fehl, da der Speicher voll ist und die Log-Message nicht aufgezeichnet werden kann. Das System exportiert alte Protokolle, um Platz freizugeben, und setzt dann Transaktionen fort.</text>
-      </description>
-      <relatedFunctions>startTransaction, exportLogMessages, deleteLogMessages</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Log storage failure due to full storage - resolved by freeing space</text>
-        <text xml:lang="de">Log-Speicherfehler aufgrund vollen Speichers - gelöst durch Freigeben von Platz</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 4: Compliance Requirement for Audit Trail Continuity">
-      <description>
-        <text xml:lang="en">Compliance audit requires continuous audit trail with no gaps. When ErrorStoringLogMessageFailed is detected, compliance officers are notified and device is inspected for storage issues. Missing transaction is manually investigated.</text>
-        <text xml:lang="de">Compliance-Audit erfordert kontinuierlichen Audit-Trail ohne Lücken. Wenn ErrorStoringLogMessageFailed erkannt wird, werden Compliance-Beamte benachrichtigt und das Gerät wird auf Speicherprobleme untersucht. Fehlende Transaktion wird manuell untersucht.</text>
-      </description>
-      <relatedFunctions>startTransaction, finishTransaction, exportLogMessages</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Compliance audit identifies missing transaction due to log storage failure</text>
-        <text xml:lang="de">Compliance-Audit identifiziert fehlende Transaktion aufgrund von Log-Speicherfehler</text>
-      </errorContext>
-    </scenario>
-  </usage>
   <implementationContext>
     <note>
       <text xml:lang="en">Raised by logging functions when log message storage fails</text>

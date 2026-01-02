@@ -34,64 +34,6 @@
     </applicability>
     <reference>initialize – Exceptions (3.3.1.4)</reference>
   </specification>
-  <triggerConditions>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Application logic error - redundant initialization call</text>
-        <text xml:lang="de">Anwendungslogik-Fehler - redundanter Initialisierungsaufruf</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The application calls initialize a second time without realizing that a previous initialization call succeeded. This represents an application-level state management error where the initialization status was not properly tracked.</text>
-        <text xml:lang="de">Die Anwendung ruft initialize ein zweites Mal auf, ohne zu bemerken, dass ein vorheriger Initialisierungsaufruf erfolgreich war. Dies stellt einen Fehler der Anwendungsstatusverwaltung dar, bei dem der Initialisierungsstatus nicht ordnungsgemäß verfolgt wurde.</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">Invocation of initialize by application unaware that device is already initialized</text>
-        <text xml:lang="de">Aufruf von initialize durch Anwendung, die nicht bemerkt, dass das Gerät bereits initialisiert ist</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Error handling misinterpretation after first initialization</text>
-        <text xml:lang="de">Fehlerbehandlung-Fehlinterpretation nach der ersten Initialisierung</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The first initialize call succeeded, but the application incorrectly interpreted the result or caught an exception it shouldn't have. The application then retries initialization, not realizing the first attempt succeeded.</text>
-        <text xml:lang="de">Der erste initialize-Aufruf war erfolgreich, aber die Anwendung hat das Ergebnis falsch interpretiert oder eine Ausnahme gefaängt, die sie nicht hätte. Die Anwendung versucht dann die Initialisierung erneut, ohne zu bemerken, dass der erste Versuch erfolgreich war.</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">Application re-attempts initialization due to incorrect error interpretation</text>
-        <text xml:lang="de">Anwendung versucht die Initialisierung erneut aufgrund falsch interpretierter Fehler</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Device reuse without state reset across application cycles</text>
-        <text xml:lang="de">Gerätewiederverwendung ohne Zustandsreset über Anwendungszyklen</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">A device is reused across multiple application invocations or lifecycle cycles. A new application instance or lifecycle handler attempts to initialize the device without verifying it was already initialized in a previous cycle.</text>
-        <text xml:lang="de">Ein Gerät wird über mehrere Anwendungsaufrufe oder Lebenszyklus-Zyklen hinweg wiederverwendet. Eine neue Anwendungsinstanz oder ein Lebenszyklus-Handler versucht, das Gerät zu initialisieren, ohne zu überprüfen, dass es bereits in einem vorherigen Zyklus initialisiert wurde.</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">Multiple application instances or lifecycle cycles attempt device initialization</text>
-        <text xml:lang="de">Mehrere Anwendungsinstanzen oder Lebenszykluszyklen versuchen die Geräteinitialisierung</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Concurrent initialization attempts in multi-threaded environment</text>
-        <text xml:lang="de">Gleichzeitige Initialisierungsversuche in Multi-Thread-Umgebung</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">In multi-threaded applications, multiple threads may attempt to initialize the device concurrently without proper synchronization. One thread completes initialization while another thread is still in the initialization code path.</text>
-        <text xml:lang="de">In Multi-Thread-Anwendungen können mehrere Threads versuchen, das Gerät gleichzeitig ohne ordnungsgemäße Synchronisierung zu initialisieren. Ein Thread beendet die Initialisierung, während ein anderer Thread sich noch im Initialisierungscode-Pfad befindet.</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">Race condition where multiple threads concurrently invoke initialize</text>
-        <text xml:lang="de">Race Condition, bei der mehrere Threads gleichzeitig initialize aufrufen</text>
-      </trigger>
-    </condition>
-  </triggerConditions>
   <recovery>
     <step>
       <text xml:lang="en">Device is already initialized - proceed with normal operations</text>
@@ -181,64 +123,6 @@
       <text xml:lang="de">Themen: Geräteinitialisierung, Gerätezustand, Statusverwaltung, Initialisierungsbeschränkungen</text>
     </note>
   </notes>
-  <usage>
-    <scenario name="Scenario 1: Application State Management Error">
-      <description>
-        <text xml:lang="en">An application loses track of whether initialization has been performed and attempts to initialize the device twice during startup. The exception indicates initialization has already succeeded.</text>
-        <text xml:lang="de">Eine Anwendung verliert den Überblick darüber, ob die Initialisierung durchgeführt wurde, und versucht, das Gerät zweimal beim Start zu initialisieren. Die Ausnahme zeigt an, dass die Initialisierung bereits erfolgreich war.</text>
-      </description>
-      <relatedFunctions>
-        <text xml:lang="en">initialize, getDeviceHealth</text>
-        <text xml:lang="de">initialize, getDeviceHealth</text>
-      </relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Application-level state tracking error where initialization status was lost</text>
-        <text xml:lang="de">Fehler bei der Statusverfolgung auf Anwendungsebene, bei dem der Initialisierungsstatus verloren ging</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 2: Multi-Threaded Race Condition">
-      <description>
-        <text xml:lang="en">In a multi-threaded application, multiple threads attempt to initialize the device concurrently without synchronization. One thread completes initialization while another thread is still in the initialization code.</text>
-        <text xml:lang="de">In einer Multi-Thread-Anwendung versuchen mehrere Threads, das Gerät gleichzeitig ohne Synchronisierung zu initialisieren. Ein Thread beendet die Initialisierung, während ein anderer Thread sich noch im Initialisierungscode befindet.</text>
-      </description>
-      <relatedFunctions>
-        <text xml:lang="en">initialize, getDeviceHealth</text>
-        <text xml:lang="de">initialize, getDeviceHealth</text>
-      </relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Concurrency bug where initialization guard synchronization is missing</text>
-        <text xml:lang="de">Concurrency-Bug, bei dem die Synchronisierung des Initialisierungsschutzes fehlt</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 3: Device Reuse Across Lifecycle Cycles">
-      <description>
-        <text xml:lang="en">A device object is reused across multiple application lifecycle cycles (e.g., in container frameworks). A new lifecycle instance attempts initialization without verifying the device was already initialized in a previous lifecycle.</text>
-        <text xml:lang="de">Ein Geräteobjekt wird über mehrere Anwendungslebenszyklus-Zyklen wiederverwendet (z. B. in Container-Frameworks). Eine neue Lebenszyklusinstanz versucht die Initialisierung, ohne zu überprüfen, ob das Gerät bereits in einem vorherigen Lebenszyklus initialisiert wurde.</text>
-      </description>
-      <relatedFunctions>
-        <text xml:lang="en">initialize, getDeviceHealth</text>
-        <text xml:lang="de">initialize, getDeviceHealth</text>
-      </relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Lifecycle management issue where device state persists across application cycles</text>
-        <text xml:lang="de">Lebenszyklusverwaltungsproblem, bei dem der Gerätezustand über Anwendungszyklen hinweg besteht</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 4: Exception Misinterpretation and Retry">
-      <description>
-        <text xml:lang="en">The application incorrectly interprets the result of the first initialize call (e.g., catches and suppresses an exception), then retries initialization thinking the first attempt failed. This exception confirms the first initialization actually succeeded.</text>
-        <text xml:lang="de">Die Anwendung interpretiert das Ergebnis des ersten initialize-Aufrufs falsch (z. B. fängt und unterdrückt eine Ausnahme), versucht dann die Initialisierung erneut, da die erste Anwendung fehlgeschlagen ist. Diese Ausnahme bestätigt, dass die erste Initialisierung tatsächlich erfolgreich war.</text>
-      </description>
-      <relatedFunctions>
-        <text xml:lang="en">initialize, getDeviceHealth</text>
-        <text xml:lang="de">initialize, getDeviceHealth</text>
-      </relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Application error handling bug where successful initialization was misinterpreted as failure</text>
-        <text xml:lang="de">Fehler bei der Anwendungsfehlerbehanbindung, bei dem erfolgreiche Initialisierung als Fehler falsch interpretiert wurde</text>
-      </errorContext>
-    </scenario>
-  </usage>
   <implementationContext>
     <note>
       <text xml:lang="en">Raised by initialize when re-initialization attempted on already initialized device</text>

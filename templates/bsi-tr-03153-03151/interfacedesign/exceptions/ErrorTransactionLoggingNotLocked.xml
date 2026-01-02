@@ -34,78 +34,6 @@
   <thrownBy>
     <function>unlockTransactionLogging</function>
   </thrownBy>
-  <triggerConditions>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Unlock called when logging already unlocked</text>
-        <text xml:lang="de">Entsperrung aufgerufen, wenn die Protokollierung bereits entsperrt ist</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">unlockTransactionLogging called but logging is already in unlocked state</text>
-        <text xml:lang="de">unlockTransactionLogging aufgerufen, aber die Protokollierung ist bereits im entsperrten Zustand</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">Administrator calls unlockTransactionLogging but logging was never locked. Device detects logging is not locked and raises ErrorTransactionLoggingNotLocked.</text>
-        <text xml:lang="de">Administrator ruft unlockTransactionLogging auf, aber die Protokollierung wurde niemals gesperrt. Das Gerät erkennt, dass die Protokollierung nicht gesperrt ist, und löst ErrorTransactionLoggingNotLocked aus.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Multiple unlock attempts after initial unlock</text>
-        <text xml:lang="de">Mehrere Entsperrungsversuche nach der ersten Entsperrung</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">unlockTransactionLogging called multiple times sequentially</text>
-        <text xml:lang="de">unlockTransactionLogging mehrmals hintereinander aufgerufen</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">First unlock succeeds and logging is re-enabled. Administrator attempts second unlock without rechecking status. Device detects logging not locked and raises ErrorTransactionLoggingNotLocked on second attempt.</text>
-        <text xml:lang="de">Die erste Entsperrung ist erfolgreich und die Protokollierung ist wieder aktiviert. Der Administrator versucht eine zweite Entsperrung, ohne den Status erneut zu prüfen. Das Gerät erkennt, dass die Protokollierung nicht gesperrt ist, und löst bei dem zweiten Versuch ErrorTransactionLoggingNotLocked aus.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Unlock called after automatic lock expiration</text>
-        <text xml:lang="de">Entsperrung aufgerufen nach automatischem Ablauf der Sperrung</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">Temporary lock expires automatically before manual unlock attempted</text>
-        <text xml:lang="de">Vorübergehende Sperrung läuft automatisch ab, bevor eine manuelle Entsperrung versucht wird</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">Logging locked for maintenance. Timer-based lock auto-expires and logging re-enables. Administrator attempts manual unlock. Device detects lock already expired (logging unlocked) and raises ErrorTransactionLoggingNotLocked.</text>
-        <text xml:lang="de">Protokollierung zur Wartung gesperrt. Timer-basierte Sperrung läuft automatisch ab und die Protokollierung wird wieder aktiviert. Der Administrator versucht die manuelle Entsperrung. Das Gerät erkennt, dass die Sperrung bereits abgelaufen ist (Protokollierung entsperrt) und löst ErrorTransactionLoggingNotLocked aus.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Unlock called after device reset resets lock state</text>
-        <text xml:lang="de">Entsperrung aufgerufen, nachdem der Geräteneustart den Sperrzustand zurückgesetzt hat</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">Device reset clears lock state before unlock attempted</text>
-        <text xml:lang="de">Der Geräteneustart löscht den Sperrzustand, bevor eine Entsperrung versucht wird</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">Logging locked for audit. Device restarts and clears temporary locks. Administrator attempts to unlock via command. Device detects logging not locked (reset cleared lock) and raises ErrorTransactionLoggingNotLocked.</text>
-        <text xml:lang="de">Protokollierung zur Audit gesperrt. Das Gerät wird neu gestartet und löscht vorübergehende Sperren. Der Administrator versucht, über einen Befehl zu entsperren. Das Gerät erkennt, dass die Protokollierung nicht gesperrt ist (Neustart gelöscht Sperre) und löst ErrorTransactionLoggingNotLocked aus.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Unlock in error after lock status verification shows already unlocked</text>
-        <text xml:lang="de">Entsperrung in Fehler nach Sperrstatus-Verifikation zeigt bereits entsperrt</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">Caller checks lock status, finds it unlocked, but requests unlock anyway in error</text>
-        <text xml:lang="de">Aufrufer prüft Sperrstatus, findet ihn entsperrt, fordert aber ohnehin versehentlich Entsperrung an</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">Application checks logging lock status, receives already-unlocked response. Application incorrectly attempts unlock anyway. Device raises ErrorTransactionLoggingNotLocked due to status mismatch.</text>
-        <text xml:lang="de">Die Anwendung prüft den Protokollierungssperrststatus und erhält eine bereits entsperrt Antwort. Die Anwendung versucht dennoch verstörend zu entsperren. Das Gerät löst ErrorTransactionLoggingNotLocked aufgrund von Statusabweichung aus.</text>
-      </trigger>
-    </condition>
-  </triggerConditions>
   <executionSequence>
     <step number="1">
       <text xml:lang="en">User/application calls unlockTransactionLogging function</text>
@@ -224,52 +152,6 @@
       <text xml:lang="de">Themen: Transaktionsprotokollierung, Protokollierungskontrolle, Sperroperationen, Zustandsvalidierung</text>
     </note>
   </notes>
-  <usage>
-    <scenario name="Scenario 1: Duplicate Unlock Attempt">
-      <description>
-        <text xml:lang="en">Administrator locks logging for maintenance, then manually unlocks it. After completing maintenance, administrator attempts unlock again without checking lock status. Device detects logging is already unlocked and raises ErrorTransactionLoggingNotLocked. Administrator reviews log and recognizes logging is already operational.</text>
-        <text xml:lang="de">Der Administrator sperrt die Protokollierung zur Wartung und entsperrt sie dann manuell. Nach Abschluss der Wartung versucht der Administrator, ohne Statusprüfung erneut zu entsperren. Das Gerät erkennt, dass die Protokollierung bereits entsperrt ist, und löst ErrorTransactionLoggingNotLocked aus. Der Administrator prüft das Protokoll und erkennt, dass die Protokollierung bereits funktionsfähig ist.</text>
-      </description>
-      <relatedFunctions>unlockTransactionLogging, lockTransactionLogging</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Duplicate unlock prevention - logging already operational</text>
-        <text xml:lang="de">Duplikat-Entsperrungsprävention - Protokollierung bereits funktionsfähig</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 2: Automatic Lock Expiration Before Manual Unlock">
-      <description>
-        <text xml:lang="en">Logging locked with 10-minute timeout for maintenance. Maintenance takes 5 minutes. Lock automatically expires and logging re-enables. Administrator then manually attempts unlock without checking status. Device detects logging not locked and raises ErrorTransactionLoggingNotLocked.</text>
-        <text xml:lang="de">Protokollierung mit 10-Minuten-Timeout zur Wartung gesperrt. Die Wartung dauert 5 Minuten. Die Sperrung läuft automatisch ab und die Protokollierung wird wieder aktiviert. Der Administrator versucht dann manuell zu entsperren, ohne den Status zu prüfen. Das Gerät erkennt, dass die Protokollierung nicht gesperrt ist, und löst ErrorTransactionLoggingNotLocked aus.</text>
-      </description>
-      <relatedFunctions>unlockTransactionLogging, lockTransactionLogging</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Automatic lock expiration prevents manual unlock need</text>
-        <text xml:lang="de">Automatischer Sperrablauf verhindert manuelle Entsperrbedarf</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 3: Device Reset Clears Temporary Lock">
-      <description>
-        <text xml:lang="en">Logging locked for audit preservation. Device unexpectedly restarts. Restart clears temporary locks (but preserves permanent policy locks). Administrator attempts to unlock via command, unaware of reset. Device detects logging already unlocked from reset and raises ErrorTransactionLoggingNotLocked.</text>
-        <text xml:lang="de">Protokollierung zur Audit-Erhaltung gesperrt. Das Gerät wird unerwartet neu gestartet. Der Neustart löscht vorübergehende Sperren (aber behält permanente Richtlinien sperren). Der Administrator versucht, über einen Befehl zu entsperren, ohne vom Neustart zu wissen. Das Gerät erkennt, dass die Protokollierung bereits vom Neustart entsperrt ist, und löst ErrorTransactionLoggingNotLocked aus.</text>
-      </description>
-      <relatedFunctions>unlockTransactionLogging</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Device reset clears temporary lock - manual unlock unnecessary</text>
-        <text xml:lang="de">Geräteneustart löscht vorübergehende Sperre - manuelle Entsperrung unnötig</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 4: Application Checks Status Before Unlock">
-      <description>
-        <text xml:lang="en">Application obtains logging lock status query, receives response indicating "not locked". Application receives error alert to attempt unlock. Application calls unlockTransactionLogging to ensure unlock. Device raises ErrorTransactionLoggingNotLocked due to already-unlocked status. Application error handling catches exception and continues normally.</text>
-        <text xml:lang="de">Die Anwendung erhält eine Abfrage zum Protokollierungssperrststatus und erhält eine Antwort, die "nicht gesperrt" anzeigt. Die Anwendung erhält eine Fehlerwarnmeldung, um zu versuchen, zu entsperren. Die Anwendung ruft unlockTransactionLogging auf, um die Entsperrung sicherzustellen. Das Gerät löst ErrorTransactionLoggingNotLocked auf Grund des bereits entsperrten Status aus. Die Fehlerbehandlung der Anwendung fängt die Ausnahme auf und fährt normal fort.</text>
-      </description>
-      <relatedFunctions>unlockTransactionLogging</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Status check confirms unlock not needed - proper error handling</text>
-        <text xml:lang="de">Die Statusprüfung bestätigt, dass Entsperrung nicht erforderlich ist - ordnungsgemäße Fehlerbehandlung</text>
-      </errorContext>
-    </scenario>
-  </usage>
   <implementationContext>
     <note>
       <text xml:lang="en">Raised by unlockTransactionLogging when logging not locked</text>

@@ -45,78 +45,6 @@
     </applicability>
     <reference>Time Management (3.2.7), updateTime – Function (3.2.7), Transaction Operations (3.3.2)</reference>
   </specification>
-  <triggerConditions>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Time not initialized after device startup</text>
-        <text xml:lang="de">Zeit nicht nach dem Gerätestart initialisiert</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">Device time has not been set after initial initialization</text>
-        <text xml:lang="de">Die Gerätezeit wurde nach der ersten Initialisierung nicht eingestellt</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">A startTransaction call is made but device time has not been initialized. The device checks time validity and raises ErrorTimeNotSet.</text>
-        <text xml:lang="de">Ein startTransaction-Aufruf wird getätigt, aber die Gerätezeit wurde nicht initialisiert. Das Gerät prüft die Zeitgültigkeit und löst ErrorTimeNotSet aus.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Time lost due to power failure or battery discharge</text>
-        <text xml:lang="de">Zeit aufgrund von Stromausfallen oder Batterieentladung verloren</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">Device loses time information after power loss or long offline period</text>
-        <text xml:lang="de">Gerät verliert Zeitinformationen nach Stromausfall oder langer Offline-Zeit</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">Device experiences power loss. After power restoration, a finishTransaction call is made but device time is invalid. ErrorTimeNotSet is raised requiring time resynchronization.</text>
-        <text xml:lang="de">Gerät erlebt Stromausfall. Nach der Stromwiederherstellung wird ein finishTransaction-Aufruf getätigt, aber die Gerätezeit ist ungültig. ErrorTimeNotSet wird ausgelöst, was Zeitsynchronisierung erfordert.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Time synchronization required after offline period</text>
-        <text xml:lang="de">Zeitsynchronisierung erforderlich nach Offline-Zeit</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">Device has been offline for extended period and time needs resynchronization</text>
-        <text xml:lang="de">Gerät war lange Zeit offline und Zeit muss erneut synchronisiert werden</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">A device offline for weeks is brought online. An updateTransaction call is made but device time is out of sync and too old. ErrorTimeNotSet is raised requiring time update.</text>
-        <text xml:lang="de">Ein Gerät, das wochenweise offline war, wird wieder online gebracht. Ein updateTransaction-Aufruf wird getätigt, aber die Gerätezeit ist nicht synchronisiert und zu alt. ErrorTimeNotSet wird ausgelöst, was Zeitaktualisierung erfordert.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Time not set in initialization sequence</text>
-        <text xml:lang="de">Zeit nicht in der Initialisierungssequenz eingestellt</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">Initialization sequence did not include time setup via updateTime</text>
-        <text xml:lang="de">Die Initialisierungssequenz enthielt keine Zeiteinrichtung über updateTime</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">Device initialization completed but updateTime was not called to set time. A startTransaction call detects time is not set and raises ErrorTimeNotSet.</text>
-        <text xml:lang="de">Geräteinitialisierung abgeschlossen, aber updateTime wurde nicht aufgerufen, um Zeit einzustellen. Ein startTransaction-Aufruf erkennt, dass die Zeit nicht eingestellt ist, und löst ErrorTimeNotSet aus.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Time validity check fails</text>
-        <text xml:lang="de">Zeitgültigkeitsprüfung fehlgeschlagen</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">Device determines internal time is invalid or uninitialized</text>
-        <text xml:lang="de">Gerät stellt fest, dass die interne Zeit ungültig oder nicht initialisiert ist</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">A finishTransaction call checks device time validity but determines time is not set (null, zero, or invalid value). ErrorTimeNotSet is raised.</text>
-        <text xml:lang="de">Ein finishTransaction-Aufruf prüft die Zeitgültigkeit des Geräts, stellt aber fest, dass die Zeit nicht eingestellt ist (null, null oder ungültiger Wert). ErrorTimeNotSet wird ausgelöst.</text>
-      </trigger>
-    </condition>
-  </triggerConditions>
   <executionSequence>
     <step number="1">
       <text xml:lang="en">User/application calls a time-dependent transaction operation (e.g., startTransaction)</text>
@@ -230,52 +158,6 @@
       <text xml:lang="de">Themen: Zeitverwaltung, Geräteinitialisierung, Zeitsynchronisierung, Systemkonfiguration</text>
     </note>
   </notes>
-  <usage>
-    <scenario name="Scenario 1: Device Initialization with Time Setup">
-      <description>
-        <text xml:lang="en">Device initialization sequence includes calling updateTime to set device time. If startTransaction is called before updateTime, ErrorTimeNotSet is raised. After updateTime sets the time, transactions proceed normally.</text>
-        <text xml:lang="de">Die Geräteinitialisierungssequenz enthält das Aufrufen von updateTime, um die Gerätezeit festzulegen. Wenn startTransaction vor updateTime aufgerufen wird, wird ErrorTimeNotSet ausgelöst. Nach dem Festlegen der Zeit durch updateTime werden Transaktionen normal fortgesetzt.</text>
-      </description>
-      <relatedFunctions>initialize, updateTime, startTransaction</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Transaction blocked until device time is set via updateTime</text>
-        <text xml:lang="de">Transaktion blockiert, bis die Gerätezeit über updateTime festgelegt wird</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 2: Power Loss Requires Time Resynchronization">
-      <description>
-        <text xml:lang="en">Device loses power and internal time is reset. After power restoration, a finishTransaction call receives ErrorTimeNotSet. System calls updateTime to resynchronize time, then transactions resume.</text>
-        <text xml:lang="de">Gerät verliert Strom und interne Zeit wird zurückgesetzt. Nach der Stromwiederherstellung empfängt ein finishTransaction-Aufruf ErrorTimeNotSet. Das System ruft updateTime auf, um die Zeit erneut zu synchronisieren, dann werden Transaktionen fortgesetzt.</text>
-      </description>
-      <relatedFunctions>updateTime, startTransaction, finishTransaction</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Power loss requires time resynchronization before transactions can proceed</text>
-        <text xml:lang="de">Stromausfall erfordert Zeitsynchronisierung, bevor Transaktionen fortgesetzt werden können</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 3: Long Offline Period Requires Time Update">
-      <description>
-        <text xml:lang="en">Device has been offline for weeks without power. When brought online for operation, an updateTransaction call raises ErrorTimeNotSet. System updates device time to current value and retries transaction.</text>
-        <text xml:lang="de">Gerät war wochenweise ohne Strom offline. Bei der Inbetriebnahme löst ein updateTransaction-Aufruf ErrorTimeNotSet aus. Das System aktualisiert die Gerätezeit auf den aktuellen Wert und wiederholt die Transaktion.</text>
-      </description>
-      <relatedFunctions>updateTime, updateTransaction</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Long offline period requires time synchronization before transactions resume</text>
-        <text xml:lang="de">Lange Offline-Zeit erfordert Zeitsynchronisierung vor Wiederaufnahme von Transaktionen</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 4: Time Synchronization Monitoring">
-      <description>
-        <text xml:lang="en">System monitors device time and periodically calls updateTime to maintain synchronization. This prevents ErrorTimeNotSet even after power disruptions or time drift.</text>
-        <text xml:lang="de">Das System überwacht die Gerätezeit und ruft periodisch updateTime auf, um die Synchronisierung aufrechtzuerhalten. Dies verhindert ErrorTimeNotSet auch nach Stromstörungen oder Zeitversatz.</text>
-      </description>
-      <relatedFunctions>updateTime, getCurrentSeTime, startTransaction</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Proactive time synchronization prevents time-related operation failures</text>
-        <text xml:lang="de">Proaktive Zeitsynchronisierung verhindert zeitbedingte Operationsfehler</text>
-      </errorContext>
-    </scenario>
-  </usage>
   <implementationContext>
     <note>
       <text xml:lang="en">Raised by functions when device time not initialized</text>

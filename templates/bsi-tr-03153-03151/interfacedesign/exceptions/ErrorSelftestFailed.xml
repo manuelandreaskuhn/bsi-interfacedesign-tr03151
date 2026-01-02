@@ -32,78 +32,6 @@
     </applicability>
     <reference>selfTest – Function (3.2.8)</reference>
   </specification>
-  <triggerConditions>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Cryptographic module test failure</text>
-        <text xml:lang="de">Kryptografie-Modul-Testfehler</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">Self-test of cryptographic algorithms or operations fails</text>
-        <text xml:lang="de">Selbsttest von Kryptografie-Algorithmen oder Operationen schlägt fehl</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">selfTest function executes cryptographic test vectors and detects failures in cryptographic operations. The test fails and ErrorSelftestFailed is raised.</text>
-        <text xml:lang="de">selfTest-Funktion führt Kryptografie-Testvektoren aus und erkennt Fehler in kryptografischen Operationen. Der Test schlägt fehl und ErrorSelftestFailed wird ausgelöst.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Memory integrity check failure</text>
-        <text xml:lang="de">Speicherintegritätsprüfung fehlgeschlagen</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">Self-test detects memory corruption, errors, or integrity issues</text>
-        <text xml:lang="de">Selbsttest erkennt Speicherkorruption, Fehler oder Integritätsprobleme</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">selfTest function performs memory integrity checks (checksums, parity checks) and detects errors. Memory failure is reported and ErrorSelftestFailed is raised.</text>
-        <text xml:lang="de">selfTest-Funktion führt Speicherintegritätsprüfungen (Prüfsummen, Paritätsprüfungen) durch und erkennt Fehler. Speicherfehler wird gemeldet und ErrorSelftestFailed wird ausgelöst.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Component communication failure during test</text>
-        <text xml:lang="de">Komponentenkommunikationsfehler während des Tests</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">Self-test detects failures in component-to-component communication</text>
-        <text xml:lang="de">Selbsttest erkennt Fehler in der Kommunikation zwischen Komponenten</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">selfTest function attempts to communicate with device components and communication fails. Component failure is detected and ErrorSelftestFailed is raised.</text>
-        <text xml:lang="de">selfTest-Funktion versucht, mit Gerätekomponenten zu kommunizieren und die Kommunikation schlägt fehl. Komponentenfehler wird erkannt und ErrorSelftestFailed wird ausgelöst.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Security processor or firmware failure</text>
-        <text xml:lang="de">Sicherheitsprozessor oder Firmware-Fehler</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">Self-test detects failures in security processor functionality or firmware operation</text>
-        <text xml:lang="de">Selbsttest erkennt Fehler in der Funktionalität des Sicherheitsprozessors oder im Firmware-Betrieb</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">selfTest function tests security processor functionality and detects failures or anomalies. Processor malfunction is reported and ErrorSelftestFailed is raised.</text>
-        <text xml:lang="de">selfTest-Funktion testet die Sicherheitsprozessor-Funktionalität und erkennt Fehler oder Anomalien. Prozessorfehler wird gemeldet und ErrorSelftestFailed wird ausgelöst.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Manufacturing defect or configuration error</text>
-        <text xml:lang="de">Herstellungsmängel oder Konfigurationsfehler</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">Self-test detects manufacturing defects or incorrect device configuration</text>
-        <text xml:lang="de">Selbsttest erkennt Herstellungsmängel oder falsche Gerätekonfiguration</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">selfTest function performs configuration and initialization checks and detects defects or errors. Configuration failure is reported and ErrorSelftestFailed is raised.</text>
-        <text xml:lang="de">selfTest-Funktion führt Konfigurations- und Initialisierungsprüfungen durch und erkennt Mängel oder Fehler. Konfigurationsfehler wird gemeldet und ErrorSelftestFailed wird ausgelöst.</text>
-      </trigger>
-    </condition>
-  </triggerConditions>
   <executionSequence>
     <step number="1">
       <text xml:lang="en">User/application calls selfTest function</text>
@@ -250,52 +178,6 @@
       <text xml:lang="de">Themen: Gerätegesundheit, Selbsttest, Diagnosen, Gerätevalidierung</text>
     </note>
   </notes>
-  <usage>
-    <scenario name="Scenario 1: Device Initialization Self-Test Verification">
-      <description>
-        <text xml:lang="en">A device initialization procedure calls selfTest to verify the device is operational before entering production. When ErrorSelftestFailed is raised, the initialization aborts and the device is not brought online. The failure is logged and IT is notified.</text>
-        <text xml:lang="de">Eine Geräteinitialisierungsprozedur ruft selfTest auf, um zu überprüfen, dass das Gerät betriebsbereit ist, bevor es in die Produktion geht. Wenn ErrorSelftestFailed ausgelöst wird, bricht die Initialisierung ab und das Gerät wird nicht in Betrieb genommen. Der Fehler wird protokolliert und IT wird benachrichtigt.</text>
-      </description>
-      <relatedFunctions>selfTest, initialize</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Device initialization blocked by self-test failure</text>
-        <text xml:lang="de">Geräteinitialisierung blockiert durch Selbsttest-Fehler</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 2: Periodic Health Monitoring with Self-Test">
-      <description>
-        <text xml:lang="en">A system periodically calls selfTest to verify device health and detect component degradation. When ErrorSelftestFailed is raised, it indicates a component has failed. The system alerts administrators to schedule device maintenance or replacement.</text>
-        <text xml:lang="de">Ein System ruft periodisch selfTest auf, um die Gerätegesundheit zu überprüfen und Komponentenabnu tzung zu erkennen. Wenn ErrorSelftestFailed ausgelöst wird, zeigt dies an, dass eine Komponente ausgefallen ist. Das System benachrichtigt Administratoren, um Gerätewartung oder -austausch zu planen.</text>
-      </description>
-      <relatedFunctions>selfTest, getDeviceInfo</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Periodic health monitoring detects device component failure</text>
-        <text xml:lang="de">Periodische Gesundheitsüberwachung erkennt Gerätekomponentenausfall</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 3: Troubleshooting Device Issues with Self-Test">
-      <description>
-        <text xml:lang="en">When a user reports transaction failures or unexpected device behavior, the support team calls selfTest to diagnose the issue. ErrorSelftestFailed reveals which component is malfunctioning and directs the troubleshooting effort.</text>
-        <text xml:lang="de">Wenn ein Benutzer Transaktionsfehler oder unerwartet es Geräteverhalten meldet, ruft das Support-Team selfTest auf, um das Problem zu diagnostizieren. ErrorSelftestFailed zeigt, welche Komponente fehlfunktioniert, und lenkt den Troubleshooting-Aufwand.</text>
-      </description>
-      <relatedFunctions>selfTest, getDeviceInfo, getDescription</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Device troubleshooting identifies component failure via self-test</text>
-        <text xml:lang="de">Geräte-Troubleshooting identifiziert Komponentenausfall über Selbsttest</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 4: Manufacturing Quality Assurance Test">
-      <description>
-        <text xml:lang="en">During manufacturing and quality assurance, selfTest is called on each device to verify it meets specifications. When ErrorSelftestFailed is raised on a device, the device fails QA and is returned to manufacturing for repair or replacement.</text>
-        <text xml:lang="de">Während der Herstellung und Qualitätskontrolle wird selfTest auf jedem Gerät aufgerufen, um zu überprüfen, dass es den Spezifikationen entspricht. Wenn ErrorSelftestFailed auf einem Gerät ausgelöst wird, schlägt das Gerät die QS fehl und wird zur Reparatur oder zum Austausch an die Herstellung zurückgesendet.</text>
-      </description>
-      <relatedFunctions>selfTest, initialize</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Manufacturing QA rejects device due to self-test failure</text>
-        <text xml:lang="de">Herstellungs-QS lehnt Gerät aufgrund von Selbsttest-Fehler ab</text>
-      </errorContext>
-    </scenario>
-  </usage>
   <implementationContext>
     <note>
       <text xml:lang="en">Raised by selfTest when device self-test operation fails</text>

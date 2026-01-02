@@ -67,78 +67,6 @@
     </applicability>
     <reference>Secure Element State Management (3.2.1)</reference>
   </specification>
-  <triggerConditions>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Secure Element administratively disabled</text>
-        <text xml:lang="de">Secure Element administrativ deaktiviert</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The Secure Element has been disabled through administrative action or management interface</text>
-        <text xml:lang="de">Das Secure Element wurde durch administrative Maßnahmen oder Verwaltungsschnittstelle deaktiviert</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">Any SE API function requiring an active Secure Element is called. The device checks its enabled/disabled state and detects disabled state. The function raises ErrorSecureElementDisabled.</text>
-        <text xml:lang="de">Jede SE-API-Funktion, die ein aktives Secure Element erfordert, wird aufgerufen. Das Gerät prüft seinen aktivierten/deaktivierten Zustand und erkennt den deaktivierten Zustand. Die Funktion wirft ErrorSecureElementDisabled auf.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Device disabled by security policy</text>
-        <text xml:lang="de">Gerät durch Sicherheitsrichtlinie deaktiviert</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The Secure Element is disabled due to security policy enforcement or security event</text>
-        <text xml:lang="de">Das Secure Element wird aufgrund von Sicherheitsrichtliniendurchsetzung oder Sicherheitsereignis deaktiviert</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">A SE API function is called but security policy evaluation indicates the device must be disabled. The function raises ErrorSecureElementDisabled.</text>
-        <text xml:lang="de">Eine SE-API-Funktion wird aufgerufen, aber die Sicherheitsrichtlinienauswertung zeigt, dass das Gerät deaktiviert werden muss. Die Funktion wirft ErrorSecureElementDisabled auf.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Device in lifecycle deactivation state</text>
-        <text xml:lang="de">Gerät im Zustand der Lebenszyklus-Deaktivierung</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The Secure Element is in a deactivation or end-of-life state</text>
-        <text xml:lang="de">Das Secure Element ist in einem Deaktivierungs- oder End-of-Life-Zustand</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">Any SE API function is called but the device is in deactivation state (disabled for lifecycle reasons). The function raises ErrorSecureElementDisabled.</text>
-        <text xml:lang="de">Jede SE-API-Funktion wird aufgerufen, aber das Gerät ist im Deaktivierungszustand (aus Lebenszyklusgründen deaktiviert). Die Funktion wirft ErrorSecureElementDisabled auf.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Device initialization incomplete or pending</text>
-        <text xml:lang="de">Geräteinitialisierung unvollständig oder ausstehend</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The Secure Element has not been fully initialized or is in initialization pending state</text>
-        <text xml:lang="de">Das Secure Element wurde nicht vollständig initialisiert oder befindet sich im Initialisierungs-Ausstehend-Zustand</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">An SE API function is called but the device initialization is not complete. The function checks device state and raises ErrorSecureElementDisabled.</text>
-        <text xml:lang="de">Eine SE-API-Funktion wird aufgerufen, aber die Geräteinitialisierung ist nicht abgeschlossen. Die Funktion prüft den Gerätezustand und wirft ErrorSecureElementDisabled auf.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Device recovery from error state</text>
-        <text xml:lang="de">Gerätewiederherstellung aus dem Fehlerzustand</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The Secure Element is temporarily disabled during recovery from an error or critical event</text>
-        <text xml:lang="de">Das Secure Element wird während der Wiederherstellung nach einem Fehler oder kritischen Ereignis vorübergehend deaktiviert</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">An SE API function is called during device error recovery when the device must be disabled for safety. The function raises ErrorSecureElementDisabled.</text>
-        <text xml:lang="de">Eine SE-API-Funktion wird während der Gerätewiederherstellung aufgerufen, wenn das Gerät aus Sicherheitsgründen deaktiviert werden muss. Die Funktion wirft ErrorSecureElementDisabled auf.</text>
-      </trigger>
-    </condition>
-  </triggerConditions>
   <executionSequence>
     <step number="1">
       <text xml:lang="en">User/application calls an SE API function that requires an enabled Secure Element (e.g., authenticateUser)</text>
@@ -245,52 +173,6 @@
       <text xml:lang="de">Themen: Secure Element Verwaltung, Gerätezustand, SE-Operationen, Gerätestatus</text>
     </note>
   </notes>
-  <usage>
-    <scenario name="Scenario 1: Operation Blocked by Device Disabled State">
-      <description>
-        <text xml:lang="en">An application attempts to authenticate a user by calling authenticateUser. The Secure Element is disabled due to administrative policy. ErrorSecureElementDisabled is raised immediately. The application informs the user that the device is not available for operations.</text>
-        <text xml:lang="de">Eine Anwendung versucht, einen Benutzer durch Aufrufen von authenticateUser zu authentifizieren. Das Secure Element ist aufgrund der administrativen Richtlinie deaktiviert. ErrorSecureElementDisabled wird sofort ausgelöst. Die Anwendung teilt dem Benutzer mit, dass das Gerät nicht für Operationen verfügbar ist.</text>
-      </description>
-      <relatedFunctions>authenticateUser, getDeviceInfo</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">User authentication blocked because device is administratively disabled</text>
-        <text xml:lang="de">Benutzerauthentifizierung blockiert, da das Gerät administrativ deaktiviert ist</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 2: Recovery Procedure for Disabled Device">
-      <description>
-        <text xml:lang="en">A transaction processing system receives ErrorSecureElementDisabled when attempting to start a transaction. The administrator is notified. The administrator verifies the policy, re-enables the device through management interface, and the system retries the transaction.</text>
-        <text xml:lang="de">Ein Transaktionsverarbeitungssystem empfängt ErrorSecureElementDisabled beim Versuch, eine Transaktion zu starten. Der Administrator wird benachrichtigt. Der Administrator überprüft die Richtlinie, aktiviert das Gerät über die Verwaltungsschnittstelle erneut und das System versucht die Transaktion erneut.</text>
-      </description>
-      <relatedFunctions>startTransaction, enableSecureElement (management)</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Transaction processing blocked by disabled device - requires administrative intervention</text>
-        <text xml:lang="de">Transaktionsverarbeitung blockiert durch deaktiviertes Gerät - erfordert administrative Intervention</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 3: Device Lifecycle Management with Disabled State">
-      <description>
-        <text xml:lang="en">During device deactivation, the manufacturer sets the device to disabled state. All SE API operations fail with ErrorSecureElementDisabled. The device is scheduled for removal. After device is removed, no further operations are attempted.</text>
-        <text xml:lang="de">Während der Gerätedeaktivierung setzt der Hersteller das Gerät in den deaktivierten Zustand. Alle SE-API-Operationen schlagen mit ErrorSecureElementDisabled fehl. Das Gerät ist zur Entfernung geplant. Nach Entfernung des Geräts werden keine weiteren Operationen versucht.</text>
-      </description>
-      <relatedFunctions>all SE API functions</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Device in deactivation state - all operations blocked</text>
-        <text xml:lang="de">Gerät in Deaktivierungszustand - alle Operationen blockiert</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 4: Temporary Disable During Device Recovery">
-      <description>
-        <text xml:lang="en">The device encounters a critical error and automatically disables itself for safety. User attempts to call updateTime and receives ErrorSecureElementDisabled. After device recovery completes, it re-enables itself and operations resume normally.</text>
-        <text xml:lang="de">Das Gerät stößt auf einen kritischen Fehler und deaktiviert sich automatisch aus Sicherheitsgründen. Der Benutzer versucht, updateTime aufzurufen, und empfängt ErrorSecureElementDisabled. Nach Abschluss der Gerätewiederherstellung aktiviert es sich erneut und die Operationen werden normal fortgesetzt.</text>
-      </description>
-      <relatedFunctions>updateTime, selfTest, getDeviceInfo</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Temporary device disable during error recovery</text>
-        <text xml:lang="de">Vorübergehende Gerätedeaktivierung während der Fehlerwiederherstellung</text>
-      </errorContext>
-    </scenario>
-  </usage>
   <implementationContext>
     <note>
       <text xml:lang="en">Raised by functions when Secure Element is not operational</text>

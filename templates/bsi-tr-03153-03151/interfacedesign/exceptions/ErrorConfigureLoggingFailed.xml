@@ -34,64 +34,6 @@
   <thrownBy>
     <function>configureLogging</function>
   </thrownBy>
-  <triggerConditions>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Secure Element internal error during configuration application</text>
-        <text xml:lang="de">Interner Secure Element-Fehler während der Konfigurationsanwendung</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The Secure Element accepts the logging configuration request (component name, event type, and logging level are valid), but encounters an internal error while attempting to apply the configuration to the target component. The error may originate from firmware limitations, hardware malfunction, or internal subsystem failures.</text>
-        <text xml:lang="de">Das Secure Element akzeptiert die Protokollierungskonfigurationsanforderung (Komponentenname, Ereignistyp und Protokollierungsebene sind gültig), trifft aber auf einen internen Fehler, wenn es versucht, die Konfiguration auf die Zielkomponente anzuwenden. Der Fehler kann von Firmware-Einschränkungen, Hardwarefehlern oder internen Subsystemfehlern stammen.</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">Secure Element hardware or firmware error preventing configuration application</text>
-        <text xml:lang="de">Secure Element Hardware- oder Firmware-Fehler, der die Konfigurationsanwendung verhindert</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Device memory or resource constraints</text>
-        <text xml:lang="de">Gerätespeicher- oder Ressourcenbeschränkungen</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The device has insufficient memory or resources to allocate for the new logging configuration. This can occur if the device's logging buffer is nearly full, the configuration table is at capacity, or memory fragmentation prevents allocation of required structures.</text>
-        <text xml:lang="de">Das Gerät hat unzureichend Speicher oder Ressourcen zur Zuordnung für die neue Protokollierungskonfiguration. Dies kann auftreten, wenn der Protokollierungspuffer des Geräts fast voll ist, die Konfigurationstabelle auf Kapazität ist oder die Speicherfragmentierung die Zuordnung erforderlicher Strukturen verhindert.</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">Insufficient device memory or logging resource exhaustion</text>
-        <text xml:lang="de">Unzureichender Gerätespeicher oder Protokollierungsressourcenerschöpfung</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Logging subsystem state inconsistency</text>
-        <text xml:lang="de">Protokollierungssubsystem-Statusinkonsistenz</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The Secure Element's logging subsystem has entered an inconsistent or error state that prevents new configurations from being applied. This can occur after failed previous configuration attempts, after device state transitions, or due to corruption in the logging configuration table.</text>
-        <text xml:lang="de">Das Protokollierungssubsystem des Secure Elements ist in einen inkonsistenten oder Fehlerzustand übergegangen, der verhindert, dass neue Konfigurationen angewendet werden. Dies kann nach fehlgeschlagenen vorherigen Konfigurationsversuchen, nach Gerätestatusveränderungen oder aufgrund von Beschadigtheit in der Protokollierungskonfigurationstabelle auftreten.</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">Logging subsystem in invalid state preventing configuration updates</text>
-        <text xml:lang="de">Protokollierungssubsystem in ungültigem Zustand, das Konfigurationsaktualisierungen verhindert</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Component not accessible or unavailable</text>
-        <text xml:lang="de">Komponente nicht zugänglich oder nicht verfügbar</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The specified component exists and is valid, but is currently not accessible for configuration due to the component being in an error state, being actively processing events, or having been temporarily disabled by device firmware.</text>
-        <text xml:lang="de">Die angegebene Komponente existiert und ist gültig, ist aber derzeit nicht für die Konfiguration zugänglich, da die Komponente in einem Fehlerzustand ist, aktiv Ereignisse verarbeitet oder von Geräte-Firmware deaktiviert wurde.</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">Target component temporarily unavailable for configuration</text>
-        <text xml:lang="de">Zielkomponente vorübergehend nicht für die Konfiguration verfügbar</text>
-      </trigger>
-    </condition>
-  </triggerConditions>
   <recovery>
     <step>
       <text xml:lang="en">Verify device is initialized before configuration attempts</text>
@@ -201,64 +143,6 @@
       <text xml:lang="de">Themen: Protokollierungskonfiguration, Ereignisverwaltung, Systemkonfiguration, SE-API-Einstellungen</text>
     </note>
   </notes>
-  <usage>
-    <scenario name="Scenario 1: Logging Configuration Failure During Startup">
-      <description>
-        <text xml:lang="en">An application attempts to configure event logging during device initialization, but the logging subsystem is not yet fully operational or encounters an error.</text>
-        <text xml:lang="de">Eine Anwendung versucht, Ereignisprotokollierung während der Geräteinitialisierung zu konfigurieren, aber das Protokollierungssubsystem ist noch nicht vollständig betriebsbereit oder trifft auf einen Fehler.</text>
-      </description>
-      <relatedFunctions>
-        <text xml:lang="en">configureLogging, initializeDevice, getDeviceHealth</text>
-        <text xml:lang="de">configureLogging, initializeDevice, getDeviceHealth</text>
-      </relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Device initialization phase where logging subsystem configuration fails</text>
-        <text xml:lang="de">Geräteinitialisierungsphase, in der die Protokollierungssubsystem-Konfiguration fehlschlägt</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 2: Resource Exhaustion in Logging Subsystem">
-      <description>
-        <text xml:lang="en">An application has been configuring multiple event logging targets, and after several successful configurations, the next configuration fails due to insufficient device resources or logging buffer exhaustion.</text>
-        <text xml:lang="de">Eine Anwendung hat mehrere Ereignisprotokollierungsziele konfiguriert, und nach mehreren erfolgreichen Konfigurationen schlägt die nächste Konfiguration aufgrund unzureichender Geräteressourcen oder Protokollierungspuffererschöpfung fehl.</text>
-      </description>
-      <relatedFunctions>
-        <text xml:lang="en">configureLogging, getComponentVersions, exportLogMessages</text>
-        <text xml:lang="de">configureLogging, getComponentVersions, exportLogMessages</text>
-      </relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Progressive resource depletion scenario where later configurations fail while earlier ones succeeded</text>
-        <text xml:lang="de">Progressives Ressourcenerschließungsszenario, in dem spätere Konfigurationen fehlschlagen, während frühere erfolgreich waren</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 3: Recovery Through Logging Subsystem Reset">
-      <description>
-        <text xml:lang="en">An application encounters this exception and implements recovery by clearing existing logging configurations, waiting for device stabilization, and then retrying the configuration.</text>
-        <text xml:lang="de">Eine Anwendung trifft auf diese Ausnahme und implementiert Wiederherstellung, indem bestehende Protokollierungskonfigurationen gelöscht, auf die Gerätestabilisierung gewartet und die Konfiguration dann erneut versucht wird.</text>
-      </description>
-      <relatedFunctions>
-        <text xml:lang="en">configureLogging, deleteLogMessages, updateDevice</text>
-        <text xml:lang="de">configureLogging, deleteLogMessages, updateDevice</text>
-      </relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Recovery strategy focused on freeing resources and restoring logging subsystem state</text>
-        <text xml:lang="de">Wiederherstellungsstrategie konzentriert sich auf die Freigabe von Ressourcen und die Wiederherstellung des Protokollierungssubsystem-Status</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 4: Proactive Health Checking Before Configuration">
-      <description>
-        <text xml:lang="en">An application proactively checks device health and available resources before attempting logging configuration to prevent this exception.</text>
-        <text xml:lang="de">Eine Anwendung prüft proaktiv die Gerätegesundheit und verfügbare Ressourcen, bevor versucht wird, die Protokollierungskonfiguration zu verhindern, um diese Ausnahme zu verhindern.</text>
-      </description>
-      <relatedFunctions>
-        <text xml:lang="en">configureLogging, getDeviceHealth, getComponentVersions</text>
-        <text xml:lang="de">configureLogging, getDeviceHealth, getComponentVersions</text>
-      </relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Defensive programming approach using device health status to prevent configuration failures</text>
-        <text xml:lang="de">Defensiver Programmieransatz mit Gerätegesundheitsstatus, um Konfigurationsfehlschläge zu verhindern</text>
-      </errorContext>
-    </scenario>
-  </usage>
   <implementationContext>
     <note>
       <text xml:lang="en">Raised by configureLogging when event configuration operation fails</text>

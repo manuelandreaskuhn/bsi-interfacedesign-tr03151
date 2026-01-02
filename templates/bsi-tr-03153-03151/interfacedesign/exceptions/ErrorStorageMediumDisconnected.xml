@@ -66,78 +66,6 @@
     </applicability>
     <reference>Secure Element Storage (3.2), SE API Functions (3.3)</reference>
   </specification>
-  <triggerConditions>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Physical connector disconnection</text>
-        <text xml:lang="de">Physische Stecker-Trennung</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The physical connector between storage and device becomes disconnected</text>
-        <text xml:lang="de">Der physische Stecker zwischen Speicher und Gerät wird unterbrochen</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">An SE API function attempts to access storage but the physical connector is disconnected. The device detects storage unavailability and raises ErrorStorageMediumDisconnected.</text>
-        <text xml:lang="de">Eine SE-API-Funktion versucht, auf den Speicher zuzugreifen, aber der physische Stecker ist unterbrochen. Das Gerät erkennt die Speichernicht-Verfügbarkeit und löst ErrorStorageMediumDisconnected aus.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Storage device hardware failure</text>
-        <text xml:lang="de">Hardwarefehler des Speichergeräts</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The storage device itself has failed or malfunctioned</text>
-        <text xml:lang="de">Das Speichergerät selbst ist ausgefallen oder funktioniert nicht ordnungsgemäß</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">A startTransaction call attempts to write transaction log but storage device is unresponsive (hardware failure). ErrorStorageMediumDisconnected is raised.</text>
-        <text xml:lang="de">Ein startTransaction-Aufruf versucht, das Transaktionsprotokoll zu schreiben, aber das Speichergerät antwortet nicht (Hardwarefehler). ErrorStorageMediumDisconnected wird ausgelöst.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Storage interface communication failure</text>
-        <text xml:lang="de">Kommunikationsfehler der Speicherschnittstelle</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The communication interface between device and storage has failed</text>
-        <text xml:lang="de">Die Kommunikationsschnittstelle zwischen Gerät und Speicher ist ausgefallen</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">An exportLogMessages call attempts to read logs but the storage interface is unresponsive. The interface communication has failed and ErrorStorageMediumDisconnected is raised.</text>
-        <text xml:lang="de">Ein exportLogMessages-Aufruf versucht, Protokolle zu lesen, aber die Speicherschnittstelle antwortet nicht. Die Schnittstellenkommunikation ist fehlgeschlagen und ErrorStorageMediumDisconnected wird ausgelöst.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Storage medium physically removed</text>
-        <text xml:lang="de">Speichermedium physisch entfernt</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The storage medium is physically removed or ejected during operation</text>
-        <text xml:lang="de">Das Speichermedium wird während des Betriebs physisch entfernt oder ausgeworfen</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">A finishTransaction call is processing when storage medium is physically removed. The device detects storage unavailability and raises ErrorStorageMediumDisconnected.</text>
-        <text xml:lang="de">Ein finishTransaction-Aufruf wird verarbeitet, wenn das Speichermedium physisch entfernt wird. Das Gerät erkennt die Speichernicht-Verfügbarkeit und löst ErrorStorageMediumDisconnected aus.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Power loss to storage subsystem</text>
-        <text xml:lang="de">Stromverlust zum Speichersubsystem</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The storage subsystem loses power or experiences power failure</text>
-        <text xml:lang="de">Das Speichersubsystem verliert Stromversorgung oder hat einen Stromausfall</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">During getLastLogMessage processing, power to storage fails. Storage becomes unresponsive and ErrorStorageMediumDisconnected is raised.</text>
-        <text xml:lang="de">Während der getLastLogMessage-Verarbeitung fällt der Strom zum Speicher aus. Der Speicher wird nicht erreichbar und ErrorStorageMediumDisconnected wird ausgelöst.</text>
-      </trigger>
-    </condition>
-  </triggerConditions>
   <executionSequence>
     <step number="1">
       <text xml:lang="en">User/application calls an SE API function that requires storage access (e.g., startTransaction)</text>
@@ -248,52 +176,6 @@
       <text xml:lang="de">Themen: Speicheroperationen, Gerätehardware, Speicherstatus, Gerätekonnektivität</text>
     </note>
   </notes>
-  <usage>
-    <scenario name="Scenario 1: Storage Disconnection During Transaction Processing">
-      <description>
-        <text xml:lang="en">A finishTransaction call is processing when storage physically disconnects due to loose connector. The function detects storage unavailability and raises ErrorStorageMediumDisconnected. The transaction is rolled back and the user is informed.</text>
-        <text xml:lang="de">Ein finishTransaction-Aufruf wird verarbeitet, wenn der Speicher aufgrund eines lockeren Steckers physisch getrennt wird. Die Funktion erkennt die Speichernicht-Verfügbarkeit und löst ErrorStorageMediumDisconnected aus. Die Transaktion wird zurückgerollt und der Benutzer wird benachrichtigt.</text>
-      </description>
-      <relatedFunctions>startTransaction, finishTransaction, updateTransaction</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Transaction processing blocked by storage disconnection</text>
-        <text xml:lang="de">Transaktionsverarbeitung durch Speichertrennung blockiert</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 2: Storage Device Hardware Failure">
-      <description>
-        <text xml:lang="en">An exportLogMessages call attempts to read transaction logs but the storage device has failed. ErrorStorageMediumDisconnected is raised. The device is marked as non-operational and IT initiates repair/replacement procedures.</text>
-        <text xml:lang="de">Ein exportLogMessages-Aufruf versucht, Transaktionsprotokolle zu lesen, aber das Speichergerät ist ausgefallen. ErrorStorageMediumDisconnected wird ausgelöst. Das Gerät wird als nicht funktionsfähig markiert und die IT leitet Reparatur-/Austauschverfahren ein.</text>
-      </description>
-      <relatedFunctions>exportLogMessages, getLastLogMessage</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Log export blocked by storage hardware failure</text>
-        <text xml:lang="de">Log-Export durch Speicherhardwarefehler blockiert</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 3: Storage Connectivity Recovery">
-      <description>
-        <text xml:lang="en">A getDescription call raises ErrorStorageMediumDisconnected. Operations are halted. Physical inspection finds loose storage connector which is reseated. Device is verified to have storage access again. Operations resume.</text>
-        <text xml:lang="de">Ein getDescription-Aufruf löst ErrorStorageMediumDisconnected aus. Operationen werden angehalten. Eine physische Inspektion findet einen lockeren Speicherstecker, der neu eingesetzt wird. Das Gerät wird verifiziert, dass es wieder Speicherzugriff hat. Operationen werden fortgesetzt.</text>
-      </description>
-      <relatedFunctions>setDescription, getDescription</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Storage connectivity restored after physical inspection and connector reseating</text>
-        <text xml:lang="de">Speicherkonnektivität nach physikalischer Inspektion und Stecker-Neupositionierung wiederhergestellt</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 4: Redundant Storage Failover">
-      <description>
-        <text xml:lang="en">A high-availability system uses redundant storage. When primary storage disconnects, getTotalMemory raises ErrorStorageMediumDisconnected on primary device. System automatically fails over to redundant device to maintain operations.</text>
-        <text xml:lang="de">Ein hochverfügbares System verwendet redundanten Speicher. Wenn der primäre Speicher unterbrochen wird, löst getTotalMemory auf dem primären Gerät ErrorStorageMediumDisconnected aus. Das System wird automatisch auf das redundante Gerät umgestellt, um die Operationen zu erhalten.</text>
-      </description>
-      <relatedFunctions>getTotalMemory, startTransaction, exportLogMessages</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Redundant storage failover triggered by primary storage disconnection</text>
-        <text xml:lang="de">Redundanter Speicher-Failover durch primäre Speichertrennung ausgelöst</text>
-      </errorContext>
-    </scenario>
-  </usage>
   <implementationContext>
     <note>
       <text xml:lang="en">Raised by functions when storage hardware is disconnected</text>

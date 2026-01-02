@@ -51,78 +51,6 @@
     </applicability>
     <reference>getLastLogMessage – Function (3.3.3), getLastTransactionLogMessage – Function (3.3.3)</reference>
   </specification>
-  <triggerConditions>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Device communication failure during retrieval</text>
-        <text xml:lang="de">Gerätekommunikationsfehler während des Abrufens</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">Communication with the Secure Element is lost or interrupted during log message retrieval</text>
-        <text xml:lang="de">Die Kommunikation mit dem Secure Element wird während des Abrufens der Protokollnachricht unterbrochen oder unterbrochen</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">A getLastLogMessage or getLastTransactionLogMessage call initiates communication but loses connection before receiving the log data. The retrieval cannot be completed and ErrorRetrieveLogMessageFailed is raised.</text>
-        <text xml:lang="de">Ein getLastLogMessage- oder getLastTransactionLogMessage-Aufruf initiiert die Kommunikation, verliert aber die Verbindung, bevor die Protokolldaten empfangen werden. Das Abrufen kann nicht abgeschlossen werden und ErrorRetrieveLogMessageFailed wird ausgelöst.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Device storage read error</text>
-        <text xml:lang="de">Gerätespeicher-Lesefehler</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The device encounters read errors when accessing log storage</text>
-        <text xml:lang="de">Das Gerät stößt auf Lesefehler beim Zugriff auf Protokollspeicher</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">A getLastLogMessage call begins but the device encounters I/O errors while reading log data from storage (hardware error, sector failure, etc.). The read fails and ErrorRetrieveLogMessageFailed is raised.</text>
-        <text xml:lang="de">Ein getLastLogMessage-Aufruf beginnt, aber das Gerät stößt auf I/O-Fehler beim Lesen von Protokolldaten aus dem Speicher (Hardwarefehler, Sektorfehler usw.). Das Lesen schlägt fehl und ErrorRetrieveLogMessageFailed wird ausgelöst.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Corrupted log message data</text>
-        <text xml:lang="de">Beschädigte Protokollnachrichtendaten</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The log message data is corrupted or invalid and cannot be retrieved successfully</text>
-        <text xml:lang="de">Die Protokollnachrichtendaten sind beschädigt oder ungültig und können nicht erfolgreich abgerufen werden</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">A getLastLogMessage call attempts to read log data but the data is corrupted (checksum failure, invalid structure). The device detects corruption and raises ErrorRetrieveLogMessageFailed.</text>
-        <text xml:lang="de">Ein getLastLogMessage-Aufruf versucht, Protokolldaten zu lesen, aber die Daten sind beschädigt (Checksummenfehler, ungültige Struktur). Das Gerät erkennt die Beschädigung und wirft ErrorRetrieveLogMessageFailed auf.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Device internal error during retrieval</text>
-        <text xml:lang="de">Interner Gerätefehler während des Abrufens</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The Secure Element encounters an internal error during the retrieval operation</text>
-        <text xml:lang="de">Das Secure Element stößt während der Abrufoperation auf einen internen Fehler</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">A getLastTransactionLogMessage call is processed by the device but an internal processing error occurs. The device aborts the retrieval and raises ErrorRetrieveLogMessageFailed.</text>
-        <text xml:lang="de">Ein getLastTransactionLogMessage-Aufruf wird vom Gerät verarbeitet, aber es tritt ein interner Verarbeitungsfehler auf. Das Gerät bricht das Abrufen ab und wirft ErrorRetrieveLogMessageFailed auf.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Device not in correct state for retrieval</text>
-        <text xml:lang="de">Gerät ist nicht im richtigen Zustand zum Abrufen</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The device state is not appropriate for log message retrieval (e.g., device not initialized or in error state)</text>
-        <text xml:lang="de">Der Gerätezustand ist nicht geeignet für das Abrufen von Protokollnachrichten (z. B. Gerät nicht initialisiert oder im Fehlerzustand)</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">A getLastLogMessage call is made but the device is not initialized or not operational. The device rejects the operation and raises ErrorRetrieveLogMessageFailed.</text>
-        <text xml:lang="de">Ein getLastLogMessage-Aufruf wird durchgeführt, aber das Gerät ist nicht initialisiert oder nicht betriebsbereit. Das Gerät lehnt die Operation ab und wirft ErrorRetrieveLogMessageFailed auf.</text>
-      </trigger>
-    </condition>
-  </triggerConditions>
   <executionSequence>
     <step number="1">
       <text xml:lang="en">User/application calls getLastLogMessage or getLastTransactionLogMessage function</text>
@@ -294,52 +222,6 @@
       <text xml:lang="de">Themen: Protokollierungsoperationen, Nachrichtenabruf, Datenzugriff, Protokollverwaltung</text>
     </note>
   </notes>
-  <usage>
-    <scenario name="Scenario 1: Transaction Verification with Log Message Retrieval">
-      <description>
-        <text xml:lang="en">An application performs a transaction and immediately retrieves the log message to verify the transaction was recorded correctly. When ErrorRetrieveLogMessageFailed is raised, the application retries retrieval or queries the device state.</text>
-        <text xml:lang="de">Eine Anwendung führt eine Transaktion aus und ruft sofort die Protokollnachricht ab, um zu überprüfen, ob die Transaktion ordnungsgemäß aufgezeichnet wurde. Wenn ErrorRetrieveLogMessageFailed ausgelöst wird, versucht die Anwendung erneut, den Abruf oder Abfragen des Gerätezustands durchzuführen.</text>
-      </description>
-      <relatedFunctions>getLastLogMessage, executeTransaction</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Transaction completed but log message cannot be retrieved for verification</text>
-        <text xml:lang="de">Transaktion abgeschlossen, aber Protokollnachricht kann zur Verifizierung nicht abgerufen werden</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 2: Audit Trail Access with Failure Recovery">
-      <description>
-        <text xml:lang="en">A compliance application retrieves the most recent transaction log message as part of audit trail review. When ErrorRetrieveLogMessageFailed is raised, it alerts the administrator and triggers investigation into device connectivity or storage issues.</text>
-        <text xml:lang="de">Eine Compliance-Anwendung ruft die neueste Transaktionsprotokollnachricht im Rahmen einer Audit-Trail-Überprüfung ab. Wenn ErrorRetrieveLogMessageFailed ausgelöst wird, wird der Administrator benachrichtigt und es werden Untersuchungen zu Gerätekonnektivitäts- oder Speicherproblemen ausgelöst.</text>
-      </description>
-      <relatedFunctions>getLastLogMessage, exportLogMessages</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Audit trail access blocked by retrieval failure</text>
-        <text xml:lang="de">Audit-Trail-Zugriff blockiert durch Abruffehler</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 3: Transaction History Review with Alternative Access">
-      <description>
-        <text xml:lang="en">A user attempts to review the last transaction by calling getLastTransactionLogMessage. If ErrorRetrieveLogMessageFailed is raised, the system attempts to export all available log messages as an alternative way to access transaction history.</text>
-        <text xml:lang="de">Ein Benutzer versucht, die letzte Transaktion durch Aufrufen von getLastTransactionLogMessage zu überprüfen. Wenn ErrorRetrieveLogMessageFailed ausgelöst wird, versucht das System, alle verfügbaren Protokollnachrichten als alternative Möglichkeit zum Zugriff auf den Transaktionsverlauf zu exportieren.</text>
-      </description>
-      <relatedFunctions>getLastTransactionLogMessage, exportLogMessages</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Direct log retrieval fails - alternative export mechanism attempted</text>
-        <text xml:lang="de">Direkter Protokollabruf schlägt fehl - Alternativmechanismus zum Exportieren wird versucht</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 4: Device Diagnostics with Log Message Access">
-      <description>
-        <text xml:lang="en">A device diagnostics procedure attempts to retrieve the latest log message to verify device logging is functioning. When ErrorRetrieveLogMessageFailed is raised, it indicates a device issue - communication or storage problems.</text>
-        <text xml:lang="de">Ein Gerätediagnoseverfahren versucht, die neueste Protokollnachricht abzurufen, um zu überprüfen, ob die Geräteprotokollierung funktioniert. Wenn ErrorRetrieveLogMessageFailed ausgelöst wird, zeigt dies ein Geräteproblem an - Kommunikations- oder Speicherprobleme.</text>
-      </description>
-      <relatedFunctions>getLastLogMessage, getDeviceInfo</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Device diagnostics identify log retrieval failure as indicator of device issues</text>
-        <text xml:lang="de">Gerätediagnose identifiziert Abruffehler als Indikator für Geräteprobleme</text>
-      </errorContext>
-    </scenario>
-  </usage>
   <implementationContext>
     <note>
       <text xml:lang="en">Raised by logging functions when log message creation or retrieval fails</text>

@@ -46,36 +46,6 @@
     <function>lockTransactionLogging</function>
     <function>unlockTransactionLogging</function>
   </thrownBy>
-  <triggerConditions>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Log message creation with expired certificate</text>
-        <text xml:lang="de">Protokollmeldungserstellung mit abgelaufenem Zertifikat</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">Function performs logging operation while the certificate used for log message signing is expired (notAfter date has passed)</text>
-        <text xml:lang="de">Funktion führt einen Protokollierungsvorgang durch, während das zum Signieren von Protokollmeldungen verwendete Zertifikat abgelaufen ist (notAfter-Datum ist vergangen)</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">During execution of a logging function, the Secure Element checks certificate validity. The certificate's expiration date (notAfter) is in the past. The Secure Element creates and signs the log message anyway, stores it successfully, and then signals this condition by allowing ErrorCertificateExpired to be raised.</text>
-        <text xml:lang="de">Während der Ausführung einer Protokollierungsfunktion prüft das Secure Element die Zertifikatsgültigkeit. Das Ablaufdatum des Zertifikats (notAfter) liegt in der Vergangenheit. Das Secure Element erstellt und signiert die Protokollmeldung trotzdem, speichert sie erfolgreich und signalisiert diese Bedingung dann durch Zulassen des Auslösens von ErrorCertificateExpired.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Multiple functions accessing expired certificate simultaneously</text>
-        <text xml:lang="de">Mehrere Funktionen greifen gleichzeitig auf ein abgelaufenes Zertifikat zu</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">Multiple logging functions may raise this exception if they all use the same expired certificate for log message signing</text>
-        <text xml:lang="de">Mehrere Protokollierungsfunktionen können diese Ausnahme auslösen, wenn sie alle das gleiche abgelaufene Zertifikat zum Signieren von Protokollmeldungen verwenden</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">Different logging functions (initialize, updateTime, startTransaction, etc.) all invoke log message creation while sharing an expired certificate. Each successful operation raises ErrorCertificateExpired.</text>
-        <text xml:lang="de">Verschiedene Protokollierungsfunktionen (initialize, updateTime, startTransaction usw.) rufen alle die Erstellung von Protokollmeldungen auf, während sie ein abgelaufenes Zertifikat gemeinsam nutzen. Jeder erfolgreiche Vorgang löst ErrorCertificateExpired aus.</text>
-      </trigger>
-    </condition>
-  </triggerConditions>
   <executionSequence>
     <step number="1">
       <text xml:lang="en">User/application calls a logging function (e.g., initialize, updateTime, finishTransaction, etc.)</text>
@@ -186,64 +156,6 @@
       <text xml:lang="de">Themen: Zertifikatverwaltung, Protokollierungsvorgänge, Zertifikatvalidierung, Secure Element-Vorgänge</text>
     </note>
   </notes>
-  <usage>
-    <scenario name="Scenario 1: Certificate Expiration Detection and Notification">
-      <description>
-        <text xml:lang="en">A logging operation completes successfully and raises ErrorCertificateExpired. The application catches this exception, identifies that the logging certificate has expired, and logs a warning message for system administrators indicating that certificate renewal is needed.</text>
-        <text xml:lang="de">Ein Protokollierungsvorgang wird erfolgreich abgeschlossen und löst ErrorCertificateExpired aus. Die Anwendung fängt diese Ausnahme ab, stellt fest, dass das Protokollierungszertifikat abgelaufen ist, und protokolliert eine Warnmeldung für Systemadministratoren, die darauf hinweist, dass eine Zertifikatreneuerung erforderlich ist.</text>
-      </description>
-      <relatedFunctions>
-        <text xml:lang="en">updateTime, finishTransaction, configureLogging, initialize</text>
-        <text xml:lang="de">updateTime, finishTransaction, configureLogging, initialize</text>
-      </relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Certificate expiration detected during logging - renewal required</text>
-        <text xml:lang="de">Zertifikatablauf während der Protokollierung erkannt - Erneuerung erforderlich</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 2: Graceful Degradation with Certificate Monitoring">
-      <description>
-        <text xml:lang="en">An application continues normal operation on ErrorCertificateExpired since the log message was stored successfully. The application tracks certificate expiration occurrences and triggers a certificate management procedure when a threshold is reached.</text>
-        <text xml:lang="de">Eine Anwendung setzt den normalen Betrieb bei ErrorCertificateExpired fort, da die Protokollmeldung erfolgreich gespeichert wurde. Die Anwendung verfolgt das Auftreten von Zertifikatablaufen und löst ein Zertifikatverwaltungsverfahren aus, wenn ein Schwellenwert erreicht wird.</text>
-      </description>
-      <relatedFunctions>
-        <text xml:lang="en">startTransaction, updateTransaction, finishTransaction</text>
-        <text xml:lang="de">startTransaction, updateTransaction, finishTransaction</text>
-      </relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Operation succeeded despite expired certificate - tracking certificate validity state</text>
-        <text xml:lang="de">Vorgang trotz abgelaufenem Zertifikat erfolgreich - Zertifikatsgültigkeitszustand wird verfolgt</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 3: Proactive Certificate Management">
-      <description>
-        <text xml:lang="en">The application monitors certificate expiration by catching ErrorCertificateExpired exceptions. When the exception is raised, the application queries the device for certificate information, calculates remaining validity, and schedules certificate renewal operations accordingly.</text>
-        <text xml:lang="de">Die Anwendung überwacht das Zertifikatablaufen, indem sie ErrorCertificateExpired-Ausnahmen abfängt. Wenn die Ausnahme ausgelöst wird, fragt die Anwendung das Gerät nach Zertifikatinformationen ab, berechnet die verbleibende Gültigkeit und plant die Zertifikatreneuerungsvorgänge entsprechend.</text>
-      </description>
-      <relatedFunctions>
-        <text xml:lang="en">updateTime, configureLogging, registerClient</text>
-        <text xml:lang="de">updateTime, configureLogging, registerClient</text>
-      </relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Certificate management - expiration awareness - renewal scheduling</text>
-        <text xml:lang="de">Zertifikatverwaltung - Ablaufbewusstsein - Erneuerungsplanung</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 4: Audit Trail and Compliance Logging">
-      <description>
-        <text xml:lang="en">ErrorCertificateExpired exceptions are logged to an audit trail for compliance purposes. The application records each occurrence with timestamp, affected function, and certificate details to maintain comprehensive security and compliance records.</text>
-        <text xml:lang="de">ErrorCertificateExpired-Ausnahmen werden für Compliance-Zwecke in einem Audit-Trail protokolliert. Die Anwendung protokolliert jedes Auftreten mit Zeitstempel, betroffener Funktion und Zertifikatdetails, um umfassende Sicherheits- und Compliance-Datensätze zu führen.</text>
-      </description>
-      <relatedFunctions>
-        <text xml:lang="en">all logging functions with certificate creation</text>
-        <text xml:lang="de">alle Protokollierungsfunktionen mit Zertifikaterstellung</text>
-      </relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Audit trail recording - compliance logging - certificate lifecycle tracking</text>
-        <text xml:lang="de">Audit-Trail-Aufzeichnung - Compliance-Protokollierung - Zertifikat-Lifecycle-Tracking</text>
-      </errorContext>
-    </scenario>
-  </usage>
   <implementationContext>
     <note>
       <text xml:lang="en">Raised by logging functions when certificate validity check detects expiration</text>

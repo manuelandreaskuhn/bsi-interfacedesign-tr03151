@@ -36,78 +36,6 @@
     <function>updateTransaction</function>
     <function>finishTransaction</function>
   </thrownBy>
-  <triggerConditions>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Transaction logging administratively locked for maintenance</text>
-        <text xml:lang="de">Transaktionsprotokollierung administrativ zur Wartung gesperrt</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">Administrator locks transaction logging to perform maintenance or audit procedures</text>
-        <text xml:lang="de">Administrator sperrt die Transaktionsprotokollierung, um Wartungs- oder Audit-Verfahren durchzuführen</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">Administrator executes command to lock transaction logging. Operator attempts startTransaction. Device detects logging locked state and raises ErrorTransactionLoggingLocked to prevent unlogged transactions.</text>
-        <text xml:lang="de">Administrator führt einen Befehl aus, um die Transaktionsprotokollierung zu sperren. Der Benutzer versucht startTransaction. Das Gerät erkennt den gesperrten Protokollierungszustand und löst ErrorTransactionLoggingLocked aus, um nicht protokollierte Transaktionen zu verhindern.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Logging locked by security policy after audit trigger event</text>
-        <text xml:lang="de">Protokollierung durch Sicherheitsrichtlinie nach Audit-Auslöseereignis gesperrt</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">Security policy locks logging in response to detected security event</text>
-        <text xml:lang="de">Die Sicherheitsrichtlinie sperrt die Protokollierung als Reaktion auf ein erkanntes Sicherheitsereignis</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">Device detects unusual activity or security anomaly. Security policy triggers automatic logging lock. Next updateTransaction call detects locked state and raises ErrorTransactionLoggingLocked.</text>
-        <text xml:lang="de">Gerät erkennt ungewöhnliche Aktivität oder Sicherheitsanomalie. Die Sicherheitsrichtlinie löst eine automatische Protokollierungssperre aus. Der nächste updateTransaction-Aufruf erkennt den gesperrten Zustand und löst ErrorTransactionLoggingLocked aus.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Logging locked during device diagnostics or testing</text>
-        <text xml:lang="de">Protokollierung während Gerätediagnose oder -test gesperrt</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">Logging locked for diagnostics, testing, or firmware update procedures</text>
-        <text xml:lang="de">Protokollierung für Diagnose-, Test- oder Firmware-Update-Verfahren gesperrt</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">Device enters diagnostic mode which locks logging. Test attempts to execute finishTransaction. Device raises ErrorTransactionLoggingLocked because logging unavailable during diagnostics.</text>
-        <text xml:lang="de">Das Gerät schaltet in den Diagnosemodus, der die Protokollierung sperrt. Der Test versucht, finishTransaction auszuführen. Das Gerät löst ErrorTransactionLoggingLocked aus, da die Protokollierung während der Diagnose nicht verfügbar ist.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Logging lock persists after backup or export operation</text>
-        <text xml:lang="de">Protokollierungssperre bleibt nach Sicherungs- oder Exportoperation bestehen</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">Logging remains locked after completing backup or export procedures</text>
-        <text xml:lang="de">Die Protokollierung bleibt nach Abschluss von Sicherungs- oder Exportverfahren gesperrt</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">Administrator exports transaction logs. Logging remains locked after export for audit preservation. Next transaction attempt raises ErrorTransactionLoggingLocked until logging re-enabled.</text>
-        <text xml:lang="de">Administrator exportiert Transaktionsprotokolle. Die Protokollierung bleibt nach dem Export zur Audit-Erhaltung gesperrt. Der nächste Transaktionsversuch löst ErrorTransactionLoggingLocked aus, bis die Protokollierung wieder aktiviert wird.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Device firmware update locks logging temporarily</text>
-        <text xml:lang="de">Geräte-Firmware-Update sperrt die Protokollierung vorübergehend</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">Firmware update procedure locks logging during update process</text>
-        <text xml:lang="de">Das Firmware-Update-Verfahren sperrt die Protokollierung während des Update-Vorgangs</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">Firmware update begins and locks logging to prevent inconsistent state. If transaction attempted during update, ErrorTransactionLoggingLocked raised. Logging re-enabled after update completes.</text>
-        <text xml:lang="de">Firmware-Update beginnt und sperrt die Protokollierung, um inkonsistente Zustände zu verhindern. Wenn ein Transaktionsversuch während des Updates unternommen wird, wird ErrorTransactionLoggingLocked ausgelöst. Die Protokollierung wird nach Abschluss des Updates wieder aktiviert.</text>
-      </trigger>
-    </condition>
-  </triggerConditions>
   <executionSequence>
     <step number="1">
       <text xml:lang="en">User/application calls transaction operation (e.g., startTransaction, updateTransaction, finishTransaction)</text>
@@ -234,52 +162,6 @@
       <text xml:lang="de">Themen: Transaktionsprotokollierung, Protokollierungskontrolle, Sperroperationen, Zugriffskontrolle</text>
     </note>
   </notes>
-  <usage>
-    <scenario name="Scenario 1: Administrative Maintenance Lock">
-      <description>
-        <text xml:lang="en">Administrator initiates maintenance procedure on transaction logging. Command locks logging to ensure consistent state. Operator attempts to execute transaction via startTransaction. Device detects logging locked status and raises ErrorTransactionLoggingLocked. Operator waits for maintenance completion and logging unlock.</text>
-        <text xml:lang="de">Der Administrator leitet ein Wartungsverfahren für die Transaktionsprotokollierung ein. Der Befehl sperrt die Protokollierung, um einen konsistenten Zustand zu gewährleisten. Der Benutzer versucht, eine Transaktion über startTransaction auszuführen. Das Gerät erkennt den gesperrten Protokollierungsstatus und löst ErrorTransactionLoggingLocked aus. Der Benutzer wartet auf die Fertigstellung der Wartung und die Entsperrung der Protokollierung.</text>
-      </description>
-      <relatedFunctions>startTransaction, updateTransaction, finishTransaction</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Administrative lock prevents transactions during maintenance - audit trail consistency</text>
-        <text xml:lang="de">Die Verwaltungssperre verhindert Transaktionen während der Wartung - Audit-Trail-Konsistenz</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 2: Security Policy Triggered Lock">
-      <description>
-        <text xml:lang="en">Device detects security anomaly (unusual transaction pattern or attempted unauthorized access). Security policy automatically locks logging and alerts administrator. Next finishTransaction call detects locked logging and raises ErrorTransactionLoggingLocked. Operations blocked until administrator investigates and re-enables logging.</text>
-        <text xml:lang="de">Gerät erkennt Sicherheitsanomalie (ungewöhnliches Transaktionsmuster oder versuchter unberechtigter Zugriff). Die Sicherheitsrichtlinie sperrt die Protokollierung automatisch und benachrichtigt den Administrator. Der nächste finishTransaction-Aufruf erkennt die gesperrte Protokollierung und löst ErrorTransactionLoggingLocked aus. Der Betrieb wird blockiert, bis der Administrator untersucht und die Protokollierung wieder aktiviert.</text>
-      </description>
-      <relatedFunctions>finishTransaction, startTransaction</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Automated security policy protects audit trail during security event</text>
-        <text xml:lang="de">Die automatisierte Sicherheitsrichtlinie schützt den Audit-Trail während eines Sicherheitsereignisses</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 3: Audit Preservation Lock After Export">
-      <description>
-        <text xml:lang="en">Administrator executes command to export transaction logs for compliance audit. After export completes, logging is locked to preserve exported audit trail state. Subsequent updateTransaction call detects locked logging and raises ErrorTransactionLoggingLocked. Administrator reviews exported logs before re-enabling logging.</text>
-        <text xml:lang="de">Der Administrator führt einen Befehl aus, um Transaktionsprotokolle für Compliance-Audit zu exportieren. Nach Abschluss des Exports wird die Protokollierung gesperrt, um den exportierten Audit-Trail-Zustand zu erhalten. Der nachfolgende updateTransaction-Aufruf erkennt die gesperrte Protokollierung und löst ErrorTransactionLoggingLocked aus. Der Administrator überprüft die exportierten Protokolle, bevor die Protokollierung wieder aktiviert wird.</text>
-      </description>
-      <relatedFunctions>updateTransaction, exportLogMessages</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Lock preserves exported audit trail integrity pending review</text>
-        <text xml:lang="de">Die Sperre erhält die exportierte Audit-Trail-Integrität bis zur Überprüfung</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 4: Firmware Update with Temporary Lock">
-      <description>
-        <text xml:lang="en">Device administrator initiates firmware update procedure. Update process temporarily locks logging to maintain consistent state during update. If any transaction attempted via startTransaction during update, ErrorTransactionLoggingLocked raised. Update completes, logging automatically re-enabled, transactions can resume.</text>
-        <text xml:lang="de">Der Geräteadministrator leitet ein Firmware-Update-Verfahren ein. Der Update-Prozess sperrt die Protokollierung vorübergehend, um während des Updates einen konsistenten Zustand zu wahren. Wenn ein Transaktionsversuch über startTransaction während des Updates unternommen wird, wird ErrorTransactionLoggingLocked ausgelöst. Das Update ist abgeschlossen, die Protokollierung wird automatisch wieder aktiviert, Transaktionen können fortgesetzt werden.</text>
-      </description>
-      <relatedFunctions>startTransaction, updateTransaction, finishTransaction</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Temporary lock during firmware update maintains system consistency</text>
-        <text xml:lang="de">Die vorübergehende Sperre während des Firmware-Updates wahrt die Systemkonsistenz</text>
-      </errorContext>
-    </scenario>
-  </usage>
   <implementationContext>
     <note>
       <text xml:lang="en">Raised by transaction functions when transaction logging is locked</text>

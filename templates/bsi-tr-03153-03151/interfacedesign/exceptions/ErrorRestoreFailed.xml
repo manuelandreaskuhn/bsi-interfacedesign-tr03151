@@ -34,78 +34,6 @@
   <thrownBy>
     <function>restoreLogsFromBackup</function>
   </thrownBy>
-  <triggerConditions>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Backup data format incompatible with device</text>
-        <text xml:lang="de">Sicherungsdatenformat nicht kompatibel mit Gerät</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The backup data format is not compatible with the device or device version</text>
-        <text xml:lang="de">Das Sicherungsdatenformat ist nicht mit dem Gerät oder der Geräteversion kompatibel</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">A restoreLogsFromBackup call is made with backup data from a different device model or SE API version. The device detects the format incompatibility and raises ErrorRestoreFailed.</text>
-        <text xml:lang="de">Ein restoreLogsFromBackup-Aufruf erfolgt mit Sicherungsdaten von einem anderen Gerätemodell oder einer anderen SE-API-Version. Das Gerät erkennt die Formatinkompatibilität und wirft ErrorRestoreFailed auf.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Corrupted or damaged backup data</text>
-        <text xml:lang="de">Beschädigte oder beschädigte Sicherungsdaten</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The backup data is corrupted or damaged and cannot be parsed or validated</text>
-        <text xml:lang="de">Die Sicherungsdaten sind beschädigt oder beschädigt und können nicht analysiert oder validiert werden</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">A restoreLogsFromBackup call is made with backup data that was corrupted during transmission or storage. The device detects corruption (checksum failure, invalid structure) and raises ErrorRestoreFailed.</text>
-        <text xml:lang="de">Ein restoreLogsFromBackup-Aufruf erfolgt mit Sicherungsdaten, die während der Übertragung oder Speicherung beschädigt wurden. Das Gerät erkennt die Beschädigung (Checksummenfehler, ungültige Struktur) und wirft ErrorRestoreFailed auf.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Insufficient device storage for restore</text>
-        <text xml:lang="de">Unzureichender Gerätespeicher zur Wiederherstellung</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The device storage does not have sufficient capacity to accommodate the backup data</text>
-        <text xml:lang="de">Der Gerätespeicher verfügt nicht über ausreichende Kapazität, um die Sicherungsdaten aufzunehmen</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">A restoreLogsFromBackup call is made to restore a large backup. The device determines that storage capacity is insufficient and raises ErrorRestoreFailed.</text>
-        <text xml:lang="de">Ein restoreLogsFromBackup-Aufruf erfolgt zur Wiederherstellung einer großen Sicherung. Das Gerät stellt fest, dass die Speicherkapazität unzureichend ist, und wirft ErrorRestoreFailed auf.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Device storage error during restore operation</text>
-        <text xml:lang="de">Gerätespeicherfehler während der Wiederherstellungsoperation</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">Device encounters storage write or access errors during the restore operation</text>
-        <text xml:lang="de">Das Gerät trifft auf Speicherschreib- oder Zugriffsfehler während der Wiederherstellungsoperation</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">A restoreLogsFromBackup call begins but the device encounters storage errors (I/O failure, hardware issue) while writing restored data. The restore is aborted and ErrorRestoreFailed is raised.</text>
-        <text xml:lang="de">Ein restoreLogsFromBackup-Aufruf beginnt, aber das Gerät trifft auf Speicherfehler (I/O-Fehler, Hardwareproblem) beim Schreiben wiederhergestellter Daten. Die Wiederherstellung wird abgebrochen und ErrorRestoreFailed wird ausgelöst.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Device communication failure during restore</text>
-        <text xml:lang="de">Gerätekommunikationsfehler während der Wiederherstellung</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">Communication with the Secure Element is lost during the restore data transmission</text>
-        <text xml:lang="de">Die Kommunikation mit dem Secure Element geht während der Wiederherstellungsdatenübertragung verloren</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">A restoreLogsFromBackup call transmits backup data to the device but communication is interrupted before all data is received. The restore cannot be completed and ErrorRestoreFailed is raised.</text>
-        <text xml:lang="de">Ein restoreLogsFromBackup-Aufruf überträgt Sicherungsdaten an das Gerät, aber die Kommunikation wird unterbrochen, bevor alle Daten empfangen werden. Die Wiederherstellung kann nicht abgeschlossen werden und ErrorRestoreFailed wird ausgelöst.</text>
-      </trigger>
-    </condition>
-  </triggerConditions>
   <executionSequence>
     <step number="1">
       <text xml:lang="en">User/application calls restoreLogsFromBackup function with backup data and parameters</text>
@@ -261,52 +189,6 @@
       <text xml:lang="de">Themen: Sicherungsoperationen, Protokollverwaltung, Datenwiederherstellung, Wiederherstellung</text>
     </note>
   </notes>
-  <usage>
-    <scenario name="Scenario 1: Backup Restore with Failure Detection and Verification">
-      <description>
-        <text xml:lang="en">An application calls restoreLogsFromBackup to restore a previously exported backup of log messages. When ErrorRestoreFailed is raised, the application verifies the backup data integrity, checks device storage capacity, and retries the restore operation.</text>
-        <text xml:lang="de">Eine Anwendung ruft restoreLogsFromBackup auf, um eine zuvor exportierte Sicherung von Protokollnachrichten wiederherzustellen. Wenn ErrorRestoreFailed ausgelöst wird, verifiziert die Anwendung die Integrität der Sicherungsdaten, prüft die Gerätespeicherkapazität und versucht die Wiederherstellungsoperation erneut.</text>
-      </description>
-      <relatedFunctions>restoreLogsFromBackup, exportLogMessages</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Backup restore fails - requires verification and retry</text>
-        <text xml:lang="de">Sicherungswiederherstellung schlägt fehl - erfordert Verifizierung und Wiederholung</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 2: Disaster Recovery with Backup Restoration">
-      <description>
-        <text xml:lang="en">A device has been reset or had its logs cleared. The recovery process calls restoreLogsFromBackup to restore the audit trail from a backup. If ErrorRestoreFailed is raised, recovery procedures are triggered to investigate why the backup cannot be restored.</text>
-        <text xml:lang="de">Ein Gerät wurde zurückgesetzt oder seine Protokolle gelöscht. Der Wiederherstellungsprozess ruft restoreLogsFromBackup auf, um die Audit-Trail aus einer Sicherung wiederherzustellen. Wenn ErrorRestoreFailed ausgelöst wird, werden Wiederherstellungsverfahren ausgelöst, um zu untersuchen, warum die Sicherung nicht wiederhergestellt werden kann.</text>
-      </description>
-      <relatedFunctions>restoreLogsFromBackup, deleteLogMessages</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Disaster recovery blocked by failed backup restore</text>
-        <text xml:lang="de">Notfallwiederherstellung blockiert durch fehlgeschlagene Sicherungswiederherstellung</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 3: Multi-Device Log Migration with Compatibility Check">
-      <description>
-        <text xml:lang="en">An enterprise system attempts to migrate logs from one device to another by exporting from the source device and restoring to the target device. When ErrorRestoreFailed is raised, it indicates compatibility issues between the devices. The system verifies device versions and backup formats.</text>
-        <text xml:lang="de">Ein Unternehmenssystem versucht, Protokolle von einem Gerät zu einem anderen zu migrieren, indem es vom Quellgerät exportiert und auf dem Zielgerät wiederherstellt. Wenn ErrorRestoreFailed ausgelöst wird, zeigt dies Kompatibilitätsprobleme zwischen den Geräten an. Das System verifiziert Geräteversionen und Sicherungsformate.</text>
-      </description>
-      <relatedFunctions>restoreLogsFromBackup, exportLogMessages</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Log migration fails due to device/backup format incompatibility</text>
-        <text xml:lang="de">Protokollmigration schlägt fehl aufgrund von Gerät-/Sicherungsformat-Inkompatibilität</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 4: Backup Testing and Validation">
-      <description>
-        <text xml:lang="en">A compliance system performs regular backup testing by exporting logs and restoring them from backup. When ErrorRestoreFailed is raised during testing, it triggers an alert - the backup is unusable and may not protect against data loss. The backup system is reviewed and corrected.</text>
-        <text xml:lang="de">Ein Compliance-System führt regelmäßig Sicherungstests durch, indem es Protokolle exportiert und aus der Sicherung wiederherstellt. Wenn ErrorRestoreFailed während des Tests ausgelöst wird, löst dies einen Alarm aus - die Sicherung ist nicht verwendbar und schützt möglicherweise nicht vor Datenverlust. Das Sicherungssystem wird überprüft und korrigiert.</text>
-      </description>
-      <relatedFunctions>restoreLogsFromBackup, exportLogMessages</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Backup testing identifies restore failure - backup unusable</text>
-        <text xml:lang="de">Sicherungstests identifizieren Wiederherstellungsfehler - Sicherung nicht verwendbar</text>
-      </errorContext>
-    </scenario>
-  </usage>
   <implementationContext>
     <note>
       <text xml:lang="en">Raised by restoreLogsFromBackup when restoration operation fails</text>

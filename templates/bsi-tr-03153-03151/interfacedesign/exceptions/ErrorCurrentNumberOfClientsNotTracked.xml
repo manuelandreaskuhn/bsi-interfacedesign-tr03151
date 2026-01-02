@@ -34,64 +34,6 @@
   <thrownBy>
     <function>getCurrentNumberOfClients</function>
   </thrownBy>
-  <triggerConditions>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Device with unlimited client support and no tracking mechanism</text>
-        <text xml:lang="de">Gerät mit unbegrenzter Client-Unterstützung und ohne Tracking-Mechanismus</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The device is configured to support a practically unlimited number of simultaneous clients and has deliberately omitted client counting functionality to avoid performance overhead and complexity. When getCurrentNumberOfClients is invoked, the device detects that client tracking is not available.</text>
-        <text xml:lang="de">Das Gerät ist so konfiguriert, dass es eine praktisch unbegrenzte Anzahl gleichzeitiger Clients unterstützt und die Client-Zählfunktionalität absichtlich weggelassen hat, um Leistungsaufwand und Komplexität zu vermeiden. Wenn getCurrentNumberOfClients aufgerufen wird, stellt das Gerät fest, dass Client-Tracking nicht verfügbar ist.</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">Invocation of getCurrentNumberOfClients on device without client tracking implementation</text>
-        <text xml:lang="de">Aufruf von getCurrentNumberOfClients auf Gerät ohne Client-Tracking-Implementierung</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Client tracking disabled via device configuration</text>
-        <text xml:lang="de">Client-Tracking durch Gerätekonfiguration deaktiviert</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The device implementation supports client tracking in general, but client tracking has been disabled or suspended through device configuration settings. This might be done for performance reasons, memory constraints, or to support a specific operational mode.</text>
-        <text xml:lang="de">Die Geräteimplementierung unterstützt Client-Tracking allgemein, aber Client-Tracking wurde durch Gerätekonfigurationseinstellungen deaktiviert oder ausgesetzt. Dies kann aus Leistungsgründen, Speicherbeschränkungen oder zur Unterstützung eines bestimmten Betriebsmodus erfolgen.</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">getCurrentNumberOfClients called on device with tracking capability but disabled tracking feature</text>
-        <text xml:lang="de">getCurrentNumberOfClients auf Gerät mit Tracking-Kapaziztät, aber deaktivierter Tracking-Funktion aufgerufen</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Device variant without client management subsystem</text>
-        <text xml:lang="de">Gerätevariante ohne Client-Verwaltungssubsystem</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The device is a variant that does not implement the client management subsystem at all. The registerClient and deregisterClient functions may not be implemented, and consequently, client tracking is also not available.</text>
-        <text xml:lang="de">Das Gerät ist eine Variante, die das Client-Verwaltungssubsystem überhaupt nicht implementiert. Die Funktionen registerClient und deregisterClient sind möglicherweise nicht implementiert, und folglich ist Client-Tracking auch nicht verfügbar.</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">getCurrentNumberOfClients invoked on device variant without client management implementation</text>
-        <text xml:lang="de">getCurrentNumberOfClients auf Gerätevariante ohne Client-Verwaltungsimplementierung aufgerufen</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Client tracking unavailable due to device state</text>
-        <text xml:lang="de">Client-Tracking aufgrund des Gerätezustands nicht verfügbar</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The device or a critical subsystem responsible for client tracking is in a state where tracking information cannot be reliably provided. This might occur after firmware updates, during recovery from errors, or during specific operational modes.</text>
-        <text xml:lang="de">Das Gerät oder ein kritisches Subsystem, das für Client-Tracking zuständig ist, ist in einem Zustand, in dem Tracking-Informationen nicht zuverlässig bereitgestellt werden können. Dies kann nach Firmware-Updates, während der Wiederherstellung von Fehlern oder während bestimmter Betriebsmodi auftreten.</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">Client tracking subsystem temporarily or permanently unavailable on this device instance</text>
-        <text xml:lang="de">Client-Tracking-Subsystem vorübergehend oder dauerhaft nicht verfügbar in dieser Geräteinstanz</text>
-      </trigger>
-    </condition>
-  </triggerConditions>
   <recovery>
     <step>
       <text xml:lang="en">Confirm device is in valid initialized state</text>
@@ -189,64 +131,6 @@
       <text xml:lang="de">Themen: Client-Verwaltung, Gerätezustand, Informationsabruf, Ressourcen-Tracking</text>
     </note>
   </notes>
-  <usage>
-    <scenario name="Scenario 1: Device Capability Discovery at Initialization">
-      <description>
-        <text xml:lang="en">An application attempts to query client count at initialization time to discover device capabilities. The exception indicates that client tracking is not available, prompting the application to implement client-side tracking.</text>
-        <text xml:lang="de">Eine Anwendung versucht, die Client-Anzahl zum Initialisierungszeitpunkt abzufragen, um Gerätekapaziztäten zu ermitteln. Die Ausnahme zeigt an, dass Client-Tracking nicht verfügbar ist, was die Anwendung veranlasst, Client-seitiges Tracking zu implementieren.</text>
-      </description>
-      <relatedFunctions>
-        <text xml:lang="en">getCurrentNumberOfClients, getMaxNumberOfClients, initializeDevice</text>
-        <text xml:lang="de">getCurrentNumberOfClients, getMaxNumberOfClients, initializeDevice</text>
-      </relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Capability discovery phase where application learns that client tracking is not available</text>
-        <text xml:lang="de">Kapaziztätentdeckungsphase, in der die Anwendung erfährt, dass Client-Tracking nicht verfügbar ist</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 2: Fallback to Alternative Client Information">
-      <description>
-        <text xml:lang="en">An application that requires client capacity information receives this exception and falls back to querying getMaxNumberOfClients or getRegisteredClients to obtain related information.</text>
-        <text xml:lang="de">Eine Anwendung, die Client-Kapaziztätsinformationen erfordert, erhält diese Ausnahme und fällt auf Abfragen von getMaxNumberOfClients oder getRegisteredClients zurück, um verwandte Informationen zu erhalten.</text>
-      </description>
-      <relatedFunctions>
-        <text xml:lang="en">getCurrentNumberOfClients, getMaxNumberOfClients, getRegisteredClients</text>
-        <text xml:lang="de">getCurrentNumberOfClients, getMaxNumberOfClients, getRegisteredClients</text>
-      </relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Graceful degradation where application adapts to missing capability</text>
-        <text xml:lang="de">Sanfte Herabstufung, bei der die Anwendung sich an fehlende Kapaziztät anpasst</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 3: Application-Level Client Registry Implementation">
-      <description>
-        <text xml:lang="en">An application responds to this exception by implementing its own client registry at the application level, tracking client registrations and deregistrations internally to monitor client counts.</text>
-        <text xml:lang="de">Eine Anwendung reagiert auf diese Ausnahme, indem sie ihre eigene Client-Registry auf Anwendungsebene implementiert, Client-Registrierungen und -Abmeldungen intern verfolgt, um Client-Zählungen zu überwachen.</text>
-      </description>
-      <relatedFunctions>
-        <text xml:lang="en">getCurrentNumberOfClients, registerClient, deregisterClient</text>
-        <text xml:lang="de">getCurrentNumberOfClients, registerClient, deregisterClient</text>
-      </relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Client management where application mirrors server-side client registration in local data structures</text>
-        <text xml:lang="de">Client-Verwaltung, bei der die Anwendung serverseitige Client-Registrierung in lokalen Datenstrukturen spiegelt</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 4: Device Variant Selection Based on Client Tracking">
-      <description>
-        <text xml:lang="en">An application that critically depends on client counting receives this exception and determines that this device variant is unsuitable. The application may retry with a different device instance or variant that supports client tracking.</text>
-        <text xml:lang="de">Eine Anwendung, die kritisch von Client-Zählung abhängt, erhält diese Ausnahme und bestimmt, dass diese Gerätevariante ungeeignet ist. Die Anwendung kann mit einer anderen Geräteinstanz oder Variante, die Client-Tracking unterstützt, erneut versuchen.</text>
-      </description>
-      <relatedFunctions>
-        <text xml:lang="en">getCurrentNumberOfClients, getComponentVersions, getDeviceHealth</text>
-        <text xml:lang="de">getCurrentNumberOfClients, getComponentVersions, getDeviceHealth</text>
-      </relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Device selection scenario where client tracking capability drives device choice</text>
-        <text xml:lang="de">Geräteauswahlszenario, bei dem die Client-Tracking-Kapaziztät die Geräteauswahl antreibt</text>
-      </errorContext>
-    </scenario>
-  </usage>
   <implementationContext>
     <note>
       <text xml:lang="en">Raised by getCurrentNumberOfClients when client count tracking unavailable</text>

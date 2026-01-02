@@ -51,78 +51,6 @@
     </applicability>
     <reference>Transaction Operations (3.3.2), Logging Operations (3.3.3), Signature Counter Management</reference>
   </specification>
-  <triggerConditions>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Signature counter reaches logical maximum value</text>
-        <text xml:lang="de">Signaturzähler erreicht logischen Maximalwert</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The signature counter has been incremented to its maximum possible value</text>
-        <text xml:lang="de">Der Signaturzähler wurde auf seinen maximalen möglichen Wert erhöht</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">A startTransaction call is made but the device detects the signature counter is already at maximum value (e.g., 2^64-1). ErrorSignatureCounterOverflow is raised because the counter cannot be incremented further.</text>
-        <text xml:lang="de">Ein startTransaction-Aufruf wird getätigt, aber das Gerät erkennt, dass der Signaturzähler bereits bei Maximalwert (z. B. 2^64-1) ist. ErrorSignatureCounterOverflow wird ausgelöst, da der Zähler nicht weiter erhöht werden kann.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Extremely high transaction volume over device lifetime</text>
-        <text xml:lang="de">Excessively hohes Transaktionsvolumen über Gerätelebensdauer</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The device has processed an extraordinarily large number of transactions</text>
-        <text xml:lang="de">Das Gerät hat eine außergewöhnlich große Anzahl von Transaktionen verarbeitet</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">After many years of production operation with very high transaction load, a finishTransaction call detects the signature counter has reached maximum. ErrorSignatureCounterOverflow is raised.</text>
-        <text xml:lang="de">Nach vielen Jahren des Produktionsbetriebs mit sehr hoher Transaktionslast erkennt ein finishTransaction-Aufruf, dass der Signaturzähler Maximum erreicht hat. ErrorSignatureCounterOverflow wird ausgelöst.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Counter size insufficient for system requirements</text>
-        <text xml:lang="de">Zählergröße unangemessen für Systemanforderungen</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The counter implementation uses insufficient bit width for the system's transaction volume</text>
-        <text xml:lang="de">Die Zähler-Implementierung verwendet unzureichende Bitbreite für das Systemtransaktionsvolumen</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">An updateTransaction call is made but counter reaches maximum because the counter size is too small for the system's transaction rate. ErrorSignatureCounterOverflow is raised.</text>
-        <text xml:lang="de">Ein updateTransaction-Aufruf wird getätigt, aber der Zähler erreicht Maximum, da die Zählergröße zu klein für die Systemtransaktionsrate ist. ErrorSignatureCounterOverflow wird ausgelöst.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Signature counter increment operation would overflow</text>
-        <text xml:lang="de">Signaturzähler-Inkrementoperation würde Überlauf verursachen</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The next increment operation would cause the counter to exceed its maximum value</text>
-        <text xml:lang="de">Die nächste Inkrementoperation würde dazu führen, dass der Zähler seinen Maximalwert überschreitet</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">A configureLogging call attempts to enable more transactions but the counter cannot be incremented further. ErrorSignatureCounterOverflow is raised to prevent overflow.</text>
-        <text xml:lang="de">Ein configureLogging-Aufruf versucht, mehr Transaktionen zu aktivieren, aber der Zähler kann nicht weiter erhöht werden. ErrorSignatureCounterOverflow wird ausgelöst, um Überlauf zu verhindern.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Device approaching or at theoretical maximum transaction limit</text>
-        <text xml:lang="de">Gerät nähert sich dem theoretischen Maximum Transaktionslimit oder befindet sich dort</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The device is at or approaching the theoretical maximum transactions it can support</text>
-        <text xml:lang="de">Das Gerät befindet sich am oder nähert sich dem theoretischen Maximum der Transaktionen, die es unterstützen kann</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">Any transaction operation detects the counter is at maximum. The device has reached its absolute transaction processing limit.</text>
-        <text xml:lang="de">Jede Transaktionsoperation erkennt, dass der Zähler am Maximum ist. Das Gerät hat seine absolute Transaktionsverarbeitungsgrenze erreicht.</text>
-      </trigger>
-    </condition>
-  </triggerConditions>
   <executionSequence>
     <step number="1">
       <text xml:lang="en">User/application calls transaction operation that requires signature counter increment (e.g., startTransaction)</text>
@@ -253,52 +181,6 @@
       <text xml:lang="de">Themen: Signaturoperationen, Zählerverwaltung, Ressourcengrenzen, Überlaufschutz</text>
     </note>
   </notes>
-  <usage>
-    <scenario name="Scenario 1: Counter Overflow After Decades of Operation">
-      <description>
-        <text xml:lang="en">A device has been in production for 20+ years processing millions of transactions daily. A startTransaction call finally receives ErrorSignatureCounterOverflow. The counter has reached its maximum after processing billions of transactions. The device is decommissioned and replaced.</text>
-        <text xml:lang="de">Ein Gerät war mehr als 20 Jahre lang in der Produktion und verarbeitete täglich Millionen von Transaktionen. Ein startTransaction-Aufruf empfängt schließlich ErrorSignatureCounterOverflow. Der Zähler hat sein Maximum erreicht, nachdem er Milliarden von Transaktionen verarbeitet hat. Das Gerät wird außer Betrieb genommen und ersetzt.</text>
-      </description>
-      <relatedFunctions>startTransaction, exportLogMessages, getDescription</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Device end-of-life due to counter overflow after decades of operation</text>
-        <text xml:lang="de">Gerät-End-of-Life aufgrund von ZählerÜberlauf nach Jahrzehnten des Betriebs</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 2: Counter Monitoring Predicts Overflow">
-      <description>
-        <text xml:lang="en">Capacity planning tools monitor counter growth rates and predict when counters will overflow based on current transaction volume. For a device projected to overflow in 5 years, replacement is scheduled proactively.</text>
-        <text xml:lang="de">Kapazitätsplanungstools überwachen Zählerwachstumsraten und prognostizieren, wann Zähler basierend auf aktuellem Transaktionsvolumen Überlauf verursachen werden. Für ein Gerät, von dem erwartet wird, dass es in 5 Jahren Überlauf verursacht, wird der Austausch proaktiv geplant.</text>
-      </description>
-      <relatedFunctions>getDescription, startTransaction</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Proactive planning detects future counter overflow risk</text>
-        <text xml:lang="de">Proaktive Planung erkennt zukünftiges ZählerÜberlauf-Risiko</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 3: Unexpected Counter Overflow Detection">
-      <description>
-        <text xml:lang="en">A system experiences unexpected transaction processing failure. Investigation reveals a startTransaction call receives ErrorSignatureCounterOverflow. Analysis shows the counter was undersized for the actual transaction volume. Emergency device replacement is performed and counter sizing is reviewed.</text>
-        <text xml:lang="de">Ein System erleidet einen unerwarteten Transaktionsverarbeitungsfehler. Die Untersuchung zeigt, dass ein startTransaction-Aufruf ErrorSignatureCounterOverflow empfängt. Die Analyse zeigt, dass der Zähler für das tatsächliche Transaktionsvolumen unterbewertet war. Ein Notfall-Geräteaustausch wird durchgeführt und die Zählergröße wird überprüft.</text>
-      </description>
-      <relatedFunctions>startTransaction, finishTransaction</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Emergency handling of unexpected counter overflow due to undersized counter</text>
-        <text xml:lang="de">Notfallbehandlung des unerwarteten ZählerÜberlaufs aufgrund eines unterbewerteten Zählers</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 4: High-Load System Counter Management">
-      <description>
-        <text xml:lang="en">A high-volume transaction system monitors counter increment rates. When counter is predicted to overflow in 2 months at current load, the system schedules gradual migration of transactions to replacement devices to maintain continuous service.</text>
-        <text xml:lang="de">Ein Hochvolumen-Transaktionssystem überwacht Zähler-Inkrementraten. Wenn erwartet wird, dass der Zähler in 2 Monaten bei aktueller Last Überlauf verursacht, plant das System eine schrittweise Migration von Transaktionen auf Ersatzgeräte, um kontinuierliche Dienstleistung aufrechtzuerhalten.</text>
-      </description>
-      <relatedFunctions>startTransaction, getDescription</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Managed transition planning for high-load systems with predictable counter overflow</text>
-        <text xml:lang="de">Verwaltete Übergangspplanung für Hochlastsysteme mit vorhersehbarem ZählerÜberlauf</text>
-      </errorContext>
-    </scenario>
-  </usage>
   <implementationContext>
     <note>
       <text xml:lang="en">Raised by logging functions when signature counter would overflow</text>

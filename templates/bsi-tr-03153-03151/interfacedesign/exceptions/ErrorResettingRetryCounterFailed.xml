@@ -34,78 +34,6 @@
   <thrownBy>
     <function>unblockPin</function>
   </thrownBy>
-  <triggerConditions>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Device storage write failure during retry counter reset</text>
-        <text xml:lang="de">Gerätespeicherschreibfehler während des Zurücksetzen des Wiederholungszählers</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">PIN is unblocked successfully but device fails to write the reset retry counter value to storage</text>
-        <text xml:lang="de">PIN ist erfolgreich entsperrt, aber das Gerät kann den zurückgesetzten Wiederholungszählerwert nicht in den Speicher schreiben</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">The unblockPin function successfully verifies the PUK and sets a new PIN. When attempting to reset the retry counter, the device encounters a storage write failure. The counter remains at its old value and ErrorResettingRetryCounterFailed is raised.</text>
-        <text xml:lang="de">Die unblockPin-Funktion überprüft die PUK erfolgreich und setzt eine neue PIN. Beim Versuch, den Wiederholungszähler zurückzusetzen, tritt beim Gerät ein Speicherschreibfehler auf. Der Zähler bleibt bei seinem alten Wert und ErrorResettingRetryCounterFailed wird ausgelöst.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Device communication failure during counter reset step</text>
-        <text xml:lang="de">Gerätekommunikationsfehler während des Schritts zum Zurücksetzen des Zählers</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">PIN unblock and new PIN set succeed but communication fails during the retry counter reset transmission</text>
-        <text xml:lang="de">PIN-Entsperrung und neue PIN-Einstellung sind erfolgreich, aber die Kommunikation schlägt während der Übertragung des Wiederholungszählers fehl</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">The unblockPin function completes PIN unblocking and new PIN setting. When transmitting the command to reset the retry counter, device communication is lost. The counter reset is not confirmed and ErrorResettingRetryCounterFailed is raised.</text>
-        <text xml:lang="de">Die unblockPin-Funktion schließt die PIN-Entsperrung und die neue PIN-Einstellung ab. Beim Übertragen des Befehls zum Zurücksetzen des Wiederholungszählers geht die Gerätekommunikation verloren. Das Zurücksetzen des Zählers wird nicht bestätigt und ErrorResettingRetryCounterFailed wird ausgelöst.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Device internal error during retry counter update</text>
-        <text xml:lang="de">Interner Gerätefehler während der Aktualisierung des Wiederholungszählers</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">Secure Element reports an internal error when attempting to update the retry counter</text>
-        <text xml:lang="de">Secure Element meldet einen internen Fehler beim Versuch, den Wiederholungszähler zu aktualisieren</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">The unblockPin function successfully completes PIN-related operations. When the device attempts to update the retry counter, it encounters an internal error (hardware issue, verification failure, etc.). ErrorResettingRetryCounterFailed is raised.</text>
-        <text xml:lang="de">Die unblockPin-Funktion schließt PIN-bezogene Operationen erfolgreich ab. Wenn das Gerät versucht, den Wiederholungszähler zu aktualisieren, tritt ein interner Fehler auf (Hardwareproblem, Überprüfungsfehler usw.). ErrorResettingRetryCounterFailed wird ausgelöst.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Partial transaction rollback leaves counter unreset</text>
-        <text xml:lang="de">Teilweises Transaktions-Rollback hinterlässt Zähler ohne Zurücksetzen</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">A partial transaction or atomic operation failure leaves the retry counter in an unreset state</text>
-        <text xml:lang="de">Ein teilweiser Transaktions- oder Atomoperationsfehler hinterlässt den Wiederholungszähler in einem nicht zurückgesetzten Zustand</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">The unblockPin operation uses an atomic transaction to update PIN and counter. The transaction fails on the counter update step but the PIN update is already committed. The counter remains unreset and ErrorResettingRetryCounterFailed is raised.</text>
-        <text xml:lang="de">Die unblockPin-Operation verwendet eine atomare Transaktion zur Aktualisierung von PIN und Zähler. Die Transaktion schlägt beim Zähler-Update-Schritt fehl, aber das PIN-Update ist bereits übergeben. Der Zähler bleibt nicht zurückgesetzt und ErrorResettingRetryCounterFailed wird ausgelöst.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Device resource exhaustion during counter reset</text>
-        <text xml:lang="de">Ressourcenerschöpfung des Geräts während des Zählers-Zurücksetzen</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">Device lacks resources to complete the retry counter reset operation</text>
-        <text xml:lang="de">Das Gerät verfügt nicht über ausreichende Ressourcen zum Abschließen der Wiederholungszähler-Zurücksetzen-Operation</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">The PIN is successfully unblocked but the device runs out of resources (memory, processing) when attempting to reset the retry counter. ErrorResettingRetryCounterFailed is raised.</text>
-        <text xml:lang="de">Die PIN ist erfolgreich entsperrt, aber dem Gerät gehen die Ressourcen (Speicher, Verarbeitung) aus, wenn versucht wird, den Wiederholungszähler zurückzusetzen. ErrorResettingRetryCounterFailed wird ausgelöst.</text>
-      </trigger>
-    </condition>
-  </triggerConditions>
   <executionSequence>
     <step number="1">
       <text xml:lang="en">User/application calls unblockPin function with user ID and PUK</text>
@@ -225,52 +153,6 @@
       <text xml:lang="de">Themen: PIN-Verwaltung, Zähler-Operationen, Wiederholungs-Operationen, Authentifizierung</text>
     </note>
   </notes>
-  <usage>
-    <scenario name="Scenario 1: PIN Unblock with Partial Failure Handling">
-      <description>
-        <text xml:lang="en">An application calls unblockPin to unblock a user's PIN using the correct PUK. The function raises ErrorResettingRetryCounterFailed, indicating the PIN is unblocked but the retry counter was not reset. The application informs the user that their PIN is now active but the account should have the retry counter reset for consistency.</text>
-        <text xml:lang="de">Eine Anwendung ruft unblockPin auf, um die PIN eines Benutzers mit der korrekten PUK zu entsperren. Die Funktion wirft ErrorResettingRetryCounterFailed auf, was anzeigt, dass die PIN entsperrt ist, aber der Wiederholungszähler nicht zurückgesetzt wurde. Die Anwendung teilt dem Benutzer mit, dass seine PIN jetzt aktiv ist, aber das Konto zur Konsistenz den Wiederholungszähler zurücksetzen sollte.</text>
-      </description>
-      <relatedFunctions>unblockPin, authenticateUser</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">PIN unblocked successfully but retry counter reset failed</text>
-        <text xml:lang="de">PIN erfolgreich entsperrt, aber Zurücksetzen des Wiederholungszählers fehlgeschlagen</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 2: Device State Verification After Partial Failure">
-      <description>
-        <text xml:lang="en">After receiving ErrorResettingRetryCounterFailed, an application queries the device to verify the PIN is actually unblocked and checks the current retry counter value. The application logs the inconsistent state and schedules a task to reset the counter.</text>
-        <text xml:lang="de">Nach Empfang von ErrorResettingRetryCounterFailed frägt eine Anwendung das Gerät ab, um zu prüfen, ob die PIN tatsächlich entsperrt ist, und prüft den aktuellen Wiederholungszählerwert. Die Anwendung protokolliert den inkonsistenten Zustand und plant eine Aufgabe zum Zurücksetzen des Zählers.</text>
-      </description>
-      <relatedFunctions>unblockPin</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Verification of device state after partial PIN unblocking failure</text>
-        <text xml:lang="de">Verifizierung des Gerätezustands nach teilweisem PIN-Entsperrungs-Fehler</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 3: Automatic Recovery with Retry Counter Reset">
-      <description>
-        <text xml:lang="en">When ErrorResettingRetryCounterFailed is raised, a recovery procedure is triggered that calls an administrative reset function to reset the retry counter. After the counter is reset, the account is in a consistent state.</text>
-        <text xml:lang="de">Wenn ErrorResettingRetryCounterFailed ausgelöst wird, wird ein Wiederherstellungsverfahren ausgelöst, das eine administrative Zurücksetzen-Funktion aufruft, um den Wiederholungszähler zurückzusetzen. Nach dem Zurücksetzen des Zählers ist das Konto in einem konsistenten Zustand.</text>
-      </description>
-      <relatedFunctions>unblockPin</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Automatic recovery attempting to reset retry counter after partial failure</text>
-        <text xml:lang="de">Automatische Wiederherstellung beim Versuch, den Wiederholungszähler nach teilweisem Fehler zurückzusetzen</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 4: User Communication About Inconsistent State">
-      <description>
-        <text xml:lang="en">A support system receives ErrorResettingRetryCounterFailed during a user PIN recovery process. The system informs the user that their PIN is now active, but also notifies them that they should be careful with their next authentication attempts as the retry counter may not have been reset properly.</text>
-        <text xml:lang="de">Ein Support-System erhält ErrorResettingRetryCounterFailed während eines Benutzer-PIN-Wiederherstellungsprozesses. Das System teilt dem Benutzer mit, dass seine PIN jetzt aktiv ist, warnt ihn aber auch davor, dass er bei seinen nächsten Authentifizierungsversuchen vorsichtig sein sollte, da der Wiederholungszähler möglicherweise nicht ordnungsgemäß zurückgesetzt wurde.</text>
-      </description>
-      <relatedFunctions>unblockPin</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">User guidance after partial PIN unblocking failure</text>
-        <text xml:lang="de">Benutzerführung nach teilweisem PIN-Entsperrungs-Fehler</text>
-      </errorContext>
-    </scenario>
-  </usage>
   <implementationContext>
     <note>
       <text xml:lang="en">Raised by unblockPin when retry counter reset fails</text>

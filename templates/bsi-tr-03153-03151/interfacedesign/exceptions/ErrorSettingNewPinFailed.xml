@@ -34,78 +34,6 @@
   <thrownBy>
     <function>unblockPin</function>
   </thrownBy>
-  <triggerConditions>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Invalid new PIN format or policy violation</text>
-        <text xml:lang="de">Ungültiges neues PIN-Format oder Richtlinienverletzung</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The new PIN does not meet security policy requirements</text>
-        <text xml:lang="de">Die neue PIN erfüllt nicht die Sicherheitsrichtlinienanforderungen</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">An unblockPin call provides a new PIN that violates policy (too short, invalid characters, weak PIN). The device validates the new PIN and raises ErrorSettingNewPinFailed.</text>
-        <text xml:lang="de">Ein unblockPin-Aufruf stellt eine neue PIN bereit, die die Richtlinie verletzt (zu kurz, ungültige Zeichen, schwache PIN). Das Gerät validiert die neue PIN und wirft ErrorSettingNewPinFailed auf.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Device storage write error for new PIN</text>
-        <text xml:lang="de">Gerätespeicher-Schreibfehler für neue PIN</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The device fails to write the new PIN to storage</text>
-        <text xml:lang="de">Das Gerät kann die neue PIN nicht im Speicher schreiben</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">An unblockPin call reaches the new PIN setting step but the device encounters storage write errors. The new PIN cannot be stored and ErrorSettingNewPinFailed is raised.</text>
-        <text xml:lang="de">Ein unblockPin-Aufruf erreicht den Schritt zur neuen PIN-Einstellung, aber das Gerät stößt auf Speicher-Schreibfehler. Die neue PIN kann nicht gespeichert werden und ErrorSettingNewPinFailed wird ausgelöst.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Device internal error during PIN setting</text>
-        <text xml:lang="de">Geräteinterner Fehler während der PIN-Einstellung</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The device encounters an internal error while processing the new PIN</text>
-        <text xml:lang="de">Das Gerät stößt auf einen internen Fehler während der Verarbeitung der neuen PIN</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">An unblockPin call processes the new PIN but the device encounters internal processing errors. The device aborts the PIN setting and raises ErrorSettingNewPinFailed.</text>
-        <text xml:lang="de">Ein unblockPin-Aufruf verarbeitet die neue PIN, aber das Gerät stößt auf interne Verarbeitungsfehler. Das Gerät bricht die PIN-Einstellung ab und wirft ErrorSettingNewPinFailed auf.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Communication failure during PIN setting</text>
-        <text xml:lang="de">Kommunikationsfehler während der PIN-Einstellung</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">Communication with the device is lost during new PIN setting</text>
-        <text xml:lang="de">Die Kommunikation mit dem Gerät wird während der neuen PIN-Einstellung unterbrochen</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">An unblockPin call transmits new PIN data but communication is interrupted. The device cannot complete PIN setting and raises ErrorSettingNewPinFailed.</text>
-        <text xml:lang="de">Ein unblockPin-Aufruf überträgt neue PIN-Daten, aber die Kommunikation wird unterbrochen. Das Gerät kann die PIN-Einstellung nicht abschließen und wirft ErrorSettingNewPinFailed auf.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">PIN policy configuration error</text>
-        <text xml:lang="de">Fehler in der PIN-Richtlinienkonfiguration</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">Device PIN security policy configuration prevents the new PIN from being set</text>
-        <text xml:lang="de">Die Konfiguration der Geräte-PIN-Sicherheitsrichtlinie verhindert das Festlegen der neuen PIN</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">An unblockPin call attempts to set a new PIN but device policy configuration prevents it (policy timeout, policy lock). The device raises ErrorSettingNewPinFailed.</text>
-        <text xml:lang="de">Ein unblockPin-Aufruf versucht, eine neue PIN festzulegen, aber die Geräterichtlinienkonfiguration verhindert dies (Richtlinien-Timeout, Richtliniensperre). Das Gerät wirft ErrorSettingNewPinFailed auf.</text>
-      </trigger>
-    </condition>
-  </triggerConditions>
   <executionSequence>
     <step number="1">
       <text xml:lang="en">User/application calls unblockPin function with PUK and new PIN parameters</text>
@@ -253,52 +181,6 @@
       <text xml:lang="de">Themen: PIN-Verwaltung, Authentifizierung, Passwortverwaltung, Benutzerverwaltung</text>
     </note>
   </notes>
-  <usage>
-    <scenario name="Scenario 1: User PIN Unblock with Policy Validation">
-      <description>
-        <text xml:lang="en">A user with a blocked PIN calls unblockPin with their PUK and a new PIN. The new PIN is too short and violates security policy. ErrorSettingNewPinFailed is raised. The user is informed about PIN requirements and retries with a valid PIN.</text>
-        <text xml:lang="de">Ein Benutzer mit einer blockierten PIN ruft unblockPin mit seinem PUK und einer neuen PIN auf. Die neue PIN ist zu kurz und verletzt die Sicherheitsrichtlinie. ErrorSettingNewPinFailed wird ausgelöst. Der Benutzer wird über PIN-Anforderungen informiert und versucht erneut mit einer gültigen PIN.</text>
-      </description>
-      <relatedFunctions>unblockPin, authenticateUser</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">PIN unblock fails due to new PIN violating security policy</text>
-        <text xml:lang="de">PIN-Entsperrung fehlgeschlagen, da neue PIN Sicherheitsrichtlinie verletzt</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 2: PIN Recovery with Device Storage Issues">
-      <description>
-        <text xml:lang="en">A PIN recovery process calls unblockPin. The PUK authentication succeeds but device storage fails when attempting to write the new PIN. ErrorSettingNewPinFailed is raised. The administrator is notified of device storage problems.</text>
-        <text xml:lang="de">Ein PIN-Wiederherstellungsprozess ruft unblockPin auf. Die PUK-Authentifizierung ist erfolgreich, aber der Gerätespeicher schlägt bei dem Versuch, die neue PIN zu schreiben, fehl. ErrorSettingNewPinFailed wird ausgelöst. Der Administrator wird über Gerätespeicherprobleme benachrichtigt.</text>
-      </description>
-      <relatedFunctions>unblockPin, selfTest</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">PIN recovery blocked by device storage failure</text>
-        <text xml:lang="de">PIN-Wiederherstellung blockiert durch Gerätespeicherfehler</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 3: Help Desk PIN Reset with Retry Logic">
-      <description>
-        <text xml:lang="en">Help desk staff use unblockPin to reset a user's PIN. When ErrorSettingNewPinFailed is raised, the help desk system logs the failure, verifies the new PIN meets policy, and retries the operation.</text>
-        <text xml:lang="de">Das Helpdesk-Personal verwendet unblockPin, um die PIN eines Benutzers zurückzusetzen. Wenn ErrorSettingNewPinFailed ausgelöst wird, protokolliert das Helpdesk-System den Fehler, vergewissert sich, dass die neue PIN die Richtlinie erfüllt, und versucht die Operation erneut.</text>
-      </description>
-      <relatedFunctions>unblockPin, getDescription</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Help desk PIN reset operation encounters new PIN setting failure</text>
-        <text xml:lang="de">Helpdesk PIN-Rücksetzvorgang stößt auf Fehler bei der neuen PIN-Einstellung</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 4: Emergency Access with Authentication Recovery">
-      <description>
-        <text xml:lang="en">An employee locked out of the system calls emergency support to unblock their PIN. When ErrorSettingNewPinFailed is raised, support verifies device state and works through recovery procedures to restore PIN access.</text>
-        <text xml:lang="de">Ein Mitarbeiter, der aus dem System ausgesperrt ist, ruft den Notfall-Support an, um seine PIN freizuschalten. Wenn ErrorSettingNewPinFailed ausgelöst wird, vergewissert sich der Support des Gerätezustands und arbeitet Wiederherstellungsverfahren durch, um den PIN-Zugriff wiederherzustellen.</text>
-      </description>
-      <relatedFunctions>unblockPin, authenticateUser</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Emergency PIN recovery blocked by new PIN setting failure</text>
-        <text xml:lang="de">Notfall-PIN-Wiederherstellung blockiert durch Fehler bei der neuen PIN-Einstellung</text>
-      </errorContext>
-    </scenario>
-  </usage>
   <implementationContext>
     <note>
       <text xml:lang="en">Raised by unblockPin when new PIN assignment fails</text>

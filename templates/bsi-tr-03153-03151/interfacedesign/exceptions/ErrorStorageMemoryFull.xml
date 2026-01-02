@@ -51,78 +51,6 @@
     </applicability>
     <reference>Secure Element Storage Capacity (3.2), SE API Functions (3.3)</reference>
   </specification>
-  <triggerConditions>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Storage capacity exhausted by transaction logs</text>
-        <text xml:lang="de">Speicherkapazität durch Transaktionsprotokolle erschöpft</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">Transaction log accumulation has filled available storage</text>
-        <text xml:lang="de">Die Ansammlung von Transaktionsprotokollen hat den verfügbaren Speicher gefüllt</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">A finishTransaction call attempts to write transaction log but storage is full. The device detects full storage and raises ErrorStorageMemoryFull.</text>
-        <text xml:lang="de">Ein finishTransaction-Aufruf versucht, das Transaktionsprotokoll zu schreiben, aber der Speicher ist voll. Das Gerät erkennt vollen Speicher und löst ErrorStorageMemoryFull aus.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Inadequate storage for application workload</text>
-        <text xml:lang="de">Unzureichender Speicher für die Anwendungsarbeitslast</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">Storage capacity is insufficient for the application's transaction volume</text>
-        <text xml:lang="de">Die Speicherkapazität ist unzureichend für das Transaktionsvolumen der Anwendung</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">After many transactions, a startTransaction call attempts to create new transaction but storage is full. The device has insufficient storage for the workload and ErrorStorageMemoryFull is raised.</text>
-        <text xml:lang="de">Nach vielen Transaktionen versucht ein startTransaction-Aufruf, eine neue Transaktion zu erstellen, aber der Speicher ist voll. Das Gerät hat unzureichenden Speicher für die Arbeitslast und ErrorStorageMemoryFull wird ausgelöst.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Logs not regularly exported or archived</text>
-        <text xml:lang="de">Protokolle nicht regelmäßig exportiert oder archiviert</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">Storage fills because logs are not being managed through export/deletion</text>
-        <text xml:lang="de">Der Speicher füllt sich, weil die Protokolle nicht durch Export/Löschung verwaltet werden</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">An updateTransaction call reaches storage full condition. Analysis reveals logs have accumulated without regular export/deletion and storage is exhausted.</text>
-        <text xml:lang="de">Ein updateTransaction-Aufruf erreicht die Speicher-voll-Bedingung. Die Analyse zeigt, dass sich Protokolle ohne regelmäßigen Export/Löschung angesammelt haben und der Speicher erschöpft ist.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Configuration or user data consuming storage</text>
-        <text xml:lang="de">Konfiguration oder Benutzerdaten verbrauchen Speicher</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">Device configuration or user data has consumed available storage space</text>
-        <text xml:lang="de">Die Gerätekonfiguration oder Benutzerdaten haben den verfügbaren Speicherplatz verbraucht</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">A setDescription call attempts to update description but storage is full. Storage capacity is exhausted by accumulated data.</text>
-        <text xml:lang="de">Ein setDescription-Aufruf versucht, die Beschreibung zu aktualisieren, aber der Speicher ist voll. Die Speicherkapazität ist durch angesammelte Daten erschöpft.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Log restoration attempt when storage is full</text>
-        <text xml:lang="de">Versuch der Log-Wiederherstellung, wenn der Speicher voll ist</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">Attempting to restore logs from backup when storage is already full</text>
-        <text xml:lang="de">Versuch, Protokolle aus einer Sicherung wiederherzustellen, wenn der Speicher bereits voll ist</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">A restoreLogsFromBackup call attempts to restore logs but storage is full. The restore cannot proceed and ErrorStorageMemoryFull is raised.</text>
-        <text xml:lang="de">Ein restoreLogsFromBackup-Aufruf versucht, Protokolle wiederherzustellen, aber der Speicher ist voll. Die Wiederherstellung kann nicht fortgesetzt werden und ErrorStorageMemoryFull wird ausgelöst.</text>
-      </trigger>
-    </condition>
-  </triggerConditions>
   <executionSequence>
     <step number="1">
       <text xml:lang="en">User/application calls an SE API function that requires storage write (e.g., finishTransaction)</text>
@@ -241,52 +169,6 @@
       <text xml:lang="de">Themen: Speicheroperationen, Speicherverwaltung, Speicherkapazität, Ressourcenlimits</text>
     </note>
   </notes>
-  <usage>
-    <scenario name="Scenario 1: Storage Full During Peak Transaction Load">
-      <description>
-        <text xml:lang="en">A high-volume transaction system reaches storage full during peak load. A finishTransaction call raises ErrorStorageMemoryFull. Emergency storage cleanup procedures export and delete old logs, freeing space. Operations resume after storage cleanup.</text>
-        <text xml:lang="de">Ein hochvolumiges Transaktionssystem erreicht vollen Speicher während der Spitzenlast. Ein finishTransaction-Aufruf löst ErrorStorageMemoryFull aus. Notfall-Speicherbereinigungsverfahren exportieren und löschen alte Protokolle und geben Platz frei. Operationen werden nach der Speicherbereinigung fortgesetzt.</text>
-      </description>
-      <relatedFunctions>finishTransaction, startTransaction, exportLogMessages, deleteLogMessages</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Production transaction processing blocked by full storage during peak load</text>
-        <text xml:lang="de">Produktions-Transaktionsverarbeitung durch vollen Speicher während der Spitzenlast blockiert</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 2: Proactive Storage Management">
-      <description>
-        <text xml:lang="en">A monitoring system tracks storage utilization. When storage reaches 80% capacity, the system automatically exports logs and deletes archived entries. This proactive approach prevents ErrorStorageMemoryFull during operations.</text>
-        <text xml:lang="de">Ein Überwachungssystem verfolgt die Speichernutzung. Wenn der Speicher 80% Kapazität erreicht, exportiert das System automatisch Protokolle und löscht archivierte Einträge. Dieser proaktive Ansatz verhindert ErrorStorageMemoryFull während der Operationen.</text>
-      </description>
-      <relatedFunctions>getTotalMemory, getUsedMemory, getFreeMemory, exportLogMessages, deleteLogMessages</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Proactive storage management prevents storage full conditions</text>
-        <text xml:lang="de">Proaktive Speicherverwaltung verhindert Speicher-voll-Bedingungen</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 3: Storage Capacity Upgrade Triggered">
-      <description>
-        <text xml:lang="en">A system experiences ErrorStorageMemoryFull frequently despite regular log export. Analysis shows storage capacity is inadequate for the transaction workload. Device is upgraded with larger storage or storage management is improved.</text>
-        <text xml:lang="de">Ein System erfährt ErrorStorageMemoryFull häufig trotz regelmäßigen Log-Exports. Die Analyse zeigt, dass die Speicherkapazität für die Transaktionsarbeitslast unzureichend ist. Das Gerät wird mit größerem Speicher aktualisiert oder die Speicherverwaltung wird verbessert.</text>
-      </description>
-      <relatedFunctions>startTransaction, getTotalMemory</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Repeated storage full errors trigger storage capacity upgrade decision</text>
-        <text xml:lang="de">Wiederholte Speicher-voll-Fehler lösen Entscheidung zur Speicherkapazitäts-Aufruestung aus</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 4: Log Restoration Blocked by Full Storage">
-      <description>
-        <text xml:lang="en">A restoreLogsFromBackup call to restore archived logs fails because storage is already full. The system must first export and delete current logs to free space, then retry the restore operation.</text>
-        <text xml:lang="de">Ein restoreLogsFromBackup-Aufruf zur Wiederherstellung archivierter Protokolle schlägt fehl, da der Speicher bereits voll ist. Das System muss zuerst aktuelle Protokolle exportieren und löschen, um Platz freizugeben, und dann den Wiederherstellungsvorgang wiederholen.</text>
-      </description>
-      <relatedFunctions>restoreLogsFromBackup, exportLogMessages, deleteLogMessages</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Log restoration requires storage space to be freed first</text>
-        <text xml:lang="de">Log-Wiederherstellung erfordert, dass Speicherplatz zuerst freigegeben wird</text>
-      </errorContext>
-    </scenario>
-  </usage>
   <implementationContext>
     <note>
       <text xml:lang="en">Raised by functions when device storage capacity exhausted</text>

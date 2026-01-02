@@ -51,78 +51,6 @@
     </applicability>
     <reference>Secure Element Architecture (3.2)</reference>
   </specification>
-  <triggerConditions>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Physical connector disconnection</text>
-        <text xml:lang="de">Physikalische Steckerentrennung</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">A physical connector or interface between Secure Element components becomes disconnected</text>
-        <text xml:lang="de">Ein physikalischer Stecker oder eine Schnittstelle zwischen Secure Element-Komponenten wird getrennt</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">An SE API function is executing when a physical connector between components fails or is disconnected. The device detects the connection loss and raises ErrorSecureElementPartsDisconnected.</text>
-        <text xml:lang="de">Eine SE-API-Funktion wird ausgeführt, wenn ein physikalischer Stecker zwischen Komponenten ausfällt oder getrennt wird. Das Gerät erkennt den Verbindungsverlust und wirft ErrorSecureElementPartsDisconnected auf.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Communication channel failure between components</text>
-        <text xml:lang="de">Kommunikationskanalfehler zwischen Komponenten</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The communication link between Secure Element components fails or becomes unreliable</text>
-        <text xml:lang="de">Die Kommunikationsverbindung zwischen Secure Element-Komponenten fällt aus oder wird unzuverlässig</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">An SE API operation requires communication between components but the channel fails. The operation cannot complete and ErrorSecureElementPartsDisconnected is raised.</text>
-        <text xml:lang="de">Eine SE-API-Operation erfordert Kommunikation zwischen Komponenten, aber der Kanal fällt aus. Die Operation kann nicht abgeschlossen werden und ErrorSecureElementPartsDisconnected wird ausgelöst.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Component hardware malfunction or failure</text>
-        <text xml:lang="de">Komponentenhardwarefehler oder -ausfall</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">A critical component of the Secure Element malfunctions or fails</text>
-        <text xml:lang="de">Eine kritische Komponente des Secure Element funktioniert falsch oder fällt aus</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">An SE API function is executing and a component hardware failure is detected (processor failure, memory failure, interface failure). The device raises ErrorSecureElementPartsDisconnected.</text>
-        <text xml:lang="de">Eine SE-API-Funktion wird ausgeführt und ein Komponentenhardwarefehler wird erkannt (Prozessorfehler, Speicherfehler, Schnittstellenfehler). Das Gerät wirft ErrorSecureElementPartsDisconnected auf.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Component removal during operation</text>
-        <text xml:lang="de">Komponentenentfernung während des Betriebs</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">A component is physically removed or disabled while the Secure Element is operating</text>
-        <text xml:lang="de">Eine Komponente wird physikalisch entfernt oder deaktiviert, während das Secure Element betrieben wird</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">During SE API operation, a component is physically removed or its power supply is cut. The device detects the loss and raises ErrorSecureElementPartsDisconnected.</text>
-        <text xml:lang="de">Während der SE-API-Operation wird eine Komponente physikalisch entfernt oder ihre Stromversorgung unterbrochen. Das Gerät erkennt den Verlust und wirft ErrorSecureElementPartsDisconnected auf.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Cryptographic subsystem disconnection</text>
-        <text xml:lang="de">Kryptografisches Subsystem-Trennverbindung</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The cryptographic processing component becomes unreachable</text>
-        <text xml:lang="de">Die Kryptografie-Verarbeitungskomponente wird unerreichbar</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">An SE API function requiring cryptographic operations is called. The device attempts to access the crypto subsystem but communication fails. ErrorSecureElementPartsDisconnected is raised.</text>
-        <text xml:lang="de">Eine SE-API-Funktion, die kryptografische Operationen erfordert, wird aufgerufen. Das Gerät versucht, auf das Krypto-Subsystem zuzugreifen, aber die Kommunikation fällt aus. ErrorSecureElementPartsDisconnected wird ausgelöst.</text>
-      </trigger>
-    </condition>
-  </triggerConditions>
   <executionSequence>
     <step number="1">
       <text xml:lang="en">User/application calls an SE API function that requires component connectivity (e.g., authenticateUser)</text>
@@ -237,52 +165,6 @@
       <text xml:lang="de">Themen: Secure Element Verwaltung, Hardware, Komponentenkommunikation, Gerätestatus</text>
     </note>
   </notes>
-  <usage>
-    <scenario name="Scenario 1: Component Disconnection Detection During Authentication">
-      <description>
-        <text xml:lang="en">An application attempts to authenticate a user by calling authenticateUser. During authentication, the Secure Element detects that a component has disconnected (e.g., cryptographic processor becomes unreachable). ErrorSecureElementPartsDisconnected is raised. The application halts operations and alerts administrator.</text>
-        <text xml:lang="de">Eine Anwendung versucht, einen Benutzer durch Aufrufen von authenticateUser zu authentifizieren. Während der Authentifizierung erkennt das Secure Element, dass eine Komponente die Verbindung getrennt hat (z. B. Kryptografie-Prozessor wird unerreichbar). ErrorSecureElementPartsDisconnected wird ausgelöst. Die Anwendung hält Operationen an und warnt den Administrator.</text>
-      </description>
-      <relatedFunctions>authenticateUser, initialize, selfTest</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Authentication fails due to detected component disconnection - hardware failure</text>
-        <text xml:lang="de">Authentifizierung fällt aufgrund der erkannten Komponententrennverbindung fehl - Hardwarefehler</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 2: Component Failure Detection During Transaction">
-      <description>
-        <text xml:lang="en">Transaction processing is in progress when a component communication failure occurs. The finishTransaction operation detects component disconnection and raises ErrorSecureElementPartsDisconnected. The transaction state is uncertain. Hardware is inspected and repaired before processing resumes.</text>
-        <text xml:lang="de">Die Transaktionsverarbeitung ist laufend, wenn ein Komponentenkommunikationsfehler auftritt. Die finishTransaction-Operation erkennt die Komponententrennverbindung und wirft ErrorSecureElementPartsDisconnected auf. Der Transaktionszustand ist unsicher. Die Hardware wird untersucht und repariert, bevor die Verarbeitung fortgesetzt wird.</text>
-      </description>
-      <relatedFunctions>startTransaction, updateTransaction, finishTransaction</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Transaction processing blocked by component hardware failure</text>
-        <text xml:lang="de">Transaktionsverarbeitung blockiert durch Komponentenhardwarefehler</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 3: Self-Test Reveals Component Disconnection">
-      <description>
-        <text xml:lang="en">A system administrator runs a selfTest operation to verify device health. The test detects a component communication failure and ErrorSecureElementPartsDisconnected is raised. The administrator schedules device maintenance or replacement.</text>
-        <text xml:lang="de">Ein Systemadministrator führt eine selfTest-Operation aus, um die Geräteintegrität zu überprüfen. Der Test erkennt einen Komponentenkommunikationsfehler und ErrorSecureElementPartsDisconnected wird ausgelöst. Der Administrator plant Gerätewartung oder -austausch ein.</text>
-      </description>
-      <relatedFunctions>selfTest, initialize</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Self-test reveals component connectivity issue</text>
-        <text xml:lang="de">Selbsttest zeigt Komponentenverbindungsproblem auf</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 4: Physical Connector Loosening Detected">
-      <description>
-        <text xml:lang="en">A device is in production when a physical connector begins to loosen due to vibration. Operations intermittently fail with ErrorSecureElementPartsDisconnected as connector connectivity becomes intermittent. Physical inspection identifies the loose connector which is re-seated.</text>
-        <text xml:lang="de">Ein Gerät ist in der Produktion, wenn ein physikalischer Stecker aufgrund von Vibrationen zu lockern beginnt. Operationen schlagen zeitweise mit ErrorSecureElementPartsDisconnected fehl, da die Steckerverbindung zeitweise wird. Die physikalische Untersuchung identifiziert den lockeren Stecker, der neu gesetzt wird.</text>
-      </description>
-      <relatedFunctions>any SE API function may raise exception</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Intermittent component disconnection due to loose physical connector</text>
-        <text xml:lang="de">Zeitweilige Komponententrennverbindung aufgrund eines lockeren physikalischen Steckers</text>
-      </errorContext>
-    </scenario>
-  </usage>
   <implementationContext>
     <note>
       <text xml:lang="en">Raised by functions when SE component communication fails</text>

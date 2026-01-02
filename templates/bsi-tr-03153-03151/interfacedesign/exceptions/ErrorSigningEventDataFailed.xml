@@ -51,78 +51,6 @@
     </applicability>
     <reference>Transaction Operations (3.3.2), Digital Signature Generation</reference>
   </specification>
-  <triggerConditions>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Cryptographic signature generation failure</text>
-        <text xml:lang="de">Fehler bei der Erzeugung der kryptografischen Signatur</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The cryptographic operation to generate the signature fails</text>
-        <text xml:lang="de">Die kryptografische Operation zur Erzeugung der Signatur schlägt fehl</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">A startTransaction call formats event data and attempts signature generation but the cryptographic operation fails (key issue, algorithm failure). ErrorSigningEventDataFailed is raised.</text>
-        <text xml:lang="de">Ein startTransaction-Aufruf formatiert Ereignisdaten und versucht die Signaturerzeugung, aber die kryptografische Operation schlägt fehl (Schlüsselproblem, Algorithmenfehler). ErrorSigningEventDataFailed wird ausgelöst.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Invalid or corrupted event data for signing</text>
-        <text xml:lang="de">Ungültige oder beschädigte Ereignisdaten zum Signieren</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The event data to be signed is invalid or corrupted</text>
-        <text xml:lang="de">Die zu signierenden Ereignisdaten sind ungültig oder beschädigt</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">An updateTransaction call attempts to sign event data but the data is invalid or corrupted. The device detects the invalid data and raises ErrorSigningEventDataFailed.</text>
-        <text xml:lang="de">Ein updateTransaction-Aufruf versucht, Ereignisdaten zu signieren, aber die Daten sind ungültig oder beschädigt. Das Gerät erkennt die ungültigen Daten und löst ErrorSigningEventDataFailed aus.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Device cryptographic processor failure</text>
-        <text xml:lang="de">Fehler des Geräte-Kryptoprozessors</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The device cryptographic processor fails during signing operation</text>
-        <text xml:lang="de">Der Geräte-Kryptoprozessor schlägt während der Signierungsoperation fehl</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">A finishTransaction call initiates signing but the device cryptographic processor fails or becomes unavailable. ErrorSigningEventDataFailed is raised.</text>
-        <text xml:lang="de">Ein finishTransaction-Aufruf initiiert die Signierung, aber der Geräte-Kryptoprozessor schlägt fehl oder wird nicht verfügbar. ErrorSigningEventDataFailed wird ausgelöst.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Insufficient device resources for signing</text>
-        <text xml:lang="de">Unzureichende Geräteressourcen zum Signieren</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The device lacks sufficient resources to complete signing operation</text>
-        <text xml:lang="de">Das Gerät hat unzureichende Ressourcen, um die Signierungsoperation abzuschließen</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">A startTransaction call attempts signing but the device runs out of memory or processing capacity. The signing operation cannot complete and ErrorSigningEventDataFailed is raised.</text>
-        <text xml:lang="de">Ein startTransaction-Aufruf versucht die Signierung, aber das Gerät läuft out of memory oder Verarbeitungskapazität. Die Signierungsoperation kann nicht abgeschlossen werden und ErrorSigningEventDataFailed wird ausgelöst.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Communication failure during signature generation</text>
-        <text xml:lang="de">Kommunikationsfehler bei der Signaturerzeugung</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">Communication with the device fails during the signing operation</text>
-        <text xml:lang="de">Die Kommunikation mit dem Gerät schlägt während der Signierungsoperation fehl</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">An updateTransaction call transmits event data for signing but communication is interrupted before signature is returned. ErrorSigningEventDataFailed is raised.</text>
-        <text xml:lang="de">Ein updateTransaction-Aufruf sendet Ereignisdaten zum Signieren, aber die Kommunikation wird unterbrochen, bevor die Signatur zurückgegeben wird. ErrorSigningEventDataFailed wird ausgelöst.</text>
-      </trigger>
-    </condition>
-  </triggerConditions>
   <executionSequence>
     <step number="1">
       <text xml:lang="en">User/application calls transaction operation that requires event signing (e.g., finishTransaction)</text>
@@ -261,52 +189,6 @@
       <text xml:lang="de">Themen: Protokollierungsoperationen, Kryptografie, Signaturoperationen, Ereignissignierung</text>
     </note>
   </notes>
-  <usage>
-    <scenario name="Scenario 1: Transaction Signing with Cryptographic Failure">
-      <description>
-        <text xml:lang="en">A finishTransaction call sends transaction event data to be signed. The device cryptographic processor fails during signature generation. ErrorSigningEventDataFailed is raised. The transaction is rolled back and the user is informed that the transaction could not be properly recorded.</text>
-        <text xml:lang="de">Ein finishTransaction-Aufruf sendet Transaktionsereignisdaten zum Signieren. Der Geräte-Kryptoprozessor schlägt während der Signaturerzeugung fehl. ErrorSigningEventDataFailed wird ausgelöst. Die Transaktion wird zurückgerollt und der Benutzer wird informiert, dass die Transaktion nicht ordnungsgemäß aufgezeichnet werden konnte.</text>
-      </description>
-      <relatedFunctions>finishTransaction, startTransaction, updateTransaction</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Transaction processing blocked by event signing failure</text>
-        <text xml:lang="de">Transaktionsverarbeitung durch Fehler bei der Ereignissignierung blockiert</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 2: Audit Trail Integrity Verification">
-      <description>
-        <text xml:lang="en">A compliance audit queries transaction signatures to verify audit trail integrity. When transactions cannot be verified because they lack proper signatures (due to ErrorSigningEventDataFailed), the audit identifies gaps in the audit trail.</text>
-        <text xml:lang="de">Ein Compliance-Audit fragt Transaktionssignaturen ab, um die Integrität des Audit-Trails zu überprüfen. Wenn Transaktionen nicht überprüft werden können, da ihnen ordnungsgemäße Signaturen fehlen (aufgrund von ErrorSigningEventDataFailed), identifiziert das Audit Lücken im Audit-Trail.</text>
-      </description>
-      <relatedFunctions>startTransaction, exportLogMessages</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Compliance audit detects unsigned transactions from signing failures</text>
-        <text xml:lang="de">Compliance-Audit erkennt unsignierte Transaktionen aus Signaturfehlern</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 3: High-Load System Signing Exhaustion">
-      <description>
-        <text xml:lang="en">A high-volume transaction system experiences ErrorSigningEventDataFailed during peak load. Analysis reveals device cryptographic processor is resource-constrained. System load is reduced or device is upgraded to handle signature load.</text>
-        <text xml:lang="de">Ein hochvolumiges Transaktionssystem erfährt ErrorSigningEventDataFailed während der Spitzenlast. Die Analyse zeigt, dass der Geräte-Kryptoprozessor ressourcenbeschränkt ist. Die Systemlast wird reduziert oder das Gerät wird aktualisiert, um die Signaturlast zu bewältigen.</text>
-      </description>
-      <relatedFunctions>startTransaction, finishTransaction</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">High-load transaction system encounters cryptographic resource limits</text>
-        <text xml:lang="de">Hochlast-Transaktionssystem trifft auf kryptografische Ressourcenlimits</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 4: Event Data Validation Before Signing">
-      <description>
-        <text xml:lang="en">Transaction processing validates event data before transmission to device for signing. When ErrorSigningEventDataFailed occurs, the system has data validation logs that help troubleshoot whether the failure was data-related or device-related.</text>
-        <text xml:lang="de">Die Transaktionsverarbeitung validiert Ereignisdaten vor der Übertragung zum Gerät zum Signieren. Wenn ErrorSigningEventDataFailed auftritt, verfügt das System über Datenvalidierungsprotokolle, die bei der Fehlersuche helfen, ob der Fehler datenbezogen oder gerätebezogen ist.</text>
-      </description>
-      <relatedFunctions>startTransaction, updateTransaction, finishTransaction</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Event data validation helps distinguish between data and device issues in signing failures</text>
-        <text xml:lang="de">Die Ereignisdatenvalidierung hilft, zwischen Daten- und Geräteproblemen bei Signaturfehlern zu unterscheiden</text>
-      </errorContext>
-    </scenario>
-  </usage>
   <implementationContext>
     <note>
       <text xml:lang="en">Raised by logging functions when cryptographic signing operation fails</text>

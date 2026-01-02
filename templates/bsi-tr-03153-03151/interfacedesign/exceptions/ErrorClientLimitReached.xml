@@ -34,50 +34,6 @@
   <thrownBy>
     <function>registerClient</function>
   </thrownBy>
-  <triggerConditions>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Client registration at device capacity</text>
-        <text xml:lang="de">Client-Registrierung bei maximaler Gerätekapaziztät</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The registerClient function is invoked while the device has already registered the maximum number of simultaneous clients</text>
-        <text xml:lang="de">Die Funktion registerClient wird aufgerufen, während das Gerät bereits die maximale Anzahl gleichzeitiger Clients registriert hat</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">The device checks its current client count and finds it equals the maximum allowed. ErrorClientLimitReached is raised to prevent exceeding device capacity.</text>
-        <text xml:lang="de">Das Gerät prüft seine aktuelle Client-Anzahl und stellt fest, dass sie gleich dem zulässigen Maximum ist. ErrorClientLimitReached wird ausgelöst, um zu verhindern, dass die Gerätekapaziztät überschritten wird.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Multiple concurrent registration attempts at limit</text>
-        <text xml:lang="de">Mehrere gleichzeitige Registrierungsversuche beim Limit</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">Multiple applications or threads attempt to register clients simultaneously when the device is at its maximum capacity</text>
-        <text xml:lang="de">Mehrere Anwendungen oder Threads versuchen gleichzeitig, Clients zu registrieren, wenn das Gerät bei maximaler Kapaziztät ist</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">Each registration attempt is checked against the device's maximum client limit. Once the limit is reached, subsequent attempts raise ErrorClientLimitReached.</text>
-        <text xml:lang="de">Jeder Registrierungsversuch wird gegen das maximale Client-Limit des Geräts überprüft. Sobald das Limit erreicht ist, lösen nachfolgende Versuche ErrorClientLimitReached aus.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Resource exhaustion prevention</text>
-        <text xml:lang="de">Verhinderung von Ressourcenerschöpfung</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The device implements client capacity limits to prevent resource exhaustion and ensure stable operation</text>
-        <text xml:lang="de">Das Gerät implementiert Client-Kapaziztätslimits, um Ressourcenerschöpfung zu verhindern und stabilen Betrieb zu gewährleisten</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">The device enforces its maximum client limit during registration to maintain system stability and performance.</text>
-        <text xml:lang="de">Das Gerät erzwingt sein maximales Client-Limit während der Registrierung, um die Systemstabilität und -leistung zu erhalten.</text>
-      </trigger>
-    </condition>
-  </triggerConditions>
   <executionSequence>
     <step number="1">
       <text xml:lang="en">User/application calls registerClient function with a clientId</text>
@@ -184,64 +140,6 @@
       <text xml:lang="de">Themen: Client-Verwaltung, Registrierung, Ressourcenlämits, Gerätebeschränkungen</text>
     </note>
   </notes>
-  <usage>
-    <scenario name="Scenario 1: Capacity Check Before Registration">
-      <description>
-        <text xml:lang="en">Check device capacity before attempting to register a new client to predict and handle registration failures. Query the current and maximum client counts to make registration decisions.</text>
-        <text xml:lang="de">Prüfen Sie die Gerätekapaziztät, bevor Sie versuchen, einen neuen Client zu registrieren, um Registrierungsfehlschläge vorherzusagen und zu behandeln. Fragen Sie die aktuelle und maximale Client-Anzahl ab, um Registrierungsentscheidungen zu treffen.</text>
-      </description>
-      <relatedFunctions>
-        <text xml:lang="en">registerClient, getCurrentNumberOfClients, getMaxNumberOfClients, deregisterClient</text>
-        <text xml:lang="de">registerClient, getCurrentNumberOfClients, getMaxNumberOfClients, deregisterClient</text>
-      </relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Device at maximum capacity - proactive capacity checking - deallocation needed before registration</text>
-        <text xml:lang="de">Gerät bei maximaler Kapaziztät - proaktive Kapaziztätsprüfung - Deallokation erforderlich vor Registrierung</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 2: Deregister and Retry Strategy">
-      <description>
-        <text xml:lang="en">When capacity is exhausted, deregister an existing inactive client and retry registration for the new client to maintain required client count.</text>
-        <text xml:lang="de">Wenn die Kapaziztät erschöpft ist, melden Sie einen vorhandenen inaktiven Client ab und wiederholen Sie die Registrierung für den neuen Client, um die erforderliche Client-Anzahl zu behalten.</text>
-      </description>
-      <relatedFunctions>
-        <text xml:lang="en">registerClient, deregisterClient, getRegisteredClients</text>
-        <text xml:lang="de">registerClient, deregisterClient, getRegisteredClients</text>
-      </relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Capacity exhausted - client deallocation and retry - resource reclamation strategy</text>
-        <text xml:lang="de">Kapaziztät erschöpft - Client-Deallokation und Wiederholung - Ressourcenrückeroberstrategie</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 3: Client Queue Management">
-      <description>
-        <text xml:lang="en">Implement a client registration queue that respects device capacity limits and manages registration attempts queue when capacity is reached.</text>
-        <text xml:lang="de">Implementieren Sie eine Client-Registrierungswarteschlange, die Gerätekapaziztätsgrenzen beachtet und die Registrierungsversuche verwaltet, wenn die Kapaziztät erreicht ist.</text>
-      </description>
-      <relatedFunctions>
-        <text xml:lang="en">registerClient, getCurrentNumberOfClients, getMaxNumberOfClients</text>
-        <text xml:lang="de">registerClient, getCurrentNumberOfClients, getMaxNumberOfClients</text>
-      </relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Capacity constraint enforcement - client queue management - deferred registration</text>
-        <text xml:lang="de">Kapaziztätsbeschränkungsdurchsetzung - Client-Warteschlangenverwaltung - verschöberte Registrierung</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 4: Capacity-Aware Load Balancing">
-      <description>
-        <text xml:lang="en">Distribute client registrations across multiple devices based on available capacity to avoid exhaustion on a single device and balance load.</text>
-        <text xml:lang="de">Verteilen Sie Client-Registrierungen über mehrere Geräte basierend auf verfügbarer Kapaziztät, um Erschöpfung auf einem einzelnen Gerät zu vermeiden und Last auszugleichen.</text>
-      </description>
-      <relatedFunctions>
-        <text xml:lang="en">registerClient, getCurrentNumberOfClients, getMaxNumberOfClients</text>
-        <text xml:lang="de">registerClient, getCurrentNumberOfClients, getMaxNumberOfClients</text>
-      </relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Multi-device registration - capacity-aware load balancing - device selection logic</text>
-        <text xml:lang="de">Multi-Gerät-Registrierung - kapaziztätsbewusste Lastverteilung - Geräteauswahllogik</text>
-      </errorContext>
-    </scenario>
-  </usage>
   <implementationContext>
     <note>
       <text xml:lang="en">Raised by registerClient when maximum registered client count exceeded</text>

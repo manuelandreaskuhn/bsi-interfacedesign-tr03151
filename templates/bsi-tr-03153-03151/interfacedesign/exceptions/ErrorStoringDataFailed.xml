@@ -34,78 +34,6 @@
     </applicability>
     <reference>Device Configuration (3.2), Device Information Operations (3.3.1)</reference>
   </specification>
-  <triggerConditions>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Device storage write error</text>
-        <text xml:lang="de">Gerätespeicher-Schreibfehler</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The device storage system fails to write data successfully</text>
-        <text xml:lang="de">Das Gerätespeichersystem kann keine Daten erfolgreich schreiben</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">A setDescription call attempts to store device description but the storage write operation fails (I/O error, hardware issue). ErrorStoringDataFailed is raised.</text>
-        <text xml:lang="de">Ein setDescription-Aufruf versucht, die Gerätebeschreibung zu speichern, aber die Speicherschreiboperation schlägt fehl (I/O-Fehler, Hardwareproblem). ErrorStoringDataFailed wird ausgelöst.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Storage medium issue or corruption</text>
-        <text xml:lang="de">Speichermedium-Problem oder Beschädigung</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The storage medium has problems or data is corrupted during write</text>
-        <text xml:lang="de">Das Speichermedium hat Probleme oder Daten sind während des Schreibens beschädigt</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">An initialize call attempts to store initialization data but storage corruption is detected or write fails. ErrorStoringDataFailed is raised.</text>
-        <text xml:lang="de">Ein initialize-Aufruf versucht, Initialisierungsdaten zu speichern, aber Speicherbeschädigung wird erkannt oder das Schreiben schlägt fehl. ErrorStoringDataFailed wird ausgelöst.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Insufficient storage capacity</text>
-        <text xml:lang="de">Unzureichende Speicherkapazität</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">Storage capacity is insufficient to store the data</text>
-        <text xml:lang="de">Die Speicherkapazität ist unzureichend, um die Daten zu speichern</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">A setDescription call attempts to store data but storage is full or insufficient space available. Write cannot complete and ErrorStoringDataFailed is raised.</text>
-        <text xml:lang="de">Ein setDescription-Aufruf versucht, Daten zu speichern, aber der Speicher ist voll oder es ist unzureichend Platz verfügbar. Das Schreiben kann nicht abgeschlossen werden und ErrorStoringDataFailed wird ausgelöst.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Communication failure during storage write</text>
-        <text xml:lang="de">Kommunikationsfehler während des Speicherschreibens</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">Communication with the device fails during the storage write operation</text>
-        <text xml:lang="de">Die Kommunikation mit dem Gerät schlägt während der Speicherschreiboperation fehl</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">An initialize call transmits data for storage but communication is interrupted before write completes. ErrorStoringDataFailed is raised.</text>
-        <text xml:lang="de">Ein initialize-Aufruf überträgt Daten zur Speicherung, aber die Kommunikation wird unterbrochen, bevor das Schreiben abgeschlossen ist. ErrorStoringDataFailed wird ausgelöst.</text>
-      </trigger>
-    </condition>
-    <condition>
-      <scenario>
-        <text xml:lang="en">Device storage controller error</text>
-        <text xml:lang="de">Fehler des Gerätespeicher-Controllers</text>
-      </scenario>
-      <description>
-        <text xml:lang="en">The storage controller or write verification fails</text>
-        <text xml:lang="de">Der Speicher-Controller oder die Schreibverifikation schlägt fehl</text>
-      </description>
-      <trigger>
-        <text xml:lang="en">A setDescription call initiates storage write but the device storage controller fails or write verification fails. ErrorStoringDataFailed is raised.</text>
-        <text xml:lang="de">Ein setDescription-Aufruf initiiert Speicherschreiben, aber der Gerätespeicher-Controller schlägt fehl oder die Schreibverifikation schlägt fehl. ErrorStoringDataFailed wird ausgelöst.</text>
-      </trigger>
-    </condition>
-  </triggerConditions>
   <executionSequence>
     <step number="1">
       <text xml:lang="en">User/application calls a data storage operation (e.g., setDescription)</text>
@@ -240,52 +168,6 @@
       <text xml:lang="de">Themen: Speicheroperationen, Datenschreiben, Speicherverwaltung, Datenbeständigkeit</text>
     </note>
   </notes>
-  <usage>
-    <scenario name="Scenario 1: Device Description Update with Storage Failure">
-      <description>
-        <text xml:lang="en">An administrator calls setDescription to update device description. The device storage fails during write. ErrorStoringDataFailed is raised. The administrator verifies device storage status and retries the update.</text>
-        <text xml:lang="de">Ein Administrator ruft setDescription auf, um die Gerätebeschreibung zu aktualisieren. Der Gerätespeicher schlägt während des Schreibens fehl. ErrorStoringDataFailed wird ausgelöst. Der Administrator verifiziert den Status des Gerätespeichers und wiederholt das Update.</text>
-      </description>
-      <relatedFunctions>setDescription, getDescription, getTotalMemory</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Device configuration update blocked by storage write failure</text>
-        <text xml:lang="de">Gerätekonfiguration-Update durch Speicherschreibfehler blockiert</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 2: Device Initialization with Storage Issue">
-      <description>
-        <text xml:lang="en">Device initialization calls initialize to store initialization data but the storage write fails. ErrorStoringDataFailed is raised. Device initialization is incomplete and must be retried after checking storage.</text>
-        <text xml:lang="de">Die Geräteinitialisierung ruft initialize auf, um Initialisierungsdaten zu speichern, aber das Speicherschreiben schlägt fehl. ErrorStoringDataFailed wird ausgelöst. Die Geräteinitialisierung ist unvollständig und muss nach der Speicherprüfung wiederholt werden.</text>
-      </description>
-      <relatedFunctions>initialize, getDeviceInfo</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Device initialization fails due to storage write error</text>
-        <text xml:lang="de">Geräteinitialisierung schlägt aufgrund von Speicherschreibfehler fehl</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 3: Storage Capacity Management">
-      <description>
-        <text xml:lang="en">A setDescription call fails with ErrorStoringDataFailed due to insufficient storage. System exports and deletes old logs to free storage space, then retries the description update successfully.</text>
-        <text xml:lang="de">Ein setDescription-Aufruf schlägt mit ErrorStoringDataFailed aufgrund unzureichenden Speichers fehl. Das System exportiert und löscht alte Protokolle, um Speicherplatz freizugeben, und wiederholt dann die Beschreibungs-Aktualisierung erfolgreich.</text>
-      </description>
-      <relatedFunctions>setDescription, exportLogMessages, deleteLogMessages</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Storage write failure due to capacity - resolved by freeing storage space</text>
-        <text xml:lang="de">Speicherschreibfehler aufgrund von Kapazität - gelöst durch Freigeben von Speicherplatz</text>
-      </errorContext>
-    </scenario>
-    <scenario name="Scenario 4: Troubleshooting Storage Reliability">
-      <description>
-        <text xml:lang="en">Multiple ErrorStoringDataFailed exceptions occur during routine configuration updates. Investigation reveals storage device is degrading. Device is replaced before catastrophic storage failure occurs.</text>
-        <text xml:lang="de">Mehrere ErrorStoringDataFailed-Ausnahmen treten während routinemäßiger Konfigurationsaktualisierungen auf. Die Untersuchung zeigt, dass der Speicher beschädigt wird. Das Gerät wird ersetzt, bevor ein katastrophaler Speicherfehler auftritt.</text>
-      </description>
-      <relatedFunctions>setDescription, initialize, selfTest</relatedFunctions>
-      <errorContext>
-        <text xml:lang="en">Repeated storage failures trigger device replacement due to storage degradation</text>
-        <text xml:lang="de">Wiederholte Speicherfehler lösen Gerätetausch aufgrund von Speicherbeschädigung aus</text>
-      </errorContext>
-    </scenario>
-  </usage>
   <implementationContext>
     <note>
       <text xml:lang="en">Raised by setDescription when description storage fails</text>
