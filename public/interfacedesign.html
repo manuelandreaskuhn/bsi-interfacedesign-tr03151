@@ -755,7 +755,10 @@
       const [renderError, setRenderError] = useState(null);
       const [isRendering, setIsRendering] = useState(true);
       const [mermaidReady, setMermaidReady] = useState(false);
+      const [isFullscreen, setIsFullscreen] = useState(false);
+      const [zoomLevel, setZoomLevel] = useState(100);
       const mermaidContainerRef = useRef(null);
+      const fullscreenRef = useRef(null);
       const renderIdRef = useRef(0);
 
       // Wait for mermaid to be available (loaded via ESM)
@@ -769,6 +772,29 @@
         };
         checkMermaid();
       }, []);
+
+      // Handle ESC key to exit fullscreen
+      useEffect(() => {
+        const handleKeyDown = (e) => {
+          if (e.key === 'Escape' && isFullscreen) {
+            setIsFullscreen(false);
+          }
+        };
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
+      }, [isFullscreen]);
+
+      // Lock body scroll when fullscreen
+      useEffect(() => {
+        if (isFullscreen) {
+          document.body.style.overflow = 'hidden';
+        } else {
+          document.body.style.overflow = '';
+        }
+        return () => {
+          document.body.style.overflow = '';
+        };
+      }, [isFullscreen]);
 
       useEffect(() => {
         if (!mermaidCode || !mermaidContainerRef.current || !mermaidReady) return;
@@ -789,9 +815,10 @@
                 useMaxWidth: true,
                 htmlLabels: true,
                 curve: 'basis',
-                padding: 20,
-                nodeSpacing: 50,
-                rankSpacing: 80
+                padding: 15,
+                nodeSpacing: 30,
+                rankSpacing: 50,
+                diagramPadding: 8
               },
               themeVariables: {
                 primaryColor: '#3b82f6',
@@ -821,7 +848,7 @@
               if (svgElement) {
                 svgElement.style.maxWidth = '100%';
                 svgElement.style.height = 'auto';
-                svgElement.style.minHeight = '400px';
+                svgElement.style.minHeight = '300px';
               }
             }
           } catch (err) {
@@ -859,6 +886,10 @@
         }
       };
 
+      const handleZoomIn = () => setZoomLevel(prev => Math.min(prev + 25, 300));
+      const handleZoomOut = () => setZoomLevel(prev => Math.max(prev - 25, 25));
+      const handleZoomReset = () => setZoomLevel(100);
+
       // Show loading state while waiting for mermaid
       if (!mermaidReady) {
         return (
@@ -877,113 +908,185 @@
         );
       }
 
-      return (
-        <div className="p-4">
-          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-            {/* Toolbar */}
-            <div className="flex items-center justify-between px-4 py-2 bg-gray-50 border-b border-gray-200">
-              <div className="flex items-center gap-2">
-                <Icon name="project-diagram" className="text-blue-600" />
-                <span className="font-medium text-gray-700">
-                  {language === 'de' ? 'Flowchart-Darstellung' : 'Flowchart View'}
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => setShowCode(!showCode)}
-                  className={`px-3 py-1.5 rounded text-sm flex items-center gap-1.5 transition-colors ${
-                    showCode 
-                      ? 'bg-blue-600 text-white' 
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                  }`}
-                >
-                  <Icon name="code" />
-                  {language === 'de' ? 'Code' : 'Code'}
-                </button>
-                <button
-                  onClick={copyToClipboard}
-                  className="px-3 py-1.5 bg-gray-200 text-gray-700 rounded text-sm flex items-center gap-1.5 hover:bg-gray-300 transition-colors"
-                  title={language === 'de' ? 'Code kopieren' : 'Copy code'}
-                >
-                  <Icon name="copy" />
-                </button>
-                <button
-                  onClick={downloadSvg}
-                  className="px-3 py-1.5 bg-gray-200 text-gray-700 rounded text-sm flex items-center gap-1.5 hover:bg-gray-300 transition-colors"
-                  title={language === 'de' ? 'Als SVG herunterladen' : 'Download as SVG'}
-                >
-                  <Icon name="download" />
-                </button>
-              </div>
+      // Render content (used in both normal and fullscreen modes)
+      const renderContent = (inFullscreen = false) => (
+        <div className={`bg-white ${inFullscreen ? 'h-full flex flex-col' : 'rounded-lg border border-gray-200'} overflow-hidden`}>
+          {/* Toolbar */}
+          <div className={`flex items-center justify-between px-4 py-2 bg-gray-50 border-b border-gray-200 ${inFullscreen ? 'flex-shrink-0' : ''}`}>
+            <div className="flex items-center gap-2">
+              <Icon name="project-diagram" className="text-blue-600" />
+              <span className="font-medium text-gray-700">
+                {language === 'de' ? 'Flowchart-Darstellung' : 'Flowchart View'}
+              </span>
             </div>
+            <div className="flex items-center gap-2">
+              {/* Zoom Controls */}
+              <div className="flex items-center gap-1 bg-gray-200 rounded px-1">
+                <button
+                  onClick={handleZoomOut}
+                  className="p-1.5 text-gray-600 hover:text-gray-900 transition-colors"
+                  title={language === 'de' ? 'Verkleinern' : 'Zoom out'}
+                >
+                  <Icon name="search-minus" />
+                </button>
+                <span className="text-xs text-gray-600 w-12 text-center font-medium">{zoomLevel}%</span>
+                <button
+                  onClick={handleZoomIn}
+                  className="p-1.5 text-gray-600 hover:text-gray-900 transition-colors"
+                  title={language === 'de' ? 'Vergrößern' : 'Zoom in'}
+                >
+                  <Icon name="search-plus" />
+                </button>
+                <button
+                  onClick={handleZoomReset}
+                  className="p-1.5 text-gray-600 hover:text-gray-900 transition-colors border-l border-gray-300"
+                  title={language === 'de' ? 'Zurücksetzen' : 'Reset'}
+                >
+                  <Icon name="undo" />
+                </button>
+              </div>
 
-            {/* Mermaid Code View (toggleable) */}
-            {showCode && (
-              <div className="border-b border-gray-200">
-                <pre className="bg-gray-900 text-gray-100 p-4 text-xs overflow-x-auto font-mono max-h-64 overflow-y-auto">
-                  {mermaidCode}
-                </pre>
+              <div className="w-px h-6 bg-gray-300"></div>
+
+              <button
+                onClick={() => setShowCode(!showCode)}
+                className={`px-3 py-1.5 rounded text-sm flex items-center gap-1.5 transition-colors ${
+                  showCode 
+                    ? 'bg-blue-600 text-white' 
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                <Icon name="code" />
+                {language === 'de' ? 'Code' : 'Code'}
+              </button>
+              <button
+                onClick={copyToClipboard}
+                className="px-3 py-1.5 bg-gray-200 text-gray-700 rounded text-sm flex items-center gap-1.5 hover:bg-gray-300 transition-colors"
+                title={language === 'de' ? 'Code kopieren' : 'Copy code'}
+              >
+                <Icon name="copy" />
+              </button>
+              <button
+                onClick={downloadSvg}
+                className="px-3 py-1.5 bg-gray-200 text-gray-700 rounded text-sm flex items-center gap-1.5 hover:bg-gray-300 transition-colors"
+                title={language === 'de' ? 'Als SVG herunterladen' : 'Download as SVG'}
+              >
+                <Icon name="download" />
+              </button>
+              
+              <div className="w-px h-6 bg-gray-300"></div>
+              
+              <button
+                onClick={() => setIsFullscreen(!isFullscreen)}
+                className={`px-3 py-1.5 rounded text-sm flex items-center gap-1.5 transition-colors ${
+                  inFullscreen
+                    ? 'bg-red-600 text-white hover:bg-red-700'
+                    : 'bg-indigo-600 text-white hover:bg-indigo-700'
+                }`}
+                title={inFullscreen ? (language === 'de' ? 'Vollbild beenden (ESC)' : 'Exit fullscreen (ESC)') : (language === 'de' ? 'Vollbild' : 'Fullscreen')}
+              >
+                <Icon name={inFullscreen ? 'compress' : 'expand'} />
+                {inFullscreen ? (language === 'de' ? 'Schließen' : 'Close') : (language === 'de' ? 'Vollbild' : 'Fullscreen')}
+              </button>
+            </div>
+          </div>
+
+          {/* Mermaid Code View (toggleable) */}
+          {showCode && (
+            <div className="border-b border-gray-200 flex-shrink-0">
+              <pre className="bg-gray-900 text-gray-100 p-4 text-xs overflow-x-auto font-mono max-h-48 overflow-y-auto">
+                {mermaidCode}
+              </pre>
+            </div>
+          )}
+
+          {/* Rendered Flowchart */}
+          <div className={`p-4 bg-gradient-to-br from-gray-50 to-white overflow-auto ${inFullscreen ? 'flex-1' : 'min-h-[400px]'}`}>
+            {isRendering && (
+              <div className="flex items-center justify-center h-64">
+                <div className="text-center">
+                  <div className="loading-spinner mx-auto mb-3"></div>
+                  <p className="text-gray-500 text-sm">
+                    {language === 'de' ? 'Rendere Flowchart...' : 'Rendering flowchart...'}
+                  </p>
+                </div>
               </div>
             )}
-
-            {/* Rendered Flowchart */}
-            <div className="p-4 bg-gradient-to-br from-gray-50 to-white min-h-[400px]">
-              {isRendering && (
-                <div className="flex items-center justify-center h-64">
-                  <div className="text-center">
-                    <div className="loading-spinner mx-auto mb-3"></div>
-                    <p className="text-gray-500 text-sm">
-                      {language === 'de' ? 'Rendere Flowchart...' : 'Rendering flowchart...'}
+            
+            {renderError && (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700 mb-4">
+                <div className="flex items-start gap-2">
+                  <Icon name="exclamation-triangle" className="mt-0.5" />
+                  <div>
+                    <p className="font-medium">
+                      {language === 'de' ? 'Fehler beim Rendern' : 'Render Error'}
                     </p>
+                    <p className="text-sm mt-1">{renderError}</p>
                   </div>
-                </div>
-              )}
-              
-              {renderError && (
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700 mb-4">
-                  <div className="flex items-start gap-2">
-                    <Icon name="exclamation-triangle" className="mt-0.5" />
-                    <div>
-                      <p className="font-medium">
-                        {language === 'de' ? 'Fehler beim Rendern' : 'Render Error'}
-                      </p>
-                      <p className="text-sm mt-1">{renderError}</p>
-                    </div>
-                  </div>
-                </div>
-              )}
-              
-              <div 
-                ref={mermaidContainerRef}
-                className="mermaid-container flex justify-center items-center overflow-auto"
-                style={{ minHeight: isRendering ? '0' : '400px' }}
-              />
-            </div>
-
-            {/* Legend */}
-            <div className="px-4 py-3 bg-gray-50 border-t border-gray-200">
-              <div className="flex flex-wrap items-center gap-4 text-xs text-gray-600">
-                <span className="font-medium">{language === 'de' ? 'Legende:' : 'Legend:'}</span>
-                <div className="flex items-center gap-1.5">
-                  <span className="w-4 h-4 rounded bg-emerald-500"></span>
-                  <span>{language === 'de' ? 'Start/Ende' : 'Start/End'}</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <span className="w-4 h-4 rounded bg-blue-500"></span>
-                  <span>{language === 'de' ? 'Schritt' : 'Step'}</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <span className="w-4 h-4 rounded bg-red-500"></span>
-                  <span>{language === 'de' ? 'Fehler/Exception' : 'Error/Exception'}</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <span className="w-4 h-2 border-t-2 border-dashed border-gray-500"></span>
-                  <span>{language === 'de' ? 'Fehlerpfad' : 'Error path'}</span>
                 </div>
               </div>
+            )}
+            
+            <div 
+              ref={mermaidContainerRef}
+              className="mermaid-container flex justify-center items-start overflow-auto transition-transform duration-200"
+              style={{ 
+                transform: `scale(${zoomLevel / 100})`,
+                transformOrigin: 'top center',
+                minHeight: isRendering ? '0' : '300px'
+              }}
+            />
+          </div>
+
+          {/* Legend */}
+          <div className={`px-4 py-2 bg-gray-50 border-t border-gray-200 ${inFullscreen ? 'flex-shrink-0' : ''}`}>
+            <div className="flex flex-wrap items-center gap-4 text-xs text-gray-600">
+              <span className="font-medium">{language === 'de' ? 'Legende:' : 'Legend:'}</span>
+              <div className="flex items-center gap-1.5">
+                <span className="w-3 h-3 rounded bg-emerald-500"></span>
+                <span>{language === 'de' ? 'Start/Ende' : 'Start/End'}</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="w-3 h-3 rounded bg-blue-500"></span>
+                <span>{language === 'de' ? 'Schritt' : 'Step'}</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="w-3 h-3 rounded bg-red-500"></span>
+                <span>{language === 'de' ? 'Fehler' : 'Error'}</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="w-3 h-1 border-t-2 border-dashed border-gray-500"></span>
+                <span>{language === 'de' ? 'Fehlerpfad' : 'Error path'}</span>
+              </div>
+              {inFullscreen && (
+                <span className="ml-auto text-gray-400">
+                  <Icon name="keyboard" className="mr-1" />
+                  ESC {language === 'de' ? 'zum Schließen' : 'to close'}
+                </span>
+              )}
             </div>
           </div>
         </div>
+      );
+
+      return (
+        <>
+          {/* Normal View */}
+          <div className={`p-4 ${isFullscreen ? 'hidden' : ''}`}>
+            {renderContent(false)}
+          </div>
+
+          {/* Fullscreen Overlay */}
+          {isFullscreen && (
+            <div 
+              ref={fullscreenRef}
+              className="fixed inset-0 z-50 bg-white"
+              style={{ top: 0, left: 0, right: 0, bottom: 0 }}
+            >
+              {renderContent(true)}
+            </div>
+          )}
+        </>
       );
     };
 
@@ -998,7 +1101,7 @@
       const [availableTypes, setAvailableTypes] = useState([]);
       const [availableEnums, setAvailableEnums] = useState([]);
       const [availableExceptions, setAvailableExceptions] = useState([]);
-      const [stepViewMode, setStepViewMode] = useState('cards'); // 'cards', 'timeline', 'pseudocode', 'flowchart'
+      const [stepViewMode, setStepViewMode] = useState('overview'); // 'overview', 'signature', 'steps', 'flowchart', 'logging'
       const [expandedSteps, setExpandedSteps] = useState({});
 
       // Helper to get text in current language
@@ -1133,7 +1236,7 @@
         setExpandedSteps({});
       };
 
-      // Generate Mermaid flowchart from steps
+      // Generate Mermaid flowchart from steps - optimized for vertical layout
       const generateMermaidFlowchart = () => {
         if (!data?.detailedSteps?.length) return '';
         
@@ -1152,80 +1255,87 @@
             .replace(/\n/g, ' ')
             .trim();
         };
+
+        // Wrap text at ~35 chars for better vertical display
+        const wrapText = (text, maxLen = 35) => {
+          if (!text || text.length <= maxLen) return text;
+          const words = text.split(' ');
+          let lines = [];
+          let currentLine = '';
+          
+          for (const word of words) {
+            if ((currentLine + ' ' + word).trim().length <= maxLen) {
+              currentLine = (currentLine + ' ' + word).trim();
+            } else {
+              if (currentLine) lines.push(currentLine);
+              currentLine = word;
+            }
+          }
+          if (currentLine) lines.push(currentLine);
+          
+          // Limit to 2 lines max
+          if (lines.length > 2) {
+            return lines.slice(0, 2).join('<br/>') + '...';
+          }
+          return lines.join('<br/>');
+        };
         
-        let mermaid = 'flowchart TD\n';
+        // Use TB (Top to Bottom) for strict vertical layout
+        let mermaid = 'flowchart TB\n';
         
-        // Define styles
-        mermaid += '    %% Style definitions\n';
-        mermaid += '    classDef startEnd fill:#10b981,stroke:#059669,color:#fff,stroke-width:2px\n';
+        // Define compact styles
+        mermaid += '    %% Styles\n';
+        mermaid += '    classDef startEnd fill:#10b981,stroke:#059669,color:#fff,stroke-width:2px,rx:20,ry:20\n';
         mermaid += '    classDef step fill:#3b82f6,stroke:#2563eb,color:#fff,stroke-width:2px\n';
-        mermaid += '    classDef error fill:#ef4444,stroke:#dc2626,color:#fff,stroke-width:2px\n';
-        mermaid += '    classDef errorEnd fill:#fecaca,stroke:#ef4444,color:#991b1b,stroke-width:2px\n';
-        mermaid += '    classDef condition fill:#f59e0b,stroke:#d97706,color:#fff,stroke-width:2px\n\n';
+        mermaid += '    classDef stepWithError fill:#3b82f6,stroke:#ef4444,color:#fff,stroke-width:3px\n';
+        mermaid += '    classDef error fill:#fee2e2,stroke:#ef4444,color:#991b1b,stroke-width:2px\n';
+        mermaid += '    classDef errorEnd fill:#fecaca,stroke:#ef4444,color:#991b1b,stroke-width:2px,rx:20,ry:20\n\n';
         
         // Start node
-        mermaid += '    Start([▶ Start]):::startEnd\n';
+        mermaid += '    Start(["▶ Start"]):::startEnd\n';
         mermaid += '    Start --> Step1\n\n';
         
-        // Main flow subgraph
-        mermaid += '    subgraph MainFlow[" 📋 Hauptablauf"]\n';
-        mermaid += '    direction TB\n';
-        
+        // Generate all steps in a single vertical flow
         data.detailedSteps.forEach((step, idx) => {
           const stepId = `Step${step.number}`;
           const nextStepId = idx < data.detailedSteps.length - 1 ? `Step${data.detailedSteps[idx + 1].number}` : 'Success';
           
           // Get step description with language support
           const stepText = getText(step.description, language) || step.germanText || step.originalText || '';
-          const shortText = escapeText(stepText.substring(0, 50)) + (stepText.length > 50 ? '...' : '');
+          const wrappedText = wrapText(escapeText(stepText), 40);
+          const hasErrors = step.errorCases?.length > 0;
           
-          // Step node with number
-          mermaid += `    ${stepId}["🔹 ${step.number}. ${shortText}"]:::step\n`;
+          // Step node - use different style if has errors
+          const stepClass = hasErrors ? 'stepWithError' : 'step';
+          mermaid += `    ${stepId}["<b>${step.number}.</b> ${wrappedText}"]:::${stepClass}\n`;
           
           // Connect to next step (success path)
-          if (idx < data.detailedSteps.length - 1) {
-            mermaid += `    ${stepId} --> ${nextStepId}\n`;
-          } else {
-            mermaid += `    ${stepId} --> Success\n`;
+          mermaid += `    ${stepId} --> ${nextStepId}\n`;
+          
+          // Add error branches directly (no subgraph, keep vertical)
+          if (hasErrors) {
+            step.errorCases.forEach((ec, ecIdx) => {
+              const errorId = `Err${step.number}_${ecIdx}`;
+              const excName = escapeText(ec.exception || 'Error');
+              const shortExc = excName.length > 25 ? excName.substring(0, 22) + '...' : excName;
+              
+              // Error node to the side
+              mermaid += `    ${errorId}["⚠ ${shortExc}"]:::error\n`;
+              mermaid += `    ${stepId} -. "${language === 'de' ? 'Fehler' : 'Error'}" .-> ${errorId}\n`;
+              mermaid += `    ${errorId} --> ErrorEnd\n`;
+            });
           }
+          
+          mermaid += '\n';
         });
         
-        mermaid += '    end\n\n';
-        
         // Success end node
-        mermaid += '    Success([✅ ' + (language === 'de' ? 'Erfolg' : 'Success') + ']):::startEnd\n\n';
+        mermaid += '    Success(["✅ ' + (language === 'de' ? 'Erfolg' : 'Success') + '"]):::startEnd\n';
         
-        // Error handling subgraph
-        const hasErrors = data.detailedSteps.some(s => s.errorCases?.length > 0);
-        if (hasErrors) {
-          mermaid += '    subgraph ErrorHandling[" ⚠️ Fehlerbehandlung"]\n';
-          mermaid += '    direction TB\n';
-          mermaid += '    ErrorEnd([❌ ' + (language === 'de' ? 'Abbruch' : 'Abort') + ']):::errorEnd\n';
-          
-          data.detailedSteps.forEach((step) => {
-            const stepId = `Step${step.number}`;
-            if (step.errorCases?.length > 0) {
-              step.errorCases.forEach((ec, ecIdx) => {
-                const errorId = `Err${step.number}_${ecIdx}`;
-                const excName = escapeText(ec.exception || 'Error');
-                mermaid += `    ${errorId}{{"⚡ ${excName}"}}:::error\n`;
-              });
-            }
-          });
-          
-          mermaid += '    end\n\n';
-          
-          // Error connections (outside subgraph)
-          data.detailedSteps.forEach((step) => {
-            const stepId = `Step${step.number}`;
-            if (step.errorCases?.length > 0) {
-              step.errorCases.forEach((ec, ecIdx) => {
-                const errorId = `Err${step.number}_${ecIdx}`;
-                mermaid += `    ${stepId} -.->|"${language === 'de' ? 'Fehler' : 'Error'}"| ${errorId}\n`;
-                mermaid += `    ${errorId} --> ErrorEnd\n`;
-              });
-            }
-          });
+        // Error end node (only if there are errors)
+        const hasAnyErrors = data.detailedSteps.some(s => s.errorCases?.length > 0);
+        if (hasAnyErrors) {
+          mermaid += '    ErrorEnd(["❌ ' + (language === 'de' ? 'Abbruch' : 'Abort') + '"]):::errorEnd\n';
         }
         
         return mermaid;
@@ -1252,50 +1362,58 @@
 
       if (!data) return null;
 
+      // Define tabs for the function detail view
+      const tabs = [
+        { id: 'overview', label: language === 'de' ? 'Übersicht' : 'Overview', icon: 'info-circle' },
+        { id: 'signature', label: language === 'de' ? 'Signatur' : 'Signature', icon: 'code' },
+        { id: 'steps', label: language === 'de' ? 'Ablauf' : 'Flow', icon: 'tasks', badge: data.stepCount },
+        { id: 'flowchart', label: 'Flowchart', icon: 'project-diagram' },
+        ...(data.systemLog || data.transactionLog ? [{ id: 'logging', label: 'Logging', icon: 'file-alt' }] : [])
+      ];
+
       return (
-        <div className="p-6 fade-in">
+        <div className="p-4 fade-in">
           <div className="max-w-7xl mx-auto">
             {/* Back Button */}
             <button
               onClick={onBack}
-              className="mb-4 flex items-center text-gray-600 hover:text-gray-900 transition-colors"
+              className="mb-3 flex items-center text-gray-600 hover:text-gray-900 transition-colors text-sm"
             >
-              <Icon name="arrow-left" className="mr-2" />
-              Zurück zur Übersicht
+              <Icon name="arrow-left" className="mr-1" />
+              {language === 'de' ? 'Zurück' : 'Back'}
             </button>
 
-            {/* Header Card */}
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-6">
-              <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-6 text-white">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-start gap-4">
-                    <div className="w-16 h-16 bg-white/20 rounded-xl flex items-center justify-center">
-                      <Icon name="code" className="text-3xl" />
+            {/* Compact Header with integrated Tabs */}
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-4">
+              {/* Header */}
+              <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-4 text-white">
+                <div className="flex items-center justify-between flex-wrap gap-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center">
+                      <Icon name="code" className="text-2xl" />
                     </div>
                     <div>
-                      <h1 className="text-2xl font-bold font-mono">{data.name}()</h1>
-                      <div className="flex items-center gap-3 mt-2 flex-wrap">
-                        <span className="px-3 py-1 bg-white/20 rounded-full text-sm">
-                          {data.category}
-                        </span>
-                        <span className="px-3 py-1 bg-white/20 rounded-full text-sm">
+                      <h1 className="text-xl font-bold font-mono">{data.name}()</h1>
+                      <div className="flex items-center gap-2 mt-1 flex-wrap">
+                        <span className="px-2 py-0.5 bg-white/20 rounded text-xs">{data.category}</span>
+                        <span className="px-2 py-0.5 bg-white/20 rounded text-xs">
                           <Icon name="list-ol" className="mr-1" />
-                          {data.stepCount} Schritte
+                          {data.stepCount} {language === 'de' ? 'Schritte' : 'Steps'}
                         </span>
-                        <span className="px-3 py-1 bg-white/20 rounded-full text-sm">
+                        <span className="px-2 py-0.5 bg-white/20 rounded text-xs">
                           <Icon name="exclamation-triangle" className="mr-1" />
-                          {data.exceptionCount} Exceptions
+                          {data.exceptionCount} Exc.
                         </span>
                         {data.systemLog && (
-                          <span className="px-3 py-1 bg-green-600 rounded-full text-sm">
+                          <span className="px-2 py-0.5 bg-green-600 rounded text-xs">
                             <Icon name="file-alt" className="mr-1" />
-                            System-Log
+                            SysLog
                           </span>
                         )}
                         {data.transactionLog && (
-                          <span className="px-3 py-1 bg-yellow-600 rounded-full text-sm">
+                          <span className="px-2 py-0.5 bg-yellow-600 rounded text-xs">
                             <Icon name="exchange-alt" className="mr-1" />
-                            Transaction-Log
+                            TxLog
                           </span>
                         )}
                       </div>
@@ -1304,212 +1422,242 @@
                 </div>
               </div>
 
-              {/* Description */}
-              <div className="p-6">
-                <h2 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
-                  <Icon name="info-circle" className="mr-2 text-blue-500" />
-                  {language === 'de' ? 'Beschreibung' : 'Description'}
-                </h2>
+              {/* Description - compact */}
+              <div className="p-3 bg-gray-50 border-b text-sm">
                 <p className="text-gray-700 leading-relaxed">{t(data.description) || (language === 'de' ? 'Keine Beschreibung verfügbar.' : 'No description available.')}</p>
               </div>
-            </div>
 
-            {/* Function Signature Card */}
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-6">
-              <div className="p-4 bg-gray-800 text-gray-100 font-mono text-sm">
-                <span className="text-purple-400">{data.returnValue?.type || 'void'}</span>
-                <span className="text-yellow-300 ml-2">{data.name}</span>
-                <span className="text-gray-400">(</span>
-                {data.parameters?.map((p, idx) => (
-                  <span key={idx}>
-                    <span className="text-purple-400">{p.type}</span>
-                    <span className="text-blue-300 ml-1">{p.name}</span>
-                    {idx < data.parameters.length - 1 && <span className="text-gray-400">, </span>}
-                  </span>
+              {/* Tabs */}
+              <div className="flex border-b bg-white overflow-x-auto">
+                {tabs.map(tab => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setStepViewMode(tab.id)}
+                    className={`px-4 py-3 text-sm font-medium flex items-center gap-2 border-b-2 transition-colors whitespace-nowrap ${
+                      stepViewMode === tab.id
+                        ? 'text-blue-600 border-blue-600'
+                        : 'text-gray-500 border-transparent hover:text-gray-700'
+                    }`}
+                  >
+                    <Icon name={tab.icon} />
+                    {tab.label}
+                    {tab.badge && (
+                      <span className={`ml-1 px-1.5 py-0.5 text-xs rounded-full ${
+                        stepViewMode === tab.id ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-600'
+                      }`}>
+                        {tab.badge}
+                      </span>
+                    )}
+                  </button>
                 ))}
-                <span className="text-gray-400">)</span>
-                {data.exceptions?.length > 0 && (
-                  <>
-                    <span className="text-gray-500 ml-2">throws</span>
-                    <span className="text-red-400 ml-1">{data.exceptions.slice(0, 3).join(', ')}</span>
-                    {data.exceptions.length > 3 && <span className="text-gray-500">...</span>}
-                  </>
-                )}
               </div>
             </div>
 
-            {/* Parameters Table */}
-            {data.parameters && data.parameters.length > 0 && (
-              <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-6">
-                <div className="p-4 bg-gray-50 border-b">
-                  <h3 className="font-semibold text-gray-800 flex items-center">
-                    <Icon name="sign-in-alt" className="mr-2 text-blue-500" />
-                    Parameter
-                    <span className="ml-2 px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full">
-                      {data.parameters.length}
-                    </span>
-                  </h3>
-                </div>
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead className="bg-gray-50 border-b">
-                      <tr>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Name</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Typ</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Richtung</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Beschreibung</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Pflicht</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200">
-                      {data.parameters.map((param, idx) => (
-                        <tr key={idx} className="hover:bg-gray-50">
-                          <td className="px-4 py-3">
-                            <code className="text-blue-700 font-semibold">{param.name}</code>
-                          </td>
-                          <td className="px-4 py-3">
-                            {renderTypeReference(param.type)}
-                          </td>
-                          <td className="px-4 py-3">
-                            <span className={`px-2 py-0.5 rounded text-xs ${
-                              param.direction === 'INPUT' ? 'bg-green-100 text-green-700' :
-                              param.direction === 'OUTPUT' ? 'bg-orange-100 text-orange-700' :
-                              'bg-gray-100 text-gray-700'
-                            }`}>
-                              {param.direction}
-                            </span>
-                          </td>
-                          <td className="px-4 py-3 text-sm text-gray-600 max-w-md">
-                            {t(param.description) || '-'}
-                          </td>
-                          <td className="px-4 py-3">
-                            {param.required ? (
-                              <span className="text-green-600"><Icon name="check" /></span>
-                            ) : (
-                              <span className="text-gray-400"><Icon name="minus" /></span>
-                            )}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            )}
-
-            {/* Return Value */}
-            {data.returnValue && data.returnValue.type !== 'void' && (
-              <div className="bg-white rounded-lg shadow p-5 mb-6">
-                <h3 className="font-semibold text-gray-800 mb-3 flex items-center">
-                  <Icon name="sign-out-alt" className="mr-2 text-green-500" />
-                  {language === 'de' ? 'Rückgabewert' : 'Return Value'}
-                </h3>
-                <div className="flex items-center gap-4">
-                  {renderTypeReference(data.returnValue.type)}
-                  {t(data.returnValue.description) && (
-                    <span className="text-gray-600 text-sm">– {t(data.returnValue.description)}</span>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* Exceptions */}
-            {data.exceptions && data.exceptions.length > 0 && (
-              <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-6">
-                <div className="p-4 bg-gray-50 border-b">
-                  <h3 className="font-semibold text-gray-800 flex items-center">
-                    <Icon name="exclamation-triangle" className="mr-2 text-red-500" />
-                    {language === 'de' ? 'Mögliche Exceptions' : 'Possible Exceptions'}
-                    <span className="ml-2 px-2 py-0.5 bg-red-100 text-red-700 text-xs rounded-full">
-                      {data.exceptions.length}
-                    </span>
-                  </h3>
-                </div>
-                <div className="p-4">
-                  <div className="flex flex-wrap gap-2">
-                    {data.exceptions.map((exc, idx) => (
-                      <span key={idx}>
-                        {renderExceptionReference(exc)}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Detailed Steps */}
-            {data.detailedSteps && data.detailedSteps.length > 0 && (
-              <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-6">
-                <div className="p-4 bg-gray-50 border-b">
-                  <div className="flex items-center justify-between">
-                    <h3 className="font-semibold text-gray-800 flex items-center">
-                      <Icon name="tasks" className="mr-2 text-indigo-500" />
-                      Ausführungsschritte
-                      <span className="ml-2 px-2 py-0.5 bg-indigo-100 text-indigo-700 text-xs rounded-full">
-                        {data.detailedSteps.length}
-                      </span>
-                    </h3>
-                    <div className="flex items-center gap-2">
-                      {/* View Mode Buttons */}
-                      <div className="flex bg-gray-200 rounded-lg p-0.5">
-                        <button
-                          onClick={() => setStepViewMode('cards')}
-                          className={`px-3 py-1 rounded text-sm transition-colors ${
-                            stepViewMode === 'cards' ? 'bg-white shadow text-indigo-600' : 'text-gray-600 hover:text-gray-800'
-                          }`}
-                          title="Karten-Ansicht"
-                        >
-                          <Icon name="th-large" />
-                        </button>
-                        <button
-                          onClick={() => setStepViewMode('timeline')}
-                          className={`px-3 py-1 rounded text-sm transition-colors ${
-                            stepViewMode === 'timeline' ? 'bg-white shadow text-indigo-600' : 'text-gray-600 hover:text-gray-800'
-                          }`}
-                          title="Timeline-Ansicht"
-                        >
-                          <Icon name="stream" />
-                        </button>
-                        <button
-                          onClick={() => setStepViewMode('pseudocode')}
-                          className={`px-3 py-1 rounded text-sm transition-colors ${
-                            stepViewMode === 'pseudocode' ? 'bg-white shadow text-indigo-600' : 'text-gray-600 hover:text-gray-800'
-                          }`}
-                          title="Pseudocode-Ansicht"
-                        >
-                          <Icon name="code" />
-                        </button>
-                        <button
-                          onClick={() => setStepViewMode('flowchart')}
-                          className={`px-3 py-1 rounded text-sm transition-colors ${
-                            stepViewMode === 'flowchart' ? 'bg-white shadow text-indigo-600' : 'text-gray-600 hover:text-gray-800'
-                          }`}
-                          title="Flowchart-Ansicht"
-                        >
-                          <Icon name="project-diagram" />
-                        </button>
+            {/* Tab Content */}
+            <div className="space-y-4">
+              {/* Overview Tab */}
+              {stepViewMode === 'overview' && (
+                <div className="space-y-4">
+                  {/* Parameters */}
+                  {data.parameters && data.parameters.length > 0 && (
+                    <div className="bg-white rounded-lg shadow overflow-hidden">
+                      <div className="p-3 bg-gray-50 border-b">
+                        <h3 className="font-semibold text-gray-800 flex items-center text-sm">
+                          <Icon name="sign-in-alt" className="mr-2 text-blue-500" />
+                          Parameter
+                          <span className="ml-2 px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full">
+                            {data.parameters.length}
+                          </span>
+                        </h3>
                       </div>
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-sm">
+                          <thead className="bg-gray-50 border-b">
+                            <tr>
+                              <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase">Name</th>
+                              <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase">Typ</th>
+                              <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase">Dir</th>
+                              <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase">Beschreibung</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-gray-200">
+                            {data.parameters.map((param, idx) => (
+                              <tr key={idx} className="hover:bg-gray-50">
+                                <td className="px-3 py-2">
+                                  <code className="text-blue-700 font-semibold">{param.name}</code>
+                                </td>
+                                <td className="px-3 py-2">{renderTypeReference(param.type)}</td>
+                                <td className="px-3 py-2">
+                                  <span className={`px-1.5 py-0.5 rounded text-xs ${
+                                    param.direction === 'INPUT' ? 'bg-green-100 text-green-700' :
+                                    param.direction === 'OUTPUT' ? 'bg-orange-100 text-orange-700' :
+                                    'bg-gray-100 text-gray-700'
+                                  }`}>
+                                    {param.direction}
+                                  </span>
+                                </td>
+                                <td className="px-3 py-2 text-gray-600 max-w-xs truncate">{t(param.description) || '-'}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  )}
 
-                      {/* Expand/Collapse */}
-                      {stepViewMode === 'cards' && (
-                        <div className="flex gap-1">
-                          <button onClick={expandAllSteps} className="px-2 py-1 text-xs text-gray-500 hover:text-gray-700" title={language === 'de' ? 'Alle aufklappen' : 'Expand all'}>
-                            <Icon name="expand-arrows-alt" />
-                          </button>
-                          <button onClick={collapseAllSteps} className="px-2 py-1 text-xs text-gray-500 hover:text-gray-700" title={language === 'de' ? 'Alle zuklappen' : 'Collapse all'}>
-                            <Icon name="compress-arrows-alt" />
-                          </button>
+                  {/* Return Value */}
+                  {data.returnValue && data.returnValue.type !== 'void' && (
+                    <div className="bg-white rounded-lg shadow p-4">
+                      <h3 className="font-semibold text-gray-800 mb-2 flex items-center text-sm">
+                        <Icon name="sign-out-alt" className="mr-2 text-green-500" />
+                        {language === 'de' ? 'Rückgabewert' : 'Return Value'}
+                      </h3>
+                      <div className="flex items-center gap-3">
+                        {renderTypeReference(data.returnValue.type)}
+                        {t(data.returnValue.description) && (
+                          <span className="text-gray-600 text-sm">– {t(data.returnValue.description)}</span>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Exceptions */}
+                  {data.exceptions && data.exceptions.length > 0 && (
+                    <div className="bg-white rounded-lg shadow overflow-hidden">
+                      <div className="p-3 bg-gray-50 border-b">
+                        <h3 className="font-semibold text-gray-800 flex items-center text-sm">
+                          <Icon name="exclamation-triangle" className="mr-2 text-red-500" />
+                          {language === 'de' ? 'Mögliche Exceptions' : 'Possible Exceptions'}
+                          <span className="ml-2 px-2 py-0.5 bg-red-100 text-red-700 text-xs rounded-full">
+                            {data.exceptions.length}
+                          </span>
+                        </h3>
+                      </div>
+                      <div className="p-3">
+                        <div className="flex flex-wrap gap-2">
+                          {data.exceptions.map((exc, idx) => (
+                            <span key={idx}>{renderExceptionReference(exc)}</span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Pre/Post Conditions */}
+                  {(data.precondition || data.postcondition) && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {data.precondition && (
+                        <div className="bg-white rounded-lg shadow p-4">
+                          <h3 className="font-semibold text-gray-800 mb-2 flex items-center text-sm">
+                            <Icon name="door-open" className="mr-2 text-blue-500" />
+                            {language === 'de' ? 'Vorbedingung' : 'Precondition'}
+                          </h3>
+                          <p className="text-gray-600 text-sm">{data.precondition}</p>
+                        </div>
+                      )}
+                      {data.postcondition && (
+                        <div className="bg-white rounded-lg shadow p-4">
+                          <h3 className="font-semibold text-gray-800 mb-2 flex items-center text-sm">
+                            <Icon name="door-closed" className="mr-2 text-green-500" />
+                            {language === 'de' ? 'Nachbedingung' : 'Postcondition'}
+                          </h3>
+                          <p className="text-gray-600 text-sm">{data.postcondition}</p>
                         </div>
                       )}
                     </div>
-                  </div>
-                </div>
+                  )}
 
-                {/* Cards View */}
-                {stepViewMode === 'cards' && (
+                  {/* Notes */}
+                  {data.notes && data.notes.length > 0 && (
+                    <div className="bg-white rounded-lg shadow p-4">
+                      <h3 className="font-semibold text-gray-800 mb-2 flex items-center text-sm">
+                        <Icon name="sticky-note" className="mr-2 text-yellow-500" />
+                        {language === 'de' ? 'Hinweise' : 'Notes'}
+                      </h3>
+                      <ul className="space-y-1">
+                        {data.notes.map((note, idx) => (
+                          <li key={idx} className="text-gray-600 text-sm flex items-start">
+                            <Icon name="angle-right" className="mr-2 mt-0.5 text-gray-400" />
+                            {typeof note === 'string' ? note : note.text}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Signature Tab */}
+              {stepViewMode === 'signature' && (
+                <div className="bg-white rounded-lg shadow overflow-hidden">
+                  <div className="p-4 bg-gray-800 text-gray-100 font-mono text-sm">
+                    <span className="text-purple-400">{data.returnValue?.type || 'void'}</span>
+                    <span className="text-yellow-300 ml-2">{data.name}</span>
+                    <span className="text-gray-400">(</span>
+                    {data.parameters?.map((p, idx) => (
+                      <span key={idx}>
+                        <span className="text-purple-400">{p.type}</span>
+                        <span className="text-blue-300 ml-1">{p.name}</span>
+                        {idx < data.parameters.length - 1 && <span className="text-gray-400">, </span>}
+                      </span>
+                    ))}
+                    <span className="text-gray-400">)</span>
+                    {data.exceptions?.length > 0 && (
+                      <>
+                        <span className="text-gray-500 ml-2">throws</span>
+                        <span className="text-red-400 ml-1">{data.exceptions.join(', ')}</span>
+                      </>
+                    )}
+                  </div>
+                  
+                  {/* Pseudocode */}
+                  {data.detailedSteps && data.detailedSteps.length > 0 && (
+                    <div className="p-4 border-t">
+                      <h4 className="text-sm font-semibold text-gray-700 mb-2">Pseudocode</h4>
+                      <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg text-sm overflow-x-auto font-mono">
+                        <code>
+                          <span className="text-purple-400">function</span> <span className="text-yellow-300">{data.name}</span>({data.parameters?.map(p => p.name).join(', ')}) {'{\n'}
+                          {data.detailedSteps.map(step => {
+                            const pseudoText = t(step.pseudocode) || (typeof step.pseudocode === 'string' ? step.pseudocode : '');
+                            const descText = t(step.description) || (language === 'en' ? step.originalText : step.germanText) || '';
+                            return (
+                            <span key={step.number}>
+                              {`\n  `}<span className="text-gray-500">// {language === 'de' ? 'Schritt' : 'Step'} {step.number}</span>{'\n'}
+                              {pseudoText ? 
+                                pseudoText.split('\n').map((line, i) => (
+                                  <span key={i}>{`  ${line}\n`}</span>
+                                )) : 
+                                `  // ${descText.substring(0, 60)}...\n`
+                              }
+                            </span>
+                          )})}
+                          {'\n}'}
+                        </code>
+                      </pre>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Steps Tab */}
+              {stepViewMode === 'steps' && data.detailedSteps && data.detailedSteps.length > 0 && (
+                <div className="bg-white rounded-lg shadow overflow-hidden">
+                  <div className="p-3 bg-gray-50 border-b flex items-center justify-between">
+                    <h3 className="font-semibold text-gray-800 flex items-center text-sm">
+                      <Icon name="tasks" className="mr-2 text-indigo-500" />
+                      {language === 'de' ? 'Ausführungsschritte' : 'Execution Steps'}
+                    </h3>
+                    <div className="flex gap-1">
+                      <button onClick={expandAllSteps} className="px-2 py-1 text-xs text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded" title={language === 'de' ? 'Alle aufklappen' : 'Expand all'}>
+                        <Icon name="expand-arrows-alt" />
+                      </button>
+                      <button onClick={collapseAllSteps} className="px-2 py-1 text-xs text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded" title={language === 'de' ? 'Alle zuklappen' : 'Collapse all'}>
+                        <Icon name="compress-arrows-alt" />
+                      </button>
+                    </div>
+                  </div>
                   <div className="p-4 space-y-3">
                     {data.detailedSteps.map((step, idx) => {
-                      // Get step description text - support new multilingual format and old format
                       const stepDescText = t(step.description) || (language === 'en' ? step.originalText : step.germanText) || '';
                       const pseudocodeText = t(step.pseudocode) || (typeof step.pseudocode === 'string' ? step.pseudocode : '');
                       
@@ -1520,12 +1668,13 @@
                           onClick={() => toggleStep(step.number)}
                         >
                           <div className="flex items-center gap-3">
-                            <span className="w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                            <span className={`w-7 h-7 rounded-full flex items-center justify-center text-white text-sm font-bold ${
+                              step.errorCases?.length > 0 ? 'bg-red-500' : 'bg-indigo-600'
+                            }`}>
                               {step.number}
                             </span>
-                            <span className="font-medium text-gray-800">
-                              {stepDescText.substring(0, 80)}
-                              {stepDescText.length > 80 ? '...' : ''}
+                            <span className="font-medium text-gray-800 text-sm">
+                              {stepDescText.substring(0, 70)}{stepDescText.length > 70 ? '...' : ''}
                             </span>
                           </div>
                           <div className="flex items-center gap-2">
@@ -1534,44 +1683,37 @@
                                 {step.errorCases.length} {language === 'de' ? 'Fehler' : 'Errors'}
                               </span>
                             )}
-                            {step.successCases?.length > 0 && (
-                              <span className="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded">
-                                {language === 'de' ? 'Erfolg' : 'Success'}
-                              </span>
-                            )}
                             <Icon name={expandedSteps[step.number] ? 'chevron-up' : 'chevron-down'} className="text-gray-400" />
                           </div>
                         </div>
                         
                         {expandedSteps[step.number] && (
-                          <div className="p-4 border-t bg-white">
-                            <p className="text-gray-700 mb-4">
-                              {stepDescText}
-                            </p>
+                          <div className="p-4 border-t bg-white text-sm">
+                            <p className="text-gray-700 mb-3">{stepDescText}</p>
                             
                             {pseudocodeText && (
-                              <div className="mb-4">
-                                <h5 className="text-xs font-semibold text-gray-500 uppercase mb-2">Pseudocode</h5>
-                                <pre className="bg-gray-900 text-gray-100 p-3 rounded text-sm overflow-x-auto font-mono">
+                              <div className="mb-3">
+                                <h5 className="text-xs font-semibold text-gray-500 uppercase mb-1">Pseudocode</h5>
+                                <pre className="bg-gray-900 text-gray-100 p-2 rounded text-xs overflow-x-auto font-mono">
                                   {pseudocodeText}
                                 </pre>
                               </div>
                             )}
                             
                             {step.errorCases?.length > 0 && (
-                              <div className="mb-4">
-                                <h5 className="text-xs font-semibold text-red-600 uppercase mb-2 flex items-center">
+                              <div className="mb-3">
+                                <h5 className="text-xs font-semibold text-red-600 uppercase mb-1 flex items-center">
                                   <Icon name="times-circle" className="mr-1" />
                                   {language === 'de' ? 'Fehlerfälle' : 'Error Cases'}
                                 </h5>
                                 <div className="space-y-2">
                                   {step.errorCases.map((ec, ecIdx) => (
-                                    <div key={ecIdx} className="p-3 bg-red-50 rounded border-l-4 border-red-400">
+                                    <div key={ecIdx} className="p-2 bg-red-50 rounded border-l-3 border-red-400">
                                       <div className="flex items-center gap-2 mb-1">
                                         {renderExceptionReference(ec.exception)}
                                       </div>
-                                      <p className="text-sm text-red-700"><strong>{language === 'de' ? 'Auslöser' : 'Trigger'}:</strong> {t(ec.trigger)}</p>
-                                      {t(ec.action) && <p className="text-sm text-red-600"><strong>{language === 'de' ? 'Aktion' : 'Action'}:</strong> {t(ec.action)}</p>}
+                                      <p className="text-xs text-red-700"><strong>{language === 'de' ? 'Auslöser' : 'Trigger'}:</strong> {t(ec.trigger)}</p>
+                                      {t(ec.action) && <p className="text-xs text-red-600"><strong>{language === 'de' ? 'Aktion' : 'Action'}:</strong> {t(ec.action)}</p>}
                                     </div>
                                   ))}
                                 </div>
@@ -1580,15 +1722,15 @@
                             
                             {step.successCases?.length > 0 && (
                               <div>
-                                <h5 className="text-xs font-semibold text-green-600 uppercase mb-2 flex items-center">
+                                <h5 className="text-xs font-semibold text-green-600 uppercase mb-1 flex items-center">
                                   <Icon name="check-circle" className="mr-1" />
                                   {language === 'de' ? 'Erfolgsfälle' : 'Success Cases'}
                                 </h5>
                                 <div className="space-y-2">
                                   {step.successCases.map((sc, scIdx) => (
-                                    <div key={scIdx} className="p-3 bg-green-50 rounded border-l-4 border-green-400">
-                                      <p className="text-sm text-green-700"><strong>{language === 'de' ? 'Bedingung' : 'Condition'}:</strong> {t(sc.condition)}</p>
-                                      {t(sc.action) && <p className="text-sm text-green-600"><strong>{language === 'de' ? 'Aktion' : 'Action'}:</strong> {t(sc.action)}</p>}
+                                    <div key={scIdx} className="p-2 bg-green-50 rounded border-l-3 border-green-400">
+                                      <p className="text-xs text-green-700"><strong>{language === 'de' ? 'Bedingung' : 'Condition'}:</strong> {t(sc.condition)}</p>
+                                      {t(sc.action) && <p className="text-xs text-green-600"><strong>{language === 'de' ? 'Aktion' : 'Action'}:</strong> {t(sc.action)}</p>}
                                     </div>
                                   ))}
                                 </div>
@@ -1599,135 +1741,29 @@
                       </div>
                     )})}
                   </div>
-                )}
+                </div>
+              )}
 
-                {/* Timeline View */}
-                {stepViewMode === 'timeline' && (
-                  <div className="p-4">
-                    <div className="relative">
-                      {data.detailedSteps.map((step, idx) => {
-                        const stepText = t(step.description) || (language === 'en' ? step.originalText : step.germanText) || '';
-                        return (
-                        <div key={step.number} className="flex gap-4 mb-6 last:mb-0">
-                          <div className="flex flex-col items-center">
-                            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold ${
-                              step.errorCases?.length > 0 ? 'bg-red-500' :
-                              step.successCases?.length > 0 ? 'bg-green-500' :
-                              'bg-indigo-600'
-                            }`}>
-                              {step.number}
-                            </div>
-                            {idx < data.detailedSteps.length - 1 && (
-                              <div className="w-0.5 h-full bg-gray-300 mt-2"></div>
-                            )}
-                          </div>
-                          <div className="flex-1 pb-6">
-                            <p className="text-gray-800 font-medium mb-2">
-                              {stepText}
-                            </p>
-                            {step.errorCases?.length > 0 && (
-                              <div className="flex flex-wrap gap-1 mt-2">
-                                {step.errorCases.map((ec, ecIdx) => (
-                                  <span key={ecIdx}>{renderExceptionReference(ec.exception)}</span>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      )})}
-                    </div>
-                  </div>
-                )}
+              {/* Flowchart Tab */}
+              {stepViewMode === 'flowchart' && (
+                <MermaidFlowchartView 
+                  mermaidCode={generateMermaidFlowchart()} 
+                  language={language}
+                />
+              )}
 
-                {/* Pseudocode View */}
-                {stepViewMode === 'pseudocode' && (
-                  <div className="p-4">
-                    <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg text-sm overflow-x-auto font-mono">
-                      <code>
-                        <span className="text-purple-400">function</span> <span className="text-yellow-300">{data.name}</span>({data.parameters?.map(p => p.name).join(', ')}) {'{\n'}
-                        {data.detailedSteps.map(step => {
-                          const pseudoText = t(step.pseudocode) || (typeof step.pseudocode === 'string' ? step.pseudocode : '');
-                          const descText = t(step.description) || (language === 'en' ? step.originalText : step.germanText) || '';
-                          return (
-                          <span key={step.number}>
-                            {`\n  `}<span className="text-gray-500">// {language === 'de' ? 'Schritt' : 'Step'} {step.number}</span>{'\n'}
-                            {pseudoText ? 
-                              pseudoText.split('\n').map((line, i) => (
-                                <span key={i}>{`  ${line}\n`}</span>
-                              )) : 
-                              `  // ${descText.substring(0, 60)}...\n`
-                            }
-                          </span>
-                        )})}
-                        {'\n}'}
-                      </code>
-                    </pre>
-                  </div>
-                )}
-
-                {/* Flowchart View (Mermaid) */}
-                {stepViewMode === 'flowchart' && (
-                  <MermaidFlowchartView 
-                    mermaidCode={generateMermaidFlowchart()} 
-                    language={language}
-                  />
-                )}
-              </div>
-            )}
-
-            {/* Notes */}
-            {data.notes && data.notes.length > 0 && (
-              <div className="bg-white rounded-lg shadow p-5 mb-6">
-                <h3 className="font-semibold text-gray-800 mb-3 flex items-center">
-                  <Icon name="sticky-note" className="mr-2 text-yellow-500" />
-                  Hinweise
-                </h3>
-                <ul className="space-y-2">
-                  {data.notes.map((note, idx) => (
-                    <li key={idx} className="text-gray-600 text-sm flex items-start">
-                      <Icon name="angle-right" className="mr-2 mt-1 text-gray-400" />
-                      {typeof note === 'string' ? note : note.text}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {/* Pre/Post Conditions */}
-            {(data.precondition || data.postcondition) && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                {data.precondition && (
-                  <div className="bg-white rounded-lg shadow p-5">
-                    <h3 className="font-semibold text-gray-800 mb-3 flex items-center">
-                      <Icon name="door-open" className="mr-2 text-blue-500" />
-                      Vorbedingung
-                    </h3>
-                    <p className="text-gray-600 text-sm">{data.precondition}</p>
-                  </div>
-                )}
-                {data.postcondition && (
-                  <div className="bg-white rounded-lg shadow p-5">
-                    <h3 className="font-semibold text-gray-800 mb-3 flex items-center">
-                      <Icon name="door-closed" className="mr-2 text-green-500" />
-                      Nachbedingung
-                    </h3>
-                    <p className="text-gray-600 text-sm">{data.postcondition}</p>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Logging Section */}
-            {(data.systemLog || data.transactionLog) && (
-              <LoggingSection 
-                systemLog={data.systemLog} 
-                transactionLog={data.transactionLog}
-                functionName={data.name}
-                onNavigateToType={onNavigateToType}
-                availableTypes={availableTypes}
-                language={language}
-              />
-            )}
+              {/* Logging Tab */}
+              {stepViewMode === 'logging' && (data.systemLog || data.transactionLog) && (
+                <LoggingSection 
+                  systemLog={data.systemLog} 
+                  transactionLog={data.transactionLog}
+                  functionName={data.name}
+                  onNavigateToType={onNavigateToType}
+                  availableTypes={availableTypes}
+                  language={language}
+                />
+              )}
+            </div>
           </div>
         </div>
       );
