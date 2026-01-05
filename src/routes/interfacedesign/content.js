@@ -337,4 +337,87 @@ router.get('/:instance/interfacedesign/function/:id', async (req, res) => {
   }
 });
 
+/**
+ * GET /:instance/interfacedesign/processes
+ * Get all processes
+ */
+router.get('/:instance/interfacedesign/processes', async (req, res) => {
+  try {
+    const basePath = await getInterfaceDesignPath(req.params.instance);
+    if (!basePath) {
+      return res.status(404).json({ error: 'InterfaceDesign folder not found' });
+    }
+
+    const processes = await xmlParser.loadProcesses(basePath);
+    
+    // Sort by actor, then by id
+    processes.sort((a, b) => {
+      if (a.actor !== b.actor) {
+        return a.actor.localeCompare(b.actor);
+      }
+      return a.id.localeCompare(b.id);
+    });
+
+    // Group by actor
+    const groupedByActor = {};
+    processes.forEach(proc => {
+      const actor = proc.actor || 'Uncategorized';
+      if (!groupedByActor[actor]) {
+        groupedByActor[actor] = [];
+      }
+      groupedByActor[actor].push(proc);
+    });
+
+    // Group by diagram type
+    const groupedByType = {};
+    processes.forEach(proc => {
+      const type = proc.diagramType || 'unknown';
+      if (!groupedByType[type]) {
+        groupedByType[type] = [];
+      }
+      groupedByType[type].push(proc);
+    });
+
+    res.json({
+      success: true,
+      count: processes.length,
+      items: processes,
+      groupedByActor,
+      groupedByType
+    });
+  } catch (error) {
+    console.error('Error getting processes:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * GET /:instance/interfacedesign/process/:actor/:type/:id
+ * Get a single process by actor, type and ID with full details
+ */
+router.get('/:instance/interfacedesign/process/:actor/:type/:id', async (req, res) => {
+  try {
+    const basePath = await getInterfaceDesignPath(req.params.instance);
+    if (!basePath) {
+      return res.status(404).json({ error: 'InterfaceDesign folder not found' });
+    }
+
+    const { actor, type, id } = req.params;
+    const filePath = path.join(basePath, 'processes', actor, type, `${id}.xml`);
+    const processData = await xmlParser.parseProcessDetail(filePath, actor, type);
+    
+    if (!processData) {
+      return res.status(404).json({ error: 'Process not found' });
+    }
+
+    res.json({
+      success: true,
+      process: processData
+    });
+  } catch (error) {
+    console.error('Error getting process:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 module.exports = router;

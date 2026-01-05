@@ -25,7 +25,7 @@
         <actor>
             <text xml:lang="en">Storage Medium</text>
             <text xml:lang="de">Speichermedium</text>
-        </object>
+        </actor>
     </actors>
     <usedObjects>
         <object>

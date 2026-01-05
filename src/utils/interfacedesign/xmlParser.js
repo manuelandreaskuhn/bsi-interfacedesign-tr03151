@@ -893,6 +893,259 @@ async function parseExceptionDetail(filePath) {
 }
 
 /**
+ * Parse a process XML file and extract relevant data
+ * @param {string} filePath - Path to process XML file
+ * @param {string} actor - Actor name (from folder structure)
+ * @param {string} diagramType - Diagram type (flow or sequenz)
+ * @returns {Promise<Object>} - Process data
+ */
+async function parseProcess(filePath, actor, diagramType) {
+  const xml = await parseXmlFile(filePath);
+  if (!xml || !xml.process) return null;
+
+  const proc = xml.process;
+  const baseName = path.basename(filePath, '.xml');
+  
+  // Extract interface functions
+  let interfaceFunctions = [];
+  if (proc.interfaceFunctions && proc.interfaceFunctions.function) {
+    interfaceFunctions = Array.isArray(proc.interfaceFunctions.function)
+      ? proc.interfaceFunctions.function
+      : [proc.interfaceFunctions.function];
+  }
+
+  // Extract actors from XML
+  let actors = [];
+  if (proc.actors && proc.actors.actor) {
+    const actorList = Array.isArray(proc.actors.actor) ? proc.actors.actor : [proc.actors.actor];
+    actors = actorList.map(a => extractMultiLangText(a));
+  }
+
+  // Extract exceptions
+  let exceptions = [];
+  if (proc.possibleExceptions && proc.possibleExceptions.exception) {
+    exceptions = Array.isArray(proc.possibleExceptions.exception)
+      ? proc.possibleExceptions.exception
+      : [proc.possibleExceptions.exception];
+  }
+
+  return {
+    id: baseName, // Use filename as unique identifier for API calls
+    processId: proc.processId || baseName, // Original processId from XML for display
+    name: extractMultiLangText(proc.processName),
+    description: extractMultiLangText(proc.description),
+    actor, // Folder-based actor (who executes this process)
+    diagramType, // flow or sequenz
+    actors, // All participants
+    interfaceFunctions,
+    functionCount: interfaceFunctions.length,
+    exceptionCount: exceptions.length,
+    baseName,
+    filePath
+  };
+}
+
+/**
+ * Parse a process XML file with full details
+ * @param {string} filePath - Path to process XML file
+ * @param {string} actor - Actor name (from folder structure)
+ * @param {string} diagramType - Diagram type (flow or sequenz)
+ * @returns {Promise<Object>} - Full process data with mermaid content
+ */
+async function parseProcessDetail(filePath, actor, diagramType) {
+  const xml = await parseXmlFile(filePath);
+  if (!xml || !xml.process) return null;
+
+  const proc = xml.process;
+  const baseName = path.basename(filePath, '.xml');
+  const mermaidPath = filePath.replace('.xml', '.mermaid');
+  
+  // Read mermaid diagram content
+  let mermaidContent = '';
+  try {
+    mermaidContent = await fs.readFile(mermaidPath, 'utf-8');
+  } catch (err) {
+    console.warn(`Mermaid file not found: ${mermaidPath}`);
+  }
+
+  // Extract actors
+  let actors = [];
+  if (proc.actors && proc.actors.actor) {
+    const actorList = Array.isArray(proc.actors.actor) ? proc.actors.actor : [proc.actors.actor];
+    actors = actorList.map(a => extractMultiLangText(a));
+  }
+
+  // Extract used objects
+  let usedObjects = [];
+  if (proc.usedObjects && proc.usedObjects.object) {
+    const objList = Array.isArray(proc.usedObjects.object) ? proc.usedObjects.object : [proc.usedObjects.object];
+    usedObjects = objList.map(o => extractMultiLangText(o));
+  }
+
+  // Extract interface functions
+  let interfaceFunctions = [];
+  if (proc.interfaceFunctions && proc.interfaceFunctions.function) {
+    interfaceFunctions = Array.isArray(proc.interfaceFunctions.function)
+      ? proc.interfaceFunctions.function
+      : [proc.interfaceFunctions.function];
+  }
+
+  // Extract input parameters
+  let inputParameters = [];
+  if (proc.inputParameters && proc.inputParameters.parameter) {
+    const params = Array.isArray(proc.inputParameters.parameter)
+      ? proc.inputParameters.parameter
+      : [proc.inputParameters.parameter];
+    inputParameters = params.map(p => ({
+      name: p.name || p.n || '',
+      type: p.type || '',
+      description: extractMultiLangText(p.description)
+    }));
+  }
+
+  // Extract output parameters
+  let outputParameters = [];
+  if (proc.outputParameters && proc.outputParameters.parameter) {
+    const params = Array.isArray(proc.outputParameters.parameter)
+      ? proc.outputParameters.parameter
+      : [proc.outputParameters.parameter];
+    outputParameters = params.map(p => ({
+      name: p.name || p.n || '',
+      type: p.type || '',
+      description: extractMultiLangText(p.description)
+    }));
+  }
+
+  // Extract used data objects
+  let usedDataObjects = [];
+  if (proc.usedDataObjects && proc.usedDataObjects.dataObject) {
+    usedDataObjects = Array.isArray(proc.usedDataObjects.dataObject)
+      ? proc.usedDataObjects.dataObject
+      : [proc.usedDataObjects.dataObject];
+  }
+
+  // Extract exceptions
+  let exceptions = [];
+  if (proc.possibleExceptions && proc.possibleExceptions.exception) {
+    exceptions = Array.isArray(proc.possibleExceptions.exception)
+      ? proc.possibleExceptions.exception
+      : [proc.possibleExceptions.exception];
+  }
+
+  // Extract references
+  let references = [];
+  if (proc.references && proc.references.reference) {
+    references = Array.isArray(proc.references.reference)
+      ? proc.references.reference
+      : [proc.references.reference];
+  }
+
+  // Extract notes
+  const notes = extractMultiLangText(proc.notes);
+
+  return {
+    id: baseName, // Use filename as unique identifier for API calls
+    processId: proc.processId || baseName, // Original processId from XML for display
+    name: extractMultiLangText(proc.processName),
+    description: extractMultiLangText(proc.description),
+    actor,
+    diagramType,
+    actors,
+    usedObjects,
+    interfaceFunctions,
+    inputParameters,
+    outputParameters,
+    usedDataObjects,
+    exceptions,
+    references,
+    notes,
+    mermaidContent,
+    baseName,
+    filePath
+  };
+}
+
+/**
+ * Load all processes from the processes directory
+ * Structure: processes/{actor}/{diagramType}/{processName}.xml/.mermaid
+ * @param {string} basePath - Base path for interfacedesign
+ * @returns {Promise<Array>} - Array of parsed processes
+ */
+async function loadProcesses(basePath) {
+  const processesPath = path.join(basePath, 'processes');
+  const processes = [];
+
+  try {
+    // Check if processes folder exists
+    const exists = await fs.access(processesPath).then(() => true).catch(() => false);
+    if (!exists) return [];
+
+    // Read actor folders
+    const actorFolders = await fs.readdir(processesPath, { withFileTypes: true });
+    
+    for (const actorDir of actorFolders) {
+      if (!actorDir.isDirectory()) continue;
+      const actor = actorDir.name;
+      const actorPath = path.join(processesPath, actor);
+
+      // Read diagram type folders (flow, sequenz)
+      const diagramTypeFolders = await fs.readdir(actorPath, { withFileTypes: true });
+      
+      for (const typeDir of diagramTypeFolders) {
+        if (!typeDir.isDirectory()) continue;
+        const diagramType = typeDir.name;
+        const typePath = path.join(actorPath, diagramType);
+
+        // Read XML files in this folder
+        const files = await getXmlFilesFromDir(typePath);
+        
+        for (const file of files) {
+          const process = await parseProcess(file.path, actor, diagramType);
+          if (process) {
+            processes.push(process);
+          }
+        }
+      }
+    }
+  } catch (error) {
+    console.error('Error loading processes:', error.message);
+  }
+
+  return processes;
+}
+
+/**
+ * Get process overview with counts
+ * @param {string} basePath - Base path for interfacedesign
+ * @returns {Promise<Object>} - Overview with counts by actor and diagram type
+ */
+async function getProcessesOverview(basePath) {
+  const processes = await loadProcesses(basePath);
+  
+  const overview = {
+    count: processes.length,
+    byActor: {},
+    byDiagramType: {}
+  };
+
+  processes.forEach(proc => {
+    // Count by actor
+    if (!overview.byActor[proc.actor]) {
+      overview.byActor[proc.actor] = 0;
+    }
+    overview.byActor[proc.actor]++;
+
+    // Count by diagram type
+    if (!overview.byDiagramType[proc.diagramType]) {
+      overview.byDiagramType[proc.diagramType] = 0;
+    }
+    overview.byDiagramType[proc.diagramType]++;
+  });
+
+  return overview;
+}
+
+/**
  * Load all items from a category directory
  * @param {string} basePath - Base path for interfacedesign
  * @param {string} category - Category name (functions, enums, types, exceptions)
@@ -932,7 +1185,8 @@ async function getOverview(basePath) {
     functions: { count: 0, categories: {} },
     enums: { count: 0, categories: {} },
     types: { count: 0, categories: {} },
-    exceptions: { count: 0, categories: {} }
+    exceptions: { count: 0, categories: {} },
+    processes: { count: 0, categories: {} }
   };
 
   for (const category of categories) {
@@ -949,6 +1203,12 @@ async function getOverview(basePath) {
     });
   }
 
+  // Add processes overview
+  const processesOverview = await getProcessesOverview(basePath);
+  overview.processes.count = processesOverview.count;
+  overview.processes.categories = processesOverview.byActor;
+  overview.processes.byDiagramType = processesOverview.byDiagramType;
+
   return overview;
 }
 
@@ -963,6 +1223,10 @@ module.exports = {
   parseTypeDetail,
   parseException,
   parseExceptionDetail,
+  parseProcess,
+  parseProcessDetail,
+  loadProcesses,
+  getProcessesOverview,
   loadCategory,
   getOverview
 };
