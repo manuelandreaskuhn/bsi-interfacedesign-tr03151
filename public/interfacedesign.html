@@ -66,6 +66,22 @@
       padding: 2px 4px;
       border-radius: 4px;
     }
+    /* Fix for Tailwind CSS interference with Mermaid edge labels */
+    .mermaid-container .edgeLabel foreignObject {
+      overflow: visible !important;
+    }
+    .mermaid-container .edgeLabel foreignObject > div,
+    .mermaid-container .edgeLabel .labelBkg {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      line-height: 1.2 !important;
+      min-height: auto !important;
+      height: auto !important;
+    }
+    .mermaid-container .edgeLabel span {
+      line-height: 1.2 !important;
+    }
     .mermaid-container .flowchart-link {
       stroke-width: 2px;
     }
@@ -1364,19 +1380,23 @@
         // Use TB (Top to Bottom) for strict vertical layout
         let mermaid = 'flowchart TB\n';
         
-        // Define compact styles with hover effects
+        // Define compact styles
         mermaid += '    %% Styles\n';
         mermaid += '    classDef startEnd fill:#10b981,stroke:#059669,color:#fff,stroke-width:2px,rx:20,ry:20\n';
         mermaid += '    classDef step fill:#3b82f6,stroke:#2563eb,color:#fff,stroke-width:2px\n';
         mermaid += '    classDef stepSuccess fill:#10b981,stroke:#059669,color:#fff,stroke-width:2px\n';
         mermaid += '    classDef stepWithError fill:#3b82f6,stroke:#ef4444,color:#fff,stroke-width:3px\n';
-        mermaid += '    classDef error fill:#fee2e2,stroke:#ef4444,color:#991b1b,stroke-width:2px\n';
-        mermaid += '    classDef errorEnd fill:#fecaca,stroke:#ef4444,color:#991b1b,stroke-width:2px,rx:20,ry:20\n\n';
+        mermaid += '    classDef errorEnd fill:#fecaca,stroke:#ef4444,color:#991b1b,stroke-width:2px,rx:20,ry:20\n';
+        mermaid += '    linkStyle default stroke:#64748b,stroke-width:2px\n\n';
         
         // Start node - language aware
         const startLabel = language === 'de' ? 'Start' : 'Start';
         mermaid += `    Start(["▶ ${startLabel}"]):::startEnd\n`;
         mermaid += '    Start --> Step1\n\n';
+        
+        // Track error link indices for styling
+        let linkIndex = 1; // Start at 1 because of Start --> Step1
+        const errorLinkIndices = [];
         
         // Generate all steps in a single vertical flow
         data.detailedSteps.forEach((step, idx) => {
@@ -1400,20 +1420,29 @@
           
           // Connect to next step (success path)
           mermaid += `    ${stepId} --> ${nextStepId}\n`;
+          linkIndex++;
           
-          // Add error branches directly (no subgraph, keep vertical)
+          // Add error path directly to ErrorEnd with exception names as label
+          // No separate exception nodes - keeps diagram narrow
           if (hasErrors) {
-            step.errorCases.forEach((ec, ecIdx) => {
-              const errorId = `Err${step.number}_${ecIdx}`;
-              const excName = escapeText(ec.exception || 'Error');
-              const triggerText = escapeText(getText(ec.trigger, language) || '');
-              
-              // Error node - full exception name
-              mermaid += `    ${errorId}["⚠ ${excName}"]:::error\n`;
-              const errorLabel = language === 'de' ? 'Fehler' : 'Error';
-              mermaid += `    ${stepId} -. "${errorLabel}" .-> ${errorId}\n`;
-              mermaid += `    ${errorId} --> ErrorEnd\n`;
-            });
+            // Collect exception names for this step
+            const stepExceptions = step.errorCases.map(ec => escapeText(ec.exception || 'Error'));
+            
+            // Create label based on number of exceptions
+            let errorLabel;
+            if (stepExceptions.length === 1) {
+              errorLabel = stepExceptions[0];
+            } else if (stepExceptions.length === 2) {
+              errorLabel = stepExceptions.join(', ');
+            } else {
+              // Show first exception + count of others
+              errorLabel = `${stepExceptions[0]} +${stepExceptions.length - 1}`;
+            }
+            
+            // Single dotted line from step to ErrorEnd with exception label
+            mermaid += `    ${stepId} -.->|"${errorLabel}"| ErrorEnd\n`;
+            errorLinkIndices.push(linkIndex);
+            linkIndex++;
           }
           
           mermaid += '\n';
@@ -1428,6 +1457,11 @@
         if (hasAnyErrors) {
           const abortLabel = language === 'de' ? 'Abbruch' : 'Abort';
           mermaid += `    ErrorEnd(["❌ ${abortLabel}"]):::errorEnd\n`;
+          
+          // Style error links in red
+          if (errorLinkIndices.length > 0) {
+            mermaid += `    linkStyle ${errorLinkIndices.join(',')} stroke:#ef4444,stroke-width:2px,stroke-dasharray:5\n`;
+          }
         }
         
         return mermaid;
