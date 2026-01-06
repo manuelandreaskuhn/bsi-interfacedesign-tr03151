@@ -9,7 +9,7 @@ sequenceDiagram
     activate TSE
     TSE->>SM: Prüfe PUK
     activate SM
-    
+
     alt PUK korrekt
         SM->>SM: Entsperre PIN
         SM->>SM: Setze neue PIN
@@ -34,12 +34,14 @@ sequenceDiagram
         
     else PUK falsch
         SM->>SM: PUK-Fehlversuchszähler++
+        activate SM
         alt PUK-Fehlversuche >= Limit
             SM->>SM: Sperre PUK temporär
             SM-->>TSE: Error: ErrorPukTemporarilyBlocked
         else
             SM-->>TSE: Error: ErrorUnblockingPinFailed
         end
+        activate TSE
         deactivate SM
         TSE-->>Nutzer: Entsperrung fehlgeschlagen
         deactivate TSE

@@ -20,7 +20,7 @@ flowchart TD
     
     ProcessLogs --> ForEachLog{Für jede<br/>Log-Nachricht}
     
-    ForEachLog -->|Nächste Log| VerifySerialNo{Seriennummer =<br/>Hash(PublicKey)?}
+    ForEachLog -->|Nächste Log| VerifySerialNo{"Seriennummer =<br/>Hash(PublicKey)?"}
     VerifySerialNo -->|Nein| ErrorSerial[Fehler: Seriennummer falsch]
     VerifySerialNo -->|Ja| VerifySig{Signatur<br/>valide?}
     
