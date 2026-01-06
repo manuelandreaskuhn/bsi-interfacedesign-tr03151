@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process>
+    <processId>002</processId>
+    <processName>
+        <text xml:lang="en">Transaction Update</text>
+        <text xml:lang="de">Transaktionsaktualisierung</text>
+    </processName>
+    <description>
+        <text xml:lang="en">Update of transaction data during processing</text>
+        <text xml:lang="de">Aktualisierung von Transaktionsdaten während der Verarbeitung</text>
+    </description>
+    <actors>
+        <actor>
+            <text xml:lang="en">Recording System (ERS)</text>
+            <text xml:lang="de">Aufzeichnungssystem (ERS)</text>
+        </actor>
+        <actor>
+            <text xml:lang="en">TSE</text>
+            <text xml:lang="de">TSE</text>
+        </actor>
+    </actors>
+    <status>draft</status>
+</process>

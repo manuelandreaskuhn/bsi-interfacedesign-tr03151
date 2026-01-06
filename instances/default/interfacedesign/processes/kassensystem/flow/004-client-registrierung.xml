@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process>
+    <processId>004</processId>
+    <processName>
+        <text xml:lang="en">Client Registration</text>
+        <text xml:lang="de">Client-Registrierung</text>
+    </processName>
+    <description>
+        <text xml:lang="en">Registration of a new recording system as a client with the TSE</text>
+        <text xml:lang="de">Registrierung eines neuen Aufzeichnungssystems als Client bei der TSE</text>
+    </description>
+    <actors>
+        <actor>
+            <text xml:lang="en">Recording System (ERS)</text>
+            <text xml:lang="de">Aufzeichnungssystem (ERS)</text>
+        </actor>
+        <actor>
+            <text xml:lang="en">TSE</text>
+            <text xml:lang="de">TSE</text>
+        </actor>
+        <actor>
+            <text xml:lang="en">Administrator</text>
+            <text xml:lang="de">Administrator</text>
+        </actor>
+    </actors>
+    <flowType>flow</flowType>
+    <status>draft</status>
+</process>

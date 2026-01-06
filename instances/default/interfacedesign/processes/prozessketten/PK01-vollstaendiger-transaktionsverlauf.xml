@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<processChain>
+    <chainId>PK01</chainId>
+    <chainName>
+        <text xml:lang="en">Complete Transaction Flow</text>
+        <text xml:lang="de">Vollständiger Transaktionsverlauf</text>
+    </chainName>
+    <description>
+        <text xml:lang="en">Complete sequence from transaction start to finish including all necessary steps</text>
+        <text xml:lang="de">Vollständige Abfolge von Transaktionsstart bis Abschluss mit allen notwendigen Schritten</text>
+    </description>
+    <processes>
+        <process>
+            <id>001</id>
+            <sequence>1</sequence>
+            <name>
+                <text xml:lang="en">Transaction Start</text>
+                <text xml:lang="de">Transaktionsstart</text>
+            </name>
+        </process>
+        <process>
+            <id>002</id>
+            <sequence>2</sequence>
+            <name>
+                <text xml:lang="en">Transaction Update</text>
+                <text xml:lang="de">Transaktionsaktualisierung</text>
+            </name>
+        </process>
+        <process>
+            <id>003</id>
+            <sequence>3</sequence>
+            <name>
+                <text xml:lang="en">Transaction Finish</text>
+                <text xml:lang="de">Transaktionsabschluss</text>
+            </name>
+        </process>
+    </processes>
+    <status>draft</status>
+</processChain>

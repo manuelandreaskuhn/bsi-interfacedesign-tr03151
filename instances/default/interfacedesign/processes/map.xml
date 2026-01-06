@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<processMap>
+    <metadata>
+        <title>
+            <text xml:lang="en">TSE Process Landscape</text>
+            <text xml:lang="de">TSE Prozesslandkarte</text>
+        </title>
+        <version>1.0.0</version>
+        <date>2026-01-06</date>
+        <description>
+            <text xml:lang="en">Basic TSE process examples</text>
+            <text xml:lang="de">Grundlegende TSE-Prozessbeispiele</text>
+        </description>
+    </metadata>
+
+    <mainCategories>
+        <category>
+            <id>transactions</id>
+            <name>
+                <text xml:lang="en">Transaction Management</text>
+                <text xml:lang="de">Transaktionsverwaltung</text>
+            </name>
+            <processes>
+                <process>
+                    <id>001</id>
+                    <name>
+                        <text xml:lang="en">Transaction Start</text>
+                        <text xml:lang="de">Transaktionsstart</text>
+                    </name>
+                </process>
+                <process>
+                    <id>002</id>
+                    <name>
+                        <text xml:lang="en">Transaction Update</text>
+                        <text xml:lang="de">Transaktionsaktualisierung</text>
+                    </name>
+                </process>
+                <process>
+                    <id>003</id>
+                    <name>
+                        <text xml:lang="en">Transaction Finish</text>
+                        <text xml:lang="de">Transaktionsabschluss</text>
+                    </name>
+                </process>
+            </processes>
+        </category>
+
+        <category>
+            <id>client_management</id>
+            <name>
+                <text xml:lang="en">Client Management</text>
+                <text xml:lang="de">Client-Verwaltung</text>
+            </name>
+            <processes>
+                <process>
+                    <id>004</id>
+                    <name>
+                        <text xml:lang="en">Client Registration</text>
+                        <text xml:lang="de">Client-Registrierung</text>
+                    </name>
+                </process>
+            </processes>
+        </category>
+
+        <category>
+            <id>process_chains</id>
+            <name>
+                <text xml:lang="en">Process Chains</text>
+                <text xml:lang="de">Prozessketten</text>
+            </name>
+            <chains>
+                <chain>
+                    <id>PK01</id>
+                    <name>
+                        <text xml:lang="en">Complete Transaction Flow</text>
+                        <text xml:lang="de">Vollständiger Transaktionsverlauf</text>
+                    </name>
+                </chain>
+            </chains>
+        </category>
+    </mainCategories>
+</processMap>

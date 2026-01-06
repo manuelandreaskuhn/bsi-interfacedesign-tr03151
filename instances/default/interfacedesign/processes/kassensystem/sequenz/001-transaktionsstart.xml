@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process>
+    <processId>001</processId>
+    <processName>
+        <text xml:lang="en">Transaction Start</text>
+        <text xml:lang="de">Transaktionsstart</text>
+    </processName>
+    <description>
+        <text xml:lang="en">Start of a new transaction by the recording system</text>
+        <text xml:lang="de">Start einer neuen Transaktion durch das Aufzeichnungssystem</text>
+    </description>
+    <actors>
+        <actor>
+            <text xml:lang="en">Recording System (ERS)</text>
+            <text xml:lang="de">Aufzeichnungssystem (ERS)</text>
+        </actor>
+        <actor>
+            <text xml:lang="en">TSE</text>
+            <text xml:lang="de">TSE</text>
+        </actor>
+    </actors>
+    <steps>
+        <step number="1">
+            <description>
+                <text xml:lang="en">ERS sends transaction start request to TSE</text>
+                <text xml:lang="de">ERS sendet Anfrage zum Transaktionsstart an TSE</text>
+            </description>
+        </step>
+        <step number="2">
+            <description>
+                <text xml:lang="en">TSE validates request and generates transaction ID</text>
+                <text xml:lang="de">TSE validiert die Anfrage und generiert Transaktions-ID</text>
+            </description>
+        </step>
+        <step number="3">
+            <description>
+                <text xml:lang="en">TSE returns transaction ID and signature to ERS</text>
+                <text xml:lang="de">TSE gibt Transaktions-ID und Signatur an ERS zurück</text>
+            </description>
+        </step>
+    </steps>
+    <status>draft</status>
+</process>

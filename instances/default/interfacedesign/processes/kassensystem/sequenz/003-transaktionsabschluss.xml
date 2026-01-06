@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process>
+    <processId>003</processId>
+    <processName>
+        <text xml:lang="en">Transaction Finish</text>
+        <text xml:lang="de">Transaktionsabschluss</text>
+    </processName>
+    <description>
+        <text xml:lang="en">Finalization of a transaction with digital signature</text>
+        <text xml:lang="de">Abschluss einer Transaktion mit digitaler Signatur</text>
+    </description>
+    <actors>
+        <actor>
+            <text xml:lang="en">Recording System (ERS)</text>
+            <text xml:lang="de">Aufzeichnungssystem (ERS)</text>
+        </actor>
+        <actor>
+            <text xml:lang="en">TSE</text>
+            <text xml:lang="de">TSE</text>
+        </actor>
+    </actors>
+    <status>draft</status>
+</process>
