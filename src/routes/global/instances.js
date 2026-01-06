@@ -49,6 +49,7 @@ router.get('/', async (req, res) => {
                 match.exceptionCount = instance.exceptionCount || 0;
                 match.typeCount = instance.typeCount || 0;
                 match.enumCount = instance.enumCount || 0;
+                match.processCount = instance.processCount || 0;
             } else {
                 instances.push(instance);
             }
@@ -166,6 +167,7 @@ router.get('/templates', async (req, res) => {
                 match.exceptionCount = template.exceptionCount || 0;
                 match.typeCount = template.typeCount || 0;
                 match.enumCount = template.enumCount || 0;
+                match.processCount = template.processCount || 0;
             } else {
                 templates.push(template);
             }

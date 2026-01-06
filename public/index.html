@@ -359,6 +359,13 @@
                                 </span>
                                 <span className="font-medium text-amber-700">{instance.enumCount || 0}</span>
                               </div>
+                              <div className="flex justify-between text-sm bg-teal-50 rounded px-2 py-1 col-span-2">
+                                <span className="text-gray-600">
+                                  <Icon name="cogs" className="mr-1 text-teal-500" />
+                                  Prozesse
+                                </span>
+                                <span className="font-medium text-teal-700">{instance.processCount || 0}</span>
+                              </div>
                             </div>
                           ) : instance.hasInterfaces ? (
                             <div className="text-center py-4 text-gray-400">
@@ -502,11 +509,12 @@
                               {/* InterfaceDesign Info */}
                               {(template.functionCount > 0 || template.exceptionCount > 0 || template.typeCount > 0 || template.enumCount > 0) && (
                                 <div className="flex gap-3 mt-1 text-xs text-emerald-600">
-                                  <span className="font-medium"><Icon name="project-diagram" className="mr-1" />Schnittstelle:</span>
+                                  <span className="font-medium"><Icon name="project-diagram" className="mr-1" /></span>
                                   <span><Icon name="code" className="mr-1" />{template.functionCount} Fkt.</span>
                                   <span><Icon name="exclamation-triangle" className="mr-1" />{template.exceptionCount} Exc.</span>
                                   <span><Icon name="cube" className="mr-1" />{template.typeCount} Types</span>
                                   <span><Icon name="list-ol" className="mr-1" />{template.enumCount} Enums</span>
+                                  <span><Icon name="cogs" className="mr-1" />{template.processCount} Prozesse</span>
                                 </div>
                               )}
                               
@@ -562,7 +570,7 @@
                         </div>
                         {(selectedTemplate.functionCount > 0 || selectedTemplate.typeCount > 0) ? (
                           <div className="text-sm text-emerald-700">
-                            {selectedTemplate.functionCount} Funktionen, {selectedTemplate.exceptionCount} Exceptions, {selectedTemplate.typeCount} Types, {selectedTemplate.enumCount} Enums
+                            {selectedTemplate.functionCount} Funktionen, {selectedTemplate.exceptionCount} Exceptions, {selectedTemplate.typeCount} Types, {selectedTemplate.enumCount} Enums, {selectedTemplate.processCount} Prozesse
                           </div>
                         ) : (
                           <div className="text-sm text-gray-400">Keine Schnittstellendefinitionen</div>
