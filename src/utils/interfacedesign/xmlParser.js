@@ -1209,7 +1209,294 @@ async function getOverview(basePath) {
   overview.processes.categories = processesOverview.byActor;
   overview.processes.byDiagramType = processesOverview.byDiagramType;
 
+  // Add process chains overview
+  const processChainsOverview = await getProcessChainsOverview(basePath);
+  overview.processChains = {
+    count: processChainsOverview.count,
+    categories: {}
+  };
+
   return overview;
+}
+
+// ============================================
+// Process Chain Parsing Functions
+// ============================================
+
+/**
+ * Parse a process chain XML file and extract basic data
+ * @param {string} filePath - Path to process chain XML file
+ * @returns {Promise<Object>} - Process chain data
+ */
+async function parseProcessChain(filePath) {
+  const xml = await parseXmlFile(filePath);
+  if (!xml || !xml.processChain) return null;
+
+  const chain = xml.processChain;
+  const baseName = path.basename(filePath, '.xml');
+  
+  // Extract involved processes
+  let involvedProcesses = [];
+  if (chain.involvedProcesses && chain.involvedProcesses.process) {
+    const processes = Array.isArray(chain.involvedProcesses.process)
+      ? chain.involvedProcesses.process
+      : [chain.involvedProcesses.process];
+    involvedProcesses = processes.map(p => ({
+      id: p.id,
+      name: extractMultiLangText(p.n)
+    }));
+  }
+
+  // Extract steps
+  let steps = [];
+  if (chain.steps && chain.steps.step) {
+    const stepList = Array.isArray(chain.steps.step) ? chain.steps.step : [chain.steps.step];
+    steps = stepList.map(s => ({
+      stepNumber: s.stepNumber,
+      name: extractMultiLangText(s.n)
+    }));
+  }
+
+  return {
+    id: baseName,
+    chainId: chain.chainId || baseName,
+    name: extractMultiLangText(chain.n),
+    description: extractMultiLangText(chain.description),
+    processCount: involvedProcesses.length,
+    stepCount: steps.length,
+    involvedProcesses,
+    baseName,
+    filePath
+  };
+}
+
+/**
+ * Parse a process chain XML file with full details
+ * @param {string} filePath - Path to process chain XML file
+ * @returns {Promise<Object>} - Full process chain data with mermaid content
+ */
+async function parseProcessChainDetail(filePath) {
+  const xml = await parseXmlFile(filePath);
+  if (!xml || !xml.processChain) return null;
+
+  const chain = xml.processChain;
+  const baseName = path.basename(filePath, '.xml');
+  const mermaidPath = filePath.replace('.xml', '.mermaid');
+  
+  // Read mermaid content if exists
+  let mermaidContent = null;
+  try {
+    mermaidContent = await fs.readFile(mermaidPath, 'utf-8');
+  } catch (err) {
+    // Mermaid file doesn't exist
+  }
+
+  // Extract involved processes
+  let involvedProcesses = [];
+  if (chain.involvedProcesses && chain.involvedProcesses.process) {
+    const processes = Array.isArray(chain.involvedProcesses.process)
+      ? chain.involvedProcesses.process
+      : [chain.involvedProcesses.process];
+    involvedProcesses = processes.map(p => ({
+      id: p.id,
+      name: extractMultiLangText(p.n)
+    }));
+  }
+
+  // Extract prerequisites
+  let prerequisites = [];
+  if (chain.prerequisites && chain.prerequisites.prerequisite) {
+    const prereqList = Array.isArray(chain.prerequisites.prerequisite)
+      ? chain.prerequisites.prerequisite
+      : [chain.prerequisites.prerequisite];
+    prerequisites = prereqList.map(p => extractMultiLangText(p));
+  }
+
+  // Extract actors
+  let actors = [];
+  if (chain.actors && chain.actors.actor) {
+    const actorList = Array.isArray(chain.actors.actor) ? chain.actors.actor : [chain.actors.actor];
+    actors = actorList.map(a => extractMultiLangText(a));
+  }
+
+  // Extract steps with full details
+  let steps = [];
+  if (chain.steps && chain.steps.step) {
+    const stepList = Array.isArray(chain.steps.step) ? chain.steps.step : [chain.steps.step];
+    steps = stepList.map(s => ({
+      stepNumber: s.stepNumber,
+      name: extractMultiLangText(s.n),
+      description: extractMultiLangText(s.description),
+      function: s.function ? {
+        name: s.function.n,
+        linkedProcess: s.function.linkedProcess ? {
+          id: s.function.linkedProcess.id,
+          name: extractMultiLangText(s.function.linkedProcess.n)
+        } : null
+      } : null,
+      critical: s.critical === 'true' || s.critical === true,
+      optional: s.optional === 'true' || s.optional === true,
+      frequency: s.frequency || null
+    }));
+  }
+
+  // Extract variants
+  let variants = [];
+  if (chain.variants && chain.variants.variant) {
+    const variantList = Array.isArray(chain.variants.variant)
+      ? chain.variants.variant
+      : [chain.variants.variant];
+    variants = variantList.map(v => ({
+      name: extractMultiLangText(v.n),
+      description: extractMultiLangText(v.description)
+    }));
+  }
+
+  // Extract outcome
+  let outcome = null;
+  if (chain.outcome) {
+    outcome = {
+      minimumLogMessages: chain.outcome.minimumLogMessages || null,
+      logTypes: [],
+      storedData: []
+    };
+    
+    if (chain.outcome.logTypes && chain.outcome.logTypes.logType) {
+      const logTypeList = Array.isArray(chain.outcome.logTypes.logType)
+        ? chain.outcome.logTypes.logType
+        : [chain.outcome.logTypes.logType];
+      outcome.logTypes = logTypeList.map(lt => extractMultiLangText(lt));
+    }
+    
+    if (chain.outcome.storedData && chain.outcome.storedData.dataItem) {
+      const dataItemList = Array.isArray(chain.outcome.storedData.dataItem)
+        ? chain.outcome.storedData.dataItem
+        : [chain.outcome.storedData.dataItem];
+      outcome.storedData = dataItemList.map(di => extractMultiLangText(di));
+    }
+  }
+
+  // Extract usage scenario
+  const usageScenario = chain.usageScenario ? extractMultiLangText(chain.usageScenario) : null;
+
+  // Extract references
+  let references = [];
+  if (chain.references && chain.references.reference) {
+    references = Array.isArray(chain.references.reference)
+      ? chain.references.reference
+      : [chain.references.reference];
+  }
+
+  return {
+    id: baseName,
+    chainId: chain.chainId || baseName,
+    name: extractMultiLangText(chain.n),
+    description: extractMultiLangText(chain.description),
+    involvedProcesses,
+    prerequisites,
+    actors,
+    steps,
+    variants,
+    outcome,
+    usageScenario,
+    references,
+    mermaidContent,
+    baseName,
+    filePath
+  };
+}
+
+/**
+ * Check if an XML file is a process chain (has processChain as root element)
+ * @param {string} filePath - Path to XML file
+ * @returns {Promise<boolean>} - True if it's a process chain
+ */
+async function isProcessChainFile(filePath) {
+  try {
+    const xml = await parseXmlFile(filePath);
+    return xml && xml.processChain !== undefined;
+  } catch (err) {
+    return false;
+  }
+}
+
+/**
+ * Check if a folder is a process chain folder (no flow/sequenz subfolders)
+ * @param {string} folderPath - Path to folder
+ * @returns {Promise<boolean>} - True if it's a process chain folder
+ */
+async function isProcessChainFolder(folderPath) {
+  try {
+    const entries = await fs.readdir(folderPath, { withFileTypes: true });
+    const subfolders = entries.filter(e => e.isDirectory()).map(e => e.name);
+    
+    // If it has 'flow' or 'sequenz' subfolders, it's a regular process folder
+    const hasFlowOrSequenz = subfolders.includes('flow') || subfolders.includes('sequenz');
+    return !hasFlowOrSequenz;
+  } catch (err) {
+    return false;
+  }
+}
+
+/**
+ * Load all process chains from the processes folder
+ * Process chains are identified by:
+ * 1. Being in a folder without 'flow' or 'sequenz' subfolders
+ * 2. Having 'processChain' as root XML element
+ * @param {string} basePath - Base path of interfacedesign folder
+ * @returns {Promise<Array>} - Array of process chain data
+ */
+async function loadProcessChains(basePath) {
+  const processesPath = path.join(basePath, 'processes');
+  const chains = [];
+
+  try {
+    // Get all subdirectories in processes folder
+    const entries = await fs.readdir(processesPath, { withFileTypes: true });
+    const folders = entries.filter(e => e.isDirectory()).map(e => e.name);
+
+    for (const folder of folders) {
+      const folderPath = path.join(processesPath, folder);
+      
+      // Check if this folder is a process chain folder (no flow/sequenz subfolders)
+      if (await isProcessChainFolder(folderPath)) {
+        // Get all XML files in this folder
+        const files = await fs.readdir(folderPath);
+        const xmlFiles = files.filter(f => f.endsWith('.xml'));
+
+        for (const file of xmlFiles) {
+          const filePath = path.join(folderPath, file);
+          
+          // Check if the XML file has processChain as root element
+          if (await isProcessChainFile(filePath)) {
+            const chainData = await parseProcessChain(filePath);
+            if (chainData) {
+              // Add folder name for reference
+              chainData.folder = folder;
+              chains.push(chainData);
+            }
+          }
+        }
+      }
+    }
+  } catch (err) {
+    // processes folder doesn't exist or other error
+    console.error('Error loading process chains:', err);
+  }
+
+  return chains;
+}
+
+/**
+ * Get process chains overview statistics
+ * @param {string} basePath - Base path of interfacedesign folder
+ * @returns {Promise<Object>} - Overview statistics
+ */
+async function getProcessChainsOverview(basePath) {
+  const chains = await loadProcessChains(basePath);
+  return {
+    count: chains.length
+  };
 }
 
 module.exports = {
@@ -1227,6 +1514,10 @@ module.exports = {
   parseProcessDetail,
   loadProcesses,
   getProcessesOverview,
+  parseProcessChain,
+  parseProcessChainDetail,
+  loadProcessChains,
+  getProcessChainsOverview,
   loadCategory,
   getOverview
 };

@@ -420,4 +420,77 @@ router.get('/:instance/interfacedesign/process/:actor/:type/:id', async (req, re
   }
 });
 
+// ============================================
+// Process Chains Routes
+// ============================================
+
+/**
+ * GET /:instance/interfacedesign/processchains
+ * Get all process chains
+ */
+router.get('/:instance/interfacedesign/processchains', async (req, res) => {
+  try {
+    const basePath = await getInterfaceDesignPath(req.params.instance);
+    if (!basePath) {
+      return res.status(404).json({ error: 'InterfaceDesign folder not found' });
+    }
+
+    const chains = await xmlParser.loadProcessChains(basePath);
+    
+    // Sort by chainId
+    chains.sort((a, b) => a.chainId.localeCompare(b.chainId));
+
+    res.json({
+      success: true,
+      items: chains,
+      count: chains.length
+    });
+  } catch (error) {
+    console.error('Error loading process chains:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * GET /:instance/interfacedesign/processchain/:id
+ * Get a single process chain by ID with full details
+ * Searches all process chain folders to find the chain
+ */
+router.get('/:instance/interfacedesign/processchain/:id', async (req, res) => {
+  try {
+    const basePath = await getInterfaceDesignPath(req.params.instance);
+    if (!basePath) {
+      return res.status(404).json({ error: 'InterfaceDesign folder not found' });
+    }
+
+    const { id } = req.params;
+    
+    // First, load all process chains to find the one with matching ID
+    const allChains = await xmlParser.loadProcessChains(basePath);
+    const chainInfo = allChains.find(c => c.id === id || c.chainId === id);
+    
+    if (!chainInfo) {
+      return res.status(404).json({ error: 'Process chain not found' });
+    }
+
+    // Now load the full details using the found file path
+    const chainData = await xmlParser.parseProcessChainDetail(chainInfo.filePath);
+    
+    if (!chainData) {
+      return res.status(404).json({ error: 'Process chain not found' });
+    }
+
+    // Add folder info
+    chainData.folder = chainInfo.folder;
+
+    res.json({
+      success: true,
+      processChain: chainData
+    });
+  } catch (error) {
+    console.error('Error getting process chain:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 module.exports = router;

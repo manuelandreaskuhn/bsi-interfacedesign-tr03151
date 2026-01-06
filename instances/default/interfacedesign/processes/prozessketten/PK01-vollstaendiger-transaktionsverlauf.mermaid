@@ -1,0 +1,53 @@
+sequenceDiagram
+    actor Nutzer as Nutzer/Kassensystem
+    participant KS as Kassensystem
+    participant TSE as TSE
+    participant SM as Sicherheitsmodul
+
+    Note over Nutzer,SM: VORAUSSETZUNG: Client ist registriert
+
+    rect rgb(200, 220, 255)
+    Note over Nutzer,SM: PHASE 1: TRANSAKTIONSBEGINN
+    Nutzer->>KS: Vorgang beginnt
+    KS->>TSE: startTransaction(clientId, processData)
+    activate TSE
+    TSE->>SM: Inkrementiere Transaktionszähler
+    activate SM
+    SM->>SM: Erstelle Signatur über Daten
+    SM-->>TSE: Transaktionsnummer, Signatur, Zeitstempel
+    deactivate SM
+    TSE-->>KS: transactionNumber, signature
+    deactivate TSE
+    KS-->>Nutzer: Transaktion gestartet
+    end
+
+    rect rgb(255, 255, 200)
+    Note over Nutzer,SM: PHASE 2: UPDATES
+    Nutzer->>KS: Daten hinzufügen
+    KS->>TSE: updateTransaction(clientId, transactionNumber, processData)
+    activate TSE
+    TSE->>SM: Signiere Update
+    activate SM
+    SM->>SM: Signaturzähler++
+    SM->>SM: Erstelle Signatur
+    SM-->>TSE: Signatur, Zeitstempel
+    deactivate SM
+    TSE-->>KS: signature, signatureCounter
+    deactivate TSE
+    KS-->>Nutzer: Update erfolgreich
+    end
+
+    rect rgb(220, 255, 220)
+    Note over Nutzer,SM: PHASE 3: TRANSAKTIONSABSCHLUSS
+    Nutzer->>KS: Transaktion abschließen
+    KS->>TSE: finishTransaction(clientId, transactionNumber, processData)
+    activate TSE
+    TSE->>SM: Erstelle finale Signatur
+    activate SM
+    SM->>SM: Berechne finale Prüfwert
+    SM-->>TSE: signature, logTime
+    deactivate SM
+    TSE-->>KS: signature, logTime
+    deactivate TSE
+    KS-->>Nutzer: Transaktion abgeschlossen
+    end

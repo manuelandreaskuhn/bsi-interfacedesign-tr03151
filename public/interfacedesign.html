@@ -210,6 +210,22 @@
             activeView = 'processes';
           }
           break;
+        case 'processchains':
+          activeView = 'processchains';
+          break;
+        case 'processchain':
+          // URL: /instance/interfacedesign/processchain/id
+          const chainId = pathParts[3] || null;
+          if (chainId) {
+            activeView = 'processchain-detail';
+            selectedItem = { 
+              type: 'processchain', 
+              item: { id: chainId } 
+            };
+          } else {
+            activeView = 'processchains';
+          }
+          break;
         default:
           activeView = 'overview';
       }
@@ -256,6 +272,12 @@
           if (processInfo) {
             url += `/process/${processInfo.actor}/${processInfo.diagramType}/${itemId}`;
           }
+          break;
+        case 'processchains':
+          url += '/processchains';
+          break;
+        case 'processchain-detail':
+          url += `/processchain/${itemId}`;
           break;
         default:
           break;
@@ -321,6 +343,13 @@
         icon: 'project-diagram',
         color: 'teal',
         description: 'Ablaufdiagramme und Prozessbeschreibungen'
+      },
+      { 
+        id: 'processchains', 
+        label: 'Prozessketten', 
+        icon: 'link',
+        color: 'indigo',
+        description: 'Verkettete Prozessabläufe und Workflows'
       }
     ];
 
@@ -377,7 +406,8 @@
                       (item.id === 'exceptions' && activeView === 'exception-detail') ||
                       (item.id === 'enums' && activeView === 'enum-detail') ||
                       (item.id === 'types' && activeView === 'type-detail') ||
-                      (item.id === 'processes' && activeView === 'process-detail') ? 'active' : ''
+                      (item.id === 'processes' && activeView === 'process-detail') ||
+                      (item.id === 'processchains' && activeView === 'processchain-detail') ? 'active' : ''
                     }`}
                     onClick={() => onViewChange(item.id)}
                   >
@@ -386,14 +416,16 @@
                       item.color === 'purple' ? 'bg-purple-100' :
                       item.color === 'amber' ? 'bg-amber-100' :
                       item.color === 'red' ? 'bg-red-100' :
-                      item.color === 'teal' ? 'bg-teal-100' : 'bg-gray-100'
+                      item.color === 'teal' ? 'bg-teal-100' :
+                      item.color === 'indigo' ? 'bg-indigo-100' : 'bg-gray-100'
                     }`}>
                       <Icon name={item.icon} className={
                         item.color === 'blue' ? 'text-blue-600' :
                         item.color === 'purple' ? 'text-purple-600' :
                         item.color === 'amber' ? 'text-amber-600' :
                         item.color === 'red' ? 'text-red-600' :
-                        item.color === 'teal' ? 'text-teal-600' : 'text-gray-600'
+                        item.color === 'teal' ? 'text-teal-600' :
+                        item.color === 'indigo' ? 'text-indigo-600' : 'text-gray-600'
                       } />
                     </div>
                     <div className="flex-1">
@@ -455,14 +487,16 @@
                   item.color === 'purple' ? 'from-purple-500 to-purple-600' :
                   item.color === 'amber' ? 'from-amber-500 to-amber-600' :
                   item.color === 'red' ? 'from-red-500 to-red-600' :
-                  item.color === 'teal' ? 'from-teal-500 to-teal-600' : 'from-gray-500 to-gray-600';
+                  item.color === 'teal' ? 'from-teal-500 to-teal-600' :
+                  item.color === 'indigo' ? 'from-indigo-500 to-indigo-600' : 'from-gray-500 to-gray-600';
                 
                 const badgeClass = 
                   item.color === 'blue' ? 'bg-blue-50 text-blue-700' :
                   item.color === 'purple' ? 'bg-purple-50 text-purple-700' :
                   item.color === 'amber' ? 'bg-amber-50 text-amber-700' :
                   item.color === 'red' ? 'bg-red-50 text-red-700' :
-                  item.color === 'teal' ? 'bg-teal-50 text-teal-700' : 'bg-gray-50 text-gray-700';
+                  item.color === 'teal' ? 'bg-teal-50 text-teal-700' :
+                  item.color === 'indigo' ? 'bg-indigo-50 text-indigo-700' : 'bg-gray-50 text-gray-700';
                 
                 return (
                   <div 
@@ -4869,6 +4903,552 @@
     };
 
     // ============================================
+    // Process Chains List Component
+    // ============================================
+
+    const ProcessChainsView = ({ instance, onSelectItem, language = 'de' }) => {
+      const [data, setData] = useState(null);
+      const [loading, setLoading] = useState(true);
+      const [searchTerm, setSearchTerm] = useState('');
+
+      const t = (obj) => getText(obj, language);
+
+      useEffect(() => {
+        loadProcessChains();
+      }, [instance]);
+
+      const loadProcessChains = async () => {
+        setLoading(true);
+        try {
+          const response = await fetch(getApiUrl(instance, '/processchains'));
+          const result = await response.json();
+          if (result.success) {
+            setData(result.items);
+          }
+        } catch (err) {
+          console.error('Error loading process chains:', err);
+        }
+        setLoading(false);
+      };
+
+      const filteredChains = useMemo(() => {
+        if (!data) return [];
+        if (!searchTerm) return data;
+        
+        const search = searchTerm.toLowerCase();
+        return data.filter(chain => 
+          chain.chainId.toLowerCase().includes(search) ||
+          t(chain.name).toLowerCase().includes(search) ||
+          t(chain.description).toLowerCase().includes(search)
+        );
+      }, [data, searchTerm, language]);
+
+      if (loading) {
+        return (
+          <div className="flex items-center justify-center h-64">
+            <div className="loading-spinner"></div>
+          </div>
+        );
+      }
+
+      return (
+        <div className="p-4 fade-in">
+          <div className="max-w-6xl mx-auto">
+            {/* Header */}
+            <div className="bg-gradient-to-r from-indigo-600 to-indigo-700 rounded-xl shadow-lg p-6 mb-6 text-white">
+              <div className="flex items-center justify-between flex-wrap gap-4">
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center">
+                    <Icon name="link" className="text-3xl" />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-bold">
+                      {language === 'de' ? 'Prozessketten' : 'Process Chains'}
+                    </h2>
+                    <p className="text-indigo-100">
+                      {language === 'de' ? 'Verkettete Prozessabläufe und Workflows' : 'Linked process flows and workflows'}
+                    </p>
+                  </div>
+                </div>
+                <div className="text-3xl font-bold">{data?.length || 0}</div>
+              </div>
+            </div>
+
+            {/* Search */}
+            <div className="bg-white rounded-lg shadow-sm border p-4 mb-6">
+              <div className="relative">
+                <Icon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder={language === 'de' ? 'Suche nach ID, Name oder Beschreibung...' : 'Search by ID, name or description...'}
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                />
+              </div>
+            </div>
+
+            {/* Process Chains List */}
+            <div className="space-y-4">
+              {filteredChains.map(chain => (
+                <div
+                  key={chain.id}
+                  onClick={() => onSelectItem('processchain', chain)}
+                  className="bg-white rounded-lg shadow-sm border p-4 cursor-pointer hover:shadow-md hover:border-indigo-300 transition-all"
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Icon name="link" className="text-xl text-indigo-600" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-mono text-sm text-gray-500">{chain.chainId}</span>
+                      </div>
+                      <h3 className="font-semibold text-gray-800 mb-1">{t(chain.name)}</h3>
+                      <p className="text-sm text-gray-600 line-clamp-2">{t(chain.description)}</p>
+                      
+                      {/* Meta Info */}
+                      <div className="flex items-center gap-4 mt-3 text-xs text-gray-500">
+                        <span className="flex items-center gap-1">
+                          <Icon name="project-diagram" />
+                          {chain.processCount} {language === 'de' ? 'Prozesse' : 'Processes'}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <Icon name="list-ol" />
+                          {chain.stepCount} {language === 'de' ? 'Schritte' : 'Steps'}
+                        </span>
+                      </div>
+
+                      {/* Involved Processes Preview */}
+                      {chain.involvedProcesses && chain.involvedProcesses.length > 0 && (
+                        <div className="flex flex-wrap gap-2 mt-3">
+                          {chain.involvedProcesses.slice(0, 4).map((proc, idx) => (
+                            <span key={idx} className="px-2 py-1 bg-indigo-50 text-indigo-700 rounded text-xs font-mono">
+                              {proc.id}
+                            </span>
+                          ))}
+                          {chain.involvedProcesses.length > 4 && (
+                            <span className="px-2 py-1 bg-gray-100 text-gray-600 rounded text-xs">
+                              +{chain.involvedProcesses.length - 4}
+                            </span>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                    <Icon name="chevron-right" className="text-gray-400 flex-shrink-0" />
+                  </div>
+                </div>
+              ))}
+
+              {filteredChains.length === 0 && (
+                <div className="text-center py-12 text-gray-500">
+                  <Icon name="search" className="text-4xl mb-3 opacity-50" />
+                  <p>{language === 'de' ? 'Keine Prozessketten gefunden' : 'No process chains found'}</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    // ============================================
+    // Process Chain Detail View Component
+    // ============================================
+
+    const ProcessChainDetailView = ({ 
+      instance, 
+      chainId, 
+      onBack, 
+      onNavigateToProcess,
+      onNavigateToFunction,
+      language = 'de' 
+    }) => {
+      const [chain, setChain] = useState(null);
+      const [loading, setLoading] = useState(true);
+      const [error, setError] = useState(null);
+      const mermaidRef = useRef(null);
+      const [mermaidRendered, setMermaidRendered] = useState(false);
+
+      const t = (obj) => getText(obj, language);
+
+      useEffect(() => {
+        loadChain();
+      }, [instance, chainId]);
+
+      const loadChain = async () => {
+        setLoading(true);
+        setError(null);
+        setMermaidRendered(false);
+        try {
+          const response = await fetch(getApiUrl(instance, `/processchain/${chainId}`));
+          const result = await response.json();
+          if (result.success) {
+            setChain(result.processChain);
+          } else {
+            setError(result.error || 'Failed to load process chain');
+          }
+        } catch (err) {
+          console.error('Error loading process chain:', err);
+          setError(err.message);
+        }
+        setLoading(false);
+      };
+
+      // Render Mermaid diagram
+      useEffect(() => {
+        const renderMermaid = async () => {
+          if (chain?.mermaidContent && mermaidRef.current && window.mermaid && !mermaidRendered) {
+            try {
+              const id = `mermaid-chain-${Date.now()}`;
+              const { svg } = await window.mermaid.render(id, chain.mermaidContent);
+              mermaidRef.current.innerHTML = svg;
+              setMermaidRendered(true);
+            } catch (err) {
+              console.error('Mermaid render error:', err);
+              mermaidRef.current.innerHTML = `<div class="text-red-500 p-4">${language === 'de' ? 'Fehler beim Rendern des Diagramms' : 'Error rendering diagram'}</div>`;
+            }
+          }
+        };
+        
+        const timer = setTimeout(renderMermaid, 100);
+        return () => clearTimeout(timer);
+      }, [chain, mermaidRendered, language]);
+
+      if (loading) {
+        return (
+          <div className="flex items-center justify-center h-64">
+            <div className="loading-spinner"></div>
+          </div>
+        );
+      }
+
+      if (error) {
+        return (
+          <div className="p-6">
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">
+              <Icon name="exclamation-triangle" className="mr-2" />
+              {error}
+            </div>
+          </div>
+        );
+      }
+
+      if (!chain) return null;
+
+      return (
+        <div className="p-4 fade-in">
+          <div className="max-w-7xl mx-auto">
+            {/* Back Button */}
+            <button
+              onClick={onBack}
+              className="mb-3 flex items-center text-gray-600 hover:text-gray-900 transition-colors text-sm"
+            >
+              <Icon name="arrow-left" className="mr-1" />
+              {language === 'de' ? 'Zurück zur Übersicht' : 'Back to overview'}
+            </button>
+
+            {/* Header */}
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-6">
+              <div className="bg-gradient-to-r from-indigo-600 to-indigo-700 p-6 text-white">
+                <div className="flex items-start gap-4">
+                  <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center">
+                    <Icon name="link" className="text-2xl" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="font-mono text-sm text-indigo-200">{chain.chainId}</span>
+                    </div>
+                    <h1 className="text-2xl font-bold mb-2">{t(chain.name)}</h1>
+                    <p className="text-indigo-100">{t(chain.description)}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Mermaid Diagram */}
+            {chain.mermaidContent && (
+              <div className="bg-white rounded-lg shadow-sm border mb-6 overflow-hidden">
+                <div className="border-b bg-gray-50 px-4 py-3">
+                  <h3 className="font-semibold text-gray-700 flex items-center">
+                    <Icon name="project-diagram" className="mr-2 text-indigo-600" />
+                    {language === 'de' ? 'Ablaufdiagramm' : 'Flow Diagram'}
+                  </h3>
+                </div>
+                <div className="p-4 overflow-x-auto bg-gradient-to-br from-gray-50 to-white">
+                  <div 
+                    ref={mermaidRef}
+                    className="mermaid-container flex justify-center min-h-[300px]"
+                  />
+                </div>
+              </div>
+            )}
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Involved Processes */}
+              {chain.involvedProcesses && chain.involvedProcesses.length > 0 && (
+                <div className="bg-white rounded-lg shadow-sm border">
+                  <div className="border-b bg-gray-50 px-4 py-3">
+                    <h3 className="font-semibold text-gray-700 flex items-center">
+                      <Icon name="project-diagram" className="mr-2 text-teal-600" />
+                      {language === 'de' ? 'Beteiligte Prozesse' : 'Involved Processes'}
+                    </h3>
+                  </div>
+                  <div className="p-4">
+                    <div className="space-y-2">
+                      {chain.involvedProcesses.map((proc, idx) => (
+                        <div
+                          key={idx}
+                          className="flex items-center gap-3 p-2 bg-teal-50 rounded hover:bg-teal-100 transition-colors"
+                        >
+                          <span className="px-2 py-1 bg-teal-600 text-white rounded text-xs font-mono">
+                            {proc.id}
+                          </span>
+                          <span className="text-gray-700">{t(proc.name)}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Prerequisites */}
+              {chain.prerequisites && chain.prerequisites.length > 0 && (
+                <div className="bg-white rounded-lg shadow-sm border">
+                  <div className="border-b bg-gray-50 px-4 py-3">
+                    <h3 className="font-semibold text-gray-700 flex items-center">
+                      <Icon name="check-circle" className="mr-2 text-green-600" />
+                      {language === 'de' ? 'Voraussetzungen' : 'Prerequisites'}
+                    </h3>
+                  </div>
+                  <div className="p-4">
+                    <ul className="space-y-2">
+                      {chain.prerequisites.map((prereq, idx) => (
+                        <li key={idx} className="flex items-start gap-2 text-gray-700">
+                          <Icon name="check" className="text-green-500 mt-1 flex-shrink-0" />
+                          <span>{t(prereq)}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              )}
+
+              {/* Actors */}
+              {chain.actors && chain.actors.length > 0 && (
+                <div className="bg-white rounded-lg shadow-sm border">
+                  <div className="border-b bg-gray-50 px-4 py-3">
+                    <h3 className="font-semibold text-gray-700 flex items-center">
+                      <Icon name="users" className="mr-2 text-blue-600" />
+                      {language === 'de' ? 'Beteiligte Akteure' : 'Involved Actors'}
+                    </h3>
+                  </div>
+                  <div className="p-4">
+                    <div className="flex flex-wrap gap-2">
+                      {chain.actors.map((actor, idx) => (
+                        <span key={idx} className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm">
+                          {t(actor)}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Variants */}
+              {chain.variants && chain.variants.length > 0 && (
+                <div className="bg-white rounded-lg shadow-sm border">
+                  <div className="border-b bg-gray-50 px-4 py-3">
+                    <h3 className="font-semibold text-gray-700 flex items-center">
+                      <Icon name="code-branch" className="mr-2 text-purple-600" />
+                      {language === 'de' ? 'Varianten' : 'Variants'}
+                    </h3>
+                  </div>
+                  <div className="p-4 space-y-3">
+                    {chain.variants.map((variant, idx) => (
+                      <div key={idx} className="p-3 bg-purple-50 rounded-lg">
+                        <div className="font-medium text-purple-800 mb-1">{t(variant.name)}</div>
+                        <div className="text-sm text-purple-700">{t(variant.description)}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Steps */}
+            {chain.steps && chain.steps.length > 0 && (
+              <div className="bg-white rounded-lg shadow-sm border mt-6">
+                <div className="border-b bg-gray-50 px-4 py-3">
+                  <h3 className="font-semibold text-gray-700 flex items-center">
+                    <Icon name="list-ol" className="mr-2 text-indigo-600" />
+                    {language === 'de' ? 'Ablaufschritte' : 'Process Steps'}
+                  </h3>
+                </div>
+                <div className="p-4">
+                  <div className="space-y-4">
+                    {chain.steps.map((step, idx) => (
+                      <div 
+                        key={idx} 
+                        className={`relative pl-8 pb-4 ${idx < chain.steps.length - 1 ? 'border-l-2 border-indigo-200 ml-3' : 'ml-3'}`}
+                      >
+                        {/* Step number circle */}
+                        <div className={`absolute -left-3 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
+                          step.critical ? 'bg-red-500 text-white' :
+                          step.optional ? 'bg-gray-300 text-gray-700' :
+                          'bg-indigo-500 text-white'
+                        }`}>
+                          {step.stepNumber}
+                        </div>
+
+                        <div className="bg-gray-50 rounded-lg p-4">
+                          <div className="flex items-center gap-2 mb-2">
+                            <h4 className="font-semibold text-gray-800">{t(step.name)}</h4>
+                            {step.critical && (
+                              <span className="px-2 py-0.5 bg-red-100 text-red-700 rounded text-xs">
+                                {language === 'de' ? 'Kritisch' : 'Critical'}
+                              </span>
+                            )}
+                            {step.optional && (
+                              <span className="px-2 py-0.5 bg-gray-200 text-gray-700 rounded text-xs">
+                                {language === 'de' ? 'Optional' : 'Optional'}
+                              </span>
+                            )}
+                            {step.frequency && (
+                              <span className="px-2 py-0.5 bg-blue-100 text-blue-700 rounded text-xs">
+                                {step.frequency}
+                              </span>
+                            )}
+                          </div>
+                          
+                          <p className="text-sm text-gray-600 mb-3">{t(step.description)}</p>
+
+                          {step.function && (
+                            <div className="flex items-center gap-2 text-sm">
+                              <span className="text-gray-500">{language === 'de' ? 'Funktion:' : 'Function:'}</span>
+                              <button
+                                onClick={() => onNavigateToFunction && onNavigateToFunction(step.function.name)}
+                                className="px-2 py-1 bg-blue-50 text-blue-700 rounded font-mono hover:bg-blue-100 transition-colors"
+                              >
+                                {step.function.name}()
+                              </button>
+                              {step.function.linkedProcess && (
+                                <>
+                                  <span className="text-gray-400">→</span>
+                                  <span className="px-2 py-1 bg-teal-50 text-teal-700 rounded text-xs">
+                                    {language === 'de' ? 'Prozess' : 'Process'} {step.function.linkedProcess.id}
+                                  </span>
+                                </>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Outcome */}
+            {chain.outcome && (
+              <div className="bg-white rounded-lg shadow-sm border mt-6">
+                <div className="border-b bg-gray-50 px-4 py-3">
+                  <h3 className="font-semibold text-gray-700 flex items-center">
+                    <Icon name="flag-checkered" className="mr-2 text-green-600" />
+                    {language === 'de' ? 'Ergebnis' : 'Outcome'}
+                  </h3>
+                </div>
+                <div className="p-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {chain.outcome.minimumLogMessages && (
+                      <div className="p-3 bg-green-50 rounded-lg">
+                        <div className="text-sm text-green-600 mb-1">
+                          {language === 'de' ? 'Mindestanzahl Log-Nachrichten' : 'Minimum Log Messages'}
+                        </div>
+                        <div className="text-2xl font-bold text-green-700">
+                          {chain.outcome.minimumLogMessages}
+                        </div>
+                      </div>
+                    )}
+
+                    {chain.outcome.logTypes && chain.outcome.logTypes.length > 0 && (
+                      <div className="p-3 bg-blue-50 rounded-lg">
+                        <div className="text-sm text-blue-600 mb-2">
+                          {language === 'de' ? 'Log-Typen' : 'Log Types'}
+                        </div>
+                        <ul className="space-y-1 text-sm text-blue-700">
+                          {chain.outcome.logTypes.map((lt, idx) => (
+                            <li key={idx} className="flex items-center gap-1">
+                              <Icon name="file-alt" className="text-xs" />
+                              {t(lt)}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {chain.outcome.storedData && chain.outcome.storedData.length > 0 && (
+                      <div className="p-3 bg-purple-50 rounded-lg md:col-span-2">
+                        <div className="text-sm text-purple-600 mb-2">
+                          {language === 'de' ? 'Gespeicherte Daten' : 'Stored Data'}
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                          {chain.outcome.storedData.map((data, idx) => (
+                            <span key={idx} className="px-2 py-1 bg-purple-100 text-purple-700 rounded text-xs">
+                              {t(data)}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Usage Scenario */}
+            {chain.usageScenario && (
+              <div className="bg-white rounded-lg shadow-sm border mt-6">
+                <div className="border-b bg-gray-50 px-4 py-3">
+                  <h3 className="font-semibold text-gray-700 flex items-center">
+                    <Icon name="lightbulb" className="mr-2 text-yellow-600" />
+                    {language === 'de' ? 'Anwendungsbeispiel' : 'Usage Scenario'}
+                  </h3>
+                </div>
+                <div className="p-4">
+                  <p className="text-gray-700">{t(chain.usageScenario)}</p>
+                </div>
+              </div>
+            )}
+
+            {/* References */}
+            {chain.references && chain.references.length > 0 && (
+              <div className="bg-white rounded-lg shadow-sm border mt-6">
+                <div className="border-b bg-gray-50 px-4 py-3">
+                  <h3 className="font-semibold text-gray-700 flex items-center">
+                    <Icon name="book" className="mr-2 text-gray-600" />
+                    {language === 'de' ? 'Referenzen' : 'References'}
+                  </h3>
+                </div>
+                <div className="p-4">
+                  <ul className="space-y-1">
+                    {chain.references.map((ref, idx) => (
+                      <li key={idx} className="text-gray-600 text-sm flex items-center gap-2">
+                        <Icon name="external-link-alt" className="text-xs" />
+                        {ref}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    };
+
+    // ============================================
     // Main Application Component
     // ============================================
 
@@ -4953,6 +5533,8 @@
             actor: item.actor,
             diagramType: item.diagramType
           });
+        } else if (type === 'processchain') {
+          updateUrl(instance, detailView, item.id);
         } else {
           updateUrl(instance, detailView, item.id);
         }
@@ -4973,6 +5555,8 @@
           listView = 'types';
         } else if (previousType === 'process') {
           listView = 'processes';
+        } else if (previousType === 'processchain') {
+          listView = 'processchains';
         }
         setActiveView(listView);
         updateUrl(instance, listView);
@@ -5110,6 +5694,18 @@
                 onNavigateToException={handleNavigateToException}
                 onNavigateToType={handleNavigateToType}
                 onNavigateToEnum={handleNavigateToEnum}
+                language={language}
+              />
+            );
+          case 'processchains':
+            return <ProcessChainsView instance={instance} onSelectItem={handleSelectItem} language={language} />;
+          case 'processchain-detail':
+            return (
+              <ProcessChainDetailView 
+                instance={instance} 
+                chainId={selectedItem?.item?.id}
+                onBack={handleBackFromDetail}
+                onNavigateToFunction={handleNavigateToFunction}
                 language={language}
               />
             );

@@ -1,0 +1,18 @@
+sequenceDiagram
+    participant ERS as Aufzeichnungssystem (ERS)
+    participant TSE as TSE
+    participant SM as Sicherheitsmodul
+
+    ERS->>TSE: finishTransaction(clientId, transactionNumber, processData)
+    activate TSE
+    
+    TSE->>TSE: Prüfe Transaktionsstatus
+    TSE->>SM: Erstelle finale Signatur
+    activate SM
+    SM->>SM: Signaturzähler++
+    SM->>SM: Berechne finale Prüfwert
+    SM-->>TSE: signature
+    deactivate SM
+    
+    TSE-->>ERS: signature, signatureCounter, logTime
+    deactivate TSE
