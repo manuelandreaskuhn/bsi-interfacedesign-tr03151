@@ -493,4 +493,31 @@ router.get('/:instance/interfacedesign/processchain/:id', async (req, res) => {
   }
 });
 
+/**
+ * GET /:instance/interfacedesign/processmap
+ * Get the process map/landscape
+ */
+router.get('/:instance/interfacedesign/processmap', async (req, res) => {
+  try {
+    const basePath = await getInterfaceDesignPath(req.params.instance);
+    if (!basePath) {
+      return res.status(404).json({ error: 'InterfaceDesign folder not found' });
+    }
+
+    const processMap = await xmlParser.parseProcessMap(basePath);
+    
+    if (!processMap) {
+      return res.status(404).json({ error: 'Process map not found' });
+    }
+
+    res.json({
+      success: true,
+      processMap
+    });
+  } catch (error) {
+    console.error('Error getting process map:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 module.exports = router;

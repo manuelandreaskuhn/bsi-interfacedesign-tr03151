@@ -226,6 +226,9 @@
             activeView = 'processchains';
           }
           break;
+        case 'processmap':
+          activeView = 'processmap';
+          break;
         default:
           activeView = 'overview';
       }
@@ -279,6 +282,9 @@
         case 'processchain-detail':
           url += `/processchain/${itemId}`;
           break;
+        case 'processmap':
+          url += '/processmap';
+          break;
         default:
           break;
       }
@@ -309,6 +315,13 @@
     // ============================================
 
     const NAV_ITEMS = [
+      { 
+        id: 'processmap', 
+        label: 'Prozesslandkarte', 
+        icon: 'map',
+        color: 'emerald',
+        description: 'Übersicht aller Prozesse und Prozessketten'
+      },
       { 
         id: 'functions', 
         label: 'Funktionen', 
@@ -392,6 +405,9 @@
                   ? Object.keys(overview[item.id].categories).length 
                   : 0;
                 
+                // processmap doesn't have a count, it's a special navigation item
+                const showCount = item.id !== 'processmap';
+                
                 const bgColorClass = `bg-${item.color}-100`;
                 const textColorClass = `text-${item.color}-600`;
                 const badgeBgClass = `bg-${item.color}-100`;
@@ -417,7 +433,8 @@
                       item.color === 'amber' ? 'bg-amber-100' :
                       item.color === 'red' ? 'bg-red-100' :
                       item.color === 'teal' ? 'bg-teal-100' :
-                      item.color === 'indigo' ? 'bg-indigo-100' : 'bg-gray-100'
+                      item.color === 'indigo' ? 'bg-indigo-100' :
+                      item.color === 'emerald' ? 'bg-emerald-100' : 'bg-gray-100'
                     }`}>
                       <Icon name={item.icon} className={
                         item.color === 'blue' ? 'text-blue-600' :
@@ -425,27 +442,29 @@
                         item.color === 'amber' ? 'text-amber-600' :
                         item.color === 'red' ? 'text-red-600' :
                         item.color === 'teal' ? 'text-teal-600' :
-                        item.color === 'indigo' ? 'text-indigo-600' : 'text-gray-600'
+                        item.color === 'indigo' ? 'text-indigo-600' :
+                        item.color === 'emerald' ? 'text-emerald-600' : 'text-gray-600'
                       } />
                     </div>
                     <div className="flex-1">
                       <div className="font-medium text-gray-800 flex items-center justify-between">
                         {item.label}
-                        {!loading && (
+                        {!loading && showCount && (
                           <span className={`badge rounded-full ${
                             item.color === 'blue' ? 'bg-blue-100 text-blue-700' :
                             item.color === 'purple' ? 'bg-purple-100 text-purple-700' :
                             item.color === 'amber' ? 'bg-amber-100 text-amber-700' :
                             item.color === 'red' ? 'bg-red-100 text-red-700' :
                             item.color === 'teal' ? 'bg-teal-100 text-teal-700' :
-                            item.color === 'indigo' ? 'bg-indigo-100 text-indigo-700' : 'bg-gray-100 text-gray-700'
+                            item.color === 'indigo' ? 'bg-indigo-100 text-indigo-700' :
+                            item.color === 'emerald' ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-700'
                           }`}>
                             {count}
                           </span>
                         )}
                       </div>
                       <div className="text-xs text-gray-500">
-                        {loading ? 'Lädt...' : `${categoryCount} Gruppe${categoryCount !== 1 ? 'n' : ''}`}
+                        {loading ? 'Lädt...' : showCount ? `${categoryCount} Gruppe${categoryCount !== 1 ? 'n' : ''}` : item.description}
                       </div>
                     </div>
                   </div>
@@ -470,6 +489,9 @@
     // ============================================
 
     const OverviewView = ({ overview, onNavigate }) => {
+      // Filter out processmap from overview - it's a special navigation item
+      const overviewItems = NAV_ITEMS.filter(item => item.id !== 'processmap');
+      
       return (
         <div className="p-6 fade-in">
           <div className="max-w-7xl mx-auto">
@@ -479,7 +501,7 @@
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {NAV_ITEMS.map(item => {
+              {overviewItems.map(item => {
                 const data = overview?.[item.id] || { count: 0, categories: {} };
                 const categories = Object.entries(data.categories || {}).sort((a, b) => b[1] - a[1]);
                 
@@ -489,7 +511,8 @@
                   item.color === 'amber' ? 'from-amber-500 to-amber-600' :
                   item.color === 'red' ? 'from-red-500 to-red-600' :
                   item.color === 'teal' ? 'from-teal-500 to-teal-600' :
-                  item.color === 'indigo' ? 'from-indigo-500 to-indigo-600' : 'from-gray-500 to-gray-600';
+                  item.color === 'indigo' ? 'from-indigo-500 to-indigo-600' :
+                  item.color === 'emerald' ? 'from-emerald-500 to-emerald-600' : 'from-gray-500 to-gray-600';
                 
                 const badgeClass = 
                   item.color === 'blue' ? 'bg-blue-50 text-blue-700' :
@@ -497,7 +520,8 @@
                   item.color === 'amber' ? 'bg-amber-50 text-amber-700' :
                   item.color === 'red' ? 'bg-red-50 text-red-700' :
                   item.color === 'teal' ? 'bg-teal-50 text-teal-700' :
-                  item.color === 'indigo' ? 'bg-indigo-50 text-indigo-700' : 'bg-gray-50 text-gray-700';
+                  item.color === 'indigo' ? 'bg-indigo-50 text-indigo-700' :
+                  item.color === 'emerald' ? 'bg-emerald-50 text-emerald-700' : 'bg-gray-50 text-gray-700';
                 
                 return (
                   <div 
@@ -4911,6 +4935,419 @@
     };
 
     // ============================================
+    // Process Map View Component
+    // ============================================
+
+    const ProcessMapView = ({ instance, onNavigateToProcess, onNavigateToProcessChain, language = 'de' }) => {
+      const [data, setData] = useState(null);
+      const [loading, setLoading] = useState(true);
+      const [error, setError] = useState(null);
+      const [activeTab, setActiveTab] = useState('categories');
+      const [expandedCategories, setExpandedCategories] = useState({});
+      const [processes, setProcesses] = useState([]);
+      const [processChains, setProcessChains] = useState([]);
+
+      const t = (obj) => getText(obj, language);
+
+      useEffect(() => {
+        loadData();
+      }, [instance]);
+
+      const loadData = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+          // Load process map
+          const mapResponse = await fetch(getApiUrl(instance, '/processmap'));
+          const mapResult = await mapResponse.json();
+          if (mapResult.success) {
+            setData(mapResult.processMap);
+            // Expand first category by default
+            if (mapResult.processMap.categories?.length > 0) {
+              setExpandedCategories({ [mapResult.processMap.categories[0].id]: true });
+            }
+          } else {
+            setError(mapResult.error || 'Failed to load process map');
+          }
+
+          // Load processes for linking
+          const processesResponse = await fetch(getApiUrl(instance, '/processes'));
+          const processesResult = await processesResponse.json();
+          if (processesResult.success) {
+            setProcesses(processesResult.items || []);
+          }
+
+          // Load process chains for linking
+          const chainsResponse = await fetch(getApiUrl(instance, '/processchains'));
+          const chainsResult = await chainsResponse.json();
+          if (chainsResult.success) {
+            setProcessChains(chainsResult.items || []);
+          }
+        } catch (err) {
+          console.error('Error loading process map:', err);
+          setError(err.message);
+        }
+        setLoading(false);
+      };
+
+      const toggleCategory = (categoryId) => {
+        setExpandedCategories(prev => ({
+          ...prev,
+          [categoryId]: !prev[categoryId]
+        }));
+      };
+
+      // Find process by numeric ID
+      const findProcess = (numericId) => {
+        return processes.find(p => {
+          const baseId = p.baseName?.split('-')[0];
+          return baseId === numericId || p.baseName?.includes(`${numericId}-`);
+        });
+      };
+
+      // Find process chain by ID
+      const findProcessChain = (chainId) => {
+        return processChains.find(pc => pc.chainId === chainId || pc.id?.includes(chainId));
+      };
+
+      const handleProcessClick = (numericId) => {
+        const process = findProcess(numericId);
+        if (process && onNavigateToProcess) {
+          onNavigateToProcess(process);
+        }
+      };
+
+      const handleProcessChainClick = (chainId) => {
+        const chain = findProcessChain(chainId);
+        if (chain && onNavigateToProcessChain) {
+          onNavigateToProcessChain(chain);
+        }
+      };
+
+      if (loading) {
+        return (
+          <div className="flex items-center justify-center h-64">
+            <div className="loading-spinner"></div>
+          </div>
+        );
+      }
+
+      if (error) {
+        return (
+          <div className="p-6">
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">
+              <Icon name="exclamation-triangle" className="mr-2" />
+              {error}
+            </div>
+          </div>
+        );
+      }
+
+      if (!data) return null;
+
+      return (
+        <div className="p-4 fade-in">
+          <div className="max-w-7xl mx-auto">
+            {/* Header */}
+            <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 rounded-xl shadow-lg p-6 text-white mb-6">
+              <div className="flex items-start gap-4">
+                <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center">
+                  <Icon name="map" className="text-2xl" />
+                </div>
+                <div className="flex-1">
+                  <h1 className="text-2xl font-bold mb-2">{t(data.metadata?.title)}</h1>
+                  <p className="text-emerald-100 mb-3">{t(data.metadata?.description)}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {data.metadata?.standards?.map((std, idx) => (
+                      <span key={idx} className="px-2 py-1 bg-white/20 rounded text-xs">
+                        {std}
+                      </span>
+                    ))}
+                    <span className="px-2 py-1 bg-white/20 rounded text-xs">
+                      v{data.metadata?.version}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Tabs */}
+            <div className="bg-white rounded-lg shadow-sm border mb-6">
+              <div className="flex border-b overflow-x-auto">
+                {[
+                  { id: 'categories', icon: 'folder-tree', label: language === 'de' ? 'Kategorien' : 'Categories' },
+                  { id: 'critical', icon: 'exclamation-circle', label: language === 'de' ? 'Kritische Prozesse' : 'Critical Processes' },
+                  { id: 'quickstart', icon: 'rocket', label: language === 'de' ? 'Schnellstart' : 'Quick Start' },
+                  { id: 'learning', icon: 'graduation-cap', label: language === 'de' ? 'Lernpfade' : 'Learning Paths' }
+                ].map(tab => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`flex items-center gap-2 px-4 py-3 text-sm font-medium whitespace-nowrap transition-colors ${
+                      activeTab === tab.id 
+                        ? 'text-emerald-600 border-b-2 border-emerald-600 bg-emerald-50' 
+                        : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    <Icon name={tab.icon} />
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+
+              <div className="p-4">
+                {/* Categories Tab */}
+                {activeTab === 'categories' && (
+                  <div className="space-y-4">
+                    {data.categories?.map((category) => (
+                      <div key={category.id} className="border rounded-lg overflow-hidden">
+                        <button
+                          onClick={() => toggleCategory(category.id)}
+                          className="w-full flex items-center gap-3 p-4 text-left hover:bg-gray-50 transition-colors"
+                          style={{ borderLeftWidth: '4px', borderLeftColor: category.color }}
+                        >
+                          <span className="text-2xl">{category.icon}</span>
+                          <div className="flex-1">
+                            <h3 className="font-semibold text-gray-800">{t(category.name)}</h3>
+                            <p className="text-sm text-gray-500">{t(category.description)}</p>
+                          </div>
+                          <Icon 
+                            name={expandedCategories[category.id] ? 'chevron-up' : 'chevron-down'} 
+                            className="text-gray-400"
+                          />
+                        </button>
+                        
+                        {expandedCategories[category.id] && (
+                          <div className="border-t bg-gray-50 p-4">
+                            <div className="space-y-4">
+                              {category.subCategories?.map((subCat) => (
+                                <div key={subCat.id} className="bg-white rounded-lg p-4 border">
+                                  <h4 className="font-medium text-gray-700 mb-3">{t(subCat.name)}</h4>
+                                  
+                                  {/* Processes */}
+                                  {subCat.processes?.length > 0 && (
+                                    <div className="mb-3">
+                                      <div className="text-xs font-semibold text-gray-400 uppercase mb-2">
+                                        {language === 'de' ? 'Prozesse' : 'Processes'}
+                                      </div>
+                                      <div className="flex flex-wrap gap-2">
+                                        {subCat.processes.map((proc, idx) => {
+                                          const linkedProc = findProcess(proc.id);
+                                          return (
+                                            <button
+                                              key={idx}
+                                              onClick={() => linkedProc && handleProcessClick(proc.id)}
+                                              className={`inline-flex items-center gap-1 px-2 py-1 rounded text-sm transition-colors ${
+                                                proc.critical 
+                                                  ? 'bg-red-100 text-red-700 hover:bg-red-200' 
+                                                  : proc.mandatory 
+                                                    ? 'bg-teal-100 text-teal-700 hover:bg-teal-200'
+                                                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                              } ${linkedProc ? 'cursor-pointer' : 'opacity-75'}`}
+                                            >
+                                              <span className="font-mono text-xs">{proc.id}</span>
+                                              <span>{t(proc.name)}</span>
+                                              {proc.critical && <Icon name="exclamation-circle" className="text-xs" />}
+                                              {linkedProc && <Icon name="external-link-alt" className="text-xs opacity-50" />}
+                                            </button>
+                                          );
+                                        })}
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  {/* Process Chains */}
+                                  {subCat.processChains?.length > 0 && (
+                                    <div>
+                                      <div className="text-xs font-semibold text-gray-400 uppercase mb-2">
+                                        {language === 'de' ? 'Prozessketten' : 'Process Chains'}
+                                      </div>
+                                      <div className="flex flex-wrap gap-2">
+                                        {subCat.processChains.map((chain, idx) => {
+                                          const linkedChain = findProcessChain(chain.id);
+                                          return (
+                                            <button
+                                              key={idx}
+                                              onClick={() => linkedChain && handleProcessChainClick(chain.id)}
+                                              className={`inline-flex items-center gap-1 px-2 py-1 bg-indigo-100 text-indigo-700 rounded text-sm hover:bg-indigo-200 transition-colors ${
+                                                linkedChain ? 'cursor-pointer' : 'opacity-75'
+                                              }`}
+                                            >
+                                              <Icon name="link" className="text-xs" />
+                                              <span className="font-mono text-xs">{chain.id}</span>
+                                              <span>{t(chain.name)}</span>
+                                              {linkedChain && <Icon name="external-link-alt" className="text-xs opacity-50" />}
+                                            </button>
+                                          );
+                                        })}
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Critical Processes Tab */}
+                {activeTab === 'critical' && (
+                  <div className="space-y-3">
+                    <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+                      <div className="flex items-center gap-2 text-red-700">
+                        <Icon name="exclamation-triangle" />
+                        <span className="font-medium">
+                          {language === 'de' 
+                            ? 'Diese Prozesse sind kritisch für den Betrieb der TSE'
+                            : 'These processes are critical for TSE operation'}
+                        </span>
+                      </div>
+                    </div>
+                    {data.criticalProcesses?.map((proc, idx) => {
+                      const linkedProc = findProcess(proc.id);
+                      return (
+                        <div 
+                          key={idx}
+                          onClick={() => linkedProc && handleProcessClick(proc.id)}
+                          className={`bg-white border border-red-200 rounded-lg p-4 ${
+                            linkedProc ? 'cursor-pointer hover:bg-red-50' : ''
+                          } transition-colors`}
+                        >
+                          <div className="flex items-start gap-3">
+                            <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center text-red-600 font-mono font-bold">
+                              {proc.id}
+                            </div>
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2">
+                                <h4 className="font-semibold text-gray-800">{t(proc.name)}</h4>
+                                {linkedProc && <Icon name="external-link-alt" className="text-gray-400 text-xs" />}
+                              </div>
+                              <p className="text-sm text-gray-600 mt-1">{t(proc.reason)}</p>
+                              {proc.severity && (
+                                <span className="inline-block mt-2 px-2 py-0.5 bg-red-100 text-red-700 rounded text-xs">
+                                  {t(proc.severity)}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {/* Quick Start Tab */}
+                {activeTab === 'quickstart' && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {data.navigation?.startingPoints?.map((sp, idx) => {
+                      const isChain = sp.start?.startsWith('PK');
+                      const linkedItem = isChain ? findProcessChain(sp.start) : findProcess(sp.start);
+                      return (
+                        <div 
+                          key={idx}
+                          onClick={() => {
+                            if (isChain && linkedItem) {
+                              handleProcessChainClick(sp.start);
+                            } else if (linkedItem) {
+                              handleProcessClick(sp.start);
+                            }
+                          }}
+                          className={`bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-200 rounded-lg p-4 ${
+                            linkedItem ? 'cursor-pointer hover:from-emerald-100 hover:to-teal-100' : ''
+                          } transition-colors`}
+                        >
+                          <div className="flex items-start gap-3">
+                            <div className="w-12 h-12 bg-emerald-500 text-white rounded-lg flex items-center justify-center">
+                              <Icon name="play" />
+                            </div>
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2">
+                                <h4 className="font-semibold text-gray-800">{t(sp.role)}</h4>
+                                <span className="px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded text-xs font-mono">
+                                  {sp.start}
+                                </span>
+                                {linkedItem && <Icon name="external-link-alt" className="text-gray-400 text-xs" />}
+                              </div>
+                              <p className="text-sm text-gray-600 mt-1">{t(sp.description)}</p>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {/* Learning Paths Tab */}
+                {activeTab === 'learning' && (
+                  <div className="space-y-6">
+                    {data.navigation?.learningPaths?.map((path, idx) => (
+                      <div key={idx} className="bg-white border rounded-lg overflow-hidden">
+                        <div className="bg-gradient-to-r from-purple-500 to-indigo-500 p-4 text-white">
+                          <div className="flex items-center gap-2 mb-1">
+                            <Icon name="graduation-cap" />
+                            <h4 className="font-semibold">{t(path.name)}</h4>
+                          </div>
+                          <p className="text-sm text-purple-100">
+                            {language === 'de' ? 'Zielgruppe:' : 'Target audience:'} {t(path.targetAudience)}
+                          </p>
+                        </div>
+                        <div className="p-4">
+                          <div className="relative">
+                            {path.steps?.map((step, stepIdx) => {
+                              const isChain = step.id?.startsWith('PK');
+                              const linkedItem = isChain ? findProcessChain(step.id) : findProcess(step.id);
+                              return (
+                                <div key={stepIdx} className="flex items-start gap-3 pb-4">
+                                  <div className="flex flex-col items-center">
+                                    <div className="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center font-bold text-sm">
+                                      {stepIdx + 1}
+                                    </div>
+                                    {stepIdx < path.steps.length - 1 && (
+                                      <div className="w-0.5 h-full bg-indigo-200 mt-1" style={{ minHeight: '24px' }} />
+                                    )}
+                                  </div>
+                                  <div 
+                                    onClick={() => {
+                                      if (isChain && linkedItem) {
+                                        handleProcessChainClick(step.id);
+                                      } else if (linkedItem) {
+                                        handleProcessClick(step.id);
+                                      }
+                                    }}
+                                    className={`flex-1 bg-gray-50 rounded-lg p-3 ${
+                                      linkedItem ? 'cursor-pointer hover:bg-indigo-50' : ''
+                                    } transition-colors`}
+                                  >
+                                    <div className="flex items-center gap-2">
+                                      <span className={`px-2 py-0.5 rounded text-xs font-mono ${
+                                        isChain ? 'bg-indigo-100 text-indigo-700' : 'bg-teal-100 text-teal-700'
+                                      }`}>
+                                        {step.id}
+                                      </span>
+                                      <span className="text-sm text-gray-700">{t(step.description)}</span>
+                                      {linkedItem && <Icon name="external-link-alt" className="text-gray-400 text-xs" />}
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    // ============================================
     // Process Chains List Component
     // ============================================
 
@@ -5748,6 +6185,17 @@
         });
       };
 
+      const handleNavigateToProcessChain = (chain) => {
+        if (!chain) return;
+        const chainId = chain.chainId || chain.id || chain.baseName;
+        setSelectedItem({ 
+          type: 'processchain', 
+          item: { id: chainId }
+        });
+        setActiveView('processchain-detail');
+        updateUrl(instance, 'processchain-detail', chainId);
+      };
+
       // Handle navigation from sidebar and overview
       const handleViewChange = (view) => {
         setActiveView(view);
@@ -5869,6 +6317,15 @@
                 onBack={handleBackFromDetail}
                 onNavigateToProcess={handleNavigateToProcess}
                 onNavigateToFunction={handleNavigateToFunction}
+                language={language}
+              />
+            );
+          case 'processmap':
+            return (
+              <ProcessMapView 
+                instance={instance}
+                onNavigateToProcess={handleNavigateToProcess}
+                onNavigateToProcessChain={handleNavigateToProcessChain}
                 language={language}
               />
             );

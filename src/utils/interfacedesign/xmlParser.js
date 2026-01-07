@@ -1592,6 +1592,173 @@ async function getProcessChainsOverview(basePath) {
   };
 }
 
+// ============================================
+// Process Map Parsing Functions
+// ============================================
+
+/**
+ * Parse the process map XML file
+ * @param {string} basePath - Base path of interfacedesign folder
+ * @returns {Promise<Object>} - Process map data
+ */
+async function parseProcessMap(basePath) {
+  const mapPath = path.join(basePath, 'processes', 'map.xml');
+  
+  try {
+    const xml = await parseXmlFile(mapPath);
+    if (!xml || !xml.processMap) return null;
+
+    const map = xml.processMap;
+
+    // Parse metadata
+    const metadata = {
+      title: extractMultiLangText(map.metadata?.title),
+      version: map.metadata?.version || '',
+      date: map.metadata?.date || '',
+      description: extractMultiLangText(map.metadata?.description),
+      standards: []
+    };
+    
+    if (map.metadata?.standards?.standard) {
+      metadata.standards = Array.isArray(map.metadata.standards.standard)
+        ? map.metadata.standards.standard
+        : [map.metadata.standards.standard];
+    }
+
+    // Parse main categories
+    const categories = [];
+    if (map.mainCategories?.category) {
+      const catList = Array.isArray(map.mainCategories.category)
+        ? map.mainCategories.category
+        : [map.mainCategories.category];
+      
+      for (const cat of catList) {
+        const category = {
+          id: cat.id,
+          name: extractMultiLangText(cat.n || cat.name),
+          description: extractMultiLangText(cat.description),
+          icon: cat.icon || '',
+          color: cat.color || '#888888',
+          subCategories: []
+        };
+
+        // Parse subcategories
+        if (cat.subCategories?.subCategory) {
+          const subCatList = Array.isArray(cat.subCategories.subCategory)
+            ? cat.subCategories.subCategory
+            : [cat.subCategories.subCategory];
+          
+          for (const subCat of subCatList) {
+            const subCategory = {
+              id: subCat.id,
+              name: extractMultiLangText(subCat.n || subCat.name),
+              processes: [],
+              processChains: []
+            };
+
+            // Parse processes in subcategory
+            if (subCat.processes?.process) {
+              const procList = Array.isArray(subCat.processes.process)
+                ? subCat.processes.process
+                : [subCat.processes.process];
+              
+              subCategory.processes = procList.map(p => ({
+                id: p.id,
+                name: extractMultiLangText(p.n || p.name),
+                mandatory: p.mandatory === 'true' || p.mandatory === true,
+                critical: p.critical === 'true' || p.critical === true,
+                frequency: p.frequency ? extractMultiLangText(p.frequency) : null
+              }));
+            }
+
+            // Parse process chains in subcategory
+            if (subCat.processChains?.processChain) {
+              const chainList = Array.isArray(subCat.processChains.processChain)
+                ? subCat.processChains.processChain
+                : [subCat.processChains.processChain];
+              
+              subCategory.processChains = chainList.map(pc => ({
+                id: pc.id,
+                name: extractMultiLangText(pc.n || pc.name)
+              }));
+            }
+
+            category.subCategories.push(subCategory);
+          }
+        }
+
+        categories.push(category);
+      }
+    }
+
+    // Parse critical processes
+    const criticalProcesses = [];
+    if (map.criticalProcesses?.process) {
+      const critList = Array.isArray(map.criticalProcesses.process)
+        ? map.criticalProcesses.process
+        : [map.criticalProcesses.process];
+      
+      criticalProcesses.push(...critList.map(p => ({
+        id: p.id,
+        name: extractMultiLangText(p.n || p.name),
+        reason: extractMultiLangText(p.reason),
+        severity: extractMultiLangText(p.severity)
+      })));
+    }
+
+    // Parse navigation
+    const navigation = {
+      startingPoints: [],
+      learningPaths: []
+    };
+
+    if (map.navigation?.recommendedStartingPoints?.startingPoint) {
+      const spList = Array.isArray(map.navigation.recommendedStartingPoints.startingPoint)
+        ? map.navigation.recommendedStartingPoints.startingPoint
+        : [map.navigation.recommendedStartingPoints.startingPoint];
+      
+      navigation.startingPoints = spList.map(sp => ({
+        role: extractMultiLangText(sp.role),
+        start: sp.start,
+        description: extractMultiLangText(sp.description)
+      }));
+    }
+
+    if (map.navigation?.learningPaths?.learningPath) {
+      const lpList = Array.isArray(map.navigation.learningPaths.learningPath)
+        ? map.navigation.learningPaths.learningPath
+        : [map.navigation.learningPaths.learningPath];
+      
+      navigation.learningPaths = lpList.map(lp => {
+        const steps = [];
+        if (lp.steps?.step) {
+          const stepList = Array.isArray(lp.steps.step) ? lp.steps.step : [lp.steps.step];
+          steps.push(...stepList.map(s => ({
+            id: s.id,
+            description: extractMultiLangText(s.description)
+          })));
+        }
+        
+        return {
+          name: extractMultiLangText(lp.n || lp.name),
+          targetAudience: extractMultiLangText(lp.targetAudience),
+          steps
+        };
+      });
+    }
+
+    return {
+      metadata,
+      categories,
+      criticalProcesses,
+      navigation
+    };
+  } catch (err) {
+    console.error('Error parsing process map:', err);
+    return null;
+  }
+}
+
 module.exports = {
   parseXmlFile,
   getXmlFilesFromDir,
@@ -1612,5 +1779,6 @@ module.exports = {
   loadProcessChains,
   getProcessChainsOverview,
   loadCategory,
-  getOverview
+  getOverview,
+  parseProcessMap
 };
