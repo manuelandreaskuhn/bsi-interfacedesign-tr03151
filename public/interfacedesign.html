@@ -2767,7 +2767,7 @@
     // Types List Component
     // ============================================
 
-    const TypesView = ({ instance, onSelectItem }) => {
+    const TypesView = ({ instance, onSelectItem, language }) => {
       const [data, setData] = useState(null);
       const [loading, setLoading] = useState(true);
       const [searchTerm, setSearchTerm] = useState('');
@@ -3293,7 +3293,7 @@
     // Enums List Component
     // ============================================
 
-    const EnumsView = ({ instance, onSelectItem }) => {
+    const EnumsView = ({ instance, onSelectItem, language }) => {
       const [data, setData] = useState(null);
       const [loading, setLoading] = useState(true);
       const [searchTerm, setSearchTerm] = useState('');
