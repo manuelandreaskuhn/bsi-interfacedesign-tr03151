@@ -359,12 +359,19 @@
                                 </span>
                                 <span className="font-medium text-amber-700">{instance.enumCount || 0}</span>
                               </div>
-                              <div className="flex justify-between text-sm bg-teal-50 rounded px-2 py-1 col-span-2">
+                              <div className="flex justify-between text-sm bg-teal-50 rounded px-2 py-1">
                                 <span className="text-gray-600">
                                   <Icon name="cogs" className="mr-1 text-teal-500" />
                                   Prozesse
                                 </span>
                                 <span className="font-medium text-teal-700">{instance.processCount || 0}</span>
+                              </div>
+                              <div className="flex justify-between text-sm bg-indigo-50 rounded px-2 py-1">
+                                <span className="text-gray-600">
+                                  <Icon name="project-diagram" className="mr-1 text-indigo-500" />
+                                  Prozessketten
+                                </span>
+                                <span className="font-medium text-indigo-700">{instance.processChainCount || 0}</span>
                               </div>
                             </div>
                           ) : instance.hasInterfaces ? (
@@ -515,6 +522,7 @@
                                   <span><Icon name="cube" className="mr-1" />{template.typeCount} Types</span>
                                   <span><Icon name="list-ol" className="mr-1" />{template.enumCount} Enums</span>
                                   <span><Icon name="cogs" className="mr-1" />{template.processCount} Prozesse</span>
+                                  <span><Icon name="project-diagram" className="mr-1" />{template.processChainCount} Prozessketten</span>
                                 </div>
                               )}
                               
@@ -570,7 +578,7 @@
                         </div>
                         {(selectedTemplate.functionCount > 0 || selectedTemplate.typeCount > 0) ? (
                           <div className="text-sm text-emerald-700">
-                            {selectedTemplate.functionCount} Funktionen, {selectedTemplate.exceptionCount} Exceptions, {selectedTemplate.typeCount} Types, {selectedTemplate.enumCount} Enums, {selectedTemplate.processCount} Prozesse
+                            {selectedTemplate.functionCount} Funktionen, {selectedTemplate.exceptionCount} Exceptions, {selectedTemplate.typeCount} Types, {selectedTemplate.enumCount} Enums, {selectedTemplate.processCount} Prozesse, {selectedTemplate.processChainCount} Prozessketten
                           </div>
                         ) : (
                           <div className="text-sm text-gray-400">Keine Schnittstellendefinitionen</div>

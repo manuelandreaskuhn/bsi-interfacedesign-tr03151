@@ -33,7 +33,8 @@ async function getInterfaceStats(interfacedesignPath) {
     exceptionCount: 0,
     typeCount: 0,
     enumCount: 0,
-    processCount: 0
+    processCount: 0,
+    processChainCount: 0
   };
 
   try {
@@ -59,8 +60,12 @@ async function getInterfaceStats(interfacedesignPath) {
     const processesPath = path.join(interfacedesignPath, 'processes');
     stats.processCount = await countProcessFiles(processesPath);
 
+    // Count process chains
+    const processChainsPath = path.join(interfacedesignPath, 'processes');
+    stats.processChainCount = await countProcessChainFiles(processChainsPath);
+
     // Only set hasInterfaces to true if at least one XML file exists
-    const totalCount = stats.functionCount + stats.exceptionCount + stats.typeCount + stats.enumCount + stats.processCount;
+    const totalCount = stats.functionCount + stats.exceptionCount + stats.typeCount + stats.enumCount + stats.processCount + stats.processChainCount;
     stats.hasInterfaces = totalCount > 0;
 
   } catch {
@@ -87,6 +92,25 @@ async function countProcessFiles(processesPath) {
             count += await countXmlFiles(typePath);
           }
         }
+      }
+    }
+  } catch {
+    // Directory doesn't exist or is not accessible
+  }
+  return count;
+}
+
+/**
+ * Count process chain XML files (processes/{chainfolder}/*.xml)
+ */
+async function countProcessChainFiles(processesPath) {
+  let count = 0;
+  try {
+    const chainFolders = await fs.readdir(processesPath, { withFileTypes: true });
+    for (const folder of chainFolders) {
+      if (folder.isDirectory()) {
+        const folderPath = path.join(processesPath, folder.name);
+        count += await countXmlFiles(folderPath);
       }
     }
   } catch {
@@ -127,6 +151,7 @@ async function getInstances() {
           typeCount: interfaceStats.typeCount,
           enumCount: interfaceStats.enumCount,
           processCount: interfaceStats.processCount,
+          processChainCount: interfaceStats.processChainCount,
           hasTestCases: false
         };
         
@@ -166,6 +191,7 @@ async function getTemplates() {
           typeCount: interfaceStats.typeCount,
           enumCount: interfaceStats.enumCount,
           processCount: interfaceStats.processCount,
+          processChainCount: interfaceStats.processChainCount,
           hasTestCases: false
         };
         
