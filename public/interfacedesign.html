@@ -1689,14 +1689,14 @@
         // Use TB (Top to Bottom) for strict vertical layout
         let mermaid = 'flowchart TB\n';
         
-        // Define compact styles
+        // Define compact styles - subtle and clean design
         mermaid += '    %% Styles\n';
         mermaid += '    classDef startEnd fill:#10b981,stroke:#059669,color:#fff,stroke-width:2px,rx:20,ry:20\n';
-        mermaid += '    classDef step fill:#3b82f6,stroke:#2563eb,color:#fff,stroke-width:2px\n';
-        mermaid += '    classDef stepSuccess fill:#10b981,stroke:#059669,color:#fff,stroke-width:2px\n';
-        mermaid += '    classDef stepWithError fill:#3b82f6,stroke:#ef4444,color:#fff,stroke-width:3px\n';
-        mermaid += '    classDef errorEnd fill:#fecaca,stroke:#ef4444,color:#991b1b,stroke-width:2px,rx:20,ry:20\n';
-        mermaid += '    linkStyle default stroke:#64748b,stroke-width:2px\n\n';
+        mermaid += '    classDef step fill:#f0f9ff,stroke:#0284c7,color:#0c4a6e,stroke-width:1.5px\n';
+        mermaid += '    classDef stepSuccess fill:#f0fdf4,stroke:#16a34a,color:#166534,stroke-width:1.5px\n';
+        mermaid += '    classDef stepWithError fill:#fef2f2,stroke:#dc2626,color:#7f1d1d,stroke-width:2px\n';
+        mermaid += '    classDef errorEnd fill:#fee2e2,stroke:#dc2626,color:#991b1b,stroke-width:2px,rx:20,ry:20\n';
+        mermaid += '    linkStyle default stroke:#cbd5e1,stroke-width:2px\n\n';
         
         // Start node - language aware
         const startLabel = language === 'de' ? 'Start' : 'Start';
@@ -1720,8 +1720,7 @@
           
           // Step node - use different style based on status
           let stepClass = 'step';
-          if (hasErrors) stepClass = 'stepWithError';
-          else if (hasSuccess) stepClass = 'stepSuccess';
+          if (hasSuccess) stepClass = 'stepSuccess';
           
           // Step label with number prefix
           const stepLabel = language === 'de' ? 'Schritt' : 'Step';
