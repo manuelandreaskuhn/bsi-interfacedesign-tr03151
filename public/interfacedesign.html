@@ -1248,6 +1248,7 @@
         try {
           const response = await fetch(getApiUrl(instance, `/process/${proc.actor}/${proc.diagramType}/${proc.id}`));
           const result = await response.json();
+          // mermaidContent is now an object with de/en properties
           if (result.success && result.process.mermaidContent) {
             setProcessMermaidContent(result.process.mermaidContent);
           } else {
@@ -2047,9 +2048,9 @@
                           mermaidCode={generateMermaidFlowchart()} 
                           language={language}
                         />
-                      ) : processMermaidContent ? (
+                      ) : (processMermaidContent?.[language] || processMermaidContent?.de || processMermaidContent) ? (
                         <MermaidFlowchartView 
-                          mermaidCode={processMermaidContent} 
+                          mermaidCode={processMermaidContent?.[language] || processMermaidContent?.de || processMermaidContent} 
                           language={language}
                         />
                       ) : (
@@ -4549,7 +4550,10 @@
       // Render Mermaid diagram
       useEffect(() => {
         const renderMermaid = async () => {
-          if (process?.mermaidContent && mermaidRef.current && window.mermaid && !mermaidRendered) {
+          // Get language-specific mermaid content
+          const mermaidContent = process?.mermaidContent?.[language] || process?.mermaidContent?.de || process?.mermaidContent;
+          
+          if (mermaidContent && mermaidRef.current && window.mermaid) {
             try {
               // Clear previous content
               mermaidRef.current.innerHTML = '';
@@ -4558,7 +4562,7 @@
               const id = `mermaid-${Date.now()}`;
               
               // Render the diagram
-              const { svg } = await window.mermaid.render(id, process.mermaidContent);
+              const { svg } = await window.mermaid.render(id, mermaidContent);
               mermaidRef.current.innerHTML = svg;
               setMermaidRendered(true);
             } catch (err) {
@@ -4568,10 +4572,13 @@
           }
         };
         
+        // Reset mermaidRendered when language changes
+        setMermaidRendered(false);
+        
         // Small delay to ensure mermaid is loaded
         const timer = setTimeout(renderMermaid, 100);
         return () => clearTimeout(timer);
-      }, [process, mermaidRendered]);
+      }, [process, language]);
 
       const getDiagramTypeLabel = (type) => {
         switch (type) {
@@ -4667,7 +4674,7 @@
             </div>
 
             {/* Mermaid Diagram - Full Width */}
-            {process.mermaidContent && (
+            {(process.mermaidContent?.[language] || process.mermaidContent?.de || process.mermaidContent) && (
               <div className="bg-white rounded-lg shadow-sm border mb-6 overflow-hidden">
                 <div className="border-b bg-gray-50 px-4 py-3 flex items-center justify-between">
                   <h3 className="font-semibold text-gray-700 flex items-center">
@@ -5131,10 +5138,13 @@
       // Render Mermaid diagram
       useEffect(() => {
         const renderMermaid = async () => {
-          if (chain?.mermaidContent && mermaidRef.current && window.mermaid && !mermaidRendered) {
+          // Get language-specific mermaid content
+          const mermaidContent = chain?.mermaidContent?.[language] || chain?.mermaidContent?.de || chain?.mermaidContent;
+          
+          if (mermaidContent && mermaidRef.current && window.mermaid) {
             try {
               const id = `mermaid-chain-${Date.now()}`;
-              const { svg } = await window.mermaid.render(id, chain.mermaidContent);
+              const { svg } = await window.mermaid.render(id, mermaidContent);
               mermaidRef.current.innerHTML = svg;
               setMermaidRendered(true);
             } catch (err) {
@@ -5144,9 +5154,12 @@
           }
         };
         
+        // Reset mermaidRendered when language changes
+        setMermaidRendered(false);
+        
         const timer = setTimeout(renderMermaid, 100);
         return () => clearTimeout(timer);
-      }, [chain, mermaidRendered, language]);
+      }, [chain, language]);
 
       if (loading) {
         return (
@@ -5200,7 +5213,7 @@
             </div>
 
             {/* Mermaid Diagram */}
-            {chain.mermaidContent && (
+            {(chain.mermaidContent?.[language] || chain.mermaidContent?.de || chain.mermaidContent) && (
               <div className="bg-white rounded-lg shadow-sm border mb-6 overflow-hidden">
                 <div className="border-b bg-gray-50 px-4 py-3">
                   <h3 className="font-semibold text-gray-700 flex items-center">

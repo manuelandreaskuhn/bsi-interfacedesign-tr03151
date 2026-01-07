@@ -958,14 +958,33 @@ async function parseProcessDetail(filePath, actor, diagramType) {
 
   const proc = xml.process;
   const baseName = path.basename(filePath, '.xml');
-  const mermaidPath = filePath.replace('.xml', '.mermaid');
+  const dirPath = path.dirname(filePath);
   
-  // Read mermaid diagram content
-  let mermaidContent = '';
+  // Read mermaid diagram content for both languages
+  let mermaidContent = {
+    de: '',
+    en: ''
+  };
+  
+  // Try language-specific files first (_de.mermaid, _en.mermaid)
   try {
-    mermaidContent = await fs.readFile(mermaidPath, 'utf-8');
+    mermaidContent.de = await fs.readFile(path.join(dirPath, `${baseName}_de.mermaid`), 'utf-8');
   } catch (err) {
-    console.warn(`Mermaid file not found: ${mermaidPath}`);
+    // Try fallback to old format without language suffix
+    try {
+      mermaidContent.de = await fs.readFile(path.join(dirPath, `${baseName}.mermaid`), 'utf-8');
+    } catch (err2) {
+      console.warn(`German mermaid file not found for: ${baseName}`);
+    }
+  }
+  
+  try {
+    mermaidContent.en = await fs.readFile(path.join(dirPath, `${baseName}_en.mermaid`), 'utf-8');
+  } catch (err) {
+    // Fallback to German version if English not available
+    if (mermaidContent.de) {
+      mermaidContent.en = mermaidContent.de;
+    }
   }
 
   // Extract actors
@@ -1281,14 +1300,33 @@ async function parseProcessChainDetail(filePath) {
 
   const chain = xml.processChain;
   const baseName = path.basename(filePath, '.xml');
-  const mermaidPath = filePath.replace('.xml', '.mermaid');
+  const dirPath = path.dirname(filePath);
   
-  // Read mermaid content if exists
-  let mermaidContent = null;
+  // Read mermaid content for both languages
+  let mermaidContent = {
+    de: null,
+    en: null
+  };
+  
+  // Try language-specific files first (_de.mermaid, _en.mermaid)
   try {
-    mermaidContent = await fs.readFile(mermaidPath, 'utf-8');
+    mermaidContent.de = await fs.readFile(path.join(dirPath, `${baseName}_de.mermaid`), 'utf-8');
   } catch (err) {
-    // Mermaid file doesn't exist
+    // Try fallback to old format without language suffix
+    try {
+      mermaidContent.de = await fs.readFile(path.join(dirPath, `${baseName}.mermaid`), 'utf-8');
+    } catch (err2) {
+      // Mermaid file doesn't exist
+    }
+  }
+  
+  try {
+    mermaidContent.en = await fs.readFile(path.join(dirPath, `${baseName}_en.mermaid`), 'utf-8');
+  } catch (err) {
+    // Fallback to German version if English not available
+    if (mermaidContent.de) {
+      mermaidContent.en = mermaidContent.de;
+    }
   }
 
   // Extract involved processes (use 'name' or 'n' for compatibility)
