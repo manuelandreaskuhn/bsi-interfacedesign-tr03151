@@ -1211,7 +1211,7 @@ async function getOverview(basePath) {
 
   // Add process chains overview
   const processChainsOverview = await getProcessChainsOverview(basePath);
-  overview.processChains = {
+  overview.processchains = {
     count: processChainsOverview.count,
     categories: {}
   };
@@ -1235,7 +1235,7 @@ async function parseProcessChain(filePath) {
   const chain = xml.processChain;
   const baseName = path.basename(filePath, '.xml');
   
-  // Extract involved processes
+  // Extract involved processes (use 'name' or 'n' for compatibility)
   let involvedProcesses = [];
   if (chain.involvedProcesses && chain.involvedProcesses.process) {
     const processes = Array.isArray(chain.involvedProcesses.process)
@@ -1243,24 +1243,24 @@ async function parseProcessChain(filePath) {
       : [chain.involvedProcesses.process];
     involvedProcesses = processes.map(p => ({
       id: p.id,
-      name: extractMultiLangText(p.n)
+      name: extractMultiLangText(p.name || p.n)
     }));
   }
 
-  // Extract steps
+  // Extract steps (use 'name' or 'n' for compatibility)
   let steps = [];
   if (chain.steps && chain.steps.step) {
     const stepList = Array.isArray(chain.steps.step) ? chain.steps.step : [chain.steps.step];
     steps = stepList.map(s => ({
       stepNumber: s.stepNumber,
-      name: extractMultiLangText(s.n)
+      name: extractMultiLangText(s.name || s.n)
     }));
   }
 
   return {
     id: baseName,
     chainId: chain.chainId || baseName,
-    name: extractMultiLangText(chain.n),
+    name: extractMultiLangText(chain.name || chain.n),
     description: extractMultiLangText(chain.description),
     processCount: involvedProcesses.length,
     stepCount: steps.length,
@@ -1291,7 +1291,7 @@ async function parseProcessChainDetail(filePath) {
     // Mermaid file doesn't exist
   }
 
-  // Extract involved processes
+  // Extract involved processes (use 'name' or 'n' for compatibility)
   let involvedProcesses = [];
   if (chain.involvedProcesses && chain.involvedProcesses.process) {
     const processes = Array.isArray(chain.involvedProcesses.process)
@@ -1299,7 +1299,7 @@ async function parseProcessChainDetail(filePath) {
       : [chain.involvedProcesses.process];
     involvedProcesses = processes.map(p => ({
       id: p.id,
-      name: extractMultiLangText(p.n)
+      name: extractMultiLangText(p.name || p.n)
     }));
   }
 
@@ -1319,48 +1319,66 @@ async function parseProcessChainDetail(filePath) {
     actors = actorList.map(a => extractMultiLangText(a));
   }
 
-  // Extract steps with full details
+  // Extract steps with full details (use 'name' or 'n' for compatibility)
   let steps = [];
   if (chain.steps && chain.steps.step) {
     const stepList = Array.isArray(chain.steps.step) ? chain.steps.step : [chain.steps.step];
-    steps = stepList.map(s => ({
-      stepNumber: s.stepNumber,
-      name: extractMultiLangText(s.n),
-      description: extractMultiLangText(s.description),
-      function: s.function ? {
-        name: s.function.n,
-        linkedProcess: s.function.linkedProcess ? {
-          id: s.function.linkedProcess.id,
-          name: extractMultiLangText(s.function.linkedProcess.n)
-        } : null
-      } : null,
-      critical: s.critical === 'true' || s.critical === true,
-      optional: s.optional === 'true' || s.optional === true,
-      frequency: s.frequency || null
-    }));
+    steps = stepList.map(s => {
+      // Function name can be in 'name' or 'n' element, and it's a direct string
+      let functionData = null;
+      if (s.function) {
+        const funcName = s.function.name || s.function.n;
+        // funcName could be a string or an object with text content
+        const funcNameStr = typeof funcName === 'string' ? funcName : 
+                           (funcName?._ || funcName?.['#text'] || funcName);
+        
+        functionData = {
+          name: funcNameStr,
+          linkedProcess: s.function.linkedProcess ? {
+            id: s.function.linkedProcess.id,
+            name: extractMultiLangText(s.function.linkedProcess.name || s.function.linkedProcess.n)
+          } : null
+        };
+      }
+      
+      return {
+        stepNumber: s.stepNumber,
+        name: extractMultiLangText(s.name || s.n),
+        description: extractMultiLangText(s.description),
+        function: functionData,
+        critical: s.critical === 'true' || s.critical === true,
+        optional: s.optional === 'true' || s.optional === true,
+        frequency: s.frequency || null
+      };
+    });
   }
 
-  // Extract variants
+  // Extract variants (use 'name' or 'n' for compatibility)
   let variants = [];
   if (chain.variants && chain.variants.variant) {
     const variantList = Array.isArray(chain.variants.variant)
       ? chain.variants.variant
       : [chain.variants.variant];
     variants = variantList.map(v => ({
-      name: extractMultiLangText(v.n),
+      name: extractMultiLangText(v.name || v.n),
       description: extractMultiLangText(v.description)
     }));
   }
 
-  // Extract outcome
+  // Extract outcome (supports both PK01-style and PK08-style)
   let outcome = null;
   if (chain.outcome) {
     outcome = {
+      // PK01-style
       minimumLogMessages: chain.outcome.minimumLogMessages || null,
       logTypes: [],
-      storedData: []
+      storedData: [],
+      // PK08-style  
+      state: chain.outcome.state ? extractMultiLangText(chain.outcome.state) : null,
+      logMessages: []
     };
     
+    // PK01-style: logTypes
     if (chain.outcome.logTypes && chain.outcome.logTypes.logType) {
       const logTypeList = Array.isArray(chain.outcome.logTypes.logType)
         ? chain.outcome.logTypes.logType
@@ -1368,12 +1386,47 @@ async function parseProcessChainDetail(filePath) {
       outcome.logTypes = logTypeList.map(lt => extractMultiLangText(lt));
     }
     
+    // PK01-style: storedData
     if (chain.outcome.storedData && chain.outcome.storedData.dataItem) {
       const dataItemList = Array.isArray(chain.outcome.storedData.dataItem)
         ? chain.outcome.storedData.dataItem
         : [chain.outcome.storedData.dataItem];
       outcome.storedData = dataItemList.map(di => extractMultiLangText(di));
     }
+    
+    // PK08-style: logMessages
+    if (chain.outcome.logMessages && chain.outcome.logMessages.logMessage) {
+      const logMsgList = Array.isArray(chain.outcome.logMessages.logMessage)
+        ? chain.outcome.logMessages.logMessage
+        : [chain.outcome.logMessages.logMessage];
+      outcome.logMessages = logMsgList.map(lm => extractMultiLangText(lm));
+    }
+  }
+
+  // Extract important notes (can appear multiple times in XML, collect all)
+  let importantNotes = [];
+  if (chain.importantNotes) {
+    const noteSections = Array.isArray(chain.importantNotes) 
+      ? chain.importantNotes 
+      : [chain.importantNotes];
+    
+    noteSections.forEach(section => {
+      if (section.note) {
+        const noteList = Array.isArray(section.note) ? section.note : [section.note];
+        noteList.forEach(n => {
+          importantNotes.push(extractMultiLangText(n));
+        });
+      }
+    });
+  }
+
+  // Extract use cases
+  let useCases = [];
+  if (chain.useCases && chain.useCases.useCase) {
+    const useCaseList = Array.isArray(chain.useCases.useCase)
+      ? chain.useCases.useCase
+      : [chain.useCases.useCase];
+    useCases = useCaseList.map(uc => extractMultiLangText(uc));
   }
 
   // Extract usage scenario
@@ -1390,7 +1443,7 @@ async function parseProcessChainDetail(filePath) {
   return {
     id: baseName,
     chainId: chain.chainId || baseName,
-    name: extractMultiLangText(chain.n),
+    name: extractMultiLangText(chain.name || chain.n),
     description: extractMultiLangText(chain.description),
     involvedProcesses,
     prerequisites,
@@ -1398,6 +1451,8 @@ async function parseProcessChainDetail(filePath) {
     steps,
     variants,
     outcome,
+    importantNotes,
+    useCases,
     usageScenario,
     references,
     mermaidContent,

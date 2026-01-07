@@ -437,7 +437,8 @@
                             item.color === 'purple' ? 'bg-purple-100 text-purple-700' :
                             item.color === 'amber' ? 'bg-amber-100 text-amber-700' :
                             item.color === 'red' ? 'bg-red-100 text-red-700' :
-                            item.color === 'teal' ? 'bg-teal-100 text-teal-700' : 'bg-gray-100 text-gray-700'
+                            item.color === 'teal' ? 'bg-teal-100 text-teal-700' :
+                            item.color === 'indigo' ? 'bg-indigo-100 text-indigo-700' : 'bg-gray-100 text-gray-700'
                           }`}>
                             {count}
                           </span>
@@ -5067,6 +5068,7 @@
       const [chain, setChain] = useState(null);
       const [loading, setLoading] = useState(true);
       const [error, setError] = useState(null);
+      const [processes, setProcesses] = useState([]);
       const mermaidRef = useRef(null);
       const [mermaidRendered, setMermaidRendered] = useState(false);
 
@@ -5074,6 +5076,7 @@
 
       useEffect(() => {
         loadChain();
+        loadProcesses();
       }, [instance, chainId]);
 
       const loadChain = async () => {
@@ -5093,6 +5096,36 @@
           setError(err.message);
         }
         setLoading(false);
+      };
+
+      const loadProcesses = async () => {
+        try {
+          const response = await fetch(getApiUrl(instance, '/processes'));
+          const result = await response.json();
+          if (result.success) {
+            setProcesses(result.items || []);
+          }
+        } catch (err) {
+          console.error('Error loading processes:', err);
+        }
+      };
+
+      // Find a process by its ID (e.g., "001" -> process with id containing "001")
+      const findProcessByNumericId = (numericId) => {
+        if (!numericId || !processes.length) return null;
+        // Try to find process where baseName starts with the numeric ID
+        return processes.find(p => {
+          const baseId = p.baseName?.split('-')[0];
+          return baseId === numericId || p.baseName?.includes(`${numericId}-`);
+        });
+      };
+
+      // Handle click on a process link
+      const handleProcessClick = (numericId) => {
+        const process = findProcessByNumericId(numericId);
+        if (process && onNavigateToProcess) {
+          onNavigateToProcess(process);
+        }
       };
 
       // Render Mermaid diagram
@@ -5196,17 +5229,26 @@
                   </div>
                   <div className="p-4">
                     <div className="space-y-2">
-                      {chain.involvedProcesses.map((proc, idx) => (
-                        <div
-                          key={idx}
-                          className="flex items-center gap-3 p-2 bg-teal-50 rounded hover:bg-teal-100 transition-colors"
-                        >
-                          <span className="px-2 py-1 bg-teal-600 text-white rounded text-xs font-mono">
-                            {proc.id}
-                          </span>
-                          <span className="text-gray-700">{t(proc.name)}</span>
-                        </div>
-                      ))}
+                      {chain.involvedProcesses.map((proc, idx) => {
+                        const linkedProcess = findProcessByNumericId(proc.id);
+                        return (
+                          <div
+                            key={idx}
+                            onClick={() => linkedProcess && handleProcessClick(proc.id)}
+                            className={`flex items-center gap-3 p-2 bg-teal-50 rounded transition-colors ${
+                              linkedProcess ? 'cursor-pointer hover:bg-teal-100' : ''
+                            }`}
+                          >
+                            <span className="px-2 py-1 bg-teal-600 text-white rounded text-xs font-mono">
+                              {proc.id}
+                            </span>
+                            <span className="text-gray-700 flex-1">{t(proc.name)}</span>
+                            {linkedProcess && (
+                              <Icon name="external-link-alt" className="text-teal-500 text-sm" />
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 </div>
@@ -5324,7 +5366,7 @@
                           <p className="text-sm text-gray-600 mb-3">{t(step.description)}</p>
 
                           {step.function && (
-                            <div className="flex items-center gap-2 text-sm">
+                            <div className="flex items-center gap-2 text-sm flex-wrap">
                               <span className="text-gray-500">{language === 'de' ? 'Funktion:' : 'Function:'}</span>
                               <button
                                 onClick={() => onNavigateToFunction && onNavigateToFunction(step.function.name)}
@@ -5332,14 +5374,27 @@
                               >
                                 {step.function.name}()
                               </button>
-                              {step.function.linkedProcess && (
-                                <>
-                                  <span className="text-gray-400">→</span>
-                                  <span className="px-2 py-1 bg-teal-50 text-teal-700 rounded text-xs">
-                                    {language === 'de' ? 'Prozess' : 'Process'} {step.function.linkedProcess.id}
-                                  </span>
-                                </>
-                              )}
+                              {step.function.linkedProcess && (() => {
+                                const linkedProc = findProcessByNumericId(step.function.linkedProcess.id);
+                                const processName = step.function.linkedProcess.name ? t(step.function.linkedProcess.name) : null;
+                                return (
+                                  <>
+                                    <span className="text-gray-400">→</span>
+                                    <button
+                                      onClick={() => linkedProc && handleProcessClick(step.function.linkedProcess.id)}
+                                      className={`px-2 py-1 bg-teal-50 text-teal-700 rounded text-sm flex items-center gap-1 ${
+                                        linkedProc ? 'hover:bg-teal-100 cursor-pointer' : ''
+                                      }`}
+                                    >
+                                      <span className="font-mono">{step.function.linkedProcess.id}</span>
+                                      {processName && (
+                                        <span className="text-teal-600">– {processName}</span>
+                                      )}
+                                      {linkedProc && <Icon name="external-link-alt" className="text-xs ml-1" />}
+                                    </button>
+                                  </>
+                                );
+                              })()}
                             </div>
                           )}
                         </div>
@@ -5361,6 +5416,19 @@
                 </div>
                 <div className="p-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* PK08-style: State */}
+                    {chain.outcome.state && (
+                      <div className="p-3 bg-green-50 rounded-lg md:col-span-2">
+                        <div className="text-sm text-green-600 mb-1">
+                          {language === 'de' ? 'Endzustand' : 'Final State'}
+                        </div>
+                        <div className="text-green-800 font-medium">
+                          {t(chain.outcome.state)}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* PK01-style: minimumLogMessages */}
                     {chain.outcome.minimumLogMessages && (
                       <div className="p-3 bg-green-50 rounded-lg">
                         <div className="text-sm text-green-600 mb-1">
@@ -5372,6 +5440,7 @@
                       </div>
                     )}
 
+                    {/* PK01-style: logTypes */}
                     {chain.outcome.logTypes && chain.outcome.logTypes.length > 0 && (
                       <div className="p-3 bg-blue-50 rounded-lg">
                         <div className="text-sm text-blue-600 mb-2">
@@ -5388,6 +5457,24 @@
                       </div>
                     )}
 
+                    {/* PK08-style: logMessages */}
+                    {chain.outcome.logMessages && chain.outcome.logMessages.length > 0 && (
+                      <div className="p-3 bg-blue-50 rounded-lg">
+                        <div className="text-sm text-blue-600 mb-2">
+                          {language === 'de' ? 'Log-Nachrichten' : 'Log Messages'}
+                        </div>
+                        <ul className="space-y-1 text-sm text-blue-700">
+                          {chain.outcome.logMessages.map((lm, idx) => (
+                            <li key={idx} className="flex items-center gap-1">
+                              <Icon name="file-alt" className="text-xs" />
+                              {t(lm)}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {/* PK01-style: storedData */}
                     {chain.outcome.storedData && chain.outcome.storedData.length > 0 && (
                       <div className="p-3 bg-purple-50 rounded-lg md:col-span-2">
                         <div className="text-sm text-purple-600 mb-2">
@@ -5403,6 +5490,50 @@
                       </div>
                     )}
                   </div>
+                </div>
+              </div>
+            )}
+
+            {/* Important Notes */}
+            {chain.importantNotes && chain.importantNotes.length > 0 && (
+              <div className="bg-white rounded-lg shadow-sm border mt-6">
+                <div className="border-b bg-red-50 px-4 py-3">
+                  <h3 className="font-semibold text-red-700 flex items-center">
+                    <Icon name="exclamation-triangle" className="mr-2" />
+                    {language === 'de' ? 'Wichtige Hinweise' : 'Important Notes'}
+                  </h3>
+                </div>
+                <div className="p-4">
+                  <ul className="space-y-2">
+                    {chain.importantNotes.map((note, idx) => (
+                      <li key={idx} className="flex items-start gap-2 text-gray-700">
+                        <Icon name="exclamation-circle" className="text-red-500 mt-1 flex-shrink-0" />
+                        <span>{t(note)}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            )}
+
+            {/* Use Cases */}
+            {chain.useCases && chain.useCases.length > 0 && (
+              <div className="bg-white rounded-lg shadow-sm border mt-6">
+                <div className="border-b bg-gray-50 px-4 py-3">
+                  <h3 className="font-semibold text-gray-700 flex items-center">
+                    <Icon name="tasks" className="mr-2 text-indigo-600" />
+                    {language === 'de' ? 'Anwendungsfälle' : 'Use Cases'}
+                  </h3>
+                </div>
+                <div className="p-4">
+                  <ul className="space-y-2">
+                    {chain.useCases.map((uc, idx) => (
+                      <li key={idx} className="flex items-start gap-2 text-gray-700">
+                        <Icon name="check-square" className="text-indigo-500 mt-1 flex-shrink-0" />
+                        <span>{t(uc)}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </div>
             )}
@@ -5586,6 +5717,24 @@
         updateUrl(instance, 'type-detail', typeName);
       };
 
+      const handleNavigateToProcess = (process) => {
+        if (!process) return;
+        setSelectedItem({ 
+          type: 'process', 
+          item: { 
+            id: process.baseName,
+            baseName: process.baseName,
+            actor: process.actor,
+            diagramType: process.diagramType
+          } 
+        });
+        setActiveView('process-detail');
+        updateUrl(instance, 'process-detail', process.baseName, false, {
+          actor: process.actor,
+          diagramType: process.diagramType
+        });
+      };
+
       // Handle navigation from sidebar and overview
       const handleViewChange = (view) => {
         setActiveView(view);
@@ -5705,6 +5854,7 @@
                 instance={instance} 
                 chainId={selectedItem?.item?.id}
                 onBack={handleBackFromDetail}
+                onNavigateToProcess={handleNavigateToProcess}
                 onNavigateToFunction={handleNavigateToFunction}
                 language={language}
               />
