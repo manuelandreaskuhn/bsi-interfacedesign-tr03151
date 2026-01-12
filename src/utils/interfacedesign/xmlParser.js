@@ -18,12 +18,14 @@ const parser = new xml2js.Parser({
  * Extract multilingual text from an XML element
  * Supports: 
  *   - <element><text xml:lang="de">...</text><text xml:lang="en">...</text></element>
+ *   - <element><shortCommand xml:lang="de">...</shortCommand><shortCommand xml:lang="en">...</shortCommand></element>
  *   - <element>Direct text content</element> (fallback)
  * 
  * @param {any} element - The XML element (parsed by xml2js)
+ * @param {string} childElementName - Optional: name of child element to extract (e.g., 'text', 'shortCommand')
  * @returns {Object} - Object with language keys: { de: "...", en: "...", _default: "..." }
  */
-function extractMultiLangText(element) {
+function extractMultiLangText(element, childElementName = 'text') {
   if (!element) return { _default: '' };
   
   // If element is a string, return it as default
@@ -31,9 +33,10 @@ function extractMultiLangText(element) {
     return { _default: element, de: element, en: element };
   }
   
-  // Check for <text xml:lang="..."> structure
-  if (element.text) {
-    const texts = Array.isArray(element.text) ? element.text : [element.text];
+  // Check for child element structure (e.g., <text xml:lang="..."> or <shortCommand xml:lang="...">)
+  const childElement = element[childElementName];
+  if (childElement) {
+    const texts = Array.isArray(childElement) ? childElement : [childElement];
     const result = { _default: '' };
     
     texts.forEach(t => {
@@ -225,6 +228,15 @@ async function parseFunctionDetail(filePath) {
       : [func.detailedSteps.step];
     
     detailedSteps = steps.map(s => {
+      // Extract standardStep information
+      let standardStep = null;
+      if (s.standardStep) {
+        standardStep = {
+          number: parseInt(s.standardStep.number) || null,
+          shortCommand: extractMultiLangText(s.standardStep, 'shortCommand')
+        };
+      }
+      
       // Extract error cases with multilingual support
       let errorCases = [];
       if (s.errorCase) {
@@ -259,6 +271,7 @@ async function parseFunctionDetail(filePath) {
       
       return {
         number: parseInt(s.number) || 0,
+        standardStep: standardStep,
         description: description,
         pseudocode: extractMultiLangText(s.pseudocode),
         // Keep old format fields for backwards compatibility

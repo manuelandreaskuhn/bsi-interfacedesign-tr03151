@@ -1781,6 +1781,7 @@
         mermaid += '    %% Styles\n';
         mermaid += '    classDef startEnd fill:#10b981,stroke:#059669,color:#fff,stroke-width:2px,rx:20,ry:20\n';
         mermaid += '    classDef step fill:#f0f9ff,stroke:#0284c7,color:#0c4a6e,stroke-width:1.5px\n';
+        mermaid += '    classDef stepStandard fill:#f3f4f6,stroke:#6b7280,color:#374151,stroke-width:2px,stroke-dasharray:5\n';
         mermaid += '    classDef stepSuccess fill:#f0fdf4,stroke:#16a34a,color:#166534,stroke-width:1.5px\n';
         mermaid += '    classDef stepWithError fill:#fef2f2,stroke:#dc2626,color:#7f1d1d,stroke-width:2px\n';
         mermaid += '    classDef errorEnd fill:#fee2e2,stroke:#dc2626,color:#991b1b,stroke-width:2px,rx:20,ry:20\n';
@@ -1806,13 +1807,29 @@
           const hasErrors = step.errorCases?.length > 0;
           const hasSuccess = step.successCases?.length > 0;
           
+          // Check if it's a standard step
+          const isStandardStep = step.standardStep && step.standardStep.number;
+          
           // Step node - use different style based on status
           let stepClass = 'step';
           if (hasSuccess) stepClass = 'stepSuccess';
+          if (isStandardStep) stepClass = 'stepStandard';
           
-          // Step label with number prefix
+          // Step label with number prefix and standard step info
           const stepLabel = language === 'de' ? 'Schritt' : 'Step';
-          mermaid += `    ${stepId}["<b>${stepLabel} ${step.number}</b><br/>${wrappedText}"]:::${stepClass}\n`;
+          let stepHeader = `<b>${stepLabel} ${step.number}</b>`;
+          
+          // Add standard step badge
+          if (isStandardStep) {
+            const standardLabel = language === 'de' ? 'Standard' : 'Standard';
+            const standardShortCommand = step.standardStep.shortCommand ? getText(step.standardStep.shortCommand, language) : '';
+            stepHeader += `<br/><span style="font-size:0.8em;color:#6b7280">★ #${step.standardStep.number}${standardShortCommand ? ': ' + escapeText(standardShortCommand) : ''}</span>`;
+            // For standard steps, don't show the detailed description text
+            mermaid += `    ${stepId}["${stepHeader}"]:::${stepClass}\n`;
+          } else {
+            // For non-standard steps, show the full description
+            mermaid += `    ${stepId}["${stepHeader}<br/>${wrappedText}"]:::${stepClass}\n`;
+          }
           
           // Connect to next step (success path)
           mermaid += `    ${stepId} --> ${nextStepId}\n`;
@@ -2170,7 +2187,11 @@
                           {data.detailedSteps.map(step => {
                             const pseudoText = t(step.pseudocode) || (typeof step.pseudocode === 'string' ? step.pseudocode : '');
                             const descText = t(step.description) || (language === 'en' ? step.originalText : step.germanText) || '';
-                            const stepComment = `// ${language === 'de' ? 'Schritt' : 'Step'} ${step.number}`;
+                            let stepComment = `// ${language === 'de' ? 'Schritt' : 'Step'} ${step.number}`;
+                            if (step.standardStep && step.standardStep.number) {
+                              const standardShortCommand = step.standardStep.shortCommand ? t(step.standardStep.shortCommand) : '';
+                              stepComment += ` - Standard #${step.standardStep.number}${standardShortCommand ? ': ' + standardShortCommand : ''}`;
+                            }
                             return (
                             <span key={step.number}>
                               {'\n  '}<span className="text-gray-500">{stepComment}</span>{'\n'}
@@ -2229,9 +2250,22 @@
                             <span className={`w-7 h-7 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0 ${bubbleColor}`}>
                               {step.number}
                             </span>
-                            <span className="font-medium text-gray-800 text-sm leading-relaxed">
-                              {stepDescText}
-                            </span>
+                            <div className="flex-1 min-w-0">
+                              {step.standardStep && (
+                                <div className="mb-1">
+                                  <span className="inline-flex items-center px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded font-semibold">
+                                    <Icon name="star" className="mr-1" style={{fontSize: '0.7rem'}} />
+                                    {language === 'de' ? 'Standard-Schritt' : 'Standard Step'} #{step.standardStep.number}
+                                    {step.standardStep.shortCommand && (
+                                      <span className="ml-1 opacity-75">- {t(step.standardStep.shortCommand)}</span>
+                                    )}
+                                  </span>
+                                </div>
+                              )}
+                              <span className="font-medium text-gray-800 text-sm leading-relaxed">
+                                {stepDescText}
+                              </span>
+                            </div>
                           </div>
                           <div className="flex items-center gap-2 flex-shrink-0">
                             {hasSuccess && !hasErrors && (
