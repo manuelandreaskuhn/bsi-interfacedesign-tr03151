@@ -1648,6 +1648,92 @@
         setExpandedSteps({});
       };
 
+      // Syntax highlighting for pseudocode
+      const highlightPseudocode = (code, lang = 'de') => {
+        if (!code) return '';
+        
+        // Define keywords and patterns for both languages
+        const patterns = [
+          // Comments - keep at start to handle them first
+          { regex: /(\/\/[^\n]*)/g, color: '#9ca3af', name: 'comment' },
+          
+          // Exception handling with spaces (check before single words)
+          { regex: /\b(ON\s+ERROR|EXIT\s+function)\b/gi, color: '#fdba74', name: 'exception-space' },
+          
+          // Control structures
+          { regex: /\b(WENN|IF|DANN|THEN|ENDE|END|SONST|ELSE|SOLANGE|WHILE|FÜR|FOR|JEDE|EACH|IN)\b/g, color: '#7dd3fc', name: 'control' },
+          
+          // Logical operators
+          { regex: /\b(UND|AND|ODER|OR|NICHT|NOT)\b/g, color: '#93c5fd', name: 'logic' },
+          
+          // Exception handling
+          { regex: /\b(WERFE|RAISE|THROW|VERSUCHE|TRY|BEI_EXCEPTION|ON_EXCEPTION|BEI_FEHLER|ON_ERROR|CATCH|BEENDE_FUNKTION|EXIT_FUNCTION|EXIT|BEENDE_ERFOLGREICH|END_SUCCESSFULLY)\b/g, color: '#fdba74', name: 'exception' },
+          
+          // Function calls & actions
+          { regex: /\b(RUFE_AUF|RUFE|CALL|INVOKE|FÜHRE_AUS|EXECUTE|GEBE_ZURÜCK|GEBE|RETURN|HOLE|GET|RETRIEVE|SPEICHERE|STORE|SUCHE|SEARCH|DETERMINE|ERMITTLE|SPERRE|LOCK|AKTIVIERE|ENABLE|ÜBERGEBE|PASS|ERSTELLE|CREATE|PRÜFE|CHECK|UPDATE|SAMMELE|COLLECT|KOMBINIERE|COMBINE)\b/g, color: '#c084fc', name: 'function' },
+          
+          // Variable operations
+          { regex: /\b(SETZE|SET|LOGGE|LOG)\b/g, color: '#86efac', name: 'var' },
+          
+          // Error classes
+          { regex: /\b(Error[A-Za-z]+)\b/g, color: '#fca5a5', name: 'error' },
+          
+          // String literals
+          { regex: /"([^"]*)"/g, color: '#fde047', name: 'string' },
+          
+          // Numbers
+          { regex: /\b(\d+)\b/g, color: '#a5b4fc', name: 'number' }
+        ];
+        
+        // Split code into lines to preserve structure
+        const lines = code.split('\n');
+        
+        return lines.map(line => {
+          let highlightedLine = line;
+          
+          // Track positions of already highlighted parts to avoid double-highlighting
+          const highlighted = [];
+          
+          patterns.forEach(pattern => {
+            const matches = [...line.matchAll(pattern.regex)];
+            matches.forEach(match => {
+              const start = match.index;
+              const end = start + match[0].length;
+              
+              // Check if this range overlaps with already highlighted parts
+              const overlaps = highlighted.some(([s, e]) => 
+                (start >= s && start < e) || (end > s && end <= e)
+              );
+              
+              if (!overlaps) {
+                highlighted.push([start, end]);
+              }
+            });
+          });
+          
+          // Sort highlighted ranges by position (descending) to replace from end to start
+          highlighted.sort((a, b) => b[0] - a[0]);
+          
+          // Apply highlighting
+          highlighted.forEach(([start, end]) => {
+            const text = line.substring(start, end);
+            
+            // Find matching pattern
+            for (const pattern of patterns) {
+              if (pattern.regex.test(text)) {
+                pattern.regex.lastIndex = 0; // Reset regex
+                const before = highlightedLine.substring(0, start);
+                const after = highlightedLine.substring(end);
+                highlightedLine = before + `<span style="color: ${pattern.color}">${text}</span>` + after;
+                break;
+              }
+            }
+          });
+          
+          return highlightedLine;
+        }).join('\n');
+      };
+
       // Generate Mermaid flowchart from steps - optimized for vertical layout with tooltips
       const generateMermaidFlowchart = () => {
         if (!data?.detailedSteps?.length) return '';
@@ -2078,20 +2164,23 @@
                   {data.detailedSteps && data.detailedSteps.length > 0 && (
                     <div className="p-4 border-t">
                       <h4 className="text-sm font-semibold text-gray-700 mb-2">Pseudocode</h4>
-                      <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg text-sm overflow-x-auto font-mono">
+                      <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg text-sm overflow-x-auto font-mono leading-relaxed">
                         <code>
                           <span className="text-purple-400">function</span> <span className="text-yellow-300">{data.name}</span>({data.parameters?.map(p => p.name).join(', ')}) {'{\n'}
                           {data.detailedSteps.map(step => {
                             const pseudoText = t(step.pseudocode) || (typeof step.pseudocode === 'string' ? step.pseudocode : '');
                             const descText = t(step.description) || (language === 'en' ? step.originalText : step.germanText) || '';
+                            const stepComment = `// ${language === 'de' ? 'Schritt' : 'Step'} ${step.number}`;
                             return (
                             <span key={step.number}>
-                              {`\n  `}<span className="text-gray-500">// {language === 'de' ? 'Schritt' : 'Step'} {step.number}</span>{'\n'}
+                              {'\n  '}<span className="text-gray-500">{stepComment}</span>{'\n'}
                               {pseudoText ? 
-                                pseudoText.split('\n').map((line, i) => (
-                                  <span key={i}>{`  ${line}\n`}</span>
-                                )) : 
-                                `  // ${descText.substring(0, 60)}...\n`
+                                <span dangerouslySetInnerHTML={{ __html: highlightPseudocode(pseudoText, language).split('\n').map((line, idx) => {
+                                  // Preserve existing indentation
+                                  return `  ${line}`;
+                                }).join('\n') + '\n' }} />
+                                : 
+                                <span className="text-gray-500">  // {descText.substring(0, 60)}...</span>
                               }
                             </span>
                           )})}
