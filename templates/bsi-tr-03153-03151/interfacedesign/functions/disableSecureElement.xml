@@ -230,7 +230,7 @@ ENDE</text>
 FUNCTION returns without exception
 END_SUCCESSFULLY</text>
         <text xml:lang="de">// Erfolgreicher Abschluss
-RETURNE ohne Exception</text>
+RETURN ohne Exception</text>
       </pseudocode>
       <successCase>
         <condition>
