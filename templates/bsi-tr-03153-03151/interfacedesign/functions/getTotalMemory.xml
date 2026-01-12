@@ -105,6 +105,10 @@ ENDE</text>
     </step>
     <step>
       <number>4</number>
+      <standardStep number="9">
+        <shortCommand xml:lang="de">Erfolgreiche Rückgabe</shortCommand>
+        <shortCommand xml:lang="en">Successful Return</shortCommand>
+      </standardStep>
       <description>
         <text xml:lang="en">If the determination of the capacity of the storage medium has been successful, the function SHALL return the capacity of the storage medium by usage of the output parameter totalMemory. Additionally, the function SHALL return without raising an exception to indicate that the execution of the function has been successful.</text>
         <text xml:lang="de">Bei Erfolg der Ermittlung: Gibt Speicherkapazität via Parameter totalMemory zurück. Keine Exception.</text>

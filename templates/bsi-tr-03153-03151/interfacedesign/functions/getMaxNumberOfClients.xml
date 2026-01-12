@@ -105,6 +105,10 @@ ENDE</text>
     </step>
     <step>
       <number>4</number>
+      <standardStep number="9">
+        <shortCommand xml:lang="de">Erfolgreiche Rückgabe</shortCommand>
+        <shortCommand xml:lang="en">Successful Return</shortCommand>
+      </standardStep>
       <description>
         <text xml:lang="en">If the determination of the number of clients has been successful, the function SHALL return the number by usage of the output parameter maxNumberClients. If the device supports a practically unlimited number of clients, the function SHALL return the highest value that can be stored.</text>
         <text xml:lang="de">Gibt maximale Clientanzahl zurück. Bei unbegrenzten Clients: Gibt Höchstwert zurück. Bei Erfolg keine Exception.</text>

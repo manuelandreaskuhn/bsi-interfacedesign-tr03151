@@ -105,6 +105,10 @@ ENDE</text>
     </step>
     <step>
       <number>4</number>
+      <standardStep number="9">
+        <shortCommand xml:lang="de">Erfolgreiche Rückgabe</shortCommand>
+        <shortCommand xml:lang="en">Successful Return</shortCommand>
+      </standardStep>
       <description>
         <text xml:lang="en">If the determination of the currently opened transactions is successful, the function SHALL return information on all currently opened transactions by usage of the output parameter openTransactions. Additionally, the function SHALL return without raising an exception to indicate that the execution of the function has been successful.</text>
         <text xml:lang="de">Bei Erfolg der Ermittlung: Gibt alle offenen Transaktionen via Parameter openTransactions zurück. Keine Exception.</text>

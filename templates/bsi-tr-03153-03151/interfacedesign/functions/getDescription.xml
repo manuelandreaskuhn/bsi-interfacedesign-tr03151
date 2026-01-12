@@ -105,6 +105,10 @@ ENDE</text>
     </step>
     <step>
       <number>4</number>
+      <standardStep number="9">
+        <shortCommand xml:lang="de">Erfolgreiche Rückgabe</shortCommand>
+        <shortCommand xml:lang="en">Successful Return</shortCommand>
+      </standardStep>
       <description>
         <text xml:lang="en">If the determination of all information needed to populate the variable $6 as defined in chapter 2.5.3 is successful, the function SHALL return this information using the output parameter description. Additionally, the function SHALL return without raising an exception to indicate that the execution of the function has been successful.</text>
         <text xml:lang="de">Gibt Beschreibung zurück. Bei Erfolg keine Exception.</text>

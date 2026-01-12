@@ -221,6 +221,10 @@ ENDE</text>
     </step>
     <step>
       <number>8</number>
+      <standardStep number="8">
+        <shortCommand xml:lang="de">SE-Teile Verbindungsprüfung</shortCommand>
+        <shortCommand xml:lang="en">SE Parts Connection Check</shortCommand>
+      </standardStep>
       <description>
         <text xml:lang="en">If the Secure Element consists of multiple logical or physical parts that need to be connected in order to perform the whole function updateTransaction without errors the function shall check that the needed parts are connected. If one or more of the mandatory connections is lost, the function SHALL raise the exception ErrorSecureElementPartsDisconnected and exit the function.</text>
         <text xml:lang="de">Falls SE aus mehreren logischen oder physikalischen Teilen besteht: Prüfe, ob alle nötigen Teile verbunden sind. Falls nicht: Werfe ErrorSecureElementPartsDisconnected und beende Funktion.</text>
@@ -253,6 +257,10 @@ ENDE</text>
     </step>
     <step>
       <number>9</number>
+      <standardStep number="5">
+        <shortCommand xml:lang="de">SE-Funktionalität Log-Erstellung</shortCommand>
+        <shortCommand xml:lang="en">SE Log Message Creation</shortCommand>
+      </standardStep>
       <description>
         <text xml:lang="en">The function SHALL invoke the functionality of the Secure Element to update a transaction and SHALL pass all data that is to be secured, and not created or determined by Secure Element itself, to the Secure Element. If the execution fails, the function SHALL raise the exception ErrorSigningEventDataFailed and exit the function.</text>
         <text xml:lang="de">Rufe Secure-Element-Funktionalität auf, um Transaktion zu aktualisieren. Übergebe alle zu sichernden Daten. Bei Fehler: Werfe ErrorSigningEventDataFailed und beende Funktion.</text>
@@ -289,6 +297,10 @@ ENDE</text>
     </step>
     <step>
       <number>10</number>
+      <standardStep number="6">
+        <shortCommand xml:lang="de">Log-Nachricht-Teile abrufen</shortCommand>
+        <shortCommand xml:lang="en">Retrieve Log Message Parts</shortCommand>
+      </standardStep>
       <description>
         <text xml:lang="en">The function SHALL retrieve the parts of the log message determined by the Secure Element from it. If the retrieval of the log message parts fails, the function SHALL raise the exception ErrorRetrieveLogMessageFailed and exit the function.</text>
         <text xml:lang="de">Hole die Log-Nachricht-Teile vom Secure Element. Falls der Abruf fehlschlägt: Werfe ErrorRetrieveLogMessageFailed und beende Funktion.</text>
@@ -321,6 +333,10 @@ ENDE</text>
     </step>
     <step>
       <number>11</number>
+      <standardStep number="7">
+        <shortCommand xml:lang="de">Log-Nachricht-Teile speichern</shortCommand>
+        <shortCommand xml:lang="en">Store Log Message Parts</shortCommand>
+      </standardStep>
       <description>
         <text xml:lang="en">The data sent to the Secure Element and the data of the log message parts retrieved from the Secure Element (together forming the log message contents) SHALL be stored. If the data has not been stored successfully, the function SHALL raise the exception ErrorStoringLogMessageFailed and exit the function.</text>
         <text xml:lang="de">Speichere die Daten (von SE und Log-Nachricht-Teile) als Transaktionsloginhalt. Falls Speicherung fehlschlägt: Werfe ErrorStoringLogMessageFailed und beende Funktion.</text>
@@ -353,6 +369,10 @@ ENDE</text>
     </step>
     <step>
       <number>12</number>
+      <standardStep number="9">
+        <shortCommand xml:lang="de">Erfolgreiche Rückgabe</shortCommand>
+        <shortCommand xml:lang="en">Successful Return</shortCommand>
+      </standardStep>
       <description>
         <text xml:lang="en">After the data has been stored successfully, the function SHALL return the type of performed protection on the data by performedUpdateProtection with a value of noPrevPassedProtected, the time of the log message creation by firstLogsignatureCreationTime, the signature counter by firstLogsignatureCounter and the signature value by firstLogsignatureValue. Additionally, the function SHALL return without raising an exception to indicate that the execution of the function updateTransaction has been successful.</text>
         <text xml:lang="de">Gebe erfolgreich die Aktualisierungsschutzart, Signaturerstellungszeit, Signaturzähler und Signaturwert zurück. Funktion kehrt ohne Exception zurück.</text>

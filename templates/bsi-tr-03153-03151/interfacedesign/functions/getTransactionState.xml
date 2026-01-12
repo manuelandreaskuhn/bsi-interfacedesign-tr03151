@@ -133,6 +133,10 @@ ENDE</text>
     </step>
     <step>
       <number>5</number>
+      <standardStep number="9">
+        <shortCommand xml:lang="de">Erfolgreiche Rückgabe</shortCommand>
+        <shortCommand xml:lang="en">Successful Return</shortCommand>
+      </standardStep>
       <description>
         <text xml:lang="en">If the determination of transaction state has been successful, the function SHALL return the information regarding the state by the output parameter transactionState. Additionally, the function SHALL return without raising an exception to indicate that the execution of the function has been successful.</text>
         <text xml:lang="de">Bei Erfolg der Ermittlung: Gibt Transaktionsstatus via Parameter transactionState zurück. Keine Exception.</text>

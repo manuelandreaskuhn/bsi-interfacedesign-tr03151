@@ -105,6 +105,10 @@ ENDE</text>
     </step>
     <step>
       <number>4</number>
+      <standardStep number="9">
+        <shortCommand xml:lang="de">Erfolgreiche Rückgabe</shortCommand>
+        <shortCommand xml:lang="en">Successful Return</shortCommand>
+      </standardStep>
       <description>
         <text xml:lang="en">If the identification of the supported update variant has been successful, the function SHALL return the information regarding the supported update variants over the output parameter supportedSyncVariant. Additionally, the function SHALL return without raising an exception to indicate that the execution of the function has been successful.</text>
         <text xml:lang="de">Bei Erfolg der Identifikation: Gibt unterstützte Zeit-Sync-Varianten via Parameter supportedSyncVariant zurück. Keine Exception.</text>

@@ -137,6 +137,10 @@ ENDE</text>
     </step>
     <step>
       <number>5</number>
+      <standardStep number="9">
+        <shortCommand xml:lang="de">Erfolgreiche Rückgabe</shortCommand>
+        <shortCommand xml:lang="en">Successful Return</shortCommand>
+      </standardStep>
       <description>
         <text xml:lang="en">If the restoring has been successful, the function SHALL return without raising an exception to indicate that the execution of the function has been successful.</text>
         <text xml:lang="de">Bei erfolgreicher Wiederherstellung: Gebe ohne Exception zurück.</text>

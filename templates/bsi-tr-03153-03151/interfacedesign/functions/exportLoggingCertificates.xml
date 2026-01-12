@@ -105,6 +105,10 @@ ENDE</text>
     </step>
     <step>
       <number>4</number>
+      <standardStep number="9">
+        <shortCommand xml:lang="de">Erfolgreiche Rückgabe</shortCommand>
+        <shortCommand xml:lang="en">Successful Return</shortCommand>
+      </standardStep>
       <description>
         <text xml:lang="en">The function SHALL return the collected certificates in a TAR archive by the output parameter certificates. The function SHALL return the file name for the TAR archive by fileName. Additionally, the function SHALL return without raising an exception to indicate that the execution of the function has been successful.</text>
         <text xml:lang="de">Gibt Zertifikate als TAR-Archiv zurück. Bei Erfolg keine Exception.</text>

@@ -133,6 +133,10 @@ ENDE</text>
     </step>
     <step>
       <number>5</number>
+      <standardStep number="5">
+        <shortCommand xml:lang="de">SE-Funktionalität Log-Erstellung</shortCommand>
+        <shortCommand xml:lang="en">SE Log Message Creation</shortCommand>
+      </standardStep>
       <description>
         <text xml:lang="en">The function SHALL invoke the functionality of the Secure Element to create the log message parts to log the start of the update.</text>
         <text xml:lang="de">Rufe Secure-Element-Funktionalität auf, um Log-Nachricht-Teile für Update-Start zu erstellen. Bei Fehler: Werfe ErrorSigningEventDataFailed und beende Funktion.</text>
@@ -167,6 +171,10 @@ ENDE</text>
     </step>
     <step>
       <number>6</number>
+      <standardStep number="6">
+        <shortCommand xml:lang="de">Log-Nachricht-Teile abrufen</shortCommand>
+        <shortCommand xml:lang="en">Retrieve Log Message Parts</shortCommand>
+      </standardStep>
       <description>
         <text xml:lang="en">The function SHALL retrieve the parts of the log message determined by the Secure Element. If the retrieval of the log message parts fails, the function SHALL raise the exception ErrorRetrieveLogMessageFailed and exit the function.</text>
         <text xml:lang="de">Hole die Log-Nachricht-Teile vom Secure Element. Falls der Abruf fehlschlägt: Werfe ErrorRetrieveLogMessageFailed und beende Funktion.</text>
@@ -199,6 +207,10 @@ ENDE</text>
     </step>
     <step>
       <number>7</number>
+      <standardStep number="7">
+        <shortCommand xml:lang="de">Log-Nachricht-Teile speichern</shortCommand>
+        <shortCommand xml:lang="en">Store Log Message Parts</shortCommand>
+      </standardStep>
       <description>
         <text xml:lang="en">The function SHALL store the data of the retrieved log message parts. If the data has not been stored successfully, the function SHALL raise the exception ErrorStoringLogMessageFailed and exit the function.</text>
         <text xml:lang="de">Speichere die Log-Nachricht-Teile. Falls Speicherung fehlschlägt: Werfe ErrorStoringLogMessageFailed und beende Funktion.</text>
@@ -297,6 +309,10 @@ ENDE</text>
     </step>
     <step>
       <number>10</number>
+      <standardStep number="5">
+        <shortCommand xml:lang="de">SE-Funktionalität Log-Erstellung</shortCommand>
+        <shortCommand xml:lang="en">SE Log Message Creation</shortCommand>
+      </standardStep>
       <description>
         <text xml:lang="en">The function SHALL invoke the functionality of the Secure Element to create the log message parts to log the completion of the update.</text>
         <text xml:lang="de">Rufe Secure-Element-Funktionalität auf, um Log-Nachricht-Teile für Update-Abschluss zu erstellen. Bei Fehler: Werfe ErrorSigningEventDataFailed und beende Funktion.</text>
@@ -331,6 +347,10 @@ ENDE</text>
     </step>
     <step>
       <number>11</number>
+      <standardStep number="6">
+        <shortCommand xml:lang="de">Log-Nachricht-Teile abrufen</shortCommand>
+        <shortCommand xml:lang="en">Retrieve Log Message Parts</shortCommand>
+      </standardStep>
       <description>
         <text xml:lang="en">The function SHALL retrieve the parts of the log message determined by the Secure Element. If the retrieval of the log message parts fails, the function SHOULD raise the exception ErrorRetrieveLogMessageFailed and exit the function.</text>
         <text xml:lang="de">Hole die Log-Nachricht-Teile vom Secure Element. Falls Abruf fehlschlägt: Werfe ErrorRetrieveLogMessageFailed und beende Funktion.</text>
@@ -363,6 +383,10 @@ ENDE</text>
     </step>
     <step>
       <number>12</number>
+      <standardStep number="7">
+        <shortCommand xml:lang="de">Log-Nachricht-Teile speichern</shortCommand>
+        <shortCommand xml:lang="en">Store Log Message Parts</shortCommand>
+      </standardStep>
       <description>
         <text xml:lang="en">The function SHALL store the data of the retrieved log message parts. If the data has not been stored successfully, the function SHOULD raise the exception ErrorStoringLogMessageFailed and exit the function.</text>
         <text xml:lang="de">Speichere die Log-Nachricht-Teile. Falls Speicherung fehlschlägt: Werfe ErrorStoringLogMessageFailed und beende Funktion.</text>
@@ -395,6 +419,10 @@ ENDE</text>
     </step>
     <step>
       <number>13</number>
+      <standardStep number="9">
+        <shortCommand xml:lang="de">Erfolgreiche Rückgabe</shortCommand>
+        <shortCommand xml:lang="en">Successful Return</shortCommand>
+      </standardStep>
       <description>
         <text xml:lang="en">The function SHOULD return without raising an exception to indicate that the execution of the function updateDevice has been successful.</text>
         <text xml:lang="de">Gebe ohne Exception zurück, um erfolgreiche Ausführung anzuzeigen.</text>

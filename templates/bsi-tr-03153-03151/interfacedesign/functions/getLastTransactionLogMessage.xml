@@ -173,6 +173,10 @@ ENDE</text>
     </step>
     <step>
       <number>6</number>
+      <standardStep number="9">
+        <shortCommand xml:lang="de">Erfolgreiche Rückgabe</shortCommand>
+        <shortCommand xml:lang="en">Successful Return</shortCommand>
+      </standardStep>
       <description>
         <text xml:lang="en">The retrieved transaction log message SHALL be returned to the application by the output parameter logMessageContent and logMessageFileName. The function SHALL return without raising an exception to indicate that the execution of the function has been successful.</text>
         <text xml:lang="de">Gibt Transaktionslog und Dateiname zurück. Bei Erfolg keine Exception.</text>

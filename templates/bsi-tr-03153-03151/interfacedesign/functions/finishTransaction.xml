@@ -223,6 +223,10 @@ ENDE</text>
     </step>
     <step>
       <number>8</number>
+      <standardStep number="8">
+        <shortCommand xml:lang="de">SE-Teile Verbindungsprüfung</shortCommand>
+        <shortCommand xml:lang="en">SE Parts Connection Check</shortCommand>
+      </standardStep>
       <description>
         <text xml:lang="en">If the Secure Element consists of multiple logical or physical parts that need to be connected in order to perform the whole function finishTransaction without errors the function shall check that the needed parts are connected. If one or more of the mandatory connections is lost, the function SHALL raise the exception ErrorSecureElementPartsDisconnected and exit the function.</text>
         <text xml:lang="de">Prüft, ob alle notwendigen SE-Teile verbunden sind. Falls nicht: Exception ErrorSecureElementPartsDisconnected, Ende.</text>
@@ -276,6 +280,10 @@ ENDE</text>
     </step>
     <step>
       <number>10</number>
+      <standardStep number="5">
+        <shortCommand xml:lang="de">SE-Funktionalität Log-Erstellung</shortCommand>
+        <shortCommand xml:lang="en">SE Log Message Creation</shortCommand>
+      </standardStep>
       <description>
         <text xml:lang="en">The function SHALL invoke the functionality of the Secure Element to finish a transaction and to pass the relevant data to the Secure Element. If the execution fails, the function SHALL raise the exception ErrorSigningEventDataFailed and exit the function.</text>
         <text xml:lang="de">Die Funktion muss die Secure-Element-Funktionalität aufrufen, um eine Transaktion zu beenden und processData sowie processType zu übergeben. Falls die Ausführung dieser Secure-Element-Funktionalität fehlschlägt, werfe ErrorExecutionFailed und beende Funktion.</text>
@@ -308,6 +316,10 @@ ENDE</text>
     </step>
     <step>
       <number>11</number>
+      <standardStep number="6">
+        <shortCommand xml:lang="de">Log-Nachricht-Teile abrufen</shortCommand>
+        <shortCommand xml:lang="en">Retrieve Log Message Parts</shortCommand>
+      </standardStep>
       <description>
         <text xml:lang="en">The function SHALL retrieve the parts of the log message determined by the Secure Element. If the execution of this function fails, the function SHALL raise the exception ErrorRetrieveLogMessageFailed and exit the function.</text>
         <text xml:lang="de">Hole Log-Nachricht-Teile vom SE. Falls Abruf fehlschlägt: Exception ErrorRetrieveLogMessageFailed, Ende.</text>
@@ -340,6 +352,10 @@ ENDE</text>
     </step>
     <step>
       <number>12</number>
+      <standardStep number="7">
+        <shortCommand xml:lang="de">Log-Nachricht-Teile speichern</shortCommand>
+        <shortCommand xml:lang="en">Store Log Message Parts</shortCommand>
+      </standardStep>
       <description>
         <text xml:lang="en">The process data, created since the start or the last signed update of the transaction and the data of the retrieved log message parts SHALL be stored. If the data has not been stored successfully, the function SHALL raise the exception ErrorStoringLogMessageFailed and exit the function.</text>
         <text xml:lang="de">Speichert Prozessdaten und Log-Nachricht-Teile. Falls Speicherung fehlschlägt: Exception ErrorStoringLogMessageFailed, Ende.</text>
@@ -372,6 +388,10 @@ ENDE</text>
     </step>
     <step>
       <number>13</number>
+      <standardStep number="9">
+        <shortCommand xml:lang="de">Erfolgreiche Rückgabe</shortCommand>
+        <shortCommand xml:lang="en">Successful Return</shortCommand>
+      </standardStep>
       <description>
         <text xml:lang="en">The function SHALL return the time of the log message creation, the signature counter and the signature value. If so far only the finishTransaction log message has been created, the return values firstLogSignatureCreationTime, firstLogSignatureCounter and firstLogSignatureValue SHALL be used to return the log message details. If also an update log message has been created, the output parameters firstLogSignatureCreationTime, firstLogSignatureCounter and firstLogSignatureValue SHALL be used to return details for the update log message (created first in time), the parameters secondLogSignatureCreationTime, secondLogSignatureCounter and secondLogSignatureValue SHALL be used for the log message details of the finishTransation log message (created second). The return value performedFinishProtection SHALL be used to return the type of protection performed on the data. Additionally, the function SHALL return without raising an exception to indicate that the execution of the function finishTransaction has been successful.</text>
         <text xml:lang="de">Gibt Zeit, Signaturzähler und Signaturwert zurück. Bei Erfolg keine Exception.</text>
