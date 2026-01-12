@@ -9,6 +9,10 @@
   <detailedSteps>
     <step>
       <number>1</number>
+      <standardStep number="1">
+        <shortCommand xml:lang="de">Authentifizierung Nutzer</shortCommand>
+        <shortCommand xml:lang="en">User Authentication</shortCommand>
+      </standardStep>
       <description>
         <text xml:lang="en">The function SHALL check if the user that has invoked the function has the status authenticated. If the status is not authenticated, the function SHALL raise the exception ErrorUserNotAuthenticated and exit the function.</text>
         <text xml:lang="de">Prüft, ob der aufrufende Benutzer authentifiziert ist. Falls nicht: Exception ErrorUserNotAuthenticated, Ende.</text>
