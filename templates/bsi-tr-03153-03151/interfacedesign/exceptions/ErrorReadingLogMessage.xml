@@ -112,7 +112,7 @@
     </step>
     <step>
       <text xml:lang="en">Check storage integrity and availability</text>
-      <text xml:lang="de">Prüfen Sie Speicherin tegrität und Verfügbarkeit</text>
+      <text xml:lang="de">Prüfen Sie Speicherintegrität und Verfügbarkeit</text>
     </step>
   </recovery>
   <relatedExceptions>
