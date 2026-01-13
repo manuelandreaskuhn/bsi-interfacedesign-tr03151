@@ -2,6 +2,7 @@
 <type id="AuthenticateUserEventData" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/types.xsd">
   <name>AuthenticateUserEventData</name>
   <category>SystemLog</category>
+  <source>BSI TR-03151</source>
   <description>Event-specific data logged for system log entries of type AuthenticateUserEventData.</description>
   <asn1Definition>AuthenticateUserEventData ::= SEQUENCE {
   userId  PrintableString,

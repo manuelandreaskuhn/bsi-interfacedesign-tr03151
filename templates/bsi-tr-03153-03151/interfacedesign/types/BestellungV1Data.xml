@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<type id="BestellungV1Data" xmlns="http://bsi.bund.de/TR03151">
+  <name>BestellungV1Data</name>
+  <category>TransactionData</category>
+  <source>DSFinV-K</source>
+  <description>Struktur für processType 'Bestellung-V1' im CSV-Format.</description>
+  <asn1Definition>BestellungV1Data ::= SEQUENCE OF SEQUENCE {
+  menge  PrintableString,
+  bezeichnung  PrintableString,
+  preis  PrintableString
+}</asn1Definition>
+  <fields>
+    <field>
+      <name>menge</name>
+      <type>PrintableString</type>
+      <optional>false</optional>
+      <description>Menge mit minimal möglichen Dezimalstellen (Punkt als Trenner).</description>
+    </field>
+    <field>
+      <name>bezeichnung</name>
+      <type>PrintableString</type>
+      <optional>false</optional>
+      <description>Artikelname in doppelten Anführungszeichen.</description>
+    </field>
+    <field>
+      <name>preis</name>
+      <type>PrintableString</type>
+      <optional>false</optional>
+      <description>Brutto-Einzelpreis mit exakt zwei Dezimalstellen.</description>
+    </field>
+  </fields>
+</type>

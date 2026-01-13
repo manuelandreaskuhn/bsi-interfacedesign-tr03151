@@ -2,6 +2,7 @@
 <type id="Time" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/types.xsd">
   <name>Time</name>
   <category>Time and Date Types</category>
+  <source>BSI TR-03151</source>
   <baseType>CHOICE</baseType>
   <description>Represents a point in time. Can be expressed either in UTC (Coordinated Universal Time) or as generalized time.</description>
   <choices>

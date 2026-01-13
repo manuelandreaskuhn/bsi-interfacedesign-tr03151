@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resultType id="FinishTransactionResult" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/types.xsd">
     <name>FinishTransactionResult</name>
+    <category>Transaction Management Types</category>
+    <source>BSI TR-03151</source>
     <description>This class defines a container that enables the SE-API function finishTransaction to return informations about the finished transaction.</description>
     <fields>
         <field>

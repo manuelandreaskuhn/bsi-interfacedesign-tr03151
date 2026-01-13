@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <enum id="TransactionState" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/enums.xsd">
     <name>TransactionState</name>
+    <category>TransactionManagement</category>
+    <source>BSI TR-03151</source>
     <description>Represents the current state of transaction.</description>
     <values>
         <value>

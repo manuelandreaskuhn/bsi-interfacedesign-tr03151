@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resultType id="ExportDataResult" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/types.xsd">
     <name>ExportDataResult</name>
+    <category>Data Export Types</category>
+    <source>BSI TR-03151</source>
     <description>This class defines a container that enables the export of an InputStream with an accompanying filename.</description>
     <fields>
         <field>

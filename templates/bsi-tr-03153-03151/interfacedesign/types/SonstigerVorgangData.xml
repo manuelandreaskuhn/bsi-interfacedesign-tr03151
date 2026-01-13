@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<type id="SonstigerVorgangData" xmlns="http://bsi.bund.de/TR03151">
+  <name>SonstigerVorgangData</name>
+  <category>TransactionData</category>
+  <source>DSFinV-K</source>
+  <description>Struktur für processType 'SonstigerVorgang'.</description>
+  <asn1Definition>SonstigerVorgangData ::= OCTET STRING</asn1Definition>
+  <fields>
+    <field>
+      <name>frei</name>
+      <type>PrintableString</type>
+      <optional>false</optional>
+      <description>Inhalt frei wählbar; lesbares Textformat wird empfohlen.</description>
+    </field>
+  </fields>
+</type>

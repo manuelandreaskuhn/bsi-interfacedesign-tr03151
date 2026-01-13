@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resultType id="StartTransactionResult" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/types.xsd">
     <name>StartTransactionResult</name>
+    <category>Transaction Management Types</category>
+    <source>BSI TR-03151</source>
     <description>This class defines a container that enables the SE-API function startTransaction to return informations about the newly created transaction.</description>
     <fields>
         <field>

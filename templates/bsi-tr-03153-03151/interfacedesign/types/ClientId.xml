@@ -2,6 +2,7 @@
 <type id="ClientId" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/types.xsd">
   <name>ClientId</name>
   <category>Transaction Management</category>
+  <source>BSI TR-03151</source>
   <baseType>PrintableString</baseType>
   <description>Represents the ID of a client application. The character set is restricted to a subset of ASN.1 PrintableString characters as defined in Appendix A of the specification.</description>
   <constraints>

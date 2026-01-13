@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<enum id="ProcessTypes" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/enums.xsd">
+    <name>ProcessTypes</name>
+    <category>TransactionData</category>
+    <source>DSFinV-K</source>
+    <description>Definiert die zulässigen Formate für processType gemäß Anhang I.</description>
+    <values>
+        <value>
+            <name>Kassenbeleg-V1</name>
+            <description>Standardformat für Kassenbelege mit Brutto-Steuerumsätzen und Zahlungen.</description>
+        </value>
+        <value>
+            <name>Bestellung-V1</name>
+            <description>CSV-Format für die Absicherung von Bestellpositionen.</description>
+        </value>
+        <value>
+            <name>SonstigerVorgang</name>
+            <description>Frei wählbares Format für alle anderen Vorgänge.</description>
+        </value>
+    </values>
+</enum>

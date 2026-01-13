@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<type id="KassenbelegV1Data" xmlns="http://bsi.bund.de/TR03151">
+  <name>KassenbelegV1Data</name>
+  <category>TransactionData</category>
+  <source>DSFinV-K</source>
+  <description>Struktur für processType 'Kassenbeleg-V1'.</description>
+  <asn1Definition>KassenbelegV1Data ::= SEQUENCE {
+  vorgangstyp  Vorgangstypen,
+  bruttoSteuerumsaetze  PrintableString,
+  zahlungen  PrintableString
+}</asn1Definition>
+  <fields>
+    <field>
+      <name>vorgangstyp</name>
+      <type>Vorgangstypen</type>
+      <optional>false</optional>
+      <description>Wert gemäß Enum Vorgangstypen.</description>
+    </field>
+    <field>
+      <name>bruttoSteuerumsaetze</name>
+      <type>PrintableString</type>
+      <optional>false</optional>
+      <description>Fünf Bruttobeträge mit exakt zwei Dezimalstellen, getrennt durch Unterstrich. Reihenfolge: Allgemein_Ermäßigt_Durchschnitt3_Durchschnitt1_0%.</description>
+    </field>
+    <field>
+      <name>zahlungen</name>
+      <type>PrintableString</type>
+      <optional>false</optional>
+      <description>Format: Betrag:Zahlungsart:Waehrung. Mehrere Zahlungen mit Unterstrich verkettet. Zahlungsart gemäß Enum ZahlungsartenTSE.</description>
+    </field>
+  </fields>
+</type>
