@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<type id="SonstigerVorgangData" xmlns="http://bsi.bund.de/TR03151">
+<type id="SonstigerVorgangData" xmlns="http://bsi.bund.de/TR03151" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bsi.bund.de/TR03151 ../../schema/types.xsd">
   <name>SonstigerVorgangData</name>
   <category>TransactionData</category>
   <source>DSFinV-K</source>
-  <description>Struktur für processType 'SonstigerVorgang'.</description>
+  <description>Struktur für processType 'SonstigerVorgang'. Der processType "SonstigerVorgang" ist für alle Vorgänge zu verwenden, die nicht einem Kassenbeleg oder einer Bestellung entsprechen. Der Inhalt von processData kann vom Aufzeichnungssystem frei gewählt werden.</description>
   <asn1Definition>SonstigerVorgangData ::= OCTET STRING</asn1Definition>
   <fields>
     <field>
       <name>frei</name>
       <type>PrintableString</type>
       <optional>false</optional>
-      <description>Inhalt frei wählbar; lesbares Textformat wird empfohlen.</description>
+      <description>Inhalt frei wählbar. Für ggf. relevante Vorgänge sollte nach Möglichkeit ein lesbares Textformat gewählt werden, um die Nachvollziehbarkeit und Prüfbarkeit zu gewährleisten.</description>
     </field>
   </fields>
 </type>

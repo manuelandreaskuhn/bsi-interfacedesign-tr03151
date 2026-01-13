@@ -3,7 +3,7 @@
 	<name>Vorgangstypen</name>
     <category>TransactionData</category>
 	<source>DSFinV-K</source>
-	<description>Zulässige Vorgangstypen für den ersten Teil der processData bei Kassenbeleg-V1.</description>
+	<description>Zulässige Vorgangstypen für den ersten Teil der processData bei Kassenbeleg-V1. Der Vorgangstyp kennzeichnet die Art des Geschäftsvorfalls und wird im BON_TYP-Feld der DSFinV-K erfasst.</description>
 	<values>
 		<value>
 			<name>Beleg</name>
@@ -31,11 +31,15 @@
 		</value>
 		<value>
 			<name>AVSonstige</name>
-			<description>Sonstige, näher zu beschreibende Vorgänge.</description>
+			<description>Erfassung aller Vorgänge, die hier nicht näher definiert wurden. Eine nähere Beschreibung über BON_NAME ist zwingend erforderlich, um die Nachvollziehbarkeit und Prüfbarkeit der Daten zu gewährleisten.</description>
 		</value>
 		<value>
 			<name>AVRechnung</name>
 			<description>Spätere Rechnungsstellung bei vorangegangenem Lieferschein.</description>
+		</value>
+		<value>
+			<name>AVBelegstorno</name>
+			<description>Vollständige Stornierung eines Originalbelegs, so dass sämtliche Beträge nicht mehr im Kassenabschluss berücksichtigt werden. ACHTUNG: Dieser Vorgangstyp kann bei Systemen, die mit einer TSE abgesichert werden, nicht verwendet werden (vgl. DSFinV-K Anhang B Vorgangstyp AVBelegstorno). Mit dem AVBelegstorno ist nicht die negative Darstellung eines Beleges gemeint.</description>
 		</value>
 	</values>
 </enum>
