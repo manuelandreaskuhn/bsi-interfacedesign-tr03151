@@ -415,6 +415,10 @@ BEENDE_ERFOLGREICH</text>
       </description>
       <direction>INPUT</direction>
       <required>true</required>
+      <note type="DSFinV-K">
+        <text xml:lang="en">For all transaction types according to DSFinV-K, processData for the StartTransaction operation is always empty. StartTransaction is called immediately at the beginning of a transaction at the cash register.</text>
+        <text xml:lang="de">Für alle Vorgangstypen gemäß DSFinV-K gilt, dass processData für die StartTransaction-Operation immer leer ist. StartTransaction wird unmittelbar mit Beginn eines Vorgangs an der Kasse aufgerufen.</text>
+      </note>
     </parameter>
     <parameter>
       <name>processType</name>
@@ -425,6 +429,10 @@ BEENDE_ERFOLGREICH</text>
       </description>
       <direction>INPUT</direction>
       <required>true</required>
+      <note type="DSFinV-K">
+        <text xml:lang="en">For all transaction types according to DSFinV-K, processType for the StartTransaction operation is always empty. Formatting uses ASCII encoding with version suffix (e.g. -V1). Possible values: see Enum ProcessTypes.</text>
+        <text xml:lang="de">Für alle Vorgangstypen gemäß DSFinV-K gilt, dass processType für die StartTransaction-Operation immer leer ist. Die Formatierung erfolgt nach ASCII-Codierung mit Versionssuffix (z.B. -V1). Mögliche Werte: siehe Enum ProcessTypes.</text>
+      </note>
     </parameter>
     <parameter>
       <name>additionalExternalData</name>

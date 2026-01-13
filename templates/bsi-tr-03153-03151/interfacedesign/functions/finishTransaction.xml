@@ -448,6 +448,10 @@ RETURN ohne Exception</text>
       </description>
       <direction>INPUT</direction>
       <required>true</required>
+      <note type="DSFinV-K">
+        <text xml:lang="en">For DSFinV-K compliant cash register systems, processData is populated only in the FinishTransaction operation. Format and content depend on processType. See Types: KassenbelegV1Data, BestellungV1Data, SonstigerVorgangData. The processData is represented as text in either UTF-8 or ASCII encoding.</text>
+        <text xml:lang="de">Bei DSFinV-K-konformen Kassensystemen werden processData erst bei der FinishTransaction-Operation befüllt. Format und Inhalt sind abhängig vom processType. Siehe Types: KassenbelegV1Data, BestellungV1Data, SonstigerVorgangData. Die processData werden als Text wahlweise in UTF-8 oder ASCII-Codierung dargestellt.</text>
+      </note>
     </parameter>
     <parameter>
       <name>processType</name>
@@ -459,6 +463,10 @@ RETURN ohne Exception</text>
       <direction>INPUT</direction>
       <required>false</required>
       <note>conditional parameter</note>
+      <note type="DSFinV-K">
+        <text xml:lang="en">For DSFinV-K compliant cash register systems, processType identifies the format of the content represented in processData. It is represented in ASCII encoding with a version suffix (e.g., -V1). See Enum ProcessTypes for possible values: Kassenbeleg-V1, Bestellung-V1, SonstigerVorgang.</text>
+        <text xml:lang="de">Bei DSFinV-K-konformen Kassensystemen kennzeichnet processType das Format der in processData dargestellten Inhalte. Wird in ASCII-Codierung dargestellt mit Versionssuffix (z.B. -V1). Mögliche Werte siehe Enum ProcessTypes: Kassenbeleg-V1, Bestellung-V1, SonstigerVorgang.</text>
+      </note>
     </parameter>
     <parameter>
       <name>additionalExternalData</name>

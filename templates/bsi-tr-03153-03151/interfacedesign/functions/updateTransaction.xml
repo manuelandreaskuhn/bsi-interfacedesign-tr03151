@@ -427,6 +427,10 @@ BEENDE_ERFOLGREICH</text>
       </description>
       <direction>INPUT</direction>
       <required>true</required>
+      <note type="DSFinV-K">
+        <text xml:lang="en">For DSFinV-K: The UpdateTransaction operation is not used for processType Kassenbeleg-V1, as processData changes only at FinishTransaction. For processType Bestellung-V1, UpdateTransaction can be used to secure order items during the ordering process.</text>
+        <text xml:lang="de">Bei DSFinV-K: Die UpdateTransaction-Operation wird beim processType Kassenbeleg-V1 nicht verwendet, da sich die processData erst bei FinishTransaction ändern. Bei processType Bestellung-V1 kann UpdateTransaction genutzt werden, um Bestellpositionen während des Bestellvorgangs abzusichern.</text>
+      </note>
     </parameter>
     <parameter>
       <name>processType</name>
@@ -440,6 +444,10 @@ BEENDE_ERFOLGREICH</text>
       <note>
         <text xml:lang="en">conditional parameter</text>
         <text xml:lang="de">bedingter Parameter</text>
+      </note>
+      <note type="DSFinV-K">
+        <text xml:lang="en">For DSFinV-K, processType identifies the format of the content represented in processData (ASCII encoding with version suffix). See Enum ProcessTypes. Note: UpdateTransaction is not used for processType Kassenbeleg-V1.</text>
+        <text xml:lang="de">Bei DSFinV-K kennzeichnet processType das Format der in processData dargestellten Inhalte (ASCII-Codierung mit Versionssuffix). Siehe Enum ProcessTypes. Hinweis: UpdateTransaction wird bei processType Kassenbeleg-V1 nicht verwendet.</text>
       </note>
     </parameter>
     <parameter>
