@@ -527,7 +527,7 @@ async function parseType(filePath) {
     id: typeData.id || name,
     name: name,
     category: typeData.category || category,
-    description: typeData.description || '',
+    description: extractMultiLangText(typeData.description),
     fields,
     fieldCount: fields.length,
     rootElement: Object.keys(xml)[0],
@@ -610,7 +610,7 @@ async function parseTypeDetail(filePath) {
     id: typeData.id || name,
     name: name,
     category: typeData.category || category,
-    description: typeData.description || '',
+    description: extractMultiLangText(typeData.description),
     baseType: typeData.baseType || '',
     asn1Definition: typeData.asn1Definition || '',
     usage: typeData.usage || '',
@@ -620,6 +620,7 @@ async function parseTypeDetail(filePath) {
     notes,
     rootElement,
     typeKind,
+    source: typeData.source || '',
     filePath
   };
 }

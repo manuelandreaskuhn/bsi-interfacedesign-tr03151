@@ -3,7 +3,18 @@
   <name>KassenbelegV1Data</name>
   <category>TransactionData</category>
   <source>DSFinV-K</source>
-  <description>Struktur für processType 'Kassenbeleg-V1'. Format: &lt;Vorgangstyp&gt;^&lt;Brutto-Steuerumsaetze&gt;^&lt;Zahlungen&gt;. Trennzeichen: ^ (Unicode U+005E).</description>
+  <description>
+    <text xml:lang="en">Structure for processType 'Kassenbeleg-V1'. Format: &lt;Vorgangstyp&gt;^&lt;Brutto-Steuerumsaetze&gt;^&lt;Zahlungen&gt;. Separator: ^ (Unicode U+005E).</text>
+    <text xml:lang="de">Struktur für processType 'Kassenbeleg-V1'. Format: &lt;Vorgangstyp&gt;^&lt;Brutto-Steuerumsaetze&gt;^&lt;Zahlungen&gt;. Trennzeichen: ^ (Unicode U+005E).</text>
+    <text xml:lang="en">
+      *** DSFinV-K specific usage: ***
+      This data structure is used in the FinishTransaction operation when processType is set to 'Kassenbeleg-V1'. It represents the receipt data that must be transmitted to the TSE. The processData field is populated only at FinishTransaction and transmitted in UTF-8 or ASCII encoding. This is the primary transaction type for cash register systems.
+    </text>
+    <text xml:lang="de">
+      *** DSFinV-K-spezifische Verwendung: ***
+      Diese Datenstruktur wird bei der FinishTransaction-Operation verwendet, wenn processType auf 'Kassenbeleg-V1' gesetzt ist. Sie stellt die Belegdaten dar, die an die TSE übermittelt werden müssen. Das processData-Feld wird erst bei FinishTransaction befüllt und in UTF-8- oder ASCII-Codierung übertragen. Dies ist der primäre Vorgangstyp für Kassensysteme.
+    </text>
+  </description>
   <asn1Definition>KassenbelegV1Data ::= SEQUENCE {
   vorgangstyp  Vorgangstypen,
   bruttoSteuerumsaetze  PrintableString,
