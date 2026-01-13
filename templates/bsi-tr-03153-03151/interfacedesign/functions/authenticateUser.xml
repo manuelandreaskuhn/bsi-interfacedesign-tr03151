@@ -288,11 +288,9 @@ ENDE</text>
         <text xml:lang="de">Gibt ohne Exception zurück, wenn erfolgreich.</text>
       </description>
       <pseudocode>
-        <text xml:lang="en">// Successful completion
-RETURN successfully
+        <text xml:lang="en">RETURN successfully
 END_SUCCESSFULLY</text>
-        <text xml:lang="de">// Erfolgreicher Abschluss
-GEBE_ZURÜCK erfolgreich
+        <text xml:lang="de">GEBE_ZURÜCK erfolgreich
 BEENDE_ERFOLGREICH</text>
       </pseudocode>
       <successCase>

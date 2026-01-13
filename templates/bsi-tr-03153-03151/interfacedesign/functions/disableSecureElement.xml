@@ -254,11 +254,10 @@ ENDE</text>
         <text xml:lang="de">Speicherung erfolgreich. Funktion beendet erfolgreich ohne Exception.</text>
       </description>
       <pseudocode>
-        <text xml:lang="en">// Successful completion
-FUNCTION returns without exception
+        <text xml:lang="en">FUNCTION returns without exception
 END_SUCCESSFULLY</text>
-        <text xml:lang="de">// Erfolgreicher Abschluss
-RETURN ohne Exception</text>
+        <text xml:lang="de">RETURN ohne Exception
+BEENDE_ERFOLGREICH</text>
       </pseudocode>
       <successCase>
         <condition>

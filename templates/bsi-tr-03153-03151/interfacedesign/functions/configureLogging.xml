@@ -278,11 +278,9 @@ ENDE</text>
         <text xml:lang="de">Gibt ohne Exception zurück, um die erfolgreiche Ausführung anzuzeigen.</text>
       </description>
       <pseudocode>
-        <text xml:lang="en">// Success case
-Function returns without exception
+        <text xml:lang="en">Function returns without exception
 END_SUCCESSFULLY</text>
-        <text xml:lang="de">// Erfolgsfall
-Funktion kehrt ohne Exception zurück
+        <text xml:lang="de">Funktion kehrt ohne Exception zurück
 BEENDE_ERFOLGREICH</text>
       </pseudocode>
       <successCase>
