@@ -248,6 +248,86 @@
                     </processChains>
                 </subCategory>
                 <subCategory>
+                    <id>transactions.dsfinvk</id>
+                    <name>
+                        <text xml:lang="en">DSFinV-K Transaction Types</text>
+                        <text xml:lang="de">DSFinV-K Transaktionstypen</text>
+                    </name>
+                    <description>
+                        <text xml:lang="en">Specific transaction patterns according to DSFinV-K standard with different processTypes</text>
+                        <text xml:lang="de">Spezifische Transaktionsmuster nach DSFinV-K Standard mit verschiedenen processTypes</text>
+                    </description>
+                    <processes/>
+                    <processChains>
+                        <processChain>
+                            <id>PK09</id>
+                            <name>
+                                <text xml:lang="en">Kassenbeleg Transaction (DSFinV-K)</text>
+                                <text xml:lang="de">Kassenbeleg-Transaktion (DSFinV-K)</text>
+                            </name>
+                            <description>
+                                <text xml:lang="en">Standard receipt transaction - Flowchart view</text>
+                                <text xml:lang="de">Standard-Belegvorgang - Ablaufdiagramm</text>
+                            </description>
+                        </processChain>
+                        <processChain>
+                            <id>PK10</id>
+                            <name>
+                                <text xml:lang="en">Bestellung Transaction (DSFinV-K)</text>
+                                <text xml:lang="de">Bestellung-Transaktion (DSFinV-K)</text>
+                            </name>
+                            <description>
+                                <text xml:lang="en">Order transaction with incremental updates - Flowchart view</text>
+                                <text xml:lang="de">Bestellvorgang mit schrittweisen Updates - Ablaufdiagramm</text>
+                            </description>
+                        </processChain>
+                        <processChain>
+                            <id>PK11</id>
+                            <name>
+                                <text xml:lang="en">SonstigerVorgang Transaction (DSFinV-K)</text>
+                                <text xml:lang="de">SonstigerVorgang-Transaktion (DSFinV-K)</text>
+                            </name>
+                            <description>
+                                <text xml:lang="en">Other transaction with free-form data - Flowchart view</text>
+                                <text xml:lang="de">Sonstiger Vorgang mit freien Daten - Ablaufdiagramm</text>
+                            </description>
+                        </processChain>
+                        <processChain>
+                            <id>PK12</id>
+                            <name>
+                                <text xml:lang="en">Kassenbeleg Transaction Sequence (DSFinV-K)</text>
+                                <text xml:lang="de">Kassenbeleg-Transaktion Sequenzdiagramm (DSFinV-K)</text>
+                            </name>
+                            <description>
+                                <text xml:lang="en">Standard receipt transaction - Sequence diagram view</text>
+                                <text xml:lang="de">Standard-Belegvorgang - Sequenzdiagramm</text>
+                            </description>
+                        </processChain>
+                        <processChain>
+                            <id>PK13</id>
+                            <name>
+                                <text xml:lang="en">Bestellung Transaction Sequence (DSFinV-K)</text>
+                                <text xml:lang="de">Bestellung-Transaktion Sequenzdiagramm (DSFinV-K)</text>
+                            </name>
+                            <description>
+                                <text xml:lang="en">Order transaction with incremental updates - Sequence diagram view</text>
+                                <text xml:lang="de">Bestellvorgang mit schrittweisen Updates - Sequenzdiagramm</text>
+                            </description>
+                        </processChain>
+                        <processChain>
+                            <id>PK14</id>
+                            <name>
+                                <text xml:lang="en">SonstigerVorgang Transaction Sequence (DSFinV-K)</text>
+                                <text xml:lang="de">SonstigerVorgang-Transaktion Sequenzdiagramm (DSFinV-K)</text>
+                            </name>
+                            <description>
+                                <text xml:lang="en">Other transaction with free-form data - Sequence diagram view</text>
+                                <text xml:lang="de">Sonstiger Vorgang mit freien Daten - Sequenzdiagramm</text>
+                            </description>
+                        </processChain>
+                    </processChains>
+                </subCategory>
+                <subCategory>
                     <id>transactions.info</id>
                     <name>
                         <text xml:lang="en">Transaction Information</text>
