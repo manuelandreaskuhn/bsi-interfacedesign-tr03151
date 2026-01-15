@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Interface Design - Schnittstellenbeschreibung</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Mermaid 11 for Flowchart rendering (ESM) -->
@@ -118,7 +118,81 @@
     const getText = (obj, lang = 'de') => {
       if (!obj) return '';
       if (typeof obj === 'string') return obj;
-      return obj[lang] || obj._default || obj.de || obj.en || '';
+      if (typeof obj === 'number') return String(obj);
+      if (typeof obj !== 'object') return String(obj);
+      
+      // Handle arrays - this can happen with xml2js when multiple <text> elements exist
+      if (Array.isArray(obj)) {
+        // Try to find element with matching language
+        const langMatch = obj.find(item => 
+          item && typeof item === 'object' && 
+          (item['xml:lang'] === lang || item.lang === lang)
+        );
+        if (langMatch) {
+          // Extract the text from the matched element
+          return getText(langMatch._ || langMatch['#text'] || langMatch.text || langMatch, lang);
+        }
+        // Fallback to first element if no language match
+        if (obj.length > 0) {
+          return getText(obj[0]._ || obj[0]['#text'] || obj[0].text || obj[0], lang);
+        }
+        return '';
+      }
+      
+      // Special handling for obj.text being an array (common xml2js pattern)
+      if (obj.text && Array.isArray(obj.text)) {
+        const langMatch = obj.text.find(item => 
+          item && typeof item === 'object' && 
+          (item['xml:lang'] === lang || item.lang === lang)
+        );
+        if (langMatch) {
+          return getText(langMatch._ || langMatch['#text'] || langMatch, lang);
+        }
+        // Fallback to first element
+        if (obj.text.length > 0) {
+          return getText(obj.text[0]._ || obj.text[0]['#text'] || obj.text[0], lang);
+        }
+      }
+      
+      // Get the value for the language
+      let value = obj[lang] || obj._default || obj.de || obj.en || '';
+      
+      // If the value is an object or array, try to extract text from it
+      while (value && typeof value === 'object') {
+        // Handle arrays
+        if (Array.isArray(value)) {
+          const langMatch = value.find(item => 
+            item && typeof item === 'object' && 
+            (item['xml:lang'] === lang || item.lang === lang)
+          );
+          if (langMatch) {
+            value = langMatch._ || langMatch['#text'] || langMatch.text || langMatch;
+          } else if (value.length > 0) {
+            value = value[0]._ || value[0]['#text'] || value[0].text || value[0];
+          } else {
+            return '';
+          }
+        } else if (value.text !== undefined) {
+          value = value.text;
+        } else if (value._default !== undefined) {
+          value = value._default;
+        } else if (value[lang] !== undefined) {
+          value = value[lang];
+        } else if (value.de !== undefined) {
+          value = value.de;
+        } else if (value.en !== undefined) {
+          value = value.en;
+        } else if (value._ !== undefined) {
+          value = value._;
+        } else if (value['#text'] !== undefined) {
+          value = value['#text'];
+        } else {
+          // Object doesn't have expected properties
+          return '';
+        }
+      }
+      
+      return value !== null && value !== undefined ? String(value) : '';
     };
 
     // ============================================
@@ -2145,7 +2219,7 @@
                         {data.notes.map((note, idx) => (
                           <li key={idx} className="text-gray-600 text-sm flex items-start">
                             <Icon name="angle-right" className="mr-2 mt-0.5 text-gray-400" />
-                            {typeof note === 'string' ? note : note.text}
+                            {typeof note === 'string' ? note : t(note)}
                           </li>
                         ))}
                       </ul>
@@ -3363,7 +3437,7 @@
                       <div key={idx} className="p-3 bg-red-50 rounded border-l-2 border-red-300">
                         <span className="font-medium text-red-700 text-sm">{c.type}</span>
                         {c.description && (
-                          <p className="text-red-600 text-xs mt-1">{c.description}</p>
+                          <p className="text-red-600 text-xs mt-1">{t(c.description)}</p>
                         )}
                       </div>
                     ))}
@@ -3817,7 +3891,7 @@
                       <div key={idx} className="p-2 bg-red-50 rounded border-l-2 border-red-300">
                         <span className="font-medium text-red-700 text-sm">{c.type}</span>
                         {c.description && (
-                          <p className="text-red-600 text-xs mt-1">{c.description}</p>
+                          <p className="text-red-600 text-xs mt-1">{t(c.description)}</p>
                         )}
                       </div>
                     ))}
@@ -5413,7 +5487,7 @@
                       {process.references.map((ref, idx) => (
                         <li key={idx} className="text-sm text-gray-600 flex items-start gap-2">
                           <Icon name="link" className="mt-1 text-gray-400" />
-                          {ref}
+                          {typeof ref === 'string' ? ref : t(ref)}
                         </li>
                       ))}
                     </ul>
@@ -6481,6 +6555,139 @@
                         </div>
                       </div>
                     )}
+
+                    {/* PK09-11 style: processData */}
+                    {chain.outcome.processData && (
+                      <div className="p-3 bg-indigo-50 rounded-lg md:col-span-2">
+                        <div className="text-sm text-indigo-600 mb-3 font-semibold">
+                          {language === 'de' ? 'Prozessdaten-Format' : 'Process Data Format'}
+                        </div>
+                        <div className="space-y-3">
+                          {chain.outcome.processData.format && (
+                            <div>
+                              <span className="text-xs text-indigo-500 uppercase tracking-wide">
+                                {language === 'de' ? 'Format:' : 'Format:'}
+                              </span>
+                              <div className="text-indigo-800 font-mono text-sm mt-1">
+                                {t(chain.outcome.processData.format)}
+                              </div>
+                            </div>
+                          )}
+                          {chain.outcome.processData.separator && (
+                            <div>
+                              <span className="text-xs text-indigo-500 uppercase tracking-wide">
+                                {language === 'de' ? 'Trennzeichen:' : 'Separator:'}
+                              </span>
+                              <div className="text-indigo-800 font-mono text-sm mt-1">
+                                {t(chain.outcome.processData.separator)}
+                              </div>
+                            </div>
+                          )}
+                          {chain.outcome.processData.lineSeparator && (
+                            <div>
+                              <span className="text-xs text-indigo-500 uppercase tracking-wide">
+                                {language === 'de' ? 'Zeilentrenner:' : 'Line Separator:'}
+                              </span>
+                              <div className="text-indigo-800 font-mono text-sm mt-1">
+                                {t(chain.outcome.processData.lineSeparator)}
+                              </div>
+                            </div>
+                          )}
+                          {chain.outcome.processData.columnSeparator && (
+                            <div>
+                              <span className="text-xs text-indigo-500 uppercase tracking-wide">
+                                {language === 'de' ? 'Spaltentrenner:' : 'Column Separator:'}
+                              </span>
+                              <div className="text-indigo-800 font-mono text-sm mt-1">
+                                {t(chain.outcome.processData.columnSeparator)}
+                              </div>
+                            </div>
+                          )}
+                          {chain.outcome.processData.encoding && (
+                            <div>
+                              <span className="text-xs text-indigo-500 uppercase tracking-wide">
+                                {language === 'de' ? 'Kodierung:' : 'Encoding:'}
+                              </span>
+                              <div className="text-indigo-800 font-mono text-sm mt-1">
+                                {t(chain.outcome.processData.encoding)}
+                              </div>
+                            </div>
+                          )}
+                          {chain.outcome.processData.recommendation && (
+                            <div>
+                              <span className="text-xs text-indigo-500 uppercase tracking-wide">
+                                {language === 'de' ? 'Empfehlung:' : 'Recommendation:'}
+                              </span>
+                              <div className="text-indigo-700 text-sm mt-1">
+                                {t(chain.outcome.processData.recommendation)}
+                              </div>
+                            </div>
+                          )}
+                          {chain.outcome.processData.fields && chain.outcome.processData.fields.length > 0 && (
+                            <div>
+                              <span className="text-xs text-indigo-500 uppercase tracking-wide mb-2 block">
+                                {language === 'de' ? 'Felder:' : 'Fields:'}
+                              </span>
+                              <div className="space-y-2">
+                                {chain.outcome.processData.fields.map((field, idx) => (
+                                  <div key={idx} className="bg-white rounded p-2 border border-indigo-200">
+                                    <div className="font-medium text-indigo-800 text-sm">
+                                      {t(field.name)}
+                                    </div>
+                                    {field.description && (
+                                      <div className="text-indigo-600 text-xs mt-1">
+                                        {t(field.description)}
+                                      </div>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                          {chain.outcome.processData.examples && chain.outcome.processData.examples.length > 0 && (
+                            <div>
+                              <span className="text-xs text-indigo-500 uppercase tracking-wide mb-2 block">
+                                {language === 'de' ? 'Beispiele:' : 'Examples:'}
+                              </span>
+                              <div className="space-y-1">
+                                {chain.outcome.processData.examples.map((example, idx) => (
+                                  <div key={idx} className="bg-white rounded p-2 border border-indigo-200 font-mono text-xs text-indigo-700">
+                                    {t(example)}
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                          {chain.outcome.processData.example && (
+                            <div>
+                              <span className="text-xs text-indigo-500 uppercase tracking-wide mb-2 block">
+                                {language === 'de' ? 'Beispiel:' : 'Example:'}
+                              </span>
+                              <div className="bg-white rounded p-2 border border-indigo-200 font-mono text-xs text-indigo-700">
+                                {t(chain.outcome.processData.example)}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* PK09-11 style: artifacts */}
+                    {chain.outcome.artifacts && chain.outcome.artifacts.length > 0 && (
+                      <div className="p-3 bg-amber-50 rounded-lg md:col-span-2">
+                        <div className="text-sm text-amber-600 mb-2 font-semibold">
+                          {language === 'de' ? 'Erzeugte Artefakte' : 'Generated Artifacts'}
+                        </div>
+                        <ul className="space-y-2">
+                          {chain.outcome.artifacts.map((artifact, idx) => (
+                            <li key={idx} className="flex items-start gap-2 text-amber-800">
+                              <Icon name="cube" className="mt-1 flex-shrink-0 text-amber-600" />
+                              <span className="text-sm">{t(artifact)}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -6518,14 +6725,31 @@
                   </h3>
                 </div>
                 <div className="p-4">
-                  <ul className="space-y-2">
-                    {chain.useCases.map((uc, idx) => (
-                      <li key={idx} className="flex items-start gap-2 text-gray-700">
-                        <Icon name="check-square" className="text-indigo-500 mt-1 flex-shrink-0" />
-                        <span>{t(uc)}</span>
-                      </li>
-                    ))}
-                  </ul>
+                  <div className="space-y-4">
+                    {chain.useCases.map((uc, idx) => {
+                      // Check if it's a structured use case with name and description
+                      if (uc && typeof uc === 'object' && (uc.name || uc.description)) {
+                        return (
+                          <div key={idx} className="">
+                            <div className="flex items-start gap-2 text-gray-700">
+                              <Icon name="check-square" className="text-indigo-500 mt-1 flex-shrink-0" />
+                              <div className="flex-1">
+                                <h4 className="font-semibold text-indigo-900">{t(uc.name)}</h4>
+                                <p className="text-gray-700 text-sm">{t(uc.description)}</p>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      }
+                      // Simple text use case
+                      return (
+                        <div key={idx} className="flex items-start gap-2 text-gray-700">
+                          <Icon name="check-square" className="text-indigo-500 mt-1 flex-shrink-0" />
+                          <span>{t(uc)}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
             )}
@@ -6559,7 +6783,7 @@
                     {chain.references.map((ref, idx) => (
                       <li key={idx} className="text-gray-600 text-sm flex items-center gap-2">
                         <Icon name="external-link-alt" className="text-xs" />
-                        {ref}
+                        {t(ref)}
                       </li>
                     ))}
                   </ul>

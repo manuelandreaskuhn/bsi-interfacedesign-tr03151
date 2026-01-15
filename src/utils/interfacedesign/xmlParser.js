@@ -1427,7 +1427,11 @@ async function parseProcessChainDetail(filePath) {
       storedData: [],
       // PK08-style  
       state: chain.outcome.state ? extractMultiLangText(chain.outcome.state) : null,
-      logMessages: []
+      logMessages: [],
+      // PK09-style: processData structure
+      processData: null,
+      // artifacts (common across all styles)
+      artifacts: []
     };
     
     // PK01-style: logTypes
@@ -1453,6 +1457,36 @@ async function parseProcessChainDetail(filePath) {
         : [chain.outcome.logMessages.logMessage];
       outcome.logMessages = logMsgList.map(lm => extractMultiLangText(lm));
     }
+    
+    // PK09-style: processData with format, separator, and fields
+    if (chain.outcome.processData) {
+      outcome.processData = {
+        format: chain.outcome.processData.format 
+          ? extractMultiLangText(chain.outcome.processData.format) 
+          : null,
+        separator: chain.outcome.processData.separator || null,
+        fields: []
+      };
+      
+      // Extract fields
+      if (chain.outcome.processData.field) {
+        const fieldList = Array.isArray(chain.outcome.processData.field)
+          ? chain.outcome.processData.field
+          : [chain.outcome.processData.field];
+        outcome.processData.fields = fieldList.map(f => ({
+          name: f.name || '',
+          description: extractMultiLangText(f.description)
+        }));
+      }
+    }
+    
+    // Extract artifacts (common across all styles)
+    if (chain.outcome.artifacts && chain.outcome.artifacts.artifact) {
+      const artifactList = Array.isArray(chain.outcome.artifacts.artifact)
+        ? chain.outcome.artifacts.artifact
+        : [chain.outcome.artifacts.artifact];
+      outcome.artifacts = artifactList.map(a => extractMultiLangText(a));
+    }
   }
 
   // Extract important notes (can appear multiple times in XML, collect all)
@@ -1472,13 +1506,23 @@ async function parseProcessChainDetail(filePath) {
     });
   }
 
-  // Extract use cases
+  // Extract use cases (supports both simple text and structured name+description)
   let useCases = [];
   if (chain.useCases && chain.useCases.useCase) {
     const useCaseList = Array.isArray(chain.useCases.useCase)
       ? chain.useCases.useCase
       : [chain.useCases.useCase];
-    useCases = useCaseList.map(uc => extractMultiLangText(uc));
+    useCases = useCaseList.map(uc => {
+      // Check if it's structured with name and description
+      if (uc.name || uc.description) {
+        return {
+          name: extractMultiLangText(uc.name),
+          description: extractMultiLangText(uc.description)
+        };
+      }
+      // Otherwise it's simple text
+      return extractMultiLangText(uc);
+    });
   }
 
   // Extract usage scenario
