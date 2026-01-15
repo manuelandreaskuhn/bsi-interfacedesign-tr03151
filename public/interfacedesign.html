@@ -2974,6 +2974,9 @@
       const [searchTerm, setSearchTerm] = useState('');
       const [expandedCategories, setExpandedCategories] = useState({});
 
+      // Helper to get text in current language
+      const t = (obj) => getText(obj, language);
+
       // Set page title
       usePageTitle(`${language === 'de' ? 'Datentypen' : 'Types'}`);
 
@@ -3039,7 +3042,7 @@
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-gray-800 flex items-center">
                 <Icon name="cube" className="mr-3 text-purple-600" />
-                Datentypen
+                {language === 'de' ? 'Datentypen' : 'Types'}
                 <span className="ml-3 text-lg font-normal text-gray-500">({data?.count || 0})</span>
               </h2>
               
@@ -3087,7 +3090,7 @@
                             </div>
                             <div className="flex-1 min-w-0">
                               <code className="text-purple-600 font-semibold text-sm block truncate">{type.name}</code>
-                              <p className="text-xs text-gray-600 mt-1 line-clamp-2">{type.description || 'Keine Beschreibung'}</p>
+                              <p className="text-xs text-gray-600 mt-1 line-clamp-2">{t(type.description) || 'Keine Beschreibung'}</p>
                               <div className="flex items-center gap-2 mt-2">
                                 <span className="text-xs text-gray-500">
                                   <Icon name="layer-group" className="mr-1" />
