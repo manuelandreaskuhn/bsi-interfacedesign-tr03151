@@ -5058,6 +5058,8 @@
       const [currentGroup, setCurrentGroup] = useState(null);
       const [knownTypes, setKnownTypes] = useState([]);
       const [knownEnums, setKnownEnums] = useState([]);
+      const [isFullscreen, setIsFullscreen] = useState(false);
+      const [zoomLevel, setZoomLevel] = useState(100);
 
       const t = (obj) => getText(obj, language);
 
@@ -5246,6 +5248,33 @@
         return labels[actor?.toLowerCase()] || actor;
       };
 
+      const handleZoomIn = () => setZoomLevel(prev => Math.min(prev + 25, 300));
+      const handleZoomOut = () => setZoomLevel(prev => Math.max(prev - 25, 25));
+      const handleZoomReset = () => setZoomLevel(100);
+
+      // Handle ESC key to exit fullscreen
+      useEffect(() => {
+        const handleKeyDown = (e) => {
+          if (e.key === 'Escape' && isFullscreen) {
+            setIsFullscreen(false);
+          }
+        };
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
+      }, [isFullscreen]);
+
+      // Lock body scroll when fullscreen
+      useEffect(() => {
+        if (isFullscreen) {
+          document.body.style.overflow = 'hidden';
+        } else {
+          document.body.style.overflow = '';
+        }
+        return () => {
+          document.body.style.overflow = '';
+        };
+      }, [isFullscreen]);
+
       if (loading) {
         return (
           <div className="p-6 flex items-center justify-center">
@@ -5336,14 +5365,116 @@
                     <Icon name={diagramType === 'flow' ? 'sitemap' : 'exchange-alt'} className="mr-2 text-teal-600" />
                     {getDiagramTypeLabel(diagramType)}
                   </h3>
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center bg-white rounded-lg border shadow-sm">
+                      <button
+                        onClick={handleZoomOut}
+                        className="px-3 py-1.5 hover:bg-gray-50 transition-colors border-r"
+                        title={language === 'de' ? 'Verkleinern' : 'Zoom Out'}
+                      >
+                        <Icon name="search-minus" className="text-gray-600" />
+                      </button>
+                      <span className="px-3 py-1.5 text-sm font-medium text-gray-700 min-w-[60px] text-center">
+                        {zoomLevel}%
+                      </span>
+                      <button
+                        onClick={handleZoomIn}
+                        className="px-3 py-1.5 hover:bg-gray-50 transition-colors border-l"
+                        title={language === 'de' ? 'Vergrößern' : 'Zoom In'}
+                      >
+                        <Icon name="search-plus" className="text-gray-600" />
+                      </button>
+                      <button
+                        onClick={handleZoomReset}
+                        className="px-3 py-1.5 hover:bg-gray-50 transition-colors border-l text-xs font-medium text-gray-600"
+                        title={language === 'de' ? 'Zurücksetzen' : 'Reset'}
+                      >
+                        <Icon name="redo" />
+                      </button>
+                    </div>
+                    <button
+                      onClick={() => setIsFullscreen(true)}
+                      className="px-3 py-1.5 bg-white hover:bg-gray-50 border rounded-lg transition-colors shadow-sm"
+                      title={language === 'de' ? 'Vollbild' : 'Fullscreen'}
+                    >
+                      <Icon name="expand" className="text-gray-600" />
+                    </button>
+                  </div>
                 </div>
                 <div className="p-4 mermaid-container overflow-x-auto">
-                  <div ref={mermaidRef} className="flex justify-center min-w-full">
+                  <div 
+                    ref={mermaidRef} 
+                    className="flex justify-center min-w-full"
+                    style={{ 
+                      transform: `scale(${zoomLevel / 100})`,
+                      transformOrigin: 'top center',
+                      transition: 'transform 0.2s ease'
+                    }}
+                  >
                     <div className="text-gray-400 flex items-center gap-2">
                       <div className="loading-spinner"></div>
                       {language === 'de' ? 'Lade Diagramm...' : 'Loading diagram...'}
                     </div>
                   </div>
+                </div>
+              </div>
+            )}
+
+            {/* Fullscreen Overlay */}
+            {isFullscreen && (
+              <div className="fixed inset-0 bg-black bg-opacity-95 z-50 flex flex-col">
+                <div className="bg-gray-900 text-white px-6 py-4 flex items-center justify-between border-b border-gray-700">
+                  <h2 className="text-xl font-semibold flex items-center">
+                    <Icon name={diagramType === 'flow' ? 'sitemap' : 'exchange-alt'} className="mr-3 text-teal-400" />
+                    {t(process.name)} - {getDiagramTypeLabel(diagramType)}
+                  </h2>
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center bg-gray-800 rounded-lg border border-gray-700">
+                      <button
+                        onClick={handleZoomOut}
+                        className="px-3 py-2 hover:bg-gray-700 transition-colors border-r border-gray-700"
+                        title={language === 'de' ? 'Verkleinern' : 'Zoom Out'}
+                      >
+                        <Icon name="search-minus" className="text-gray-300" />
+                      </button>
+                      <span className="px-4 py-2 text-sm font-medium text-gray-200 min-w-[70px] text-center">
+                        {zoomLevel}%
+                      </span>
+                      <button
+                        onClick={handleZoomIn}
+                        className="px-3 py-2 hover:bg-gray-700 transition-colors border-l border-gray-700"
+                        title={language === 'de' ? 'Vergrößern' : 'Zoom In'}
+                      >
+                        <Icon name="search-plus" className="text-gray-300" />
+                      </button>
+                      <button
+                        onClick={handleZoomReset}
+                        className="px-3 py-2 hover:bg-gray-700 transition-colors border-l border-gray-700"
+                        title={language === 'de' ? 'Zurücksetzen' : 'Reset'}
+                      >
+                        <Icon name="redo" className="text-gray-300" />
+                      </button>
+                    </div>
+                    <button
+                      onClick={() => setIsFullscreen(false)}
+                      className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition-colors flex items-center gap-2"
+                    >
+                      <Icon name="times" />
+                      <span>{language === 'de' ? 'Schließen' : 'Close'}</span>
+                      <span className="text-xs opacity-75">(ESC)</span>
+                    </button>
+                  </div>
+                </div>
+                <div className="flex-1 overflow-auto p-6">
+                  <div 
+                    className="mermaid-container mx-auto"
+                    style={{ 
+                      transform: `scale(${zoomLevel / 100})`,
+                      transformOrigin: 'top center',
+                      transition: 'transform 0.2s ease'
+                    }}
+                    dangerouslySetInnerHTML={{ __html: mermaidRef.current?.innerHTML || '' }}
+                  />
                 </div>
               </div>
             )}
@@ -6155,6 +6286,8 @@
       const [allChains, setAllChains] = useState([]);
       const mermaidRef = useRef(null);
       const [mermaidRendered, setMermaidRendered] = useState(false);
+      const [isFullscreen, setIsFullscreen] = useState(false);
+      const [zoomLevel, setZoomLevel] = useState(100);
 
       const t = (obj) => getText(obj, language);
 
@@ -6233,6 +6366,33 @@
           onNavigateToProcess(process);
         }
       };
+
+      const handleZoomIn = () => setZoomLevel(prev => Math.min(prev + 25, 300));
+      const handleZoomOut = () => setZoomLevel(prev => Math.max(prev - 25, 25));
+      const handleZoomReset = () => setZoomLevel(100);
+
+      // Handle ESC key to exit fullscreen
+      useEffect(() => {
+        const handleKeyDown = (e) => {
+          if (e.key === 'Escape' && isFullscreen) {
+            setIsFullscreen(false);
+          }
+        };
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
+      }, [isFullscreen]);
+
+      // Lock body scroll when fullscreen
+      useEffect(() => {
+        if (isFullscreen) {
+          document.body.style.overflow = 'hidden';
+        } else {
+          document.body.style.overflow = '';
+        }
+        return () => {
+          document.body.style.overflow = '';
+        };
+      }, [isFullscreen]);
 
       // Render Mermaid diagram
       useEffect(() => {
@@ -6318,16 +6478,115 @@
             {/* Mermaid Diagram */}
             {(chain.mermaidContent?.[language] || chain.mermaidContent?.de || chain.mermaidContent) && (
               <div className="bg-white rounded-lg shadow-sm border mb-6 overflow-hidden">
-                <div className="border-b bg-gray-50 px-4 py-3">
+                <div className="border-b bg-gray-50 px-4 py-3 flex items-center justify-between">
                   <h3 className="font-semibold text-gray-700 flex items-center">
                     <Icon name="project-diagram" className="mr-2 text-indigo-600" />
                     {language === 'de' ? 'Ablaufdiagramm' : 'Flow Diagram'}
                   </h3>
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center bg-white rounded-lg border shadow-sm">
+                      <button
+                        onClick={handleZoomOut}
+                        className="px-3 py-1.5 hover:bg-gray-50 transition-colors border-r"
+                        title={language === 'de' ? 'Verkleinern' : 'Zoom Out'}
+                      >
+                        <Icon name="search-minus" className="text-gray-600" />
+                      </button>
+                      <span className="px-3 py-1.5 text-sm font-medium text-gray-700 min-w-[60px] text-center">
+                        {zoomLevel}%
+                      </span>
+                      <button
+                        onClick={handleZoomIn}
+                        className="px-3 py-1.5 hover:bg-gray-50 transition-colors border-l"
+                        title={language === 'de' ? 'Vergrößern' : 'Zoom In'}
+                      >
+                        <Icon name="search-plus" className="text-gray-600" />
+                      </button>
+                      <button
+                        onClick={handleZoomReset}
+                        className="px-3 py-1.5 hover:bg-gray-50 transition-colors border-l text-xs font-medium text-gray-600"
+                        title={language === 'de' ? 'Zurücksetzen' : 'Reset'}
+                      >
+                        <Icon name="redo" />
+                      </button>
+                    </div>
+                    <button
+                      onClick={() => setIsFullscreen(true)}
+                      className="px-3 py-1.5 bg-white hover:bg-gray-50 border rounded-lg transition-colors shadow-sm"
+                      title={language === 'de' ? 'Vollbild' : 'Fullscreen'}
+                    >
+                      <Icon name="expand" className="text-gray-600" />
+                    </button>
+                  </div>
                 </div>
                 <div className="p-4 overflow-x-auto bg-gradient-to-br from-gray-50 to-white">
                   <div 
                     ref={mermaidRef}
                     className="mermaid-container flex justify-center min-h-[300px]"
+                    style={{ 
+                      transform: `scale(${zoomLevel / 100})`,
+                      transformOrigin: 'top center',
+                      transition: 'transform 0.2s ease'
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Fullscreen Overlay */}
+            {isFullscreen && (
+              <div className="fixed inset-0 bg-black bg-opacity-95 z-50 flex flex-col">
+                <div className="bg-gray-900 text-white px-6 py-4 flex items-center justify-between border-b border-gray-700">
+                  <h2 className="text-xl font-semibold flex items-center">
+                    <Icon name="link" className="mr-3 text-indigo-400" />
+                    {t(chain.name)} - {language === 'de' ? 'Ablaufdiagramm' : 'Flow Diagram'}
+                  </h2>
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center bg-gray-800 rounded-lg border border-gray-700">
+                      <button
+                        onClick={handleZoomOut}
+                        className="px-3 py-2 hover:bg-gray-700 transition-colors border-r border-gray-700"
+                        title={language === 'de' ? 'Verkleinern' : 'Zoom Out'}
+                      >
+                        <Icon name="search-minus" className="text-gray-300" />
+                      </button>
+                      <span className="px-4 py-2 text-sm font-medium text-gray-200 min-w-[70px] text-center">
+                        {zoomLevel}%
+                      </span>
+                      <button
+                        onClick={handleZoomIn}
+                        className="px-3 py-2 hover:bg-gray-700 transition-colors border-l border-gray-700"
+                        title={language === 'de' ? 'Vergrößern' : 'Zoom In'}
+                      >
+                        <Icon name="search-plus" className="text-gray-300" />
+                      </button>
+                      <button
+                        onClick={handleZoomReset}
+                        className="px-3 py-2 hover:bg-gray-700 transition-colors border-l border-gray-700"
+                        title={language === 'de' ? 'Zurücksetzen' : 'Reset'}
+                      >
+                        <Icon name="redo" className="text-gray-300" />
+                      </button>
+                    </div>
+                    <button
+                      onClick={() => setIsFullscreen(false)}
+                      className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition-colors flex items-center gap-2"
+                    >
+                      <Icon name="times" />
+                      <span>{language === 'de' ? 'Schließen' : 'Close'}</span>
+                      <span className="text-xs opacity-75">(ESC)</span>
+                    </button>
+                  </div>
+                </div>
+                <div className="flex-1 overflow-auto p-6">
+                  <div 
+                    className="mermaid-container mx-auto"
+                    style={{ 
+                      transform: `scale(${zoomLevel / 100})`,
+                      transformOrigin: 'top center',
+                      transition: 'transform 0.2s ease'
+                    }}
+                    dangerouslySetInnerHTML={{ __html: mermaidRef.current?.innerHTML || '' }}
                   />
                 </div>
               </div>
