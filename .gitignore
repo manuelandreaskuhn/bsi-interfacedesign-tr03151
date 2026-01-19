@@ -2,3 +2,4 @@ node_modules/
 .vscode/
 dist/
 training_inputs/
+dist-temp/

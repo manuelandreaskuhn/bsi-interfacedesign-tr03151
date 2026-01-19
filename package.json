@@ -10,11 +10,16 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "node src/server.js",
-    "build": "pkg . --out-path dist",
+    
     "build:win": "pkg . --targets node22-win-x64 --out-path dist",
     "build:linux": "pkg . --targets node22-linux-x64 --out-path dist",
     "build:mac": "pkg . --targets node22-macos-x64 --out-path dist",
-    "build:all": "pkg . --targets node22-win-x64,node22-linux-x64,node22-macos-x64 --out-path dist"
+    "build:all": "pkg . --targets node22-win-x64,node22-linux-x64,node22-macos-x64 --out-path dist",
+
+    "prebuild": "node build-scripts/prebuild.js",
+    "build:static": "node build-scripts/build-static.js",
+    "clean": "rm -rf dist dist-temp",
+    "build": "npm run prebuild && npm run build:static && npm run clean"
   },
   "pkg": {
     "scripts": [
