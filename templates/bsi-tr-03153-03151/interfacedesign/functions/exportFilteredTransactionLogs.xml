@@ -319,6 +319,26 @@ ENDE</text>
       <required>false</required>
     </parameter>
     <parameter>
+      <name>firstTransactionNumber</name>
+      <type>long</type>
+      <description>
+        <text xml:lang="en">Defines the transaction number (inclusive) regarding the start of the interval of relevant log messages (conditional, must be provided together with lastTransactionNumber).</text>
+        <text xml:lang="de">Definiert die Transaktionsnummer (inklusive) bezüglich des Beginns des Intervalls relevanter Log-Nachrichten (bedingt, muss zusammen mit lastTransactionNumber angegeben werden).</text>
+      </description>
+      <direction>INPUT</direction>
+      <required>false</required>
+    </parameter>
+    <parameter>
+      <name>lastTransactionNumber</name>
+      <type>long</type>
+      <description>
+        <text xml:lang="en">Defines the transaction number (inclusive) regarding the end of the interval of relevant log messages (conditional, must be provided together with firstTransactionNumber).</text>
+        <text xml:lang="de">Definiert die Transaktionsnummer (inklusive) bezüglich des Endes des Intervalls relevanter Log-Nachrichten (bedingt, muss zusammen mit firstTransactionNumber angegeben werden).</text>
+      </description>
+      <direction>INPUT</direction>
+      <required>false</required>
+    </parameter>
+    <parameter>
       <name>startDate</name>
       <type>ZonedDateTime</type>
       <description>
@@ -356,7 +376,151 @@ ENDE</text>
       <text xml:lang="de">Ein ExportDataResult, das einen InputStream mit einem TAR-Archiv enthält, das die gefilterten Transaktionsprotokollnachrichten und Zertifikate sowie den Dateinamen des TAR-Archivs enthält.</text>
     </description>
   </returnValue>
-  <note>This function has multiple overloaded versions with different parameter combinations.</note>
+  <overloads>
+    <overload id="1">
+      <signature>ExportDataResult exportFilteredTransactionLogs()</signature>
+      <description>
+        <text xml:lang="en">Exports all available log messages without any filter.</text>
+        <text xml:lang="de">Exportiert alle verfügbaren Log-Nachrichten ohne Filter.</text>
+      </description>
+      <parameters/>
+    </overload>
+    <overload id="2">
+      <signature>ExportDataResult exportFilteredTransactionLogs(int maximumNumberRecords)</signature>
+      <description>
+        <text xml:lang="en">Exports all logs, limited by maximumNumberRecords.</text>
+        <text xml:lang="de">Exportiert alle Logs, begrenzt durch maximumNumberRecords.</text>
+      </description>
+      <parameters>
+        <param>maximumNumberRecords</param>
+      </parameters>
+    </overload>
+    <overload id="3">
+      <signature>ExportDataResult exportFilteredTransactionLogs(long transactionNumber)</signature>
+      <description>
+        <text xml:lang="en">Exports all logs for a specific transaction.</text>
+        <text xml:lang="de">Exportiert alle Logs für eine bestimmte Transaktion.</text>
+      </description>
+      <parameters>
+        <param>transactionNumber</param>
+      </parameters>
+    </overload>
+    <overload id="4">
+      <signature>ExportDataResult exportFilteredTransactionLogs(long transactionNumber, int maximumNumberRecords)</signature>
+      <description>
+        <text xml:lang="en">Exports logs for a specific transaction, limited by maximumNumberRecords.</text>
+        <text xml:lang="de">Exportiert Logs für eine bestimmte Transaktion, begrenzt durch maximumNumberRecords.</text>
+      </description>
+      <parameters>
+        <param>transactionNumber</param>
+        <param>maximumNumberRecords</param>
+      </parameters>
+    </overload>
+    <overload id="5">
+      <signature>ExportDataResult exportFilteredTransactionLogs(long firstTransactionNumber, long lastTransactionNumber, int maximumNumberRecords)</signature>
+      <description>
+        <text xml:lang="en">Exports logs in the range [firstTransactionNumber, lastTransactionNumber] (inclusive).</text>
+        <text xml:lang="de">Exportiert Logs im Bereich [firstTransactionNumber, lastTransactionNumber] (inklusive).</text>
+      </description>
+      <parameters>
+        <param>firstTransactionNumber</param>
+        <param>lastTransactionNumber</param>
+        <param>maximumNumberRecords</param>
+      </parameters>
+      <note>
+        <text xml:lang="en">firstTransactionNumber and lastTransactionNumber must always be provided together.</text>
+        <text xml:lang="de">firstTransactionNumber und lastTransactionNumber müssen immer zusammen angegeben werden.</text>
+      </note>
+    </overload>
+    <overload id="6">
+      <signature>ExportDataResult exportFilteredTransactionLogs(String clientId, long firstTransactionNumber, long lastTransactionNumber, int maximumNumberRecords)</signature>
+      <description>
+        <text xml:lang="en">Exports logs for a specific client ID in the transaction number range.</text>
+        <text xml:lang="de">Exportiert Logs für eine bestimmte Client-ID im Transaktionsnummer-Bereich.</text>
+      </description>
+      <parameters>
+        <param>clientId</param>
+        <param>firstTransactionNumber</param>
+        <param>lastTransactionNumber</param>
+        <param>maximumNumberRecords</param>
+      </parameters>
+    </overload>
+    <overload id="7">
+      <signature>ExportDataResult exportFilteredTransactionLogs(ZonedDateTime startDate, ZonedDateTime endDate, int maximumNumberRecords)</signature>
+      <description>
+        <text xml:lang="en">Exports logs in the time range [startDate, endDate] (inclusive).</text>
+        <text xml:lang="de">Exportiert Logs im Zeitbereich [startDate, endDate] (inklusive).</text>
+      </description>
+      <parameters>
+        <param>startDate</param>
+        <param>endDate</param>
+        <param>maximumNumberRecords</param>
+      </parameters>
+      <note>
+        <text xml:lang="en">If both startDate and endDate are set, endDate must be after startDate. At least one of the two parameters must be set.</text>
+        <text xml:lang="de">Wenn startDate und endDate beide gesetzt sind, muss endDate nach startDate liegen. Mindestens einer der beiden Parameter muss gesetzt sein.</text>
+      </note>
+    </overload>
+    <overload id="8">
+      <signature>ExportDataResult exportFilteredTransactionLogs(String clientId, ZonedDateTime startDate, ZonedDateTime endDate, int maximumNumberRecords)</signature>
+      <description>
+        <text xml:lang="en">Exports logs for a specific client ID in the time range.</text>
+        <text xml:lang="de">Exportiert Logs für eine bestimmte Client-ID im Zeitbereich.</text>
+      </description>
+      <parameters>
+        <param>clientId</param>
+        <param>startDate</param>
+        <param>endDate</param>
+        <param>maximumNumberRecords</param>
+      </parameters>
+    </overload>
+    <overload id="9">
+      <signature>ExportDataResult exportFilteredTransactionLogs(String clientId)</signature>
+      <description>
+        <text xml:lang="en">Exports all logs for a specific client ID.</text>
+        <text xml:lang="de">Exportiert alle Logs für eine bestimmte Client-ID.</text>
+      </description>
+      <parameters>
+        <param>clientId</param>
+      </parameters>
+    </overload>
+    <overload id="10">
+      <signature>ExportDataResult exportFilteredTransactionLogs(String clientId, int maximumNumberRecords)</signature>
+      <description>
+        <text xml:lang="en">Exports logs for a specific client ID, limited by maximumNumberRecords.</text>
+        <text xml:lang="de">Exportiert Logs für eine bestimmte Client-ID, begrenzt durch maximumNumberRecords.</text>
+      </description>
+      <parameters>
+        <param>clientId</param>
+        <param>maximumNumberRecords</param>
+      </parameters>
+    </overload>
+    <overload id="11">
+      <signature>ExportDataResult exportFilteredTransactionLogs(String clientId, long transactionNumber)</signature>
+      <description>
+        <text xml:lang="en">Exports logs for a specific client ID and transaction number.</text>
+        <text xml:lang="de">Exportiert Logs für eine bestimmte Client-ID und Transaktionsnummer.</text>
+      </description>
+      <parameters>
+        <param>clientId</param>
+        <param>transactionNumber</param>
+      </parameters>
+    </overload>
+  </overloads>
+  <mutualExclusions>
+    <exclusion>
+      <text xml:lang="en">transactionNumber AND (startDate OR endDate) cannot be used together</text>
+      <text xml:lang="de">transactionNumber UND (startDate ODER endDate) können nicht zusammen verwendet werden</text>
+    </exclusion>
+    <exclusion>
+      <text xml:lang="en">(firstTransactionNumber OR lastTransactionNumber) AND (startDate OR endDate) cannot be used together</text>
+      <text xml:lang="de">(firstTransactionNumber ODER lastTransactionNumber) UND (startDate ODER endDate) können nicht zusammen verwendet werden</text>
+    </exclusion>
+    <exclusion>
+      <text xml:lang="en">firstTransactionNumber must be provided together with lastTransactionNumber (and vice versa)</text>
+      <text xml:lang="de">firstTransactionNumber muss zusammen mit lastTransactionNumber angegeben werden (und umgekehrt)</text>
+    </exclusion>
+  </mutualExclusions>
   <exceptions>
     <exception>ErrorClientIdNotFound</exception>
     <exception>ErrorDeviceNotInitialized</exception>

@@ -693,4 +693,43 @@ BEENDE_ERFOLGREICH</text>
       </field>
     </structure>
   </transactionLog>
+  <overloads>
+    <overload id="1">
+      <signature>UpdateTransactionResult updateTransaction(String clientId, long transactionNumber, byte[] processData, String processType, byte[] additionalExternalData, boolean forceSignature)</signature>
+      <description>
+        <text xml:lang="en">Updates a transaction with explicit control over signature creation through the forceSignature parameter.</text>
+        <text xml:lang="de">Aktualisiert eine Transaktion mit expliziter Kontrolle über die Signaturerstellung durch den forceSignature-Parameter.</text>
+      </description>
+      <parameters>
+        <param>clientId</param>
+        <param>transactionNumber</param>
+        <param>processData</param>
+        <param>processType</param>
+        <param>additionalExternalData</param>
+        <param>forceSignature</param>
+      </parameters>
+      <note>
+        <text xml:lang="en">forceSignature=true forces a signed update. If false or not set, the device decides whether to create a signed or unsigned update. Only effective if the device supports both signed and unsigned updates.</text>
+        <text xml:lang="de">forceSignature=true erzwingt ein signiertes Update. Wenn false oder nicht gesetzt, entscheidet das Gerät, ob ein signiertes oder unsigniertes Update erstellt wird. Nur wirksam, wenn das Gerät sowohl signierte als auch unsignierte Updates unterstützt.</text>
+      </note>
+    </overload>
+    <overload id="2">
+      <signature>UpdateTransactionResult updateTransaction(String clientId, long transactionNumber, byte[] processData, String processType, byte[] additionalExternalData)</signature>
+      <description>
+        <text xml:lang="en">Standard update without explicit control over signature creation. The device decides whether to create a signed or unsigned update based on its configuration and capabilities.</text>
+        <text xml:lang="de">Standard-Update ohne explizite Kontrolle über die Signaturerstellung. Das Gerät entscheidet basierend auf seiner Konfiguration und seinen Fähigkeiten, ob ein signiertes oder unsigniertes Update erstellt wird.</text>
+      </description>
+      <parameters>
+        <param>clientId</param>
+        <param>transactionNumber</param>
+        <param>processData</param>
+        <param>processType</param>
+        <param>additionalExternalData</param>
+      </parameters>
+    </overload>
+  </overloads>
+  <note>
+    <text xml:lang="en">Use getSupportedTransactionUpdateVariants() to check if the device supports unsigned updates before using the forceSignature parameter.</text>
+    <text xml:lang="de">Verwenden Sie getSupportedTransactionUpdateVariants(), um zu prüfen, ob das Gerät unsignierte Updates unterstützt, bevor Sie den forceSignature-Parameter verwenden.</text>
+  </note>
 </function>

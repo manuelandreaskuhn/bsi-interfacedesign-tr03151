@@ -340,6 +340,26 @@ async function parseFunctionDetail(filePath) {
     };
   }
 
+  // Extract overloads (function overloading)
+  let overloads = [];
+  if (func.overloads && func.overloads.overload) {
+    const overloadList = Array.isArray(func.overloads.overload) ? func.overloads.overload : [func.overloads.overload];
+    overloads = overloadList.map(overload => ({
+      id: overload.id || '',
+      signature: overload.signature || '',
+      description: extractMultiLangText(overload.description),
+      parameters: overload.parameters ? (overload.parameters.param ? (Array.isArray(overload.parameters.param) ? overload.parameters.param : [overload.parameters.param]) : []) : [],
+      note: overload.note ? extractMultiLangText(overload.note) : null
+    }));
+  }
+
+  // Extract mutual exclusions
+  let mutualExclusions = [];
+  if (func.mutualExclusions && func.mutualExclusions.exclusion) {
+    const exclusionList = Array.isArray(func.mutualExclusions.exclusion) ? func.mutualExclusions.exclusion : [func.mutualExclusions.exclusion];
+    mutualExclusions = exclusionList.map(ex => extractMultiLangText(ex));
+  }
+
   return {
     id: func.id || func.n || path.basename(filePath, '.xml'),
     name: func.n || func.name || '',
@@ -358,6 +378,9 @@ async function parseFunctionDetail(filePath) {
     precondition: func.precondition || '',
     postcondition: func.postcondition || '',
     notes,
+    overloads,
+    overloadCount: overloads.length,
+    mutualExclusions,
     systemLog,
     transactionLog,
     filePath

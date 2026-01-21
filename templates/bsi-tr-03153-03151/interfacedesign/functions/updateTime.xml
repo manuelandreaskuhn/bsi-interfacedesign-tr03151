@@ -527,4 +527,36 @@ UpdateTimeEventData ::= SEQUENCE {
       </field>
     </structure>
   </systemLog>
+  <overloads>
+    <overload id="1">
+      <signature>void updateTime(ZonedDateTime newDateTime)</signature>
+      <description>
+        <text xml:lang="en">Sets the time of the Secure Element to the specified value (manual synchronization).</text>
+        <text xml:lang="de">Setzt die Zeit des Secure Elements auf den angegebenen Wert (manuelle Synchronisation).</text>
+      </description>
+      <parameters>
+        <param>newDateTime</param>
+      </parameters>
+      <note>
+        <text xml:lang="en">Only available if getTimeSyncVariant() returns manualSync or automaticAndManualSync.</text>
+        <text xml:lang="de">Nur verfügbar, wenn getTimeSyncVariant() manualSync oder automaticAndManualSync zurückgibt.</text>
+      </note>
+    </overload>
+    <overload id="2">
+      <signature>void updateTime()</signature>
+      <description>
+        <text xml:lang="en">Synchronizes the time of the Secure Element with an internal or external time source (automatic synchronization).</text>
+        <text xml:lang="de">Synchronisiert die Zeit des Secure Elements mit einer internen oder externen Zeitquelle (automatische Synchronisation).</text>
+      </description>
+      <parameters/>
+      <note>
+        <text xml:lang="en">Only available if getTimeSyncVariant() returns automaticSync or automaticAndManualSync. The device uses its own method for time synchronization.</text>
+        <text xml:lang="de">Nur verfügbar, wenn getTimeSyncVariant() automaticSync oder automaticAndManualSync zurückgibt. Das Gerät verwendet seine eigene Methode zur Zeitsynchronisation.</text>
+      </note>
+    </overload>
+  </overloads>
+  <note>
+    <text xml:lang="en">Call getTimeSyncVariant() to determine which overload can be used. The time synchronization variant determines the available update methods.</text>
+    <text xml:lang="de">Rufen Sie getTimeSyncVariant() auf, um zu bestimmen, welche Überladung verwendet werden kann. Die Zeitsynchronisationsvariante bestimmt die verfügbaren Aktualisierungsmethoden.</text>
+  </note>
 </function>

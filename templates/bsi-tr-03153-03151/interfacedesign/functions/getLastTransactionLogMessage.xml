@@ -221,6 +221,34 @@ RETURN ohne Exception</text>
       <text xml:lang="de">ein ExportDataResult, das einen InputStream mit dem Inhalt der letzten Transaktionslog-Nachricht und den Dateinamen der Log-Nachricht enthält.</text>
     </description>
   </returnValue>
+  <overloads>
+    <overload id="1">
+      <signature>GetLastLogMessageResult getLastTransactionLogMessage()</signature>
+      <description>
+        <text xml:lang="en">Returns the last transaction log message across all transactions.</text>
+        <text xml:lang="de">Gibt die letzte Transaction-Log-Nachricht über alle Transaktionen zurück.</text>
+      </description>
+      <parameters/>
+      <note>
+        <text xml:lang="en">Searches for the most recent transaction log message without filtering by transaction number.</text>
+        <text xml:lang="de">Sucht nach der neuesten Transaktionslog-Nachricht ohne Filterung nach Transaktionsnummer.</text>
+      </note>
+    </overload>
+    <overload id="2">
+      <signature>GetLastLogMessageResult getLastTransactionLogMessage(long transactionNumber)</signature>
+      <description>
+        <text xml:lang="en">Returns the last transaction log message for a specific transaction.</text>
+        <text xml:lang="de">Gibt die letzte Transaction-Log-Nachricht für eine bestimmte Transaktion zurück.</text>
+      </description>
+      <parameters>
+        <param>transactionNumber</param>
+      </parameters>
+      <note>
+        <text xml:lang="en">Filters the transaction log messages by the specified transaction number and returns the most recent one for that transaction.</text>
+        <text xml:lang="de">Filtert die Transaktionslog-Nachrichten nach der angegebenen Transaktionsnummer und gibt die neueste für diese Transaktion zurück.</text>
+      </note>
+    </overload>
+  </overloads>
   <exceptions>
     <exception>ErrorDeviceNotInitialized</exception>
     <exception>ErrorFunctionFailed</exception>
