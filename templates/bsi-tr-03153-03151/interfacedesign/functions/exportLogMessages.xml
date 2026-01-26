@@ -6,6 +6,11 @@
     <text xml:lang="en">This function is used to export &lt;ul&gt; &lt;li&gt;&lt;u&gt;all&lt;/u&gt; signed log messages,&lt;/li&gt; &lt;li&gt;certificates that are necessary for the verification of the log messages and&lt;/li&gt; &lt;li&gt;the device information.&lt;/li&gt; &lt;/ul&gt;</text>
     <text xml:lang="de">Diese Funktion wird verwendet, um alle signierten Log-Nachrichten, erforderliche Zertifikate zur Überprüfung und Geräteinformationen zu exportieren.</text>
   </description>
+  <authorizedRoles>
+    <role>unauthenticated</role>
+    <role>logger</role>
+    <role>admin</role>
+  </authorizedRoles>
   <detailedSteps>
     <step>
       <number>1</number>

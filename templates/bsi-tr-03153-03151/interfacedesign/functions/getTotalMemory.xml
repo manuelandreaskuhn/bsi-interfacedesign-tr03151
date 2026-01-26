@@ -6,6 +6,12 @@
     <text xml:lang="en">The function getTotalMemory can be used to get the total capacity of the storage medium.</text>
     <text xml:lang="de">Die Funktion getTotalMemory kann verwendet werden, um die Gesamtkapazität des Speichermediums zu ermitteln.</text>
   </description>
+  <authorizedRoles>
+    <role>unauthenticated</role>
+    <role>logger</role>
+    <role>admin</role>
+    <role>timeadmin</role>
+  </authorizedRoles>
   <detailedSteps>
     <step>
       <number>1</number>

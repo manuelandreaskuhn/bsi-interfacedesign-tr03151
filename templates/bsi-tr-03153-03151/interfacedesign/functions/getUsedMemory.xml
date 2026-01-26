@@ -6,6 +6,12 @@
     <text xml:lang="en">The function getUsedMemory can be used to get the used storage space.</text>
     <text xml:lang="de">Die Funktion getUsedMemory kann verwendet werden, um den genutzten Speicherplatz zu ermitteln.</text>
   </description>
+  <authorizedRoles>
+    <role>unauthenticated</role>
+    <role>logger</role>
+    <role>admin</role>
+    <role>timeadmin</role>
+  </authorizedRoles>
   <detailedSteps>
     <step>
       <number>1</number>

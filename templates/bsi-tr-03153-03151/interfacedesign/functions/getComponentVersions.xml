@@ -6,6 +6,12 @@
     <text xml:lang="en">The function getComponentVersions can be used to determine all device information including manufacturer and model number mapped to specific components.</text>
     <text xml:lang="de">Die Funktion getComponentVersions kann verwendet werden, um alle Geräteinformationen einschließlich Hersteller und Modellnummer, die bestimmten Komponenten zugeordnet sind, zu ermitteln.</text>
   </description>
+  <authorizedRoles>
+    <role>unauthenticated</role>
+    <role>logger</role>
+    <role>admin</role>
+    <role>timeadmin</role>
+  </authorizedRoles>
   <detailedSteps>
     <step>
       <number>1</number>

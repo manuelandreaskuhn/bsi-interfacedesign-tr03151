@@ -6,6 +6,11 @@
     <text xml:lang="en">This function returns the last transaction log message that has been produced and processed by the Secure Element filtered by a transaction number.</text>
     <text xml:lang="de">Diese Funktion gibt die letzte vom Secure Element erzeugte und verarbeitete Transaktionslog-Nachricht gefiltert nach einer Transaktionsnummer zurück.</text>
   </description>
+  <authorizedRoles>
+    <role>unauthenticated</role>
+    <role>logger</role>
+    <role>admin</role>
+  </authorizedRoles>
   <detailedSteps>
     <step>
       <number>1</number>

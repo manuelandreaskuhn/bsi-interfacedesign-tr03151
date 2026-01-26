@@ -6,6 +6,12 @@
     <text xml:lang="en">The function getFreeMemory can be used to get the amount of the currently free memory.</text>
     <text xml:lang="de">Die Funktion getFreeMemory kann verwendet werden, um die Menge des aktuell freien Speichers zu ermitteln.</text>
   </description>
+  <authorizedRoles>
+    <role>unauthenticated</role>
+    <role>logger</role>
+    <role>admin</role>
+    <role>timeadmin</role>
+  </authorizedRoles>
   <detailedSteps>
     <step>
       <number>1</number>

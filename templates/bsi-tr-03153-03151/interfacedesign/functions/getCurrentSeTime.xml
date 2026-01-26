@@ -6,6 +6,12 @@
     <text xml:lang="en">The function returns the current time set in the Secure Element.</text>
     <text xml:lang="de">Die Funktion gibt die aktuelle Zeit zurück, die im Secure Element eingestellt ist.</text>
   </description>
+  <authorizedRoles>
+    <role>unauthenticated</role>
+    <role>logger</role>
+    <role>admin</role>
+    <role>timeadmin</role>
+  </authorizedRoles>
   <detailedSteps>
     <step>
       <number>1</number>

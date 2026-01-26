@@ -6,6 +6,11 @@
     <text xml:lang="en">The function getCurrentLoggingSignatureCounters can be used to obtain the current signature counters for each private key utilized in the secure element for signing log messages.</text>
     <text xml:lang="de">Die Funktion getCurrentLoggingSignatureCounters kann verwendet werden, um die aktuellen Signaturzähler für jeden privaten Schlüssel zu erhalten, der im Secure Element zum Signieren von Log-Nachrichten verwendet wird.</text>
   </description>
+  <authorizedRoles>
+    <role>unauthenticated</role>
+    <role>logger</role>
+    <role>admin</role>
+  </authorizedRoles>
   <detailedSteps>
     <step>
       <number>1</number>

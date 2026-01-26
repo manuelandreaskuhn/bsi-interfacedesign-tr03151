@@ -6,6 +6,9 @@
     <text xml:lang="en">The function disableSecureElement disables the Secure Element in a way that none of its functionality can be used anymore.</text>
     <text xml:lang="de">Die Funktion disableSecureElement deaktiviert das Secure Element so, dass keine seiner Funktionen mehr verwendet werden können.</text>
   </description>
+  <authorizedRoles>
+    <role>admin</role>
+  </authorizedRoles>
   <detailedSteps>
     <step>
       <number>1</number>

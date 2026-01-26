@@ -6,6 +6,11 @@
     <text xml:lang="en">The function getSupportedTransactionUpdateVariants can be used to obtain information how updates of transactions are performed.</text>
     <text xml:lang="de">Die Funktion getSupportedTransactionUpdateVariants kann verwendet werden, um Informationen darüber zu erhalten, wie Aktualisierungen von Transaktionen durchgeführt werden.</text>
   </description>
+  <authorizedRoles>
+    <role>unauthenticated</role>
+    <role>logger</role>
+    <role>admin</role>
+  </authorizedRoles>
   <detailedSteps>
     <step>
       <number>1</number>

@@ -6,6 +6,9 @@
     <text xml:lang="en">The function setDescription can be used to set the short description of the device that is also provided in the device information file.</text>
     <text xml:lang="de">Die Funktion setDescription kann verwendet werden, um die kurze Beschreibung des Geräts festzulegen, die auch in der Geräteinformationsdatei enthalten ist.</text>
   </description>
+  <authorizedRoles>
+    <role>admin</role>
+  </authorizedRoles>
   <detailedSteps>
     <step>
       <number>1</number>

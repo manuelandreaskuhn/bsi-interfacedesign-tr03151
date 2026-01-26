@@ -6,6 +6,10 @@
     <text xml:lang="en">The function updateTime updates the current date/time that is maintained by the Secure Element by using the functionality for time synchronization of the Secure Element.</text>
     <text xml:lang="de">Die Funktion updateTime aktualisiert das aktuelle Datum/Uhrzeit, das vom Secure Element verwaltet wird, unter Verwendung der Zeitsynchronisierungsfunktionalität des Secure Element.</text>
   </description>
+  <authorizedRoles>
+    <role>admin</role>
+    <role>timeadmin</role>
+  </authorizedRoles>
   <detailedSteps>
     <step>
       <number>1</number>

@@ -6,6 +6,11 @@
     <text xml:lang="en">The function getMaxNumberOfClients can be used to get the maximum number of clients that can use the functionality for logging transactions of the device simultaneously.</text>
     <text xml:lang="de">Die Funktion getMaxNumberOfClients kann verwendet werden, um die maximale Anzahl von Clients zu ermitteln, die gleichzeitig die Funktionalität zum Protokollieren von Transaktionen des Geräts nutzen können.</text>
   </description>
+  <authorizedRoles>
+    <role>unauthenticated</role>
+    <role>logger</role>
+    <role>admin</role>
+  </authorizedRoles>
   <detailedSteps>
     <step>
       <number>1</number>

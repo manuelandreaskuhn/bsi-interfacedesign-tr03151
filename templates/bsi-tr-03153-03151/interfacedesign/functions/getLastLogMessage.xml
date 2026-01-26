@@ -6,6 +6,11 @@
     <text xml:lang="en">Reads a log message that bases on the last log message parts that have been produced and processed by the Secure Element</text>
     <text xml:lang="de">Liest eine Log-Nachricht, die auf den letzten vom Secure Element erzeugten und verarbeiteten Log-Nachrichtenteilen basiert</text>
   </description>
+  <authorizedRoles>
+    <role>unauthenticated</role>
+    <role>logger</role>
+    <role>admin</role>
+  </authorizedRoles>
   <detailedSteps>
     <step>
       <number>1</number>

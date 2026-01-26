@@ -6,6 +6,11 @@
     <text xml:lang="en">The function getOpenTransactions can be used to obtain the transaction numbers of open transactions that are currently managed by the device.</text>
     <text xml:lang="de">Die Funktion getOpenTransactions kann verwendet werden, um die Transaktionsnummern offener Transaktionen zu erhalten, die derzeit vom Gerät verwaltet werden.</text>
   </description>
+  <authorizedRoles>
+    <role>unauthenticated</role>
+    <role>logger</role>
+    <role>admin</role>
+  </authorizedRoles>
   <detailedSteps>
     <step>
       <number>1</number>

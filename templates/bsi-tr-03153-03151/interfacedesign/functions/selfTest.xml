@@ -6,6 +6,11 @@
     <text xml:lang="en">The function selfTest can be used to trigger a self-test of the device.</text>
     <text xml:lang="de">Die Funktion selfTest kann verwendet werden, um einen Selbsttest des Geräts auszulösen.</text>
   </description>
+  <authorizedRoles>
+    <role>unauthenticated</role>
+    <role>logger</role>
+    <role>admin</role>
+  </authorizedRoles>
   <detailedSteps>
     <step>
       <number>1</number>

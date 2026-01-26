@@ -6,6 +6,11 @@
     <text xml:lang="en">The function getMaxNumberOfTransactions can be used to obtain the maximum number of simultaneously open transactions that can be managed by the device.</text>
     <text xml:lang="de">Die Funktion getMaxNumberOfTransactions kann verwendet werden, um die maximale Anzahl gleichzeitig offener Transaktionen zu ermitteln, die vom Gerät verwaltet werden können.</text>
   </description>
+  <authorizedRoles>
+    <role>unauthenticated</role>
+    <role>logger</role>
+    <role>admin</role>
+  </authorizedRoles>
   <detailedSteps>
     <step>
       <number>1</number>

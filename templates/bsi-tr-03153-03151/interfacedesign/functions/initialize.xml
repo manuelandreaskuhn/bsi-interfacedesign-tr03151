@@ -6,6 +6,9 @@
     <text xml:lang="en">The function initialize must be used to start the initialization of the device.</text>
     <text xml:lang="de">Die Funktion initialize muss verwendet werden, um die Initialisierung des Geräts zu starten.</text>
   </description>
+  <authorizedRoles>
+    <role>admin</role>
+  </authorizedRoles>
   <detailedSteps>
     <step>
       <number>1</number>

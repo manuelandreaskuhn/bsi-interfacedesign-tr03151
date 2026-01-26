@@ -6,6 +6,9 @@
     <text xml:lang="en">The function unlockTransactionLogging can be used to enable the logging of transactions that has been disabled by invocation of the function lockTransactionLogging.</text>
     <text xml:lang="de">Die Funktion unlockTransactionLogging kann verwendet werden, um die Protokollierung von Transaktionen zu aktivieren, die durch den Aufruf der Funktion lockTransactionLogging deaktiviert wurde.</text>
   </description>
+  <authorizedRoles>
+    <role>admin</role>
+  </authorizedRoles>
   <detailedSteps>
     <step>
       <number>1</number>

@@ -6,6 +6,11 @@
     <text xml:lang="en">The function getRegisteredClients can be used to get the list of currently registered transaction logging clients.</text>
     <text xml:lang="de">Die Funktion getRegisteredClients kann verwendet werden, um die Liste der aktuell registrierten Transaktionsprotokollierungs-Clients zu erhalten.</text>
   </description>
+  <authorizedRoles>
+    <role>unauthenticated</role>
+    <role>logger</role>
+    <role>admin</role>
+  </authorizedRoles>
   <detailedSteps>
     <step>
       <number>1</number>

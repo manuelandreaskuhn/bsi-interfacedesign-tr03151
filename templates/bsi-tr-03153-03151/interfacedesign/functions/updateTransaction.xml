@@ -6,6 +6,9 @@
     <text xml:lang="en">This function updates an existing transaction. In case the device supports unsigned updates, further control of the creation of signed and unsigned updates is possible.</text>
     <text xml:lang="de">Diese Funktion aktualisiert eine bestehende Transaktion. Falls das Gerät unsignierte Updates unterstützt, ist weitere Kontrolle über die Erstellung signierter und unsignierter Updates möglich.</text>
   </description>
+  <authorizedRoles>
+    <role>logger</role>
+  </authorizedRoles>
   <detailedSteps>
     <step>
       <number>1</number>

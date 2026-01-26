@@ -114,6 +114,17 @@
   </xs:complexType>
 
   <!-- ============================= -->
+  <!-- Roles Structure               -->
+  <!-- ============================= -->
+
+  <!-- Roles: Authorized roles for function execution -->
+  <xs:complexType name="Roles">
+    <xs:sequence>
+      <xs:element name="role" type="xs:string" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- ============================= -->
   <!-- Requirement & Note Types      -->
   <!-- ============================= -->
 
@@ -151,6 +162,7 @@
       <xs:element name="name" type="tr:FunctionName" minOccurs="1"/>
       <xs:element name="category" type="tr:Category" minOccurs="1"/>
       <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:element name="authorizedRoles" type="tr:Roles" minOccurs="0"/>
       <xs:element name="detailedSteps" type="tr:DetailedSteps" minOccurs="0"/>
       <xs:element name="parameters" type="tr:Parameters" minOccurs="0"/>
       <xs:element name="returnValue" type="tr:ReturnValue" minOccurs="0"/>

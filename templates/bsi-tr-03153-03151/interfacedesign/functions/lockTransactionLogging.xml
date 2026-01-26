@@ -6,6 +6,9 @@
     <text xml:lang="en">The function lockTransactionLogging can be used to prevent logging of transactions until the function unlockTransactionLogging is invoked.</text>
     <text xml:lang="de">Die Funktion lockTransactionLogging kann verwendet werden, um die Protokollierung von Transaktionen zu verhindern, bis die Funktion unlockTransactionLogging aufgerufen wird.</text>
   </description>
+  <authorizedRoles>
+    <role>admin</role>
+  </authorizedRoles>
   <detailedSteps>
     <step>
       <number>1</number>

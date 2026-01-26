@@ -166,6 +166,14 @@ async function parseFunction(filePath) {
     stepCount = steps.length;
   }
 
+  // Extract authorized roles
+  let authorizedRoles = [];
+  if (func.authorizedRoles && func.authorizedRoles.role) {
+    authorizedRoles = Array.isArray(func.authorizedRoles.role)
+      ? func.authorizedRoles.role
+      : [func.authorizedRoles.role];
+  }
+
   return {
     id: func.id || func.n || path.basename(filePath, '.xml'),
     name: func.n || func.name || '',
@@ -181,6 +189,7 @@ async function parseFunction(filePath) {
     exceptionCount: exceptions.length,
     stepCount,
     hasSystemLog: !!func.systemLog,
+    authorizedRoles,
     filePath
   };
 }
@@ -360,6 +369,14 @@ async function parseFunctionDetail(filePath) {
     mutualExclusions = exclusionList.map(ex => extractMultiLangText(ex));
   }
 
+  // Extract authorized roles
+  let authorizedRoles = [];
+  if (func.authorizedRoles && func.authorizedRoles.role) {
+    authorizedRoles = Array.isArray(func.authorizedRoles.role)
+      ? func.authorizedRoles.role
+      : [func.authorizedRoles.role];
+  }
+
   return {
     id: func.id || func.n || path.basename(filePath, '.xml'),
     name: func.n || func.name || '',
@@ -383,6 +400,7 @@ async function parseFunctionDetail(filePath) {
     mutualExclusions,
     systemLog,
     transactionLog,
+    authorizedRoles,
     filePath
   };
 }

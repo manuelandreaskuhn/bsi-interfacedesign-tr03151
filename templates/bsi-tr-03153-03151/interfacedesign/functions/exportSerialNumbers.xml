@@ -6,6 +6,11 @@
     <text xml:lang="en">Exports the serial number(s) of the SE API. A serial number is a hash value of a public key that belongs to a key pair whose private key was used to sign log messages.</text>
     <text xml:lang="de">Exportiert die Seriennummer(n) der SE API. Eine Seriennummer ist ein Hash-Wert eines öffentlichen Schlüssels, der zu einem Schlüsselpaar gehört, dessen privater Schlüssel zum Signieren von Log-Nachrichten verwendet wurde.</text>
   </description>
+  <authorizedRoles>
+    <role>unauthenticated</role>
+    <role>logger</role>
+    <role>admin</role>
+  </authorizedRoles>
   <detailedSteps>
     <step>
       <number>1</number>

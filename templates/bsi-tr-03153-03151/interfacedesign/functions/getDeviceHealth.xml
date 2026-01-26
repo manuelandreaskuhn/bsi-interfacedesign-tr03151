@@ -6,6 +6,12 @@
     <text xml:lang="en">The function getDeviceHealth can be used to determine the health of the device or the components that form the device.</text>
     <text xml:lang="de">Die Funktion getDeviceHealth kann verwendet werden, um die Gesundheit des Geräts oder der Komponenten, die das Gerät bilden, zu bestimmen.</text>
   </description>
+  <authorizedRoles>
+    <role>unauthenticated</role>
+    <role>logger</role>
+    <role>admin</role>
+    <role>timeadmin</role>
+  </authorizedRoles>
   <detailedSteps>
     <step>
       <number>1</number>

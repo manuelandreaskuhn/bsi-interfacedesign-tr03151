@@ -6,6 +6,11 @@
     <text xml:lang="en">The function getTransactionState can be used to obtain the current state of a transaction.</text>
     <text xml:lang="de">Die Funktion getTransactionState kann verwendet werden, um den aktuellen Status einer Transaktion zu ermitteln.</text>
   </description>
+  <authorizedRoles>
+    <role>unauthenticated</role>
+    <role>logger</role>
+    <role>admin</role>
+  </authorizedRoles>
   <detailedSteps>
     <step>
       <number>1</number>

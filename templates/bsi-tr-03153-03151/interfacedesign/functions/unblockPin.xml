@@ -6,6 +6,12 @@
     <text xml:lang="en">Enables the unblocking for the entry of a PIN and the definition of a new PIN for the authentication of authorized users or applications.</text>
     <text xml:lang="de">Ermöglicht die Entsperrung für die Eingabe einer PIN und die Definition einer neuen PIN zur Authentifizierung autorisierter Benutzer oder Anwendungen.</text>
   </description>
+  <authorizedRoles>
+    <role>unauthenticated</role>
+    <role>logger</role>
+    <role>admin</role>
+    <role>timeadmin</role>
+  </authorizedRoles>
   <detailedSteps>
     <step>
       <number>1</number>

@@ -6,6 +6,9 @@
     <text xml:lang="en">This function finalizes an existing transaction.</text>
     <text xml:lang="de">Diese Funktion beendet eine bestehende Transaktion.</text>
   </description>
+  <authorizedRoles>
+    <role>logger</role>
+  </authorizedRoles>
   <detailedSteps>
     <step>
       <number>1</number>

@@ -6,6 +6,11 @@
     <text xml:lang="en">The function getCurrentNumberOfClients can be used to get the number of distinct clients that started or updated transactions that have not been finished yet ("are currently involved with open transactions").</text>
     <text xml:lang="de">Die Funktion getCurrentNumberOfClients kann verwendet werden, um die Anzahl der unterschiedlichen Clients zu ermitteln, die Transaktionen gestartet oder aktualisiert haben, die noch nicht beendet sind ("sind derzeit an offenen Transaktionen beteiligt").</text>
   </description>
+  <authorizedRoles>
+    <role>unauthenticated</role>
+    <role>logger</role>
+    <role>admin</role>
+  </authorizedRoles>
   <detailedSteps>
     <step>
       <number>1</number>

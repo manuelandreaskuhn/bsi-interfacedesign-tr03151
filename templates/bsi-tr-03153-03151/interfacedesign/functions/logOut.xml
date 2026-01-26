@@ -6,6 +6,11 @@
     <text xml:lang="en">Enables the log out of an authenticated user or application from the SE API.</text>
     <text xml:lang="de">Ermöglicht die Abmeldung eines authentifizierten Benutzers oder einer Anwendung von der SE API.</text>
   </description>
+  <authorizedRoles>
+    <role>logger</role>
+    <role>admin</role>
+    <role>timeadmin</role>
+  </authorizedRoles>
   <detailedSteps>
     <step>
       <number>1</number>

@@ -6,6 +6,11 @@
     <text xml:lang="en">This function can be used to export the &lt;ul&gt; &lt;li&gt;log messages containing the certified data and protocol data,&lt;/li&gt; &lt;li&gt;certificates that are necessary for the verification of the log messages and&lt;/li&gt; &lt;li&gt;device information&lt;/li&gt; &lt;/ul&gt; possibly limited by maximumNumberRecords.</text>
     <text xml:lang="de">Diese Funktion kann verwendet werden, um Log-Nachrichten mit zertifizierten Daten und Protokolldaten, erforderliche Zertifikate und Geräteinformationen zu exportieren, möglicherweise begrenzt durch maximumNumberRecords.</text>
   </description>
+  <authorizedRoles>
+    <role>unauthenticated</role>
+    <role>logger</role>
+    <role>admin</role>
+  </authorizedRoles>
   <detailedSteps>
     <step>
       <number>1</number>

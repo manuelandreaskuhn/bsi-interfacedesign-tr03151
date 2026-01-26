@@ -6,6 +6,9 @@
     <text xml:lang="en">The function deleteLogMessages deletes all log message files that are stored in the storage.</text>
     <text xml:lang="de">Die Funktion deleteLogMessages löscht alle Log-Nachrichtendateien, die im Speicher gespeichert sind.</text>
   </description>
+  <authorizedRoles>
+    <role>admin</role>
+  </authorizedRoles>
   <detailedSteps>
     <step>
       <number>1</number>

@@ -6,6 +6,12 @@
     <text xml:lang="en">Enables an authorized user or application to authenticate to the SE API for the usage of restricted SE API functions.</text>
     <text xml:lang="de">Ermöglicht einem autorisierten Benutzer oder einer Anwendung, sich gegenüber der SE API zu authentifizieren, um auf eingeschränkte SE API-Funktionen zuzugreifen.</text>
   </description>
+  <authorizedRoles>
+    <role>unauthenticated</role>
+    <role>logger</role>
+    <role>admin</role>
+    <role>timeadmin</role>
+  </authorizedRoles>
   <detailedSteps>
     <step>
       <number>1</number>

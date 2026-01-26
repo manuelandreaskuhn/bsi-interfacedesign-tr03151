@@ -6,6 +6,12 @@
     <text xml:lang="en">The function getTimeSyncVariant can be used to obtain information how updates of the current date/time are performed.</text>
     <text xml:lang="de">Die Funktion getTimeSyncVariant kann verwendet werden, um Informationen darüber zu erhalten, wie Aktualisierungen des aktuellen Datums/der Uhrzeit durchgeführt werden.</text>
   </description>
+  <authorizedRoles>
+    <role>unauthenticated</role>
+    <role>logger</role>
+    <role>admin</role>
+    <role>timeadmin</role>
+  </authorizedRoles>
   <detailedSteps>
     <step>
       <number>1</number>

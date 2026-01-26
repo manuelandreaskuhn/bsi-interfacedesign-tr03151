@@ -6,6 +6,9 @@
     <text xml:lang="en">The function getDescription can be used to obtain the short description of the device that is set using the function setDescription and also provided in the in the device information file.</text>
     <text xml:lang="de">Die Funktion getDescription kann verwendet werden, um die Kurzbeschreibung des Geräts zu erhalten, die mit der Funktion setDescription eingestellt und auch in der Geräteinformationsdatei bereitgestellt wird.</text>
   </description>
+  <authorizedRoles>
+    <role>admin</role>
+  </authorizedRoles>
   <detailedSteps>
     <step>
       <number>1</number>

@@ -6,6 +6,9 @@
     <text xml:lang="en">This function provides the functionality to start a new transaction.</text>
     <text xml:lang="de">Diese Funktion stellt die Funktionalität bereit, um eine neue Transaktion zu starten.</text>
   </description>
+  <authorizedRoles>
+    <role>logger</role>
+  </authorizedRoles>
   <detailedSteps>
     <step>
       <number>1</number>

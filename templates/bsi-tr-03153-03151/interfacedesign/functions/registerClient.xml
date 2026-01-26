@@ -6,6 +6,10 @@
     <text xml:lang="en">The function registerClient can be used to register the ID of a client application. If this function is implemented, the input functions startTransaction, updateTransaction and finishTransaction raise an exception if they are invoked with an unregistered ID as input for the parameter clientId.</text>
     <text xml:lang="de">Die Funktion registerClient kann verwendet werden, um die ID einer Clientanwendung zu registrieren. Falls diese Funktion implementiert ist, werfen die Eingabefunktionen startTransaction, updateTransaction und finishTransaction eine Exception, wenn sie mit einer nicht registrierten ID als Parameter clientId aufgerufen werden.</text>
   </description>
+  <authorizedRoles>
+    <role>logger</role>
+    <role>admin</role>
+  </authorizedRoles>
   <detailedSteps>
     <step>
       <number>1</number>

@@ -6,6 +6,9 @@
     <text xml:lang="en">Triggers the execution of a self test.</text>
     <text xml:lang="de">Löst die Ausführung eines Selbsttests aus.</text>
   </description>
+  <authorizedRoles>
+    <role>admin</role>
+  </authorizedRoles>
   <detailedSteps>
     <step>
       <number>1</number>
