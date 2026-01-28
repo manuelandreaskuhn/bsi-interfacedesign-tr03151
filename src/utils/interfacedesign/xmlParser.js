@@ -1420,6 +1420,30 @@ async function parseProcessChain(filePath) {
     }));
   }
 
+  // Extract interface functions - either from direct XML tag or from steps
+  let interfaceFunctions = [];
+  if (chain.interfaceFunctions && chain.interfaceFunctions.function) {
+    // Direct interfaceFunctions tag exists
+    const funcList = Array.isArray(chain.interfaceFunctions.function)
+      ? chain.interfaceFunctions.function
+      : [chain.interfaceFunctions.function];
+    interfaceFunctions = funcList.map(f => f.name || f.n || f);
+  } else if (chain.steps && chain.steps.step) {
+    // No direct interfaceFunctions tag - extract from steps
+    const stepList = Array.isArray(chain.steps.step) ? chain.steps.step : [chain.steps.step];
+    stepList.forEach(s => {
+      if (s.function && (s.function.name || s.function.n)) {
+        const funcName = s.function.name || s.function.n;
+        // funcName could be a string or an object with text content
+        const funcNameStr = typeof funcName === 'string' ? funcName : 
+                           (funcName?._ || funcName?.['#text'] || funcName);
+        if (funcNameStr && !interfaceFunctions.includes(funcNameStr)) {
+          interfaceFunctions.push(funcNameStr);
+        }
+      }
+    });
+  }
+
   return {
     id: baseName,
     chainId: chain.chainId || baseName,
@@ -1427,6 +1451,8 @@ async function parseProcessChain(filePath) {
     description: extractMultiLangText(chain.description),
     processCount: involvedProcesses.length,
     stepCount: steps.length,
+    interfaceFunctions,
+    functionCount: interfaceFunctions.length,
     involvedProcesses,
     baseName,
     filePath
@@ -1666,6 +1692,25 @@ async function parseProcessChainDetail(filePath) {
       : [chain.references.reference];
   }
 
+  // Extract interface functions - either from direct XML tag or from steps
+  let interfaceFunctions = [];
+  if (chain.interfaceFunctions && chain.interfaceFunctions.function) {
+    // Direct interfaceFunctions tag exists
+    const funcList = Array.isArray(chain.interfaceFunctions.function)
+      ? chain.interfaceFunctions.function
+      : [chain.interfaceFunctions.function];
+    interfaceFunctions = funcList.map(f => f.name || f.n || f);
+  } else {
+    // No direct interfaceFunctions tag - extract from steps
+    steps.forEach(s => {
+      if (s.function && s.function.name) {
+        if (!interfaceFunctions.includes(s.function.name)) {
+          interfaceFunctions.push(s.function.name);
+        }
+      }
+    });
+  }
+
   return {
     id: baseName,
     chainId: chain.chainId || baseName,
@@ -1677,6 +1722,8 @@ async function parseProcessChainDetail(filePath) {
     steps,
     variants,
     outcome,
+    interfaceFunctions,
+    functionCount: interfaceFunctions.length,
     importantNotes,
     useCases,
     usageScenario,

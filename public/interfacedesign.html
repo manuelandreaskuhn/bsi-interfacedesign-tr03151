@@ -1414,12 +1414,7 @@
         <div className={`bg-white ${inFullscreen ? 'h-full flex flex-col' : 'rounded-lg border border-gray-200'} overflow-hidden`}>
           {/* Toolbar */}
           <div className={`flex items-center justify-between px-4 py-2 bg-gray-50 border-b border-gray-200 ${inFullscreen ? 'flex-shrink-0' : ''}`}>
-            <div className="flex items-center gap-2">
-              <Icon name="project-diagram" className="text-blue-600" />
-              <span className="font-medium text-gray-700">
-                {language === 'de' ? 'Flowchart-Darstellung' : 'Flowchart View'}
-              </span>
-            </div>
+            <div className="flex items-center gap-2"></div>
             <div className="flex items-center gap-2">
               {/* Zoom Controls */}
               <div className="flex items-center gap-1 bg-gray-200 rounded px-1">
@@ -1605,6 +1600,7 @@
       const [stepViewMode, setStepViewMode] = useState('overview'); // 'overview', 'signature', 'steps', 'diagrams', 'logging'
       const [expandedSteps, setExpandedSteps] = useState({});
       const [relatedProcesses, setRelatedProcesses] = useState([]);
+      const [relatedProcessChains, setRelatedProcessChains] = useState([]);
       const [selectedDiagram, setSelectedDiagram] = useState('function'); // 'function' or process id
       const [processMermaidContent, setProcessMermaidContent] = useState(null);
       const [loadingDiagram, setLoadingDiagram] = useState(false);
@@ -1622,6 +1618,7 @@
         loadFunction();
         loadAvailableItems();
         loadRelatedProcesses();
+        loadRelatedProcessChains();
         loadAllFunctions();
       }, [instance, functionId]);
 
@@ -1692,6 +1689,22 @@
         }
       };
 
+      const loadRelatedProcessChains = async () => {
+        try {
+          const response = await fetch(getApiUrl(instance, '/processchains'));
+          const result = await response.json();
+          if (result.success) {
+            // Filter process chains that use this function
+            const related = result.items.filter(chain => 
+              chain.interfaceFunctions && chain.interfaceFunctions.includes(functionId)
+            );
+            setRelatedProcessChains(related);
+          }
+        } catch (err) {
+          console.error('Error loading related process chains:', err);
+        }
+      };
+
       const loadProcessDiagram = async (proc) => {
         setLoadingDiagram(true);
         try {
@@ -1710,11 +1723,37 @@
         setLoadingDiagram(false);
       };
 
+      const loadProcessChainDiagram = async (chain) => {
+        setLoadingDiagram(true);
+        try {
+          const response = await fetch(getApiUrl(instance, `/processchain/${chain.chainId || chain.id}`));
+          const result = await response.json();
+          // mermaidContent is now an object with de/en properties
+          if (result.success && result.processChain.mermaidContent) {
+            setProcessMermaidContent(result.processChain.mermaidContent);
+          } else {
+            setProcessMermaidContent(null);
+          }
+        } catch (err) {
+          console.error('Error loading process chain diagram:', err);
+          setProcessMermaidContent(null);
+        }
+        setLoadingDiagram(false);
+      };
+
       const handleDiagramSelect = (diagramId) => {
         setSelectedDiagram(diagramId);
         if (diagramId === 'function') {
           setProcessMermaidContent(null);
+        } else if (diagramId.startsWith('chain-')) {
+          // Process chain
+          const chainId = diagramId.replace('chain-', '');
+          const chain = relatedProcessChains.find(c => (c.chainId || c.id) === chainId);
+          if (chain) {
+            loadProcessChainDiagram(chain);
+          }
         } else {
+          // Process
           const proc = relatedProcesses.find(p => `${p.actor}-${p.diagramType}-${p.id}` === diagramId);
           if (proc) {
             loadProcessDiagram(proc);
@@ -2086,7 +2125,7 @@
         { id: 'overview', label: language === 'de' ? 'Übersicht' : 'Overview', icon: 'info-circle' },
         { id: 'signature', label: language === 'de' ? 'Signatur' : 'Signature', icon: 'code' },
         { id: 'steps', label: language === 'de' ? 'Ablauf' : 'Flow', icon: 'tasks', badge: data.stepCount },
-        { id: 'diagrams', label: language === 'de' ? 'Diagramme' : 'Diagrams', icon: 'project-diagram', badge: 1 + relatedProcesses.length },
+        { id: 'diagrams', label: language === 'de' ? 'Diagramme' : 'Diagrams', icon: 'project-diagram', badge: 1 + relatedProcesses.length + relatedProcessChains.length },
         ...(data.systemLog || data.transactionLog ? [{ id: 'logging', label: 'Logging', icon: 'file-alt' }] : [])
       ];
 
@@ -2659,7 +2698,7 @@
                             {language === 'de' ? 'Verfügbare Diagramme' : 'Available Diagrams'}
                           </h3>
                         </div>
-                        <div className="divide-y max-h-96 overflow-y-auto">
+                        <div className="divide-y overflow-y-auto">
                           {/* Function Flowchart */}
                           <button
                             onClick={() => handleDiagramSelect('function')}
@@ -2729,13 +2768,60 @@
                             </>
                           )}
 
-                          {relatedProcesses.length === 0 && (
+                          {relatedProcesses.length === 0 && relatedProcessChains.length === 0 && (
                             <div className="p-3 text-sm text-gray-500 text-center">
                               <Icon name="info-circle" className="mr-1" />
                               {language === 'de' 
-                                ? 'Keine Prozesse verwenden diese Funktion' 
-                                : 'No processes use this function'}
+                                ? 'Keine Prozesse oder Prozessketten verwenden diese Funktion' 
+                                : 'No processes or process chains use this function'}
                             </div>
+                          )}
+
+                          {/* Related Process Chains */}
+                          {relatedProcessChains.length > 0 && (
+                            <>
+                              <div className="px-3 py-2 bg-gray-50 text-xs font-semibold text-gray-500 uppercase">
+                                {language === 'de' ? 'Prozessketten' : 'Process Chains'}
+                              </div>
+                              {relatedProcessChains.map(chain => {
+                                const chainKey = `chain-${chain.chainId || chain.id}`;
+                                const isSelected = selectedDiagram === chainKey;
+                                return (
+                                  <button
+                                    key={chainKey}
+                                    onClick={() => handleDiagramSelect(chainKey)}
+                                    className={`w-full text-left p-3 hover:bg-gray-50 transition-colors ${
+                                      isSelected ? 'bg-emerald-50 border-l-4 border-emerald-500' : ''
+                                    }`}
+                                  >
+                                    <div className="flex items-center gap-2">
+                                      <div className={`w-8 h-8 rounded flex items-center justify-center ${
+                                        isSelected ? 'bg-emerald-100' : 'bg-emerald-50'
+                                      }`}>
+                                        <Icon 
+                                          name="link" 
+                                          className="text-emerald-600"
+                                        />
+                                      </div>
+                                      <div className="flex-1 min-w-0">
+                                        <div className="font-medium text-sm text-gray-800 truncate">
+                                          {t(chain.name)}
+                                        </div>
+                                        <div className="flex items-center gap-2 text-xs text-gray-500">
+                                          <span>{language === 'de' ? 'Prozesskette' : 'Process Chain'}</span>
+                                          {chain.stepCount > 0 && (
+                                            <>
+                                              <span>•</span>
+                                              <span>{chain.stepCount} {language === 'de' ? 'Schritte' : 'Steps'}</span>
+                                            </>
+                                          )}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </button>
+                                );
+                              })}
+                            </>
                           )}
                         </div>
                       </div>
@@ -2751,17 +2837,95 @@
                           </span>
                         </div>
                       ) : selectedDiagram === 'function' ? (
-                        <MermaidFlowchartView 
-                          mermaidCode={generateMermaidFlowchart()} 
-                          language={language}
-                          type="function"
-                        />
+                        <>
+                          {/* Diagram Header */}
+                          <div className="bg-white rounded-t-lg border border-b-0 shadow-sm px-4 py-3">
+                            <div className="flex items-center gap-3">
+                              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                                <Icon name="sitemap" className="text-blue-600 text-lg" />
+                              </div>
+                              <div>
+                                <h4 className="font-semibold text-gray-800">
+                                  {language === 'de' ? 'Funktions-Flowchart' : 'Function Flowchart'}
+                                </h4>
+                                <p className="text-xs text-gray-500">
+                                  {language === 'de' ? 'Generiert aus Ablaufschritten' : 'Generated from flow steps'}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                          <MermaidFlowchartView 
+                            mermaidCode={generateMermaidFlowchart()} 
+                            language={language}
+                            type="function"
+                          />
+                        </>
                       ) : (processMermaidContent?.[language] || processMermaidContent?.de || processMermaidContent) ? (
-                        <MermaidFlowchartView 
-                          mermaidCode={processMermaidContent?.[language] || processMermaidContent?.de || processMermaidContent} 
-                          language={language}
-                          type="process"
-                        />
+                        <>
+                          {/* Diagram Header - Process or Process Chain */}
+                          {(() => {
+                            // Check if it's a process chain
+                            if (selectedDiagram.startsWith('chain-')) {
+                              const chainId = selectedDiagram.replace('chain-', '');
+                              const chain = relatedProcessChains.find(c => (c.chainId || c.id) === chainId);
+                              if (chain) {
+                                return (
+                                  <div className="bg-white rounded-t-lg border border-b-0 shadow-sm px-4 py-3">
+                                    <div className="flex items-center gap-3">
+                                      <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
+                                        <Icon name="link" className="text-emerald-600 text-lg" />
+                                      </div>
+                                      <div className="flex-1 min-w-0">
+                                        <h4 className="font-semibold text-gray-800 truncate">
+                                          {t(chain.name)}
+                                        </h4>
+                                        <p className="text-xs text-gray-500">
+                                          {language === 'de' ? 'Prozesskette' : 'Process Chain'}
+                                          {chain.stepCount > 0 && ` • ${chain.stepCount} ${language === 'de' ? 'Schritte' : 'Steps'}`}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  </div>
+                                );
+                              }
+                            } else {
+                              // It's a process
+                              const proc = relatedProcesses.find(p => `${p.actor}-${p.diagramType}-${p.id}` === selectedDiagram);
+                              if (proc) {
+                                return (
+                                  <div className="bg-white rounded-t-lg border border-b-0 shadow-sm px-4 py-3">
+                                    <div className="flex items-center gap-3">
+                                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                                        proc.diagramType === 'flow' ? 'bg-blue-100' : 'bg-purple-100'
+                                      }`}>
+                                        <Icon 
+                                          name={proc.diagramType === 'flow' ? 'sitemap' : 'exchange-alt'} 
+                                          className={`text-lg ${proc.diagramType === 'flow' ? 'text-blue-600' : 'text-purple-600'}`}
+                                        />
+                                      </div>
+                                      <div className="flex-1 min-w-0">
+                                        <h4 className="font-semibold text-gray-800 truncate">
+                                          {t(proc.name)}
+                                        </h4>
+                                        <p className="text-xs text-gray-500">
+                                          <span className="capitalize">{proc.actor}</span>
+                                          {' • '}
+                                          <span>{proc.diagramType === 'flow' ? 'Flow' : 'Sequenz'}</span>
+                                        </p>
+                                      </div>
+                                    </div>
+                                  </div>
+                                );
+                              }
+                            }
+                            return null;
+                          })()}
+                          <MermaidFlowchartView 
+                            mermaidCode={processMermaidContent?.[language] || processMermaidContent?.de || processMermaidContent} 
+                            language={language}
+                            type="process"
+                          />
+                        </>
                       ) : (
                         <div className="bg-white rounded-lg border shadow-sm p-8 text-center text-gray-500">
                           <Icon name="exclamation-circle" className="text-2xl mb-2" />
