@@ -1114,12 +1114,95 @@ async function parseProcessDetail(filePath, actor, diagramType) {
       : [proc.references.reference];
   }
 
+  // Extract requirements
+  let requirements = [];
+  if (proc.requirements && proc.requirements.requirement) {
+    const reqs = Array.isArray(proc.requirements.requirement)
+      ? proc.requirements.requirement
+      : [proc.requirements.requirement];
+    requirements = reqs.map(r => extractMultiLangText(r));
+  }
+
+  // Extract detailed steps with order, action, reference, details, note
+  let steps = [];
+  if (proc.steps && proc.steps.step) {
+    const stepList = Array.isArray(proc.steps.step)
+      ? proc.steps.step
+      : [proc.steps.step];
+    steps = stepList.map(s => {
+      const step = {
+        order: s.order || 0,
+        action: extractMultiLangText(s.action),
+        reference: s.reference || null
+      };
+      
+      // Extract details items if present
+      if (s.details && s.details.item) {
+        const items = Array.isArray(s.details.item) ? s.details.item : [s.details.item];
+        step.details = items.map(item => extractMultiLangText(item));
+      }
+      
+      // Extract note if present
+      if (s.note) {
+        step.note = extractMultiLangText(s.note);
+      }
+      
+      return step;
+    });
+  }
+
+  // Extract deadlines
+  let deadlines = [];
+  if (proc.deadlines && proc.deadlines.deadline) {
+    const deadlineList = Array.isArray(proc.deadlines.deadline)
+      ? proc.deadlines.deadline
+      : [proc.deadlines.deadline];
+    deadlines = deadlineList.map(d => ({
+      type: d.type || '',
+      period: extractMultiLangText(d.period),
+      reference: d.reference || null
+    }));
+  }
+
+  // Extract outcomes
+  let outcomes = [];
+  if (proc.outcomes && proc.outcomes.outcome) {
+    const outcomeList = Array.isArray(proc.outcomes.outcome)
+      ? proc.outcomes.outcome
+      : [proc.outcomes.outcome];
+    outcomes = outcomeList.map(o => ({
+      type: o.type || '',
+      description: extractMultiLangText(o.description)
+    }));
+  }
+
+  // Extract exceptions (process-specific exceptions, not error exceptions)
+  let processExceptions = [];
+  if (proc.exceptions && proc.exceptions.exception) {
+    const excList = Array.isArray(proc.exceptions.exception)
+      ? proc.exceptions.exception
+      : [proc.exceptions.exception];
+    processExceptions = excList.map(e => ({
+      type: e.type || '',
+      description: extractMultiLangText(e.description)
+    }));
+  }
+
+  // Extract restrictions
+  let restrictions = [];
+  if (proc.restrictions && proc.restrictions.restriction) {
+    const resList = Array.isArray(proc.restrictions.restriction)
+      ? proc.restrictions.restriction
+      : [proc.restrictions.restriction];
+    restrictions = resList.map(r => extractMultiLangText(r));
+  }
+
   // Extract notes
   const notes = extractMultiLangText(proc.notes);
 
   return {
-    id: baseName, // Use filename as unique identifier for API calls
-    processId: proc.processId || baseName, // Original processId from XML for display
+    id: baseName,
+    processId: proc.processId || baseName,
     name: extractMultiLangText(proc.processName),
     description: extractMultiLangText(proc.description),
     actor,
@@ -1133,6 +1216,12 @@ async function parseProcessDetail(filePath, actor, diagramType) {
     exceptions,
     references,
     notes,
+    requirements,
+    steps,
+    deadlines,
+    outcomes,
+    processExceptions,
+    restrictions,
     mermaidContent,
     baseName,
     filePath

@@ -1228,6 +1228,24 @@
                                       {func.exceptionCount} Exceptions
                                     </span>
                                   </div>
+                                  {func.authorizedRoles && func.authorizedRoles.length > 0 && (
+                                    <div className="flex items-center gap-2 mt-2">
+                                      <span className="text-xs text-gray-500">
+                                        <Icon name="user-shield" className="mr-1" />
+                                        {language === 'de' ? 'Rollen:' : 'Roles:'}
+                                      </span>
+                                      <div className="flex flex-wrap gap-1">
+                                        {func.authorizedRoles.map(role => (
+                                          <span 
+                                            key={role}
+                                            className="px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded text-xs font-medium"
+                                          >
+                                            {role}
+                                          </span>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  )}
                                 </div>
                                 <Icon name="chevron-right" className="text-gray-300" />
                               </div>
@@ -5835,6 +5853,204 @@
                         <li key={idx} className="text-sm text-gray-600 flex items-start gap-2">
                           <Icon name="link" className="mt-1 text-gray-400" />
                           {typeof ref === 'string' ? ref : t(ref)}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              )}
+
+              {/* Requirements */}
+              {process.requirements && process.requirements.length > 0 && (
+                <div className="bg-white rounded-lg shadow-sm border">
+                  <div className="border-b bg-gray-50 px-4 py-3">
+                    <h3 className="font-semibold text-gray-700 flex items-center">
+                      <Icon name="clipboard-check" className="mr-2 text-blue-600" />
+                      {language === 'de' ? 'Anforderungen' : 'Requirements'}
+                    </h3>
+                  </div>
+                  <div className="p-4">
+                    <ul className="space-y-2">
+                      {process.requirements.map((req, idx) => (
+                        <li key={idx} className="text-sm text-gray-700 flex items-start gap-2">
+                          <Icon name="check-circle" className="mt-1 text-blue-500" />
+                          <span>{t(req)}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              )}
+
+              {/* Process Steps */}
+              {process.steps && process.steps.length > 0 && (
+                <div className="bg-white rounded-lg shadow-sm border lg:col-span-2">
+                  <div className="border-b bg-gray-50 px-4 py-3">
+                    <h3 className="font-semibold text-gray-700 flex items-center">
+                      <Icon name="list-ol" className="mr-2 text-teal-600" />
+                      {language === 'de' ? 'Prozessschritte' : 'Process Steps'}
+                    </h3>
+                  </div>
+                  <div className="p-4">
+                    <div className="space-y-4">
+                      {process.steps.map((step, idx) => (
+                        <div key={idx} className="flex gap-4 border-l-4 border-teal-500 pl-4 py-2">
+                          <div className="flex-shrink-0">
+                            <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-teal-100 text-teal-700 font-semibold text-sm">
+                              {step.order}
+                            </span>
+                          </div>
+                          <div className="flex-1">
+                            <p className="text-gray-800 font-medium mb-1">{t(step.action)}</p>
+                            {step.reference && (
+                              <p className="text-xs text-gray-500 flex items-center gap-1 mb-2">
+                                <Icon name="link" />
+                                {step.reference}
+                              </p>
+                            )}
+                            {step.details && step.details.length > 0 && (
+                              <ul className="mt-2 space-y-1 pl-4">
+                                {step.details.map((detail, dIdx) => (
+                                  <li key={dIdx} className="text-sm text-gray-600 list-disc">
+                                    {t(detail)}
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
+                            {step.note && t(step.note) && (
+                              <div className="mt-2 bg-yellow-50 border-l-2 border-yellow-400 px-3 py-2 rounded-r">
+                                <p className="text-xs text-yellow-800 flex items-start gap-2">
+                                  <Icon name="info-circle" className="mt-0.5" />
+                                  <span>{t(step.note)}</span>
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Deadlines */}
+              {process.deadlines && process.deadlines.length > 0 && (
+                <div className="bg-white rounded-lg shadow-sm border">
+                  <div className="border-b bg-gray-50 px-4 py-3">
+                    <h3 className="font-semibold text-gray-700 flex items-center">
+                      <Icon name="clock" className="mr-2 text-orange-600" />
+                      {language === 'de' ? 'Fristen' : 'Deadlines'}
+                    </h3>
+                  </div>
+                  <div className="p-4">
+                    <div className="space-y-3">
+                      {process.deadlines.map((deadline, idx) => (
+                        <div key={idx} className="bg-orange-50 rounded-lg p-3 border border-orange-200">
+                          <div className="flex items-start gap-3">
+                            <Icon name="calendar-alt" className="text-orange-600 mt-1" />
+                            <div className="flex-1">
+                              <p className="text-sm font-semibold text-gray-800 mb-1">
+                                {deadline.type === 'mandatory' 
+                                  ? (language === 'de' ? 'Verbindliche Frist' : 'Mandatory Deadline')
+                                  : (language === 'de' ? 'Empfohlen' : 'Recommended')}
+                              </p>
+                              <p className="text-sm text-gray-700">{t(deadline.period)}</p>
+                              {deadline.reference && (
+                                <p className="text-xs text-gray-500 mt-1 flex items-center gap-1">
+                                  <Icon name="link" />
+                                  {deadline.reference}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Outcomes */}
+              {process.outcomes && process.outcomes.length > 0 && (
+                <div className="bg-white rounded-lg shadow-sm border">
+                  <div className="border-b bg-gray-50 px-4 py-3">
+                    <h3 className="font-semibold text-gray-700 flex items-center">
+                      <Icon name="flag-checkered" className="mr-2 text-green-600" />
+                      {language === 'de' ? 'Mögliche Ergebnisse' : 'Possible Outcomes'}
+                    </h3>
+                  </div>
+                  <div className="p-4">
+                    <div className="space-y-2">
+                      {process.outcomes.map((outcome, idx) => (
+                        <div key={idx} className={`rounded-lg p-3 border-l-4 ${
+                          outcome.type === 'success' 
+                            ? 'bg-green-50 border-green-500' 
+                            : outcome.type === 'failure'
+                            ? 'bg-red-50 border-red-500'
+                            : 'bg-blue-50 border-blue-500'
+                        }`}>
+                          <div className="flex items-start gap-2">
+                            <Icon 
+                              name={outcome.type === 'success' ? 'check-circle' : outcome.type === 'failure' ? 'times-circle' : 'info-circle'} 
+                              className={`mt-0.5 ${
+                                outcome.type === 'success' ? 'text-green-600' : outcome.type === 'failure' ? 'text-red-600' : 'text-blue-600'
+                              }`}
+                            />
+                            <div className="flex-1">
+                              <p className="text-sm font-semibold text-gray-800 capitalize mb-1">
+                                {outcome.type === 'success' 
+                                  ? (language === 'de' ? 'Erfolg' : 'Success')
+                                  : outcome.type === 'failure'
+                                  ? (language === 'de' ? 'Fehler' : 'Failure')
+                                  : outcome.type}
+                              </p>
+                              <p className="text-sm text-gray-700">{t(outcome.description)}</p>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Process Exceptions (not error exceptions) */}
+              {process.processExceptions && process.processExceptions.length > 0 && (
+                <div className="bg-white rounded-lg shadow-sm border">
+                  <div className="border-b bg-gray-50 px-4 py-3">
+                    <h3 className="font-semibold text-gray-700 flex items-center">
+                      <Icon name="exclamation-circle" className="mr-2 text-amber-600" />
+                      {language === 'de' ? 'Ausnahmen' : 'Exceptions'}
+                    </h3>
+                  </div>
+                  <div className="p-4">
+                    <div className="space-y-3">
+                      {process.processExceptions.map((exc, idx) => (
+                        <div key={idx} className="bg-amber-50 rounded-lg p-3 border border-amber-200">
+                          <p className="text-sm font-semibold text-gray-800 mb-1">{exc.type}</p>
+                          <p className="text-sm text-gray-700">{t(exc.description)}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Restrictions */}
+              {process.restrictions && process.restrictions.length > 0 && (
+                <div className="bg-white rounded-lg shadow-sm border">
+                  <div className="border-b bg-gray-50 px-4 py-3">
+                    <h3 className="font-semibold text-gray-700 flex items-center">
+                      <Icon name="ban" className="mr-2 text-red-600" />
+                      {language === 'de' ? 'Einschränkungen' : 'Restrictions'}
+                    </h3>
+                  </div>
+                  <div className="p-4">
+                    <ul className="space-y-2">
+                      {process.restrictions.map((restriction, idx) => (
+                        <li key={idx} className="text-sm text-gray-700 flex items-start gap-2">
+                          <Icon name="minus-circle" className="mt-1 text-red-500" />
+                          <span>{t(restriction)}</span>
                         </li>
                       ))}
                     </ul>

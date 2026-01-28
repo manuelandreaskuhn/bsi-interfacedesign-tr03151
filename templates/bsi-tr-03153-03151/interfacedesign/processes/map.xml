@@ -785,6 +785,120 @@
                 </subCategory>
             </subCategories>
         </category>
+
+        <category>
+            <id>compliance</id>
+            <name>
+                <text xml:lang="en">Compliance &amp; Reporting</text>
+                <text xml:lang="de">Compliance &amp; Meldewesen</text>
+            </name>
+            <description>
+                <text xml:lang="en">Legal obligations, reporting requirements, and receipt issuance according to § 146a AO</text>
+                <text xml:lang="de">Gesetzliche Pflichten, Meldepflichten und Belegausgabe gemäß § 146a AO</text>
+            </description>
+            <icon>⚖️</icon>
+            <color>#E74C3C</color>
+            <subCategories>
+                <subCategory>
+                    <id>compliance.reporting</id>
+                    <name>
+                        <text xml:lang="en">Reporting Obligations</text>
+                        <text xml:lang="de">Meldepflichten</text>
+                    </name>
+                    <description>
+                        <text xml:lang="en">Mandatory notifications to tax authorities according to § 146a para. 4 AO</text>
+                        <text xml:lang="de">Verpflichtende Meldungen an das Finanzamt gemäß § 146a Abs. 4 AO</text>
+                    </description>
+                    <processes>
+                        <process>
+                            <id>091</id>
+                            <name>
+                                <text xml:lang="en">Reporting Obligation for Acquisition</text>
+                                <text xml:lang="de">Mitteilungspflicht bei Anschaffung</text>
+                            </name>
+                            <mandatory>true</mandatory>
+                            <critical>true</critical>
+                            <deadline>
+                                <text xml:lang="en">1 month after acquisition</text>
+                                <text xml:lang="de">1 Monat nach Anschaffung</text>
+                            </deadline>
+                        </process>
+                        <process>
+                            <id>092</id>
+                            <name>
+                                <text xml:lang="en">Reporting Obligation for Decommissioning</text>
+                                <text xml:lang="de">Mitteilungspflicht bei Außerbetriebnahme</text>
+                            </name>
+                            <mandatory>true</mandatory>
+                            <critical>true</critical>
+                            <deadline>
+                                <text xml:lang="en">1 month after decommissioning</text>
+                                <text xml:lang="de">1 Monat nach Außerbetriebnahme</text>
+                            </deadline>
+                        </process>
+                    </processes>
+                    <processChains/>
+                </subCategory>
+                <subCategory>
+                    <id>compliance.receipts</id>
+                    <name>
+                        <text xml:lang="en">Receipt Obligations</text>
+                        <text xml:lang="de">Belegpflichten</text>
+                    </name>
+                    <description>
+                        <text xml:lang="en">Receipt issuance obligations and exemptions according to § 146a para. 2 AO</text>
+                        <text xml:lang="de">Belegausgabepflichten und Befreiungen gemäß § 146a Abs. 2 AO</text>
+                    </description>
+                    <processes>
+                        <process>
+                            <id>093</id>
+                            <name>
+                                <text xml:lang="en">Receipt Issuance Obligation</text>
+                                <text xml:lang="de">Belegausgabepflicht</text>
+                            </name>
+                            <mandatory>true</mandatory>
+                            <critical>true</critical>
+                            <frequency>
+                                <text xml:lang="en">per transaction</text>
+                                <text xml:lang="de">pro Transaktion</text>
+                            </frequency>
+                        </process>
+                        <process>
+                            <id>094</id>
+                            <name>
+                                <text xml:lang="en">Apply for Exemption from Receipt Obligation</text>
+                                <text xml:lang="de">Befreiung von Belegausgabepflicht beantragen</text>
+                            </name>
+                            <mandatory>false</mandatory>
+                        </process>
+                    </processes>
+                    <processChains/>
+                </subCategory>
+                <subCategory>
+                    <id>compliance.failure</id>
+                    <name>
+                        <text xml:lang="en">Failure Handling</text>
+                        <text xml:lang="de">Ausfallbehandlung</text>
+                    </name>
+                    <description>
+                        <text xml:lang="en">Handling of TSE failures and emergency operations according to AEAO to § 146a</text>
+                        <text xml:lang="de">Behandlung von TSE-Ausfällen und Notbetrieb gemäß AEAO zu § 146a</text>
+                    </description>
+                    <processes>
+                        <process>
+                            <id>090</id>
+                            <name>
+                                <text xml:lang="en">TSE Failure Handling</text>
+                                <text xml:lang="de">TSE-Ausfall Behandlung</text>
+                            </name>
+                            <mandatory>true</mandatory>
+                            <critical>true</critical>
+                        </process>
+                    </processes>
+                    <processChains/>
+                </subCategory>
+            </subCategories>
+        </category>
     </mainCategories>
 
     <actors>
@@ -1215,6 +1329,104 @@
                 </process>
             </responsibleProcesses>
         </actor>
+        <actor>
+            <id>finanzamt</id>
+            <name>
+                <text xml:lang="en">Tax Authority</text>
+                <text xml:lang="de">Finanzamt</text>
+            </name>
+            <description>
+                <text xml:lang="en">Tax authority responsible for compliance monitoring and receiving notifications</text>
+                <text xml:lang="de">Finanzbehörde zuständig für Compliance-Überwachung und Meldungsempfang</text>
+            </description>
+            <icon>🏛️</icon>
+            <responsibleProcesses>
+                <process>
+                    <id>090</id>
+                    <name>
+                        <text xml:lang="en">TSE Failure Handling</text>
+                        <text xml:lang="de">TSE-Ausfall Behandlung</text>
+                    </name>
+                </process>
+                <process>
+                    <id>091</id>
+                    <name>
+                        <text xml:lang="en">Reporting Obligation for Acquisition</text>
+                        <text xml:lang="de">Mitteilungspflicht bei Anschaffung</text>
+                    </name>
+                </process>
+                <process>
+                    <id>092</id>
+                    <name>
+                        <text xml:lang="en">Reporting Obligation for Decommissioning</text>
+                        <text xml:lang="de">Mitteilungspflicht bei Außerbetriebnahme</text>
+                    </name>
+                </process>
+                <process>
+                    <id>093</id>
+                    <name>
+                        <text xml:lang="en">Receipt Issuance Obligation</text>
+                        <text xml:lang="de">Belegausgabepflicht</text>
+                    </name>
+                </process>
+                <process>
+                    <id>094</id>
+                    <name>
+                        <text xml:lang="en">Apply for Exemption from Receipt Obligation</text>
+                        <text xml:lang="de">Befreiung von Belegausgabepflicht beantragen</text>
+                    </name>
+                </process>
+            </responsibleProcesses>
+        </actor>
+        <actor>
+            <id>unternehmer</id>
+            <name>
+                <text xml:lang="en">Entrepreneur / Business Owner</text>
+                <text xml:lang="de">Unternehmer / Geschäftsinhaber</text>
+            </name>
+            <description>
+                <text xml:lang="en">Business owner responsible for compliance with legal obligations</text>
+                <text xml:lang="de">Geschäftsinhaber verantwortlich für Einhaltung gesetzlicher Pflichten</text>
+            </description>
+            <icon>👔</icon>
+            <responsibleProcesses>
+                <process>
+                    <id>090</id>
+                    <name>
+                        <text xml:lang="en">TSE Failure Handling</text>
+                        <text xml:lang="de">TSE-Ausfall Behandlung</text>
+                    </name>
+                </process>
+                <process>
+                    <id>091</id>
+                    <name>
+                        <text xml:lang="en">Reporting Obligation for Acquisition</text>
+                        <text xml:lang="de">Mitteilungspflicht bei Anschaffung</text>
+                    </name>
+                </process>
+                <process>
+                    <id>092</id>
+                    <name>
+                        <text xml:lang="en">Reporting Obligation for Decommissioning</text>
+                        <text xml:lang="de">Mitteilungspflicht bei Außerbetriebnahme</text>
+                    </name>
+                </process>
+                <process>
+                    <id>093</id>
+                    <name>
+                        <text xml:lang="en">Receipt Issuance Obligation</text>
+                        <text xml:lang="de">Belegausgabepflicht</text>
+                    </name>
+                </process>
+                <process>
+                    <id>094</id>
+                    <name>
+                        <text xml:lang="en">Apply for Exemption from Receipt Obligation</text>
+                        <text xml:lang="de">Befreiung von Belegausgabepflicht beantragen</text>
+                    </name>
+                </process>
+            </responsibleProcesses>
+        </actor>
     </actors>
 
     <usageScenarios>
@@ -1528,6 +1740,66 @@
             <severity>
                 <text xml:lang="en">high</text>
                 <text xml:lang="de">hoch</text>
+            </severity>
+        </process>
+        <process>
+            <id>090</id>
+            <name>
+                <text xml:lang="en">TSE Failure Handling</text>
+                <text xml:lang="de">TSE-Ausfall Behandlung</text>
+            </name>
+            <reason>
+                <text xml:lang="en">Legally mandated documentation and immediate action required</text>
+                <text xml:lang="de">Gesetzlich vorgeschriebene Dokumentation und unverzügliches Handeln erforderlich</text>
+            </reason>
+            <severity>
+                <text xml:lang="en">critical</text>
+                <text xml:lang="de">kritisch</text>
+            </severity>
+        </process>
+        <process>
+            <id>091</id>
+            <name>
+                <text xml:lang="en">Reporting Obligation for Acquisition</text>
+                <text xml:lang="de">Mitteilungspflicht bei Anschaffung</text>
+            </name>
+            <reason>
+                <text xml:lang="en">Legally mandated notification to tax authority within 1 month - § 146a para. 4 AO</text>
+                <text xml:lang="de">Gesetzlich vorgeschriebene Meldung an Finanzamt innerhalb 1 Monat - § 146a Abs. 4 AO</text>
+            </reason>
+            <severity>
+                <text xml:lang="en">critical</text>
+                <text xml:lang="de">kritisch</text>
+            </severity>
+        </process>
+        <process>
+            <id>092</id>
+            <name>
+                <text xml:lang="en">Reporting Obligation for Decommissioning</text>
+                <text xml:lang="de">Mitteilungspflicht bei Außerbetriebnahme</text>
+            </name>
+            <reason>
+                <text xml:lang="en">Legally mandated notification to tax authority within 1 month - § 146a para. 4 AO</text>
+                <text xml:lang="de">Gesetzlich vorgeschriebene Meldung an Finanzamt innerhalb 1 Monat - § 146a Abs. 4 AO</text>
+            </reason>
+            <severity>
+                <text xml:lang="en">critical</text>
+                <text xml:lang="de">kritisch</text>
+            </severity>
+        </process>
+        <process>
+            <id>093</id>
+            <name>
+                <text xml:lang="en">Receipt Issuance Obligation</text>
+                <text xml:lang="de">Belegausgabepflicht</text>
+            </name>
+            <reason>
+                <text xml:lang="en">Legally mandated receipt obligation per transaction - § 146a para. 2 AO</text>
+                <text xml:lang="de">Gesetzlich vorgeschriebene Belegausgabe pro Transaktion - § 146a Abs. 2 AO</text>
+            </reason>
+            <severity>
+                <text xml:lang="en">critical</text>
+                <text xml:lang="de">kritisch</text>
             </severity>
         </process>
     </criticalProcesses>
