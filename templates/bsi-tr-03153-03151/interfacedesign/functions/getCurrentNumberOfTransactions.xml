@@ -3,8 +3,8 @@
   <name>getCurrentNumberOfTransactions</name>
   <category>Client- und Transaktionsverwaltung</category>
   <description>
-    <text xml:lang="en">The function getRegisteredClients can be used to get the list of currently registered transaction logging clients.</text>
-    <text xml:lang="de">Die Funktion getRegisteredClients kann verwendet werden, um die Liste der aktuell registrierten Transaktionsprotokollierungs-Clients zu erhalten.</text>
+    <text xml:lang="en">The function getCurrentNumberOfTransactions can be used to get the number of currently open transactions.</text>
+    <text xml:lang="de">Die Funktion getCurrentNumberOfTransactions kann verwendet werden, um die Anzahl der aktuell offenen Transaktionen zu erhalten.</text>
   </description>
   <authorizedRoles>
     <role>unauthenticated</role>

@@ -3,8 +3,8 @@
   <name>updateDevice</name>
   <category>Gerätewartung</category>
   <description>
-    <text xml:lang="en">Triggers the execution of a self test.</text>
-    <text xml:lang="de">Löst die Ausführung eines Selbsttests aus.</text>
+    <text xml:lang="en">This function performs an update of the device.</text>
+    <text xml:lang="de">Diese Funktion führt ein Update des Geräts durch.</text>
   </description>
   <authorizedRoles>
     <role>admin</role>

@@ -3,8 +3,8 @@
   <name>getCurrentTransactionCounter</name>
   <category>Client- und Transaktionsverwaltung</category>
   <description>
-    <text xml:lang="en">The function getOpenTransactions can be used to obtain the transaction numbers of open transactions that are currently managed by the device.</text>
-    <text xml:lang="de">Die Funktion getOpenTransactions kann verwendet werden, um die Transaktionsnummern offener Transaktionen zu erhalten, die derzeit vom Gerät verwaltet werden.</text>
+    <text xml:lang="en">The function getCurrentTransactionCounter can be used to obtain the transaction number of the last opened transaction.</text>
+    <text xml:lang="de">Die Funktion getCurrentTransactionCounter kann verwendet werden, um die Transaktionsnummer der letzten geöffneten Transaktion zu erhalten.</text>
   </description>
   <authorizedRoles>
     <role>unauthenticated</role>

@@ -3,8 +3,8 @@
   <name>getEndOfUsageDate</name>
   <category>Gerätewartung</category>
   <description>
-    <text xml:lang="en">Electrical devices may be subject to aging or wear and tear. Sometimes this process is observable or predictable. The API function getDeviceHealth can be used to get information about the actual health of the device or the components within.</text>
-    <text xml:lang="de">Elektrische Geräte können Verschleiß unterliegen. Dieser Prozess ist manchmal beobachtbar oder vorhersehbar. Die API-Funktion getDeviceHealth kann verwendet werden, um Informationen über den tatsächlichen Zustand des Geräts oder der darin enthaltenen Komponenten zu erhalten.</text>
+    <text xml:lang="en">The function getEndOfUsageDate determines the earliest point in time at which no further input functions are possible.</text>
+    <text xml:lang="de">Die Funktion getEndOfUsageDate ermittelt den frühesten Zeitpunkt zu dem keine weiteren Eingabefunktionen möglich sind.</text>
   </description>
   <authorizedRoles>
     <role>unauthenticated</role>

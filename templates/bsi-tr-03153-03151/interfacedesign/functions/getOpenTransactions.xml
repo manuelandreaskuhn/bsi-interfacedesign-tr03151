@@ -3,8 +3,8 @@
   <name>getOpenTransactions</name>
   <category>Client- und Transaktionsverwaltung</category>
   <description>
-    <text xml:lang="en">The function getOpenTransactions can be used to obtain the transaction numbers of open transactions for a specific client application.</text>
-    <text xml:lang="de">Die Funktion getOpenTransactions kann verwendet werden, um die Transaktionsnummern offener Transaktionen für eine bestimmte Clientanwendung zu ermitteln.</text>
+    <text xml:lang="en">The function getOpenTransactions can be used to obtain the transaction numbers of open transactions.</text>
+    <text xml:lang="de">Die Funktion getOpenTransactions kann verwendet werden, um die Transaktionsnummern offener Transaktionen zu ermitteln.</text>
   </description>
   <authorizedRoles>
     <role>unauthenticated</role>
